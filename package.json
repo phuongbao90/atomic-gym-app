@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "gym-app-turbo",
   "private": true,
   "scripts": {
     "build": "turbo build",
