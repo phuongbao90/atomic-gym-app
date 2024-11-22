@@ -1,0 +1,23 @@
+{
+  "name": "@repo/app-config",
+  "version": "0.0.1",
+  "exports": {
+    "./app-colors": "./src/app-colors.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "tsup": "^8.0.1"
+  },
+  "tsup": {
+    "entry": [
+      "src/**/*.ts"
+    ],
+    "outDir": "dist",
+    "format": [
+      "esm"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+POST {{BASE_URL}}/muscle-group
+Authorization: Bearer {{$global.accessToken}}
+{
+  "name": "leg"
+}
+
+GET {{BASE_URL}}/muscle-group
+Authorization: Bearer {{$global.accessToken}}
+
+GET {{BASE_URL}}/muscle-group/1
+Authorization: Bearer {{$global.accessToken}}
+
+DELETE {{BASE_URL}}/muscle-group/1
+Authorization: Bearer {{$global.accessToken}}
+
+
+PUT {{BASE_URL}}/muscle-group/1
+Authorization: Bearer {{$global.accessToken}}
+{
+  "name": "chest"
+}

@@ -1,0 +1,7 @@
+POST {{BASE_URL}}/user
+Authorization: Bearer {{$global.accessToken}}
+{  
+  "email": "bao3@gmail.com",
+  "name": "Bao bao",
+  "password": "123456#@Nn"
+}

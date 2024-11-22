@@ -1,0 +1,25 @@
+POST {{BASE_URL}}/workout-plan
+Authorization: Bearer {{$global.accessToken}}
+{
+  "name": "Workout Plan 1"
+}
+
+###
+
+GET {{BASE_URL}}/workout-plan/my-plans
+Authorization: Bearer {{$global.accessToken}}
+
+###
+
+GET {{BASE_URL}}/workout-plan/public-plans
+Authorization: Bearer {{$global.accessToken}}
+
+###
+
+GET {{BASE_URL}}/workout-plan/1
+Authorization: Bearer {{$global.accessToken}}
+
+###
+
+DELETE {{BASE_URL}}/workout-plan/1
+Authorization: Bearer {{$global.accessToken}}

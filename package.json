@@ -3,9 +3,15 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev",
+    "dev": "turbo watch dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "_": "------------------------------------------",
+    "dev:web": "      turbo watch dev --filter=@repo/web       --filter=@repo/api",
+    "dev:dashboard": "turbo watch dev --filter=@repo/dashboard --filter=@repo/api",
+    "dev:mobile": "   turbo watch dev --filter=@repo/mobile    --filter=@repo/api",
+    "dev:api": "      turbo run start:debug --filter=@repo/api",
+    "__": "-----------------------------------------"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

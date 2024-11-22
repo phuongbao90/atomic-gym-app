@@ -1,0 +1,25 @@
+POST {{BASE_URL}}/auth/login
+
+{
+  "username": "bao5@gmail.com",
+  "password": "123456#@Nn"
+}
+
+{{
+  $global.accessToken=response.parsedBody.data.accessToken;
+  $global.refreshToken=response.parsedBody.data.refreshToken;
+}}
+
+
+POST {{BASE_URL}}/auth/signup
+
+{
+  "username": "bao9@gmail.com",
+  "name": "Bao bao",
+  "password": "123456#@Nn"
+}
+
+{{
+  $global.accessToken=response.parsedBody.data.accessToken;
+  $global.refreshToken=response.parsedBody.data.refreshToken;
+}}

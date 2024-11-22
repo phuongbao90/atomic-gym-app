@@ -1,0 +1,20 @@
+POST {{BASE_URL}}/workout
+Authorization: Bearer {{$global.accessToken}}
+{
+  "name": "Chest day",
+  "workoutPlanId": 1,
+  "exerciseIds": [1]
+
+}
+
+
+###
+
+GET {{BASE_URL}}/workout/plan/1
+Authorization: Bearer {{$global.accessToken}}
+
+
+###
+
+GET {{BASE_URL}}/workout/1
+Authorization: Bearer {{$global.accessToken}}

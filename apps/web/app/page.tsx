@@ -1,6 +1,19 @@
+"use client";
+
 import Image, { type ImageProps } from "next/image";
-import { Button } from "@repo/ui/button";
 import styles from "./page.module.css";
+import { appColors } from "@repo/app-config/app-colors";
+import {
+  useLoginMutation,
+  login,
+  Name,
+} from "@repo/app/query/auth/use-login-mutation";
+import {
+  useRegisterMutation,
+  register,
+} from "@repo/app/query/auth/use-register-mutation";
+import { useEffect } from "react";
+// import { useLoginMutation } from "@repo/app/query/auth/use-login-mutation";
 
 type Props = Omit<ImageProps, "src"> & {
   srcLight: string;
@@ -19,6 +32,12 @@ const ThemeImage = (props: Props) => {
 };
 
 export default function Home() {
+  const d = useLoginMutation();
+
+  useEffect(() => {
+    console.log("test");
+    login({ email: "test", password: "test" });
+  }, []);
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -32,7 +51,9 @@ export default function Home() {
           priority
         />
         <ol>
-          <li>
+          <h1>{Name}</h1>
+
+          <li style={{ color: appColors.primary }}>
             Get started by editing <code>apps/web/app/page.tsx</code>
           </li>
           <li>Save and see your changes instantly.</li>
@@ -63,9 +84,15 @@ export default function Home() {
             Read our docs
           </a>
         </div>
-        <Button appName="web" className={styles.secondary}>
+        <button
+          className={styles.secondary}
+          onClick={() => {
+            login({ email: "test", password: "test" });
+            register({ email: "test", password: "test" });
+          }}
+        >
           Open alert
-        </Button>
+        </button>
       </main>
       <footer className={styles.footer}>
         <a

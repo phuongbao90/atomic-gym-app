@@ -1,0 +1,35 @@
+POST {{BASE_URL}}/exercise
+Authorization: Bearer {{$global.accessToken}}
+{
+  "name": "Chest Press",
+  "description": "Chest Press description",
+  "category": "WEIGHT",
+  "muscleGroups": [1]
+}
+
+### Update Exercise
+
+PATCH {{BASE_URL}}/exercise/1
+Authorization: Bearer {{$global.accessToken}}
+{
+  "name": "Chest Press 2",
+  "description": "Chest Press description",
+  "category": "WEIGHT",
+  "muscleGroups": [1]
+}
+
+
+### Get All Exercises
+
+GET {{BASE_URL}}/exercise
+Authorization: Bearer {{$global.accessToken}}
+
+### Get Exercise by Id
+
+GET {{BASE_URL}}/exercise/2
+Authorization: Bearer {{$global.accessToken}}
+
+### Delete Exercise
+
+DELETE {{BASE_URL}}/exercise/6
+Authorization: Bearer {{$global.accessToken}}
