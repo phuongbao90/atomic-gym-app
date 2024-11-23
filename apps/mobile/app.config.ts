@@ -9,25 +9,21 @@ export default (): ExpoConfig => ({
   name: "gymapp",
   slug: "gymapp",
   owner: "phuongbao90",
-  version: "1.0.0",
+  version: VERSION_NUMBER,
   orientation: "portrait",
-  icon: "./assets/images/icon.png",
+  icon: "./assets/images/logo_256.png",
   scheme: "myapp",
   userInterfaceStyle: "automatic",
   newArchEnabled: true,
 
   ios: {
     buildNumber: String(BUILD_NUMBER),
-    // icon: IS_STAG
-    //   ? "./assets/images/ios-icon-stag.png"
-    //   : "./assets/images/ios-icon.png",
     supportsTablet: false,
     bundleIdentifier: appId,
     infoPlist: {
       UIBackgroundModes: ["fetch", "remote-notification"],
     },
     // googleServicesFile: "./plugins/google-services/GoogleService-Info.plist",
-
     privacyManifests: {
       NSPrivacyAccessedAPITypes: [
         {
@@ -41,24 +37,9 @@ export default (): ExpoConfig => ({
       usesNonExemptEncryption: false,
     },
   },
-  // android: {
-  //   adaptiveIcon: {
-  //     foregroundImage: "./assets/images/adaptive-icon.png",
-  //     backgroundColor: "#ffffff",
-  //   },
-  // },
   android: {
     versionCode: getFullVersionNumber(VERSION_NUMBER, BUILD_NUMBER),
-
-    //   adaptiveIcon: {
-    //     foregroundImage: "./assets/images/adaptive-icon.png",
-    //     backgroundColor: "#ffffff",
-    //   },
-    // },
-    adaptiveIcon: {
-      foregroundImage: "./assets/images/adaptive-icon.png",
-      backgroundColor: "#ffffff",
-    },
+    icon: "./assets/images/logo_256.png",
     package: appId,
     googleServicesFile: "./plugins/google-services.json",
     // playStoreUrl:
@@ -76,7 +57,7 @@ export default (): ExpoConfig => ({
     [
       "expo-splash-screen",
       {
-        image: "./assets/images/splash-icon.png",
+        image: "./assets/images/logo_256.png",
         imageWidth: 200,
         resizeMode: "contain",
         backgroundColor: "#ffffff",
@@ -88,16 +69,16 @@ export default (): ExpoConfig => ({
       "expo-av",
       {
         microphonePermission:
-          "DAI VIET UNI needs access to your microphone to record audio for feedback and review items",
+          "SO TAY GYM needs access to your microphone to record audio for feedback and review items",
       },
     ],
     [
       "expo-camera",
       {
         cameraPermission:
-          "DAI VIET UNI needs access to your camera to capture photo to feedback and review items",
+          "SO TAY GYM needs access to your camera to capture photo to feedback and review items",
         microphonePermission:
-          "DAI VIET UNI needs access to your microphone to record audio for feedback and review items",
+          "SO TAY GYM needs access to your microphone to record audio for feedback and review items",
         recordAudioAndroid: true,
       },
     ],
@@ -117,11 +98,11 @@ export default (): ExpoConfig => ({
       "expo-image-picker",
       {
         photosPermission:
-          "DAI VIET UNI needs access to your photo library to select and upload photo to feedback and review items",
+          "SO TAY GYM needs access to your photo library to select and upload photo to feedback and review items",
         cameraPermission:
-          "DAI VIET UNI needs access to your camera to capture photo to feedback and review items",
+          "SO TAY GYM needs access to your camera to capture photo to feedback and review items",
         microphonePermission:
-          "DAI VIET UNI needs access to your microphone to record audio for feedback and review items",
+          "SO TAY GYM needs access to your microphone to record audio for feedback and review items",
       },
     ],
     [
@@ -135,7 +116,7 @@ export default (): ExpoConfig => ({
       "expo-location",
       {
         locationAlwaysAndWhenInUsePermission:
-          "DAI VIET UNI needs access to your current location to find nearby gym facilities",
+          "SO TAY GYM needs access to your current location to find nearby gym facilities",
       },
     ],
     [
@@ -148,7 +129,7 @@ export default (): ExpoConfig => ({
       "expo-secure-store",
       {
         faceIDPermission:
-          "Allow DAI VIET UNI to access your Face ID biometric data.",
+          "Allow SO TAY GYM to access your Face ID biometric data.",
       },
     ],
     [
