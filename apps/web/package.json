@@ -10,7 +10,6 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@repo/ui": "*",
     "@repo/app-config": "*",
     "@repo/app": "*",
     "next": "15.0.3",
