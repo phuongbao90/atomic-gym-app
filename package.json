@@ -6,17 +6,21 @@
     "dev": "turbo watch dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "postinstall": "patch-package",
+    "watch-packages": "turbo run watch-packages",
+    "hacky-build-ios": "cd apps/mobile && yarn release --platform ios",
+    "check-packages-version": "npx syncpack list",
     "_": "------------------------------------------",
-    "dev:web": "      turbo watch dev --filter=@repo/web       --filter=@repo/api",
-    "dev:dashboard": "turbo watch dev --filter=@repo/dashboard --filter=@repo/api",
-    "dev:mobile": "   turbo watch dev --filter=@repo/mobile    --filter=@repo/api",
+    "dev:web": "      turbo watch dev --filter=@repo/api --filter=@repo/web",
+    "dev:dashboard": "turbo watch dev --filter=@repo/api --filter=@repo/dashboard",
+    "dev:mobile": "   turbo watch dev --filter=@repo/api --filter=@repo/mobile --filter=@repo/app-config",
     "dev:api": "      turbo run start:debug --filter=@repo/api",
     "__": "-----------------------------------------"
   },
   "devDependencies": {
-    "prettier": "^3.2.5",
+    "prettier": "^3.3.3",
     "turbo": "^2.3.0",
-    "typescript": "5.5.4"
+    "typescript": "5.7.2"
   },
   "engines": {
     "node": ">=18"

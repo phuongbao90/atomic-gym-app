@@ -15,7 +15,6 @@ export default (): ExpoConfig => ({
   scheme: "myapp",
   userInterfaceStyle: "automatic",
   newArchEnabled: true,
-
   ios: {
     buildNumber: String(BUILD_NUMBER),
     supportsTablet: false,

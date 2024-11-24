@@ -2,7 +2,8 @@
   "extends": ["//"],
   "tasks": {
     "dev": {
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**"],
+      "persistent": true
     },
     "start:debug": {
       "outputs": ["dist/**"]

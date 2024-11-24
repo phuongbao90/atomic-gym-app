@@ -2,22 +2,36 @@
   "name": "@repo/app-config",
   "version": "0.0.1",
   "exports": {
-    "./app-colors": "./src/app-colors.ts"
+    "./app-colors": {
+      "types": "./src/app-colors.ts",
+      "import": "./src/app-colors.ts"
+    }
   },
   "scripts": {
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "dev": ""
   },
   "devDependencies": {
-    "typescript": "^5",
-    "tsup": "^8.0.1"
+    "typescript": "5.7.2",
+    "tsup": "^8.0.1",
+    "@repo/typescript-config": "*",
+    "@repo/eslint-config": "*"
   },
   "tsup": {
-    "entry": [
-      "src/**/*.ts"
-    ],
-    "outDir": "dist",
     "format": [
-      "esm"
-    ]
+      "esm",
+      "cjs"
+    ],
+    "sourcemap": true,
+    "dts": true,
+    "external": [
+      "react",
+      "react-native"
+    ],
+    "loader": {
+      ".png": "dataurl",
+      ".svg": "dataurl",
+      ".js": "jsx"
+    }
   }
 }

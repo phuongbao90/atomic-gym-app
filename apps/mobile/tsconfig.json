@@ -1,11 +1,20 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "jsx": "react-jsx",
     "strict": true,
+    "moduleResolution": "nodenext",
+    "module": "nodenext",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"],
+      "@/components/*": ["./components/*"],
+      "@/constants/*": ["./constants/*"],
+      "@/assets/*": ["./assets/*"],
+      "@/hooks/*": ["./hooks/*"],
+      "@/utils/*": ["./utils/*"],
+      "@/services/*": ["./services/*"],
+      "@/features/*": ["./features/*"],
+      "@/configs/*": ["./configs/*"]
     }
   },
   "include": [
@@ -13,5 +22,8 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-  ]
+    // "../../node_modules/@repo/app-config/**/*.ts", // => turn this on if vscode stop autosuggest packages
+    // "../../node_modules/@repo/app/**/*.ts"
+  ],
+  "exclude": ["node_modules", ".turbo", "android", "ios", "assets"]
 }

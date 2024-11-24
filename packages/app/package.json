@@ -4,7 +4,14 @@
   "exports": {
     "./query/auth/*": "./src/query/auth/*.ts"
   },
+  "dependencies": {
+    "@repo/app-config": "*"
+  },
   "devDependencies": {
-    "tsup": "^8.0.1"
+    "tsup": "^8.0.1",
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "eslint": "^8.42.0",
+    "typescript": "5.7.2"
   }
 }

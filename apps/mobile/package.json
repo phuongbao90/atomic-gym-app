@@ -1,6 +1,6 @@
 {
   "name": "@repo/mobile",
-  "main": "index.js",
+  "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
@@ -13,8 +13,8 @@
     "eas-build-pre-install": "cd ../.. && yarn install",
     "copy-env-to-eas": "ts-node ./scripts/copy-env-to-eas.ts ",
     "_": "----------------------------------------------------------------------------",
-    "predev": "NODE_ENV=development EXPO_NO_GIT_STATUS=true npx expo prebuild -p android",
-    "dev": "NODE_ENV=development npx expo run:android --port 8081"
+    "predev": "NODE_ENV=development EXPO_NO_GIT_STATUS=1 EXPO_USE_METRO_WORKSPACE_ROOT=1 npx expo prebuild -p android --clean",
+    "dev": "NODE_ENV=development EXPO_USE_METRO_WORKSPACE_ROOT=1 npx expo run:android --port 8082"
   },
   "jest": {
     "preset": "jest-expo"
@@ -89,11 +89,22 @@
     "react-native-uuid": "^2.0.3",
     "react-native-webview": "13.12.2",
     "sonner-native": "^0.16.1",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@aws-sdk/client-s3": "3.693.0",
+    "@aws-sdk/lib-storage": "3.693.0",
+    "@aws-sdk/s3-request-presigner": "3.693.0",
+    "@aws-sdk/util-base64": "^3.374.0",
+    "expo-application": "~6.0.1",
+    "expo-asset": "~11.0.1",
+    "expo-intent-launcher": "~12.0.1",
+    "expo-navigation-bar": "~4.0.3",
+    "expo-notifications": "~0.29.8",
+    "expo-web-browser": "~14.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
     "@tanstack/eslint-plugin-query": "^5.60.1",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/jest": "^29.5.14",
@@ -117,7 +128,7 @@
     "reactotron-react-native": "^5.1.10",
     "reactotron-react-native-mmkv": "^0.2.7",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
+    "typescript": "5.7.2"
   },
   "private": true
 }
