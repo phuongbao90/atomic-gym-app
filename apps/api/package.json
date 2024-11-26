@@ -30,7 +30,7 @@
     "_dev": "yarn migrate:dev && yarn prisma:generate && yarn dev",
     "seed": "npx prisma db push --force-reset && ts-node --transpile-only prisma/seed.ts",
     "_": "-----------------------------------------",
-    "dev": "NODE_ENV=development nest start --debug"
+    "dev": "NODE_ENV=development nest start --debug --watch"
   },
   "dependencies": {
     "@repo/app-config": "*",
@@ -83,7 +83,8 @@
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "5.7.2"
+    "typescript": "5.7.2",
+    "zod": "^3.23.8"
   },
   "jest": {
     "moduleFileExtensions": [

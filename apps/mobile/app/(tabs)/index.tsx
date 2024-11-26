@@ -1,61 +1,92 @@
-import { Colors } from "@/constants/Colors";
+import { useSignIn } from "@/lib/auth/auth";
+import { AppStorage } from "@/lib/storage/app-storage";
 import { appColors } from "@repo/app-config/app-colors";
-
+import { useState } from "react";
 import {
-  Image,
-  StyleSheet,
-  Platform,
+  Button,
   ScrollView,
-  View,
+  StyleSheet,
   Text,
+  TextInput,
+  View,
 } from "react-native";
 // import { Colors } from "@/constants/Colors";
 
 export default function HomeScreen() {
-  console.log(Colors);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const signIn = useSignIn();
+
+  async function handleLogin() {
+    try {
+      await signIn({
+        username: "bao5@gmail.com",
+        password: "123456#@Nn",
+      });
+
+      // const response = await fetch("http://localhost:3000/api/auth/login", {
+
+      // const response = await fetch("http://localhost:3000/auth/login", {
+      // const response = await fetch("http://192.168.110.66:3000/auth/login", {
+      //   method: "POST",
+      //   body: JSON.stringify({
+      //     username: "bao5@gmail.com",
+      //     password: "123456#@Nn",
+      //   }),
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Accept: "application/json",
+      //   },
+      // });
+      // const data = await response.json();
+
+      // console.log("response ", data);
+    } catch (error) {
+      console.log("error ", error);
+    }
+  }
 
   return (
     <ScrollView>
       <View style={styles.titleContainer}>
-        <Text style={{ color: appColors.dark.primary }}>Welcome 11111</Text>
+        <Text style={{ color: appColors.dark.primary }}>onboarded</Text>
       </View>
-      <View style={styles.stepContainer}>
-        <Text type="subtitle">Step 1: Try it</Text>
-        <Text>
-          Edit <Text type="defaultSemiBold">app/(tabs)/index.tsx</Text> to see
-          changes. Press{" "}
-          <Text type="defaultSemiBold">
-            {Platform.select({
-              ios: "cmd + d",
-              android: "cmd + m",
-              web: "F12",
-            })}
-          </Text>{" "}
-          to open developer tools.
-        </Text>
-      </View>
-      <View style={styles.stepContainer}>
-        <Text type="subtitle">Step 2: Explore</Text>
-        <Text>
-          Tap the Explore tab to learn more about what's included in this
-          starter app.
-        </Text>
-      </View>
-      <View style={styles.stepContainer}>
-        <Text type="subtitle">Step 3: Get a fresh start</Text>
-        <Text>
-          When you're ready, run{" "}
-          <Text type="defaultSemiBold">npm run reset-project</Text> to get a
-          fresh <Text type="defaultSemiBold">app</Text> directory. This will
-          move the current <Text type="defaultSemiBold">app</Text> to{" "}
-          <Text type="defaultSemiBold">app-example</Text>.
-        </Text>
-      </View>
+
+      <TextInput style={styles.input} value={email} onChangeText={setEmail} />
+      <TextInput
+        style={styles.input}
+        value={password}
+        onChangeText={setPassword}
+      />
+
+      <Button
+        title="press me"
+        onPress={() => {
+          handleLogin();
+        }}
+      />
+      <Button
+        title="onboarded"
+        onPress={() => {
+          AppStorage.setIsOnboarded(false);
+        }}
+      />
+      <Button
+        title="clear all"
+        onPress={() => {
+          AppStorage.clearAll();
+        }}
+      />
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  input: {
+    borderWidth: 1,
+    borderColor: "red",
+    marginBottom: 16,
+  },
   titleContainer: {
     flexDirection: "row",
     alignItems: "center",

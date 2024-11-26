@@ -1,3 +1,7 @@
 {
-  "typescript.preferences.importModuleSpecifier": "shortest"
+  "typescript.preferences.importModuleSpecifier": "shortest",
+  "editor.codeActionsOnSave": {
+    "source.sortImports": "always",
+    "source.addMissingImports.ts": "always"
+  }
 }

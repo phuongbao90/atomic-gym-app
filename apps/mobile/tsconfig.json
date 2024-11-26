@@ -14,7 +14,8 @@
       "@/utils/*": ["./utils/*"],
       "@/services/*": ["./services/*"],
       "@/features/*": ["./features/*"],
-      "@/configs/*": ["./configs/*"]
+      "@/configs/*": ["./configs/*"],
+      "@/lib/*": ["./lib/*"]
     }
   },
   "include": [

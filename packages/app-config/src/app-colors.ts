@@ -65,8 +65,8 @@ const pallets = {
 };
 
 const variants = {
-  primary: pallets.green,
-  secondary: pallets.yellow,
+  primary: pallets.yellow,
+  secondary: pallets.green,
   error: pallets.red,
   info: pallets.blue,
   gray: pallets.gray,

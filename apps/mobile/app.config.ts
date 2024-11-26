@@ -21,6 +21,7 @@ export default (): ExpoConfig => ({
     bundleIdentifier: appId,
     infoPlist: {
       UIBackgroundModes: ["fetch", "remote-notification"],
+      NSAppTransportSecurity: { NSAllowsArbitraryLoads: true }, // ? enable HTTP requests
     },
     // googleServicesFile: "./plugins/google-services/GoogleService-Info.plist",
     privacyManifests: {
@@ -135,7 +136,7 @@ export default (): ExpoConfig => ({
       "expo-build-properties",
       {
         android: {
-          usesCleartextTraffic: true,
+          usesCleartextTraffic: true, // ? enable HTTP requests
           kotlinVersion: "1.8.0",
           compileSdkVersion: 35,
           targetSdkVersion: 35,
@@ -152,6 +153,7 @@ export default (): ExpoConfig => ({
         },
       },
     ],
+
     // [
     //   "expo-notifications",
     //   {
