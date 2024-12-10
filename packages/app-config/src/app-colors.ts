@@ -282,3 +282,5 @@ export const lightTheme = {
     notification: lightColors.error,
   },
 };
+
+export type ColorNameOrHex = keyof Colors | (string & {});

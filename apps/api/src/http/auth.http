@@ -1,7 +1,7 @@
 POST {{BASE_URL}}/auth/login
 
 {
-  "username": "bao5@gmail.com",
+  "email": "bao5@gmail.com",
   "password": "123456#@Nn"
 }
 
@@ -9,13 +9,12 @@ POST {{BASE_URL}}/auth/login
   $global.accessToken=response.parsedBody.data.accessToken;
   $global.refreshToken=response.parsedBody.data.refreshToken;
 }}
-
 
 POST {{BASE_URL}}/auth/signup
 
 {
-  "username": "bao9@gmail.com",
   "name": "Bao bao",
+  "email": "bao100@gmail.com",
   "password": "123456#@Nn"
 }
 
@@ -23,3 +22,6 @@ POST {{BASE_URL}}/auth/signup
   $global.accessToken=response.parsedBody.data.accessToken;
   $global.refreshToken=response.parsedBody.data.refreshToken;
 }}
+
+GET {{BASE_URL}}/auth/session
+Authorization: Bearer {{$global.accessToken}}

@@ -1,7 +1,6 @@
 import Feather from "@expo/vector-icons/Feather";
 import * as Haptics from "expo-haptics";
 import { Pressable, View } from "react-native";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 type IconProps = {
   size: number;
@@ -48,13 +47,13 @@ export const IconButton = ({
   radius?: "sm" | "md" | "lg" | "xl";
   spacing?: "sm" | "md" | "lg" | "xl";
 }) => {
-  const styles = useStyles({
-    button: {
-      justifyContent: "center",
-      alignItems: "center",
-      aspectRatio: 1.15,
-    },
-  });
+  // const styles = useStyles({
+  //   button: {
+  //     justifyContent: "center",
+  //     alignItems: "center",
+  //     aspectRatio: 1.15,
+  //   },
+  // });
 
   const handlePress = () => {
     if (haptic) {
@@ -66,19 +65,21 @@ export const IconButton = ({
   return (
     <Pressable
       onPress={handlePress}
-      style={[
-        styles.styles.button,
-        {
-          backgroundColor: styles.theme.button[variant].enabled.background,
-          borderRadius: styles.theme.radius[radius],
-          padding: styles.theme.spacing[spacing],
-        },
-      ]}
+      style={
+        [
+          // styles.styles.button,
+          // {
+          //   backgroundColor: styles.theme.button[variant].enabled.background,
+          //   borderRadius: styles.theme.radius[radius],
+          //   padding: styles.theme.spacing[spacing],
+          // },
+        ]
+      }
     >
-      {iconMap[icon]({
+      {/* {iconMap[icon]({
         size,
         color: styles.theme.button[variant].enabled.color,
-      })}
+      })} */}
     </Pressable>
   );
 };

@@ -1,47 +1,12 @@
 "use client";
 
-import Image, { type ImageProps } from "next/image";
 import styles from "./page.module.css";
-import { appColors } from "@repo/app-config/app-colors";
-import {
-  useLoginMutation,
-  login,
-  Name,
-} from "@repo/app/query/auth/use-login-mutation";
-import {
-  useRegisterMutation,
-  register,
-} from "@repo/app/query/auth/use-register-mutation";
-import { useEffect } from "react";
-// import { useLoginMutation } from "@repo/app/query/auth/use-login-mutation";
-
-type Props = Omit<ImageProps, "src"> & {
-  srcLight: string;
-  srcDark: string;
-};
-
-const ThemeImage = (props: Props) => {
-  const { srcLight, srcDark, ...rest } = props;
-
-  return (
-    <>
-      <Image {...rest} src={srcLight} className="imgLight" />
-      <Image {...rest} src={srcDark} className="imgDark" />
-    </>
-  );
-};
 
 export default function Home() {
-  const d = useLoginMutation();
-
-  useEffect(() => {
-    console.log("test");
-    login({ email: "test", password: "test" });
-  }, []);
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <ThemeImage
+        {/* <ThemeImage
           className={styles.logo}
           srcLight="turborepo-dark.svg"
           srcDark="turborepo-light.svg"
@@ -49,17 +14,9 @@ export default function Home() {
           width={180}
           height={38}
           priority
-        />
-        <ol>
-          <h1>{Name}</h1>
+        /> */}
 
-          <li style={{ color: appColors.primary }}>
-            Get started by editing <code>apps/web/app/page.tsx</code>
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
+        {/* <div className={styles.ctas}>
           <a
             className={styles.primary}
             href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
@@ -83,18 +40,9 @@ export default function Home() {
           >
             Read our docs
           </a>
-        </div>
-        <button
-          className={styles.secondary}
-          onClick={() => {
-            login({ email: "test", password: "test" });
-            register({ email: "test", password: "test" });
-          }}
-        >
-          Open alert
-        </button>
+        </div> */}
       </main>
-      <footer className={styles.footer}>
+      {/* <footer className={styles.footer}>
         <a
           href="https://vercel.com/templates?search=turborepo&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
           target="_blank"
@@ -123,7 +71,7 @@ export default function Home() {
           />
           Go to turbo.build →
         </a>
-      </footer>
+      </footer> */}
     </div>
   );
 }

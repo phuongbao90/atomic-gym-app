@@ -1,5 +1,5 @@
 import { PlatformPressable } from "@react-navigation/elements";
-import { ColorNameOrHex } from "@repo/app-config/app-colors";
+import { appColors, ColorNameOrHex } from "@repo/app-config";
 import * as Haptics from "expo-haptics";
 import { ReactNode } from "react";
 import {
@@ -8,8 +8,8 @@ import {
   PressableProps,
   StyleSheet,
   Text,
+  useColorScheme,
 } from "react-native";
-import { createStyleSheet, useStyles } from "react-native-unistyles";
 
 export const AppButton = ({
   title,
@@ -29,6 +29,8 @@ export const AppButton = ({
   spacing?: "sm" | "md" | "lg" | "xl";
   color?: ColorNameOrHex;
 } & PressableProps) => {
+  const isLightTheme = useColorScheme() === "dark";
+
   function handlePress(ev: GestureResponderEvent) {
     if (haptic) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -36,29 +38,28 @@ export const AppButton = ({
     onPress?.(ev);
   }
 
-  const styles = useStyles();
+  // const styles = useStyles();
 
-  // if (children) {
-  //   return (
-  //     <PlatformPressable onPress={handlePress} style={styles.button}>
-  //       {children}
-  //     </PlatformPressable>
-  //   );
-  // }
+  if (children) {
+    return (
+      <PlatformPressable onPress={handlePress} style={styles.button}>
+        {children}
+      </PlatformPressable>
+    );
+  }
 
   return (
     <PlatformPressable
       onPress={handlePress}
-      style={{
-        backgroundColor: styles.theme.button[variant].enabled.background,
-        borderRadius: styles.theme.radius[radius],
-        padding: styles.theme.spacing[spacing],
-      }}
+      style={[
+        styles.button,
+        isLightTheme ? styles.lightContained : styles.darkContained,
+      ]}
     >
       <Text
-        style={{
-          color: color || styles.theme.button[variant].enabled.color,
-        }}
+        style={[
+          isLightTheme ? styles.lightContainedText : styles.darkContainedText,
+        ]}
       >
         {title}
       </Text>
@@ -66,27 +67,39 @@ export const AppButton = ({
   );
 };
 
-const styles = createStyleSheet((theme) => ({
-  button: {
-    backgroundColor: theme.button.contained.enabled.background,
-    padding: 10,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center",
-    marginTop: "auto",
-  },
-}));
-
-// const styles = StyleSheet.create({
+// const styles = createStyleSheet((theme) => ({
 //   button: {
-//     backgroundColor: appColors.light.ui.button.contained.enabled.background,
+//     backgroundColor: theme.button.contained.enabled.background,
 //     padding: 10,
 //     borderRadius: 10,
 //     alignItems: "center",
 //     justifyContent: "center",
-//     // width: "70%",
 //     alignSelf: "center",
 //     marginTop: "auto",
 //   },
-// });
+// }));
+
+const styles = StyleSheet.create({
+  button: {
+    // backgroundColor: appColors.light.ui.button.contained.enabled.background,
+    padding: 10,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    // width: "70%",
+    alignSelf: "center",
+    marginTop: "auto",
+  },
+  darkContained: {
+    backgroundColor: appColors.dark.ui.button.contained.enabled.background,
+  },
+  lightContained: {
+    backgroundColor: appColors.light.ui.button.contained.enabled.background,
+  },
+  darkContainedText: {
+    color: appColors.dark.ui.button.contained.enabled.text,
+  },
+  lightContainedText: {
+    color: appColors.light.ui.button.contained.enabled.text,
+  },
+});

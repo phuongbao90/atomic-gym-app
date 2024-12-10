@@ -4,12 +4,13 @@ import {
   Inject,
   Injectable,
   UnauthorizedException,
-} from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
-import jwtConfig from '../../../config/jwt.config';
-import { REQUEST_USER_KEY } from '../../constant/auth.constant';
+} from "@nestjs/common";
+import { ConfigType } from "@nestjs/config";
+import { JwtService } from "@nestjs/jwt";
+import { Request } from "express";
+import { JwtUser } from "src/auth/type/jwt-user-type";
+import jwtConfig from "../../../config/jwt.config";
+import { REQUEST_USER_KEY } from "../../constant/auth.constant";
 
 /*
  ** This guard is to check if the request header has valid access token
@@ -20,7 +21,7 @@ export class AccessTokenGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY)
-    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
+    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -29,11 +30,10 @@ export class AccessTokenGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     try {
-      const payload = await this.jwtService.verifyAsync(
+      const payload: JwtUser = await this.jwtService.verifyAsync(
         token,
-        this.jwtConfiguration,
+        this.jwtConfiguration
       );
-      console.log('payload: ', payload);
       request[REQUEST_USER_KEY] = payload;
     } catch {
       throw new UnauthorizedException();
@@ -42,7 +42,7 @@ export class AccessTokenGuard implements CanActivate {
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
+    const [type, token] = request.headers.authorization?.split(" ") ?? [];
+    return type === "Bearer" ? token : undefined;
   }
 }

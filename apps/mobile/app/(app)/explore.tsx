@@ -8,7 +8,7 @@ export default function TabTwoScreen() {
 
       <Text>This app has two screens: </Text>
       <Text>
-        The layout file in <Text>app/(tabs)/_layout.tsx</Text> sets up the tab
+        The layout file in <Text>app/(app)/_layout.tsx</Text> sets up the tab
         navigator.
       </Text>
 

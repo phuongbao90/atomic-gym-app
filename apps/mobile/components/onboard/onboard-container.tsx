@@ -1,17 +1,17 @@
-import Image1 from "@/assets/images/onboard/1.svg";
-import Image2 from "@/assets/images/onboard/2.svg";
-import Image3 from "@/assets/images/onboard/3.svg";
-import Image4 from "@/assets/images/onboard/4.svg";
-import BackgroundBlur from "@/assets/images/onboard/backgound.jpg";
-import { AppStorage } from "@/lib/storage/app-storage";
-import { extractZodErrors } from "@/utils/extract-zod-errors";
-import { showErrorToast } from "@/utils/toast";
-import { appColors } from "@repo/app-config/app-colors";
+import { appColors } from "@repo/app-config";
 import { BlurView } from "expo-blur";
 import { ImageBackground } from "expo-image";
 import { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import z from "zod";
+import Image1 from "../../assets/images/onboard/1.svg";
+import Image2 from "../../assets/images/onboard/2.svg";
+import Image3 from "../../assets/images/onboard/3.svg";
+import Image4 from "../../assets/images/onboard/4.svg";
+import BackgroundBlur from "../../assets/images/onboard/backgound.jpg";
+import { AppStorage } from "../../lib/storage/app-storage";
+import { extractZodErrors } from "../../utils/extract-zod-errors";
+import { showErrorToast } from "../../utils/toast";
 import { OnboardList } from "./onboard-list";
 import { onboardListSchema } from "./onboard-schemas";
 

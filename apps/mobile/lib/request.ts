@@ -1,4 +1,4 @@
-import { Env } from "@/configs/env";
+import { Env } from "../configs/env";
 import { getToken } from "./auth/session-store";
 
 export const request = async <T>(url: string, options: RequestInit) => {

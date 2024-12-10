@@ -1,12 +1,7 @@
 {
   "name": "@repo/app-config",
   "version": "0.0.1",
-  "exports": {
-    "./app-colors": {
-      "types": "./src/app-colors.ts",
-      "import": "./src/app-colors.ts"
-    }
-  },
+  "main": "./src/index.ts",
   "scripts": {
     "check-types": "tsc --noEmit",
     "dev": ""

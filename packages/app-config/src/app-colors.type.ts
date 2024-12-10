@@ -37,8 +37,6 @@ export type Colors = {
   };
 };
 
-export type ColorNameOrHex = keyof Colors | (string & {});
-
 type UiButtonVariantColors = {
   enabled: {
     background: string;

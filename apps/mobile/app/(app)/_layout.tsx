@@ -1,10 +1,19 @@
-import { Tabs } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
 import { Platform } from "react-native";
+import { appRoutes } from "../../configs/routes";
+import { useAuthStore } from "../../stores/use-auth-store";
 
 export default function TabLayout() {
+  const { isLoggedIn } = useAuthStore();
+
+  if (!isLoggedIn) {
+    return <Redirect href={appRoutes.login} />;
+  }
+
   return (
     <Tabs
       screenOptions={{
+        headerShown: false,
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect

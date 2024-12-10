@@ -1,8 +1,20 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Req,
+} from "@nestjs/common";
+import { Request } from "express";
+import { Auth } from "src/auth/decorator/auth.decorator";
+import { AuthType } from "src/auth/type/auth-type";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UserService } from "./user.service";
 
-@Controller('user')
+@Controller("user")
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -11,14 +23,21 @@ export class UserController {
     return this.userService.getUsers();
   }
 
-  @Get(':id')
-  async getUser(@Param('id') id: number) {
+  @Get("me")
+  @Auth(AuthType.Bearer)
+  async getMe(@Req() req: Request) {
+    return this.userService.me(req);
+  }
+
+  @Get(":id")
+  async getUser(@Param("id") id: number) {
     return this.userService.getUser(id);
   }
-  @Get('username/:username')
-  async getUserByUsername(@Param('username') username: string) {
-    console.log('username3: ', username);
-    return this.userService.getUserByUsername(username);
+
+  @Get("email/:email")
+  @Auth(AuthType.None)
+  async getUserByUsername(@Param("email") email: string) {
+    return this.userService.getUserByUsername(email);
   }
 
   @Post()
@@ -26,8 +45,13 @@ export class UserController {
     return this.userService.createUser(body);
   }
 
-  @Delete(':id')
-  async deleteUser(@Param('id') id: number) {
+  @Delete(":id")
+  async deleteUser(@Param("id") id: number) {
     return this.userService.deleteUser(id);
+  }
+
+  @Put("me")
+  async updateMe(@Req() req: Request, @Body() body: Partial<CreateUserDto>) {
+    return this.userService.updateMe(body, req);
   }
 }

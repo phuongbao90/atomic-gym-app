@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client';
-import { randBetweenDate, randNumber, randProduct } from '@ngneat/falso';
-import { faker } from '@faker-js/faker';
-import * as bcrypt from 'bcrypt';
+import { faker } from "@faker-js/faker";
+import { randBetweenDate, randNumber, randProduct } from "@ngneat/falso";
+import { PrismaClient } from "@prisma/client";
+import * as bcrypt from "bcrypt";
 
 console.log(
-  '---------------------------------Seeding database---------------------------------',
+  "---------------------------------Seeding database---------------------------------"
 );
 
 const prisma = new PrismaClient();
@@ -23,16 +23,16 @@ async function main() {
     const workoutPlanCount = 50;
     const exerciseCount = 100;
     const categories = [
-      'Chest',
-      'Back',
-      'Shoulder',
-      'Biceps',
-      'Triceps',
-      'Forearms',
-      'Abs',
-      'Quads',
-      'Hamstrings',
-      'Calves',
+      "Chest",
+      "Back",
+      "Shoulder",
+      "Biceps",
+      "Triceps",
+      "Forearms",
+      "Abs",
+      "Quads",
+      "Hamstrings",
+      "Calves",
     ];
 
     // Create users
@@ -40,8 +40,8 @@ async function main() {
       await prisma.user.create({
         data: {
           name: faker.person.fullName(),
-          username: `bao${index}@gmail.com`,
-          password: await bcrypt.hash('123456#@Nn', 10),
+          email: `bao${index}@gmail.com`,
+          password: await bcrypt.hash("123456#@Nn", 10),
         },
       });
     }
@@ -61,9 +61,9 @@ async function main() {
         data: {
           name: faker.lorem.sentence(),
           category: faker.helpers.arrayElement([
-            'WEIGHT',
-            'FREE_WEIGHT',
-            'CARDIO',
+            "WEIGHT",
+            "FREE_WEIGHT",
+            "CARDIO",
           ]),
           muscleGroups: {
             connect: [
@@ -86,16 +86,16 @@ async function main() {
           cover_image: faker.image.url(),
           description: faker.lorem.paragraph(),
           objective: faker.helpers.arrayElement([
-            'STRENGTH',
-            'ENDURANCE',
-            'BALANCE',
-            'FLEXIBILITY',
-            'LOOSE_WEIGHT',
+            "STRENGTH",
+            "ENDURANCE",
+            "BALANCE",
+            "FLEXIBILITY",
+            "LOOSE_WEIGHT",
           ]),
           level: faker.helpers.arrayElement([
-            'BEGINNER',
-            'INTERMEDIATE',
-            'ADVANCED',
+            "BEGINNER",
+            "INTERMEDIATE",
+            "ADVANCED",
           ]),
           createdById: randNumber({ min: 1, max: userCount }),
           isPublic: faker.datatype.boolean(),
@@ -123,12 +123,12 @@ async function main() {
     }
 
     console.log(
-      '---------------------------------Database seeded successfully---------------------------------',
+      "---------------------------------Database seeded successfully---------------------------------"
     );
   } catch (error) {
     console.error(
-      '---------------------------------Error seeding database---------------------------------\n',
-      error,
+      "---------------------------------Error seeding database---------------------------------\n",
+      error
     );
   }
 }

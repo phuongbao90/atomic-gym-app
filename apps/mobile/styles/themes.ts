@@ -1,4 +1,4 @@
-import { appColors } from "@repo/app-config/app-colors";
+import { appColors } from "@repo/app-config";
 
 const margins = {
   sm: 2,

@@ -1,9 +1,7 @@
-export const apiRoutes = {
-  home: "/",
-  login: "auth/login",
-};
-
 export const appRoutes = {
   home: "/",
-  login: "/login",
-};
+  login: "/(auth)",
+  register: "/(auth)/register",
+  forgotPassword: "/(auth)/forgot-password",
+  otpVerify: "/(auth)/otp-verify",
+} as const;
