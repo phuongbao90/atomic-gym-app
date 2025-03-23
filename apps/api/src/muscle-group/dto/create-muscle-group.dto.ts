@@ -4,7 +4,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-} from 'class-validator';
+} from "class-validator";
 
 export class CreateMuscleGroupDto {
   @IsNotEmpty()
@@ -15,4 +15,8 @@ export class CreateMuscleGroupDto {
   @IsOptional()
   @IsNumber({}, { each: true })
   exerciseIds: number[];
+
+  @IsOptional()
+  @IsString()
+  image: string;
 }

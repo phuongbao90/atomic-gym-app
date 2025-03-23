@@ -51,6 +51,7 @@ async function main() {
       await prisma.muscleGroup.create({
         data: {
           name: category,
+          image: faker.image.url(),
         },
       });
     });
@@ -74,6 +75,8 @@ async function main() {
           },
           createdById: randNumber({ min: 1, max: userCount }),
           images: [faker.image.url(), faker.image.url(), faker.image.url()],
+          description: faker.lorem.paragraph(),
+          notes: faker.lorem.paragraph(),
         },
       });
     }

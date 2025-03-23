@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { CreateExerciseDto } from './dto/create-exercise.dto';
-import { Request } from 'express';
-import { REQUEST_USER_KEY } from '../auth/constant/auth.constant';
-import { JwtUser } from '../auth/type/jwt-user-type';
+import { Injectable } from "@nestjs/common";
+import { Request } from "express";
+import { QueryPaginationDto } from "src/common/dto/paginated-query.dto";
+import { paginateOutput } from "src/common/utils/pagination.utils";
+import { REQUEST_USER_KEY } from "../auth/constant/auth.constant";
+import { JwtUser } from "../auth/type/jwt-user-type";
+import { PrismaService } from "../prisma/prisma.service";
+import { CreateExerciseDto } from "./dto/create-exercise.dto";
 
 @Injectable()
 export class ExerciseService {
@@ -27,12 +29,18 @@ export class ExerciseService {
     });
   }
 
-  async findAll() {
-    return this.prisma.exercise.findMany({
+  async findAll(paginatedQuery: QueryPaginationDto) {
+    const { page, limit } = paginatedQuery;
+    const exercises = await this.prisma.exercise.findMany({
+      take: page * limit,
+      skip: (page - 1) * limit,
       include: {
         muscleGroups: true,
       },
     });
+    const total = await this.prisma.exercise.count();
+
+    return paginateOutput(exercises, total, paginatedQuery);
   }
 
   async findOne(id: number) {

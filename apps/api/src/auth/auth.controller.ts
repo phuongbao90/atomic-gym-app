@@ -22,14 +22,14 @@ export class AuthController {
   @Post("login")
   @Auth(AuthType.None)
   login(@Body() body: LoginDto) {
-    console.log("login", body);
+    // console.log("login", body);
     return this.authService.login(body);
   }
 
   @Post("signup")
   @Auth(AuthType.None)
   signup(@Body() body: SignupDto) {
-    console.log("signup", body);
+    // console.log("signup", body);
     return this.authService.signup(body);
   }
 
