@@ -12,6 +12,7 @@
     "../../node_modules/@repo/*/**/*.ts",
     // "../../packages/app/src/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "nativewind-env.d.ts"
   ]
 }

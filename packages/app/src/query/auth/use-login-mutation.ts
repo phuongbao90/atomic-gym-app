@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { API_ROUTES } from "../../configs/api-routes";
 import { request, setAccessToken } from "../../libs/request";
 
 export type LoginInput = {
@@ -13,7 +14,7 @@ export type LoginResponse = {
 
 export const login = async (input: LoginInput) => {
   try {
-    const res = await request<LoginResponse>("/auth/login", {
+    const res = await request<LoginResponse>(API_ROUTES.auth.login, {
       method: "POST",
       body: JSON.stringify(input),
       includeToken: false,

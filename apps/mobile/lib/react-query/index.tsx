@@ -1,5 +1,6 @@
+import { queryClient } from "@repo/app";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { MMKV } from "react-native-mmkv";
 
@@ -22,19 +23,28 @@ const clientPersister = createSyncStoragePersister({
   storage: clientStorage,
 });
 
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      gcTime: 1000 * 60 * 60 * 24, // 24 hours
-    },
-  },
-});
+// export const queryClient = new QueryClient({
+//   defaultOptions: {
+//     queries: {
+//       gcTime: 1000 * 60 * 60 * 24, // 24 hours
+//       retry: 0,
+//     },
+//   },
+// });
 
 export const ReactQueryProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
+  // console.log("__DEV__", __DEV__);
+
+  if (__DEV__) {
+    return (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
+  }
+
   return (
     <PersistQueryClientProvider
       persistOptions={{ persister: clientPersister }}

@@ -1,22 +1,24 @@
 import { ExpoConfig } from "@expo/config";
 
+const ENV = process.env.EXPO_PUBLIC_NODE_ENV;
+const IS_DEV = ENV === "development";
 const VERSION_NUMBER = "0.0.1";
-const BUILD_NUMBER = 1;
+const VERSION_CODE = 1;
 
-const appId = "com.phuongbao90.gymapp";
+const appId = IS_DEV ? "com.phuongbao90.gymapp.stag" : "com.phuongbao90.gymapp";
 
 export default (): ExpoConfig => ({
-  name: "gymapp",
+  name: IS_DEV ? "gymapp-stag" : "gymapp",
   slug: "gymapp",
   owner: "phuongbao90",
   version: VERSION_NUMBER,
   orientation: "portrait",
   icon: "./assets/images/logo_256.png",
-  scheme: "myapp",
+  scheme: "gymapp",
   userInterfaceStyle: "automatic",
   newArchEnabled: true,
   ios: {
-    buildNumber: String(BUILD_NUMBER),
+    buildNumber: String(VERSION_CODE),
     supportsTablet: false,
     bundleIdentifier: appId,
     infoPlist: {
@@ -38,22 +40,32 @@ export default (): ExpoConfig => ({
     },
   },
   android: {
-    versionCode: getFullVersionNumber(VERSION_NUMBER, BUILD_NUMBER),
+    versionCode: getFullVersionNumber(VERSION_NUMBER, VERSION_CODE),
+    softwareKeyboardLayoutMode: "pan",
     icon: "./assets/images/logo_256.png",
     package: appId,
     googleServicesFile: "./plugins/google-services.json",
     // playStoreUrl:
     //   "https://play.google.com/store/apps/details?id=com.daivietuni&pcampaignid=web_share",
     config: {},
+    permissions: [
+      "android.permission.CAMERA",
+      "android.permission.RECORD_AUDIO",
+      "android.permission.READ_EXTERNAL_STORAGE",
+      "android.permission.WRITE_EXTERNAL_STORAGE",
+    ],
   },
   extra: {
     eas: {
       projectId: "d5e0c9af-ac8c-4cc3-814b-34f88d553138",
     },
   },
-
+  experiments: {
+    typedRoutes: true,
+  },
   plugins: [
     "expo-router",
+    "react-native-compressor",
     [
       "expo-splash-screen",
       {
@@ -64,7 +76,6 @@ export default (): ExpoConfig => ({
       },
     ],
     "expo-asset",
-    "react-native-compressor",
     [
       "expo-av",
       {
@@ -137,12 +148,13 @@ export default (): ExpoConfig => ({
       {
         android: {
           usesCleartextTraffic: true, // ? enable HTTP requests
-          kotlinVersion: "1.8.0",
+          kotlinVersion: "1.9.25",
           compileSdkVersion: 35,
           targetSdkVersion: 35,
+          minSdkVersion: 24,
           buildToolsVersion: "35.0.0",
-          enableProguardInReleaseBuilds: true,
-          enableShrinkResourcesInReleaseBuilds: true,
+          // enableProguardInReleaseBuilds: true,
+          // enableShrinkResourcesInReleaseBuilds: true,
           extraMavenRepos: [
             "../../../../node_modules/@notifee/react-native/android/libs",
           ],
@@ -160,15 +172,12 @@ export default (): ExpoConfig => ({
     //     icon: "./assets/images/ic_notification.png",
     //   },
     // ],
-    "./plugins/fix-rn-firebase-plugin",
     "@react-native-firebase/app",
     "@react-native-firebase/messaging",
     "@config-plugins/react-native-blob-util",
+    "./plugins/fix-rn-firebase-plugin",
     "./plugins/inject-android-config",
   ],
-  experiments: {
-    typedRoutes: true,
-  },
 });
 
 function getFullVersionNumber(version: string, buildNumber: number) {

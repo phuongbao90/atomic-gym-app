@@ -1,36 +1,55 @@
 import Feather from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useColorScheme } from "nativewind";
+import { StyleSheet, Text, View } from "react-native";
+import { theme } from "../../styles/themes";
+import { Divider } from "./divider";
 
 export const AppHeader = ({
   title,
   center = false,
   withBackButton = false,
+  withBottomBorder = true,
   Right,
 }: {
-  title: string;
+  title?: string;
   center?: boolean;
   withBackButton?: boolean;
+  withBottomBorder?: boolean;
   Right?: React.ReactNode;
 }) => {
   const router = useRouter();
+  const mode = useColorScheme();
   return (
-    <View style={styles.container}>
-      {withBackButton && (
-        <Feather
-          name="chevron-left"
-          size={26}
-          color="black"
-          onPress={() => {
-            console.log("back");
-            router.back();
-          }}
-          style={styles.backButton}
-        />
-      )}
-      <Text style={[styles.title, center && styles.center]}>{title}</Text>
-      {!!Right && <View style={styles.right}>{Right}</View>}
-    </View>
+    <>
+      <View style={[styles.container]}>
+        {withBackButton && (
+          <Feather
+            name="chevron-left"
+            size={26}
+            color={theme.icon?.[mode.colorScheme!].color}
+            onPress={() => {
+              router.back();
+            }}
+            style={styles.backButton}
+          />
+        )}
+        {!!title && (
+          <Text
+            style={[
+              styles.title,
+              withBackButton && { marginLeft: 60 },
+              center && styles.center,
+            ]}
+          >
+            {title}
+          </Text>
+        )}
+
+        {!!Right && <View style={styles.right}>{Right}</View>}
+      </View>
+      {withBottomBorder && <Divider />}
+    </>
   );
 };
 
@@ -38,6 +57,8 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     height: 50,
+  },
+  border: {
     borderBottomWidth: 1,
     borderBottomColor: "gray",
   },
@@ -55,7 +76,7 @@ const styles = StyleSheet.create({
   },
   right: {
     position: "absolute",
-    right: 10,
+    right: 16,
     zIndex: 1000,
   },
 });

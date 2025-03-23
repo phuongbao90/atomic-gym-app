@@ -2,10 +2,10 @@ import { dotenvLoad } from "dotenv-mono";
 import { defineConfig } from "tsup";
 dotenvLoad();
 
-console.log("process.env", process.env.API_URL);
+console.log("process.env", process.env.ENV);
 
-if (!process.env.API_URL) {
-  throw new Error("API_URL not defined");
+if (!process.env.ENV) {
+  throw new Error("ENV not defined");
 }
 export default defineConfig({
   entry: ["./src/**/*.ts"],
@@ -14,6 +14,13 @@ export default defineConfig({
   dts: true,
   sourcemap: true,
   env: {
-    API_URL: process.env.API_URL,
+    // API_URL: process.env.API_URL,
+    ENV: process.env.ENV,
+  },
+  external: ["react", "react-native"],
+  loader: {
+    ".png": "dataurl",
+    ".svg": "dataurl",
+    ".js": "jsx",
   },
 });

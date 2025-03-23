@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { API_ROUTES } from "../../configs/api-routes";
 import { request } from "../../libs/request";
 import { QUERY_KEYS } from "../keys";
 
@@ -24,7 +25,7 @@ export function useGetUser(id: number) {
 
 export async function getUser(id: number) {
   try {
-    const res = await request<User>("/user/" + id, {
+    const res = await request<User>(API_ROUTES.getUser(id), {
       method: "GET",
     });
     return res?.data;

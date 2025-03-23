@@ -1,18 +1,18 @@
 import { useLoginMutation } from "@repo/app";
 import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import { useState } from "react";
 import { Button, StyleSheet, TextInput, View } from "react-native";
 import { AppScreen } from "../../components/ui/app-screen";
-import { AppScrollView } from "../../components/ui/AppScrollView";
+import { AppScrollView } from "../../components/ui/app-scrollview";
 import { appRoutes } from "../../configs/routes";
 import { setToken } from "../../lib/auth/session-store";
 import { AppStorage } from "../../lib/storage/app-storage";
-import { useAuthStore } from "../../stores/use-auth-store";
+import { authStore$ } from "../../stores/auth-store";
 
 export default function Login() {
   const [email, setEmail] = useState("bao5@gmail.com");
   const [password, setPassword] = useState("123456#@Nn");
-  const { setIsLoggedIn } = useAuthStore();
   const loginMutation = useLoginMutation();
   const router = useRouter();
 
@@ -23,10 +23,11 @@ export default function Login() {
         {
           onSuccess: (result) => {
             console.info("Login success: ");
+            SecureStore.setItemAsync("accessToken", result!.accessToken);
             setToken(result!.accessToken);
-            setIsLoggedIn(true);
+            authStore$.setIsLoggedIn(true);
           },
-        }
+        },
       );
     } catch (error) {
       console.log("error ====> ", (error as Error)?.message);

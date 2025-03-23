@@ -1,10 +1,12 @@
 // import { API_URL } from "@/configs/env";
 import { atom, createStore } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 import { ofetch } from "ofetch";
 import { ENV } from "../configs/env";
+import { Pagination } from "../types/pagination";
 
 // const API_URL = "http://192.168.31.26:3000";
-const accessTokenAtom = atom<string | null>(null);
+const accessTokenAtom = atomWithStorage<string | null>("accessToken", null);
 const store = createStore();
 
 export const setAccessToken = (token: string) => {
@@ -26,7 +28,10 @@ export const request = async <T>(
   try {
     const includeToken = options.includeToken ?? true;
 
-    const response = await ofetch<{ data: T }>(endpoint, {
+    // console.log("includeToken", includeToken);
+    // console.log("store.get(accessTokenAtom)", store.get(accessTokenAtom));
+
+    const response = await ofetch<{ data: T; meta?: Pagination }>(endpoint, {
       ...options,
       baseURL: ENV.API_URL,
       headers: {
@@ -38,10 +43,19 @@ export const request = async <T>(
           }),
         ...options.headers,
       },
+      onResponseError: (error) => {
+        console.log("onResponseError ====>", error);
+        throw error;
+      },
+      onRequestError: (error) => {
+        console.log("onRequestError ====>", error);
+        throw error;
+      },
     });
 
     return response;
   } catch (error) {
-    console.log("error ", error);
+    console.log("error ====>", error);
+    throw error;
   }
 };

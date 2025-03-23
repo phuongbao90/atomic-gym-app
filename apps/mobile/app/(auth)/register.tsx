@@ -7,8 +7,8 @@ import { AppButton } from "../../components/ui/app-button";
 import { AppHeader } from "../../components/ui/app-header";
 import { AppInput } from "../../components/ui/app-input";
 import { AppScreen } from "../../components/ui/app-screen";
-import { AppScrollView } from "../../components/ui/AppScrollView";
-import { useAuthStore } from "../../stores/use-auth-store";
+import { AppScrollView } from "../../components/ui/app-scrollview";
+import { authStore$ } from "../../stores/auth-store";
 
 const registerSchema = z
   .object({
@@ -35,15 +35,13 @@ export default function Register() {
     defaultValues: initialValues,
   });
 
-  const { setIsLoggedIn } = useAuthStore();
-
   const registerMutation = useRegisterMutation();
 
   function onSubmit(values: z.infer<typeof registerSchema>) {
     registerMutation.mutate(values, {
       onSuccess: (result) => {
         console.log("register success ", result);
-        setIsLoggedIn(true);
+        authStore$.setIsLoggedIn(true);
       },
     });
   }

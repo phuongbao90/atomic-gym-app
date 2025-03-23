@@ -1,0 +1,47 @@
+import { queryClient } from "@repo/app";
+import { colorScheme, useColorScheme } from "nativewind";
+import { Button, View } from "react-native";
+import { AppScreen } from "../../components/ui/app-screen";
+import { AppText } from "../../components/ui/app-text";
+import { AppScrollView } from "../../components/ui/app-scrollview";
+import { AppStorage } from "../../lib/storage/app-storage";
+import { authStore$ } from "../../stores/auth-store";
+
+export default function HomeScreen() {
+  const theme = useColorScheme();
+  console.log("theme", theme.colorScheme);
+  return (
+    <AppScreen>
+      <AppScrollView>
+        <View className="flex-1">
+          <View className="text-primary h-10">
+            <AppText className="text-red-700 text-xl">hhhhhh 111</AppText>
+          </View>
+          <View className="items-center justify-center gap-4 mt-auto bg">
+            <Button
+              title="switch mode"
+              onPress={() => {
+                colorScheme.set(
+                  theme.colorScheme === "dark" ? "light" : "dark",
+                );
+              }}
+            />
+            <Button
+              title="clear onboarded"
+              onPress={() => {
+                AppStorage.setIsOnboarded(false);
+              }}
+            />
+            <Button
+              title="logout"
+              onPress={() => {
+                authStore$.setIsLoggedIn(false);
+                queryClient.clear();
+              }}
+            />
+          </View>
+        </View>
+      </AppScrollView>
+    </AppScreen>
+  );
+}

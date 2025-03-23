@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { API_ROUTES } from "../../configs/api-routes";
 import { JWT_ACCESS_TOKEN_TTL } from "../../configs/constants";
 import { request } from "../../libs/request";
 import { QUERY_KEYS } from "../keys";
@@ -23,7 +24,7 @@ type Session = {
 
 export async function getSession() {
   try {
-    const res = await request<SessionUser>("/auth/session", {
+    const res = await request<SessionUser>(API_ROUTES.auth.session, {
       method: "GET",
     });
     return res?.data;
