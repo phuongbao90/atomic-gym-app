@@ -3,5 +3,35 @@
   "editor.codeActionsOnSave": {
     "source.sortImports": "always",
     "source.addMissingImports.ts": "always"
-  }
+  },
+  "tailwindCSS.experimental.classRegex": [
+    [
+      "cva\\(([^)]*)\\)",
+      "[\"'`]([^\"'`]*).*?[\"'`]"
+    ],
+    [
+      "cx\\(([^)]*)\\)",
+      "(?:'|\"|`)([^']*)(?:'|\"|`)"
+    ]
+  ],
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#ffffff",
+    "activityBar.background": "#ffffff",
+    "activityBar.foreground": "#15202b",
+    "activityBar.inactiveForeground": "#15202b99",
+    "activityBarBadge.background": "#df9f9f",
+    "activityBarBadge.foreground": "#15202b",
+    "commandCenter.border": "#15202b99",
+    "sash.hoverBorder": "#ffffff",
+    "statusBar.background": "#f7f7f7",
+    "statusBar.foreground": "#15202b",
+    "statusBarItem.hoverBackground": "#dddddd",
+    "statusBarItem.remoteBackground": "#f7f7f7",
+    "statusBarItem.remoteForeground": "#15202b",
+    "titleBar.activeBackground": "#f7f7f7",
+    "titleBar.activeForeground": "#15202b",
+    "titleBar.inactiveBackground": "#f7f7f799",
+    "titleBar.inactiveForeground": "#15202b99"
+  },
+  "peacock.color": "#f7f7f7"
 }
