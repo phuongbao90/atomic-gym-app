@@ -18,14 +18,14 @@ import { KeyboardProvider } from "react-native-keyboard-controller";
 import { useMMKVBoolean } from "react-native-mmkv";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Toaster } from "sonner-native";
-import { ReactQueryProvider } from "../lib/react-query";
-import { storageKeyNames } from "../lib/storage/app-storage";
-import { authStore$ } from "../stores/auth-store";
+import { ReactQueryProvider } from "../src/lib/react-query";
+import { storageKeyNames } from "../src/lib/storage/app-storage";
+import { authStore$ } from "../src/stores/auth-store";
 import Onboarding from "./onboarding";
 import { SafeAreaView, View } from "react-native";
 import { syncObservable } from "@legendapp/state/sync";
 import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv";
-import { appStore$ } from "../stores/app-store";
+import { appStore$ } from "../src/stores/app-store";
 import { primaryColors } from "app-config";
 
 syncObservable(appStore$, {

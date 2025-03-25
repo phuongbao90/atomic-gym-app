@@ -3,12 +3,12 @@ import { useRegisterMutation } from "app";
 import { Controller, useForm } from "react-hook-form";
 import { View } from "react-native";
 import { z } from "zod";
-import { AppButton } from "../../components/ui/app-button";
-import { AppHeader } from "../../components/ui/app-header";
-import { AppInput } from "../../components/ui/app-input";
-import { AppScreen } from "../../components/ui/app-screen";
-import { AppScrollView } from "../../components/ui/app-scrollview";
-import { authStore$ } from "../../stores/auth-store";
+import { AppButton } from "../../src/components/ui/app-button";
+import { AppHeader } from "../../src/components/ui/app-header";
+import { AppInput } from "../../src/components/ui/app-input";
+import { AppScreen } from "../../src/components/ui/app-screen";
+import { AppScrollView } from "../../src/components/ui/app-scrollview";
+import { authStore$ } from "../../src/stores/auth-store";
 
 const registerSchema = z
   .object({

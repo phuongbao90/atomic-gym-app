@@ -1,12 +1,12 @@
 import { queryClient } from "app";
 import { colorScheme, useColorScheme } from "nativewind";
 import { Button, View } from "react-native";
-import { AppScreen } from "../../components/ui/app-screen";
-import { AppText } from "../../components/ui/app-text";
-import { AppScrollView } from "../../components/ui/app-scrollview";
-import { AppStorage } from "../../lib/storage/app-storage";
-import { authStore$ } from "../../stores/auth-store";
-import { appStore$ } from "../../stores/app-store";
+import { AppScreen } from "../../src/components/ui/app-screen";
+import { AppText } from "../../src/components/ui/app-text";
+import { AppScrollView } from "../../src/components/ui/app-scrollview";
+import { AppStorage } from "../../src/lib/storage/app-storage";
+import { authStore$ } from "../../src/stores/auth-store";
+import { appStore$ } from "../../src/stores/app-store";
 
 export default function HomeScreen() {
   const theme = useColorScheme();

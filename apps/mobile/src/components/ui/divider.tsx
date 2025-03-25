@@ -11,7 +11,7 @@ export const Divider = ({ className }: { className?: string }) => {
       className={cx(
         "w-full",
         box({ intent: "divider", theme: theme.colorScheme! }),
-        className
+        className,
       )}
     />
   );

@@ -1,7 +1,7 @@
 import { Redirect, Stack } from "expo-router";
-import { appRoutes } from "../../configs/routes";
+import { appRoutes } from "../../src/configs/routes";
 import { use$ } from "@legendapp/state/react";
-import { authStore$ } from "../../stores/auth-store";
+import { authStore$ } from "../../src/stores/auth-store";
 
 export default function AuthLayout() {
   const isLoggedIn = use$(authStore$.isLoggedIn);

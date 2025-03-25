@@ -20,7 +20,7 @@ export const AppText = ({
           intent: intent,
           theme: theme.colorScheme,
         }),
-        className
+        className,
       )}
     >
       {children}

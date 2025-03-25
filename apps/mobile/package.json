@@ -7,10 +7,12 @@
     "copy-env-to-eas": "ts-node ./scripts/copy-env-to-eas.ts ",
     "postinstall": "cd ../.. & patch-package",
     "_": "----------------------------------------------------------------------------",
-    "start": "   cross-env NODE_ENV=$(node ./read-env.mjs)  npx expo start --dev-client --port 8086",
-    "predebug": "cross-env NODE_ENV=$(node ./read-env.mjs)  EXPO_NO_GIT_STATUS=1     npx expo prebuild    --platform $(node ./read-platform.mjs) --clean",
-    "debug": "   cross-env NODE_ENV=$(node ./read-env.mjs)  npx expo run:$(node ./read-platform.mjs) --device --port 8086",
-    "build": "yarn copy-env-to-eas && eas build --local --clear-cache"
+    "start": "   cross-env NODE_ENV=$(node ./scripts/read-env.mjs)  npx expo start --dev-client --port 8086",
+    "predebug": "cross-env NODE_ENV=$(node ./scripts/read-env.mjs)  EXPO_NO_GIT_STATUS=1     npx expo prebuild    --platform $(node ./scripts/read-platform.mjs) --clean",
+    "debug": "   cross-env NODE_ENV=$(node ./scripts/read-env.mjs)  npx expo run:$(node ./scripts/read-platform.mjs) --device --port 8086",
+    "build": "yarn copy-env-to-eas && eas build --local --clear-cache",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "jest": {
     "preset": "jest-expo"

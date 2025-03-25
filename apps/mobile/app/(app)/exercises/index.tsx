@@ -1,11 +1,11 @@
 import { Exercise, exerciseQuery } from "app";
 import { useRouter } from "expo-router";
-import { ExerciseItem } from "../../../components/exercise-item";
-import { AppHeader } from "../../../components/ui/app-header";
-import { AppScreen } from "../../../components/ui/app-screen";
-import { AppText } from "../../../components/ui/app-text";
+import { ExerciseItem } from "../../../src/components/exercise-item";
+import { AppHeader } from "../../../src/components/ui/app-header";
+import { AppScreen } from "../../../src/components/ui/app-screen";
+import { AppText } from "../../../src/components/ui/app-text";
 
-import { appRoutes } from "../../../configs/routes";
+import { appRoutes } from "../../../src/configs/routes";
 
 export default function Exercises() {
   const router = useRouter();

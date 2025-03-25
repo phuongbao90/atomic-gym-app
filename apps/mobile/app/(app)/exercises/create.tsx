@@ -1,5 +1,5 @@
-import { AppHeader } from "../../../components/ui/app-header";
-import { AppScreen } from "../../../components/ui/app-screen";
+import { AppHeader } from "../../../src/components/ui/app-header";
+import { AppScreen } from "../../../src/components/ui/app-screen";
 
 export default function CreateExercise() {
   return (

@@ -44,7 +44,7 @@ export default (): ExpoConfig => ({
     softwareKeyboardLayoutMode: "pan",
     icon: "./assets/images/logo_256.png",
     package: appId,
-    googleServicesFile: "./plugins/google-services.json",
+    googleServicesFile: "./scripts/google-services.json",
     // playStoreUrl:
     //   "https://play.google.com/store/apps/details?id=com.daivietuni&pcampaignid=web_share",
     config: {},
@@ -175,8 +175,8 @@ export default (): ExpoConfig => ({
     "@react-native-firebase/app",
     "@react-native-firebase/messaging",
     "@config-plugins/react-native-blob-util",
-    "./plugins/fix-rn-firebase-plugin",
-    "./plugins/inject-android-config",
+    "./scripts/fix-rn-firebase-plugin",
+    "./scripts/inject-android-config",
   ],
 });
 

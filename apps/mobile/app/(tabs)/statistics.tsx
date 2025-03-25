@@ -1,5 +1,5 @@
-import { AppScreen } from "../../components/ui/app-screen";
-import { AppText } from "../../components/ui/app-text";
+import { AppScreen } from "../../src/components/ui/app-screen";
+import { AppText } from "../../src/components/ui/app-text";
 
 export default function StatisticsTab() {
   return (

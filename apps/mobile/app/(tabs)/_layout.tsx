@@ -3,10 +3,10 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Redirect, Tabs } from "expo-router";
 import { useColorScheme } from "nativewind";
 import { Platform } from "react-native";
-import { appRoutes } from "../../configs/routes";
-import { tabBarStyle } from "../../styles/themes";
+import { appRoutes } from "../../src/configs/routes";
+import { tabBarStyle } from "../../src/styles/themes";
 import { use$ } from "@legendapp/state/react";
-import { authStore$ } from "../../stores/auth-store";
+import { authStore$ } from "../../src/stores/auth-store";
 
 const Icon = ({
   name,

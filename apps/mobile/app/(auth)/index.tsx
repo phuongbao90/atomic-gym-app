@@ -3,14 +3,14 @@ import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useState } from "react";
 import { Button, StyleSheet, TextInput, View } from "react-native";
-import { AppScreen } from "../../components/ui/app-screen";
-import { AppScrollView } from "../../components/ui/app-scrollview";
-import { appRoutes } from "../../configs/routes";
-import { setToken } from "../../lib/auth/session-store";
-import { AppStorage } from "../../lib/storage/app-storage";
-import { authStore$ } from "../../stores/auth-store";
-import { appStore$ } from "../../stores/app-store";
-import { AppText } from "../../components/ui/app-text";
+import { AppScreen } from "../../src/components/ui/app-screen";
+import { AppScrollView } from "../../src/components/ui/app-scrollview";
+import { appRoutes } from "../../src/configs/routes";
+import { setToken } from "../../src/lib/auth/session-store";
+import { AppStorage } from "../../src/lib/storage/app-storage";
+import { authStore$ } from "../../src/stores/auth-store";
+import { appStore$ } from "../../src/stores/app-store";
+import { AppText } from "../../src/components/ui/app-text";
 
 export default function Login() {
   const [email, setEmail] = useState("bao5@gmail.com");

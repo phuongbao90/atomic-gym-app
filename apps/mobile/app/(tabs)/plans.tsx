@@ -1,10 +1,10 @@
 import { useRouter } from "expo-router";
 import { View } from "react-native";
-import { AppHeader } from "../../components/ui/app-header";
-import { AppScreen } from "../../components/ui/app-screen";
-import { AppScrollView } from "../../components/ui/app-scrollview";
-import { ListItem } from "../../components/ui/list-item";
-import { appRoutes } from "../../configs/routes";
+import { AppHeader } from "../../src/components/ui/app-header";
+import { AppScreen } from "../../src/components/ui/app-screen";
+import { AppScrollView } from "../../src/components/ui/app-scrollview";
+import { ListItem } from "../../src/components/ui/list-item";
+import { appRoutes } from "../../src/configs/routes";
 
 export default function PlansTab() {
   const router = useRouter();

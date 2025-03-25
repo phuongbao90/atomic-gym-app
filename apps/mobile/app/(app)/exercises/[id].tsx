@@ -10,17 +10,17 @@ import { useColorScheme } from "nativewind";
 import { useRef, useState } from "react";
 import { Linking, TextInput, View, useWindowDimensions } from "react-native";
 // import { SceneMap, TabBar, TabView } from "react-native-tab-view";
-import { ExerciseNoteSheet } from "../../../components/bottom-sheets/exercise-note-sheet";
-import { MuscleItem } from "../../../components/muscle-item";
-import { AppBottomSheetView } from "../../../components/ui/app-bottom-sheet-view";
-import { AppHeader } from "../../../components/ui/app-header";
-import { AppScreen } from "../../../components/ui/app-screen";
-import { AppText } from "../../../components/ui/app-text";
-import { AppScrollView } from "../../../components/ui/app-scrollview";
-import { Divider } from "../../../components/ui/divider";
-import { ListItem } from "../../../components/ui/list-item";
-import { ThemedIcon } from "../../../components/ui/themed-icon";
-import { theme } from "../../../styles/themes";
+import { ExerciseNoteSheet } from "../../../src/components/bottom-sheets/exercise-note-sheet";
+import { MuscleItem } from "../../../src/components/muscle-item";
+import { AppBottomSheetView } from "../../../src/components/ui/app-bottom-sheet-view";
+import { AppHeader } from "../../../src/components/ui/app-header";
+import { AppScreen } from "../../../src/components/ui/app-screen";
+import { AppText } from "../../../src/components/ui/app-text";
+import { AppScrollView } from "../../../src/components/ui/app-scrollview";
+import { Divider } from "../../../src/components/ui/divider";
+import { ListItem } from "../../../src/components/ui/list-item";
+import { ThemedIcon } from "../../../src/components/ui/themed-icon";
+import { theme } from "../../../src/styles/themes";
 
 const Summary = ({ exercise }: { exercise?: Exercise }) => {
   const ref = useRef<BottomSheetModal>(null);

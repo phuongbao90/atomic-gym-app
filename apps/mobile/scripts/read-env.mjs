@@ -1,9 +1,9 @@
 import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-dotenv.config({ path: path.join(__dirname, "../../", ".env") });
+dotenv.config({ path: path.join(__dirname, "../../../", ".env") });
 
 console.log(process.env.EXPO_PUBLIC_NODE_ENV);
