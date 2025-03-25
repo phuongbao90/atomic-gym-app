@@ -48,6 +48,7 @@ enum ExerciseCategory {
 model MuscleGroup {
   id        Int        @id @default(autoincrement())
   name      String     @unique
+  image     String
   exercises Exercise[]
 }
 
@@ -65,6 +66,7 @@ model Exercise {
   ExerciseLog  ExerciseLog[]
   Workout      Workout?         @relation(fields: [workoutId], references: [id])
   workoutId    Int?
+  notes        String?
 }
 
 model ExerciseLog {

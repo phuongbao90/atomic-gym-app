@@ -55,8 +55,12 @@ async function bootstrap() {
     console.log("Server is running on port 3000");
   });
 
-  process.on("unhandledRejection", (reason: string, p: Promise<any>) => {
-    console.error("Unhandled Rejection at: Promise ", reason, p);
+  process.on("unhandledRejection", (reason: string) => {
+    console.error("Unhandled Rejection at: Promise ----------\n", reason);
+    return {
+      status: 500,
+      message: "Internal server error",
+    };
   });
 }
 bootstrap();

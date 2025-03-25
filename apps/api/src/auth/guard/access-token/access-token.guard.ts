@@ -26,23 +26,37 @@ export class AccessTokenGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
+    console.log("token", token);
+
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException("Lacking access token");
     }
     try {
       const payload: JwtUser = await this.jwtService.verifyAsync(
         token,
         this.jwtConfiguration
       );
+      console.log("payload", payload);
       request[REQUEST_USER_KEY] = payload;
-    } catch {
-      throw new UnauthorizedException();
+    } catch (error) {
+      console.log("AccessTokenGuard error", error?.message);
+      throw new UnauthorizedException(error?.message || "Invalid access token");
     }
+    // console.log("request", request);
     return true;
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(" ") ?? [];
-    return type === "Bearer" ? token : undefined;
+    try {
+      console.log(
+        "request.headers.authorization",
+        request.headers.authorization?.split(" ")
+      );
+      const [type, token] = request.headers.authorization?.split(" ") ?? [];
+      return type === "Bearer" ? token : undefined;
+    } catch (error) {
+      console.log("extractTokenFromHeader error", error?.message);
+      throw new UnauthorizedException(error?.message || "Unauthorized");
+    }
   }
 }

@@ -99,10 +99,8 @@ export class AuthService {
 
   async session(req: Request) {
     const accessToken = req.headers["authorization"];
-
     const user = req[REQUEST_USER_KEY];
 
-    console.log("user ", user);
     if (!user) {
       throw new UnauthorizedException();
     }
