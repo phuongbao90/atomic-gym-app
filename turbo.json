@@ -2,25 +2,42 @@
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
   "globalEnv": ["JAVA_HOME", "ANDROID_NDK", "ANDROID_SDK", "ANDROID_HOME"],
-  "globalDependencies": [".env.development"],
-
   "tasks": {
-    "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
-    },
+    "clean": { "cache": false },
     "lint": {
       "dependsOn": ["^lint"]
     },
     "check-types": {
       "dependsOn": ["^check-types"]
     },
-    "dev": {
-      "outputs": ["dist/**"],
-      "cache": false,
+
+    "start": {
+      "outputs": [".expo/**"],
       "persistent": true,
-      "env": ["API_URL"]
+      "dependsOn": ["^app-config#debug_config", "^app#debug_app"]
+    },
+    "debug": {
+      "outputs": [".expo/**"],
+      "persistent": true,
+      "dependsOn": ["^app-config#debug_config", "^app#debug_app"]
+    },
+    "debug_app": {
+      "outputs": ["build/**"]
+    },
+    "debug_config": {
+      "outputs": ["build/**"]
+    },
+    "build": {
+      "dependsOn": ["app#build_app"],
+      "persistent": true,
+      "cache": false
+    },
+    "build_app": {
+      "dependsOn": ["app-config#build_config"],
+      "outputs": ["build/**"]
+    },
+    "build_config": {
+      "outputs": ["build/**"]
     }
   }
 }

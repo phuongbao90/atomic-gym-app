@@ -9,8 +9,6 @@
   "include": [
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "../../node_modules/@repo/*/**/*.ts",
-    // "../../packages/app/src/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
     "nativewind-env.d.ts"

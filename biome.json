@@ -7,7 +7,15 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["node_modules", "dist", "build", ".turbo"]
+    "ignore": [
+      "node_modules",
+      "dist",
+      "build",
+      "ios",
+      "android",
+      ".turbo",
+      ".expo"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -36,6 +44,14 @@
   "javascript": {
     "formatter": {
       "quoteStyle": "double"
+    }
+  },
+  "json": {
+    "parser": {
+      "allowTrailingCommas": true
+    },
+    "formatter": {
+      "trailingCommas": "none"
     }
   }
 }

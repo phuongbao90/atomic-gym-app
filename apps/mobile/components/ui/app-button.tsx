@@ -1,5 +1,5 @@
 import { PlatformPressable } from "@react-navigation/elements";
-import { appColors, ColorNameOrHex } from "@repo/app-config";
+import { ColorNameOrHex } from "app-config";
 import * as Haptics from "expo-haptics";
 import { ReactNode } from "react";
 import {
@@ -81,7 +81,6 @@ export const AppButton = ({
 
 const styles = StyleSheet.create({
   button: {
-    // backgroundColor: appColors.light.ui.button.contained.enabled.background,
     padding: 10,
     borderRadius: 10,
     alignItems: "center",
@@ -91,15 +90,15 @@ const styles = StyleSheet.create({
     marginTop: "auto",
   },
   darkContained: {
-    backgroundColor: appColors.dark.ui.button.contained.enabled.background,
+    backgroundColor: "black",
   },
   lightContained: {
-    backgroundColor: appColors.light.ui.button.contained.enabled.background,
+    backgroundColor: "white",
   },
   darkContainedText: {
-    color: appColors.dark.ui.button.contained.enabled.text,
+    color: "white",
   },
   lightContainedText: {
-    color: appColors.light.ui.button.contained.enabled.text,
+    color: "black",
   },
 });

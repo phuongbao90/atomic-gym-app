@@ -8,15 +8,6 @@
       "distribution": "internal",
       "env": {}
     },
-    "staging": {
-      "developmentClient": false,
-      "distribution": "internal",
-      "resourceClass": "large",
-      "ios": {
-        "image": "latest"
-      },
-      "env": {}
-    },
     "production": {
       "developmentClient": false,
       "distribution": "store",
@@ -26,6 +17,15 @@
       },
       "ios": {
         "image": "latest"
+      },
+      "env": {}
+    },
+    "production:aab": {
+      "developmentClient": false,
+      "distribution": "store",
+      "resourceClass": "large",
+      "android": {
+        "buildType": "app-bundle"
       },
       "env": {}
     }

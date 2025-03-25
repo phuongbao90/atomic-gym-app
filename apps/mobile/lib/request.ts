@@ -17,7 +17,7 @@ export const request = async <T>(url: string, options: RequestInit) => {
       ? url
       : url.startsWith("/")
         ? Env.API_URL + url
-        : Env.API_URL + "/" + url;
+        : `${Env.API_URL}/${url}`;
 
     const response = await fetch(fullUrl, {
       ...options,

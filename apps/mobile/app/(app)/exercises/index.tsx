@@ -1,4 +1,4 @@
-import { Exercise, exerciseQuery } from "@repo/app";
+import { Exercise, exerciseQuery } from "app";
 import { useRouter } from "expo-router";
 import { ExerciseItem } from "../../../components/exercise-item";
 import { AppHeader } from "../../../components/ui/app-header";

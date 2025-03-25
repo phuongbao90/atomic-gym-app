@@ -1,4 +1,4 @@
-import { Exercise } from "@repo/app";
+import { Exercise } from "app";
 import { Image } from "expo-image";
 import { useColorScheme } from "nativewind";
 import { View } from "react-native";

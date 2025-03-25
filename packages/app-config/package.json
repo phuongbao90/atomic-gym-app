@@ -1,25 +1,17 @@
 {
-	"name": "@repo/app-config",
-	"version": "0.0.1",
-	"main": "./src/index.ts",
-	"scripts": {
-		"check-types": "tsc --noEmit",
-		"dev": ""
-	},
-	"devDependencies": {
-		"typescript": "5.7.2",
-		"tsup": "^8.0.1",
-		"@repo/typescript-config": "*"
-	},
-	"tsup": {
-		"format": ["esm", "cjs"],
-		"sourcemap": true,
-		"dts": true,
-		"external": ["react", "react-native"],
-		"loader": {
-			".png": "dataurl",
-			".svg": "dataurl",
-			".js": "jsx"
-		}
-	}
+  "name": "app-config",
+  "version": "0.0.1",
+  "main": "./build/index.js",
+  "types": "./src/index.ts",
+  "scripts": {
+    "clean": "rm -rf build",
+    "build_config": "tsup --clean",
+    "debug_config": "tsup --watch"
+  },
+  "files": ["build", "src"],
+  "devDependencies": {
+    "typescript": "5.7.2",
+    "tsup": "^8.0.1",
+    "typescript-config": "*"
+  }
 }

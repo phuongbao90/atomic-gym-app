@@ -1,4 +1,4 @@
-import { queryClient } from "@repo/app";
+import { queryClient } from "app";
 import { colorScheme, useColorScheme } from "nativewind";
 import { Button, View } from "react-native";
 import { AppScreen } from "../../components/ui/app-screen";
@@ -6,6 +6,7 @@ import { AppText } from "../../components/ui/app-text";
 import { AppScrollView } from "../../components/ui/app-scrollview";
 import { AppStorage } from "../../lib/storage/app-storage";
 import { authStore$ } from "../../stores/auth-store";
+import { appStore$ } from "../../stores/app-store";
 
 export default function HomeScreen() {
   const theme = useColorScheme();
@@ -17,13 +18,11 @@ export default function HomeScreen() {
           <View className="text-primary h-10">
             <AppText className="text-red-700 text-xl">hhhhhh 111</AppText>
           </View>
-          <View className="items-center justify-center gap-4 mt-auto bg">
+          <View className="items-center justify-center gap-4 mt-auto">
             <Button
               title="switch mode"
               onPress={() => {
-                colorScheme.set(
-                  theme.colorScheme === "dark" ? "light" : "dark",
-                );
+                appStore$.switchTheme();
               }}
             />
             <Button

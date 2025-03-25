@@ -3,7 +3,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 // import { BottomSheetModal } from "@gorhom/bottom-sheet";
 // import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { Exercise, exerciseQuery } from "@repo/app";
+import { Exercise, exerciseQuery } from "app";
 import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
 import { useColorScheme } from "nativewind";

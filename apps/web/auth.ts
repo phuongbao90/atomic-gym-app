@@ -2,8 +2,8 @@ import {
   login,
   LoginInput,
   LoginResponse,
-} from "@repo/app/query/auth/use-login-mutation";
-import { getMe, User } from "@repo/app/query/user/use-get-user";
+} from "app/query/auth/use-login-mutation";
+import { getMe, User } from "app/query/user/use-get-user";
 import NextAuth, { type DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { ofetch } from "ofetch";
@@ -79,7 +79,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           {
             method: "POST",
             body: JSON.stringify(credentials),
-          }
+          },
         );
 
         // console.log("res ", JSON.stringify(res, null, 2));

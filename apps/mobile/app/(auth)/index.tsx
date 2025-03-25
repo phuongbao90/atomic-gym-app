@@ -1,4 +1,4 @@
-import { useLoginMutation } from "@repo/app";
+import { useLoginMutation } from "app";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useState } from "react";
@@ -9,6 +9,8 @@ import { appRoutes } from "../../configs/routes";
 import { setToken } from "../../lib/auth/session-store";
 import { AppStorage } from "../../lib/storage/app-storage";
 import { authStore$ } from "../../stores/auth-store";
+import { appStore$ } from "../../stores/app-store";
+import { AppText } from "../../components/ui/app-text";
 
 export default function Login() {
   const [email, setEmail] = useState("bao5@gmail.com");
@@ -36,8 +38,8 @@ export default function Login() {
 
   return (
     <AppScreen>
-      <AppScrollView>
-        <View style={{ gap: 10, marginVertical: 20, marginHorizontal: 20 }}>
+      <AppScrollView contentContainerStyle={{ flex: 1 }}>
+        <View className="gap-4 m-4 flex-1">
           <TextInput
             style={styles.input}
             placeholder="Email"
@@ -50,8 +52,24 @@ export default function Login() {
             value={password}
             onChangeText={setPassword}
           />
+
+          <AppText className="text-red-500">
+            Aute id sit esse exercitation reprehenderit est velit pariatur id ut
+            et. Laboris incididunt aute minim pariatur aliqua eiusmod. Pariatur
+            duis exercitation anim amet Lorem reprehenderit excepteur duis sunt
+            adipisicing sit esse id enim. Enim tempor tempor adipisicing dolore
+            consectetur labore ea minim Lorem magna incididunt excepteur eiusmod
+            nisi ut. Laboris minim nostrud irure veniam officia ea minim ipsum
+            eu voluptate fugiat nulla pariatur.
+          </AppText>
         </View>
-        <View style={{ marginTop: "auto", gap: 8 }}>
+        <View className="mt-auto gap-4">
+          <Button
+            title="Switch theme"
+            onPress={() => {
+              appStore$.switchTheme();
+            }}
+          />
           <Button
             title="Login"
             onPress={() => {

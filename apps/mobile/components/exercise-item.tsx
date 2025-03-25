@@ -1,4 +1,4 @@
-import { Exercise } from "@repo/app";
+import { Exercise } from "app";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { appRoutes } from "../configs/routes";

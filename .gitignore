@@ -37,3 +37,14 @@ yarn-error.log*
 .DS_Store
 *.pem
 
+# API
+apps/api/prisma/migrations/
+
+
+# Mobile
+.expo/
+
+# Dashboard
+
+# Web
+.nuxt/

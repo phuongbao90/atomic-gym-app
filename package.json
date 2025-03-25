@@ -2,20 +2,24 @@
   "name": "gym-app-turbo",
   "private": true,
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo watch dev",
-    "lint": "turbo lint",
+    "clean": "turbo run clean && rm -rf node_modules && rm -rf yarn.lock && yarn install",
+    "clear-daemon": "npx turbo daemon clean",
+    "validate-package": "npx syncpack list",
     "postinstall": "patch-package",
-    "watch-packages": "turbo run watch-packages",
-    "hacky-build-ios": "cd apps/mobile && yarn release --platform ios",
-    "check-packages-version": "npx syncpack list",
+    "build": "fastlane start",
+
     "_": "------------------------------------------",
-    "dev:web": "      turbo watch dev --filter=@repo/api --filter=@repo/web --filter=@repo/app",
-    "dev:dashboard": "turbo watch dev --filter=@repo/api --filter=@repo/dashboard --filter=@repo/app",
-    "dev:mobile": "   turbo watch dev --filter=@repo/api --filter=@repo/mobile --filter=@repo/app-config --filter=@repo/app",
-    "dev:api": "      turbo run start:debug --filter=@repo/api",
-    "__": "-----------------------------------------",
-    "build:mobile": "turbo run build --filter=@repo/mobile"
+    "dev:web": "      turbo watch dev --filter=api --filter=web --filter=app",
+    "dev:dashboard": "turbo watch dev --filter=api --filter=dashboard --filter=app",
+    "dev:api": "      turbo run start:debug --filter=api",
+
+    "__": "------------------------------------------",
+    "mobile#debug_start_dev": "      ts-node ./scripts/modify-env.cjs dev     ios     && turbo watch start --filter=mobile",
+    "mobile#debug_android_dev": "    ts-node ./scripts/modify-env.cjs dev     android && turbo watch debug --filter=mobile",
+    "mobile#debug_ios_dev": "        ts-node ./scripts/modify-env.cjs dev     ios     && turbo watch debug --filter=mobile",
+    "mobile#build_android_prod": "   ts-node ./scripts/modify-env.cjs prod    android && turbo run build --filter=mobile -- --profile production     --platform android  --non-interactive --output ./build/prod/app.apk",
+    "mobile#build_android_prodAab": "ts-node ./scripts/modify-env.cjs prodAab android && turbo run build --filter=mobile -- --profile production:aab --platform android  --non-interactive --output ./build/prodAab/app.aab",
+    "mobile#build_ios_prod": "       ts-node ./scripts/modify-env.cjs prod    ios     && turbo run build_app && cd apps/mobile && yarn build -- --profile production     --platform ios      --non-interactive --output ./build/prod/app.ipa"
   },
   "devDependencies": {
     "dotenv-mono": "^1.3.14",

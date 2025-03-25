@@ -6,8 +6,7 @@ import "../global.css";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { PortalProvider } from "@gorhom/portal";
 import { use$ } from "@legendapp/state/react";
-import { setAccessToken } from "@repo/app";
-import { appColors } from "@repo/app-config";
+import { setAccessToken } from "app";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import * as SecureStore from "expo-secure-store";
@@ -17,18 +16,37 @@ import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { useMMKVBoolean } from "react-native-mmkv";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Toaster } from "sonner-native";
 import { ReactQueryProvider } from "../lib/react-query";
 import { storageKeyNames } from "../lib/storage/app-storage";
 import { authStore$ } from "../stores/auth-store";
 import Onboarding from "./onboarding";
+import { SafeAreaView, View } from "react-native";
+import { syncObservable } from "@legendapp/state/sync";
+import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv";
+import { appStore$ } from "../stores/app-store";
+import { primaryColors } from "app-config";
+
+syncObservable(appStore$, {
+  persist: {
+    name: "appStore",
+    plugin: ObservablePersistMMKV,
+  },
+});
+syncObservable(authStore$, {
+  persist: {
+    name: "authStore",
+    plugin: ObservablePersistMMKV,
+  },
+});
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const theme = useColorScheme();
+  const insets = useSafeAreaInsets();
+  const theme = use$(appStore$.theme);
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -55,22 +73,20 @@ export default function RootLayout() {
   return (
     <ReactQueryProvider>
       <KeyboardProvider>
-        <GestureHandlerRootView>
+        <GestureHandlerRootView style={{ flex: 1 }}>
           <BottomSheetModalProvider>
             <PortalProvider>
               <StatusBar
                 backgroundColor={
-                  theme.colorScheme === "dark"
-                    ? appColors.dark.primary
-                    : appColors.light.primary
+                  theme === "dark" ? primaryColors[300] : primaryColors[600]
                 }
-                translucent={theme.colorScheme === "dark"}
+                translucent={theme === "dark"}
                 animated
                 style="dark"
               />
-              <Toaster position="bottom-center" duration={3000} />
-              <SafeAreaView style={{ flex: 1 }}>
+              <SafeAreaView className="flex-1" style={{ top: insets.top }}>
                 <App />
+                <Toaster position="bottom-center" duration={3000} />
               </SafeAreaView>
             </PortalProvider>
           </BottomSheetModalProvider>

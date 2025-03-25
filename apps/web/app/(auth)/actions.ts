@@ -1,6 +1,6 @@
 "use server";
 
-import { RegisterResponse } from "@repo/app/query/auth/use-register-mutation";
+import { RegisterResponse } from "app/query/auth/use-register-mutation";
 import { ofetch } from "ofetch";
 import { z } from "zod";
 import { signIn } from "../../auth";
@@ -68,13 +68,13 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
           password: password as string,
           name: name as string,
         }),
-      }
+      },
     );
 
     console.log(
       "registerResponse =====>",
       registerResponse,
-      registerResponse.data
+      registerResponse.data,
     );
 
     // if (!registerResponse || !registerResponse.data) {

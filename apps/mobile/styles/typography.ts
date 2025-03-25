@@ -1,6 +1,4 @@
-import { appColors } from "@repo/app-config";
 import { cva, type VariantProps } from "class-variance-authority";
-import { useColorScheme } from "nativewind";
 import { Appearance, Text, TextProps } from "react-native";
 
 console.log("Appearance ", Appearance.getColorScheme());

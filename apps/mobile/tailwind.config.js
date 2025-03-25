@@ -1,4 +1,5 @@
 const { platformSelect } = require("nativewind/theme");
+import sharedConfig from "tailwind-config";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -8,27 +9,9 @@ module.exports = {
     "./components/**/*.{js,jsx,ts,tsx}",
     "./styles/**/*.{js,jsx,ts,tsx}",
   ],
-  presets: [require("nativewind/preset")],
+  presets: [require("nativewind/preset"), sharedConfig],
   theme: {
-    extend: {
-      // colors: {
-      //   // error: platformSelect({
-      //   //   ios: "#ff0000",
-      //   //   android: "#ff0000",
-      //   // }),
-      //   tahiti: {
-      //     100: "#cffafe",
-      //     200: "#a5f3fc",
-      //     300: "#67e8f9",
-      //     400: "#22d3ee",
-      //     500: "#06b6d4",
-      //     600: "#0891b2",
-      //     700: "#0e7490",
-      //     800: "#155e75",
-      //     900: "#164e63",
-      //   },
-      // },
-    },
+    extend: {},
   },
   plugins: [],
 };

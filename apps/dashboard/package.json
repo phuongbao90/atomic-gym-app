@@ -1,5 +1,5 @@
 {
-  "name": "@repo/dashboard",
+  "name": "dashboard",
   "private": true,
   "type": "module",
   "version": "0.0.1",
@@ -15,8 +15,8 @@
     "@nuxtjs/auth-next": "5.0.0-1667386184.dfbbb54",
     "@nuxtjs/color-mode": "^3.5.2",
     "@nuxtjs/tailwindcss": "6.12.2",
-    "@repo/app": "*",
-    "@repo/app-config": "*",
+    "app": "*",
+    "app-config": "*",
     "@sidebase/nuxt-auth": "^0.9.4",
     "better-sqlite3": "^11.6.0",
     "class-variance-authority": "^0.7.1",
@@ -30,7 +30,7 @@
     "vue-router": "latest"
   },
   "devDependencies": {
-    "@repo/typescript-config": "*",
+    "typescript-config": "*",
     "typescript": "5.7.2"
   }
 }

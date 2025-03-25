@@ -1,5 +1,5 @@
 {
-  "name": "@repo/api",
+  "name": "api",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -7,7 +7,6 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "start": "nest start",
     "start:dev": "NODE_ENV=development nest start --watch",
     "start:debug": "NODE_ENV=development nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -24,6 +23,7 @@
     "seed": "npx prisma db push --force-reset && ts-node --transpile-only prisma/seed.ts",
     "_": "-----------------------------------------",
     "dev": "NODE_ENV=development nest start --watch",
+    "start": "NODE_ENV=development nest start --watch",
     "dev:ssl": "NODE_ENV=development nest start --watch --ssl",
     "reset-db": "yarn migrate:dev && yarn prisma:generate && npx prisma db push --force-reset && ts-node --transpile-only prisma/seed.ts"
   },
@@ -38,7 +38,7 @@
     "@nestjs/swagger": "^8.0.7",
     "@ngneat/falso": "^7.2.0",
     "@prisma/client": "^5.22.0",
-    "@repo/app-config": "*",
+    "app-config": "*",
     "bcrypt": "5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
@@ -57,7 +57,7 @@
     "@nestjs/cli": "^10.4.8",
     "@nestjs/schematics": "^10.2.3",
     "@nestjs/testing": "^10.4.8",
-    "@repo/typescript-config": "*",
+    "typescript-config": "*",
     "@types/express": "^4.17.17",
     "@types/express-session": "^1.18.1",
     "@types/jest": "^29.5.14",

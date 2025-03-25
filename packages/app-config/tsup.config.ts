@@ -12,10 +12,10 @@ if (
 }
 
 export default defineConfig({
-  entry: ["./src/index.ts"],
+  entry: ["src/index.ts"],
   format: ["esm", "cjs"],
   outDir: "build",
-  dts: true,
+  dts: false,
   sourcemap: true,
   env: {
     EXPO_PUBLIC_NODE_ENV: process.env.EXPO_PUBLIC_NODE_ENV,

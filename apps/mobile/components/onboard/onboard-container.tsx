@@ -1,4 +1,3 @@
-import { appColors } from "@repo/app-config";
 import { BlurView } from "expo-blur";
 import { ImageBackground } from "expo-image";
 import { useEffect } from "react";
@@ -84,6 +83,6 @@ export const OnboardContainer = () => {
 const styles = StyleSheet.create({
   skipButton: {},
   button: {
-    backgroundColor: appColors.light.ui.button.contained.enabled.background,
+    backgroundColor: "black",
   },
 });

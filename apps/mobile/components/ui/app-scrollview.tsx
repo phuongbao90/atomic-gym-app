@@ -9,7 +9,9 @@ export function AppScrollView({
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
       {...rest}
-      contentContainerStyle={[{ flexGrow: 1 }, rest.contentContainerStyle]}
+      style={[{ flex: 1 }, rest.style]}
+      contentContainerStyle={[rest.contentContainerStyle]}
+      keyboardShouldPersistTaps="handled"
     >
       {children}
     </ScrollView>
