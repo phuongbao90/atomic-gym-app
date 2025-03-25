@@ -11,7 +11,6 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { StatusBar } from "expo-status-bar";
-import { useColorScheme } from "nativewind";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
@@ -27,6 +26,7 @@ import { syncObservable } from "@legendapp/state/sync";
 import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv";
 import { appStore$ } from "../src/stores/app-store";
 import { primaryColors } from "app-config";
+import "../src/configs/i18n";
 
 syncObservable(appStore$, {
   persist: {

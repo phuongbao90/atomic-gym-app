@@ -64,6 +64,7 @@ export default (): ExpoConfig => ({
     typedRoutes: true,
   },
   plugins: [
+    "expo-localization",
     "expo-router",
     "react-native-compressor",
     [
