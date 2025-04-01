@@ -1,41 +1,43 @@
-import Feather from "@expo/vector-icons/Feather";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { Redirect, Tabs } from "expo-router";
-import { useColorScheme } from "nativewind";
-import { Platform } from "react-native";
-import { appRoutes } from "../../src/configs/routes";
-import { tabBarStyle } from "../../src/styles/themes";
-import { use$ } from "@legendapp/state/react";
-import { authStore$ } from "../../src/stores/auth-store";
+import Feather from "@expo/vector-icons/Feather"
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"
+import { Redirect, Tabs } from "expo-router"
+import { useColorScheme } from "nativewind"
+import { Platform } from "react-native"
+import { appRoutes } from "../../src/configs/routes"
+// import { tabBarStyle } from "../../src/styles/themes"
+import { use$ } from "@legendapp/state/react"
+import { authStore$ } from "../../src/stores/auth-store"
+import { appStore$ } from "../../src/stores/app-store"
+import { cn } from "../../src/utils/cn"
+import { colors } from "../../src/styles/themes"
 
 const Icon = ({
   name,
   focused,
 }: {
-  name: keyof typeof Feather.glyphMap;
-  focused: boolean;
+  name: keyof typeof Feather.glyphMap
+  focused: boolean
 }) => {
-  const theme = useColorScheme();
+  const colorMode = use$(appStore$.theme)
 
   return (
     <Feather
       name={name}
       size={24}
       color={
-        focused
-          ? tabBarStyle[theme.colorScheme!].iconColor.focused
-          : tabBarStyle[theme.colorScheme!].iconColor.unfocused
+        focused ? colors.text[colorMode].main : colors.text[colorMode].inactive
       }
     />
-  );
-};
+  )
+}
 
 export default function TabLayout() {
-  const isLoggedIn = use$(authStore$.isLoggedIn);
-  const theme = useColorScheme();
+  const isLoggedIn = use$(authStore$.isLoggedIn)
+  const theme = useColorScheme()
+  const colorMode = use$(appStore$.theme)
 
   if (!isLoggedIn) {
-    return <Redirect href={appRoutes.login} />;
+    return <Redirect href={appRoutes.login} />
   }
 
   return (
@@ -48,14 +50,12 @@ export default function TabLayout() {
             position: "absolute",
           },
           default: {
-            backgroundColor: tabBarStyle[theme.colorScheme!].backgroundColor,
-            borderTopColor: tabBarStyle[theme.colorScheme!].borderTopColor,
+            backgroundColor: colors.pageBackground[colorMode],
+            // borderTopColor: tabBarStyle[theme!].borderTopColor,
           },
         }),
-        tabBarActiveTintColor:
-          tabBarStyle[theme.colorScheme!].labelColor.focused,
-        tabBarInactiveTintColor:
-          tabBarStyle[theme.colorScheme!].labelColor.unfocused,
+        tabBarActiveTintColor: colors.text[colorMode].main,
+        tabBarInactiveTintColor: colors.text[colorMode].inactive,
       }}
     >
       <Tabs.Screen
@@ -85,8 +85,8 @@ export default function TabLayout() {
               size={24}
               color={
                 focused
-                  ? tabBarStyle[theme.colorScheme!].iconColor.focused
-                  : tabBarStyle[theme.colorScheme!].iconColor.unfocused
+                  ? colors.text[colorMode].main
+                  : colors.text[colorMode].inactive
               }
             />
           ),
@@ -109,5 +109,5 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
-  );
+  )
 }

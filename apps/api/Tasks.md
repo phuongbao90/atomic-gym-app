@@ -1,13 +1,19 @@
-# Gym App
+## Tab: HomeScreen
 
-## Obstacles
+[] api: my current workout
 
-- [ ] register with phone number => otp, costly
+## Tab: plans
 
-## backlogs
+[] api: my workout plans (list)
 
-- [ ] Create user
-- [ ] Login
-- [ ] Logout
-- [ ] Forgot password
-- [ ] Reset password
+[] api: featured plans (by keys)
+
+## Tab: history
+
+
+## Tab: charts
+
+
+### Screens
+
+#### Exercise

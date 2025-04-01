@@ -1,4 +1,4 @@
-import { cva } from "class-variance-authority";
+import { cva } from "class-variance-authority"
 
 export const box = cva([], {
   variants: {
@@ -22,4 +22,4 @@ export const box = cva([], {
       className: ["border-b-2 border-gray-700"],
     },
   ],
-});
+})

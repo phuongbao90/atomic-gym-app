@@ -13,7 +13,7 @@ import jwtConfig from "./config/jwt.config";
 import { AccessTokenGuard } from "./auth/guard/access-token/access-token.guard";
 import { AuthGuard } from "./auth/guard/authentication/auth.guard";
 import { UserModule } from "./user/user.module";
-// import { JwtModule } from '@nestjs/jwt';
+import { JwtModule } from "@nestjs/jwt";
 import { ExerciseModule } from "./exercise/exercise.module";
 import { MuscleGroupModule } from "./muscle-group/muscle-group.module";
 import { WorkoutPlanModule } from "./workout-plan/workout-plan.module";
@@ -38,7 +38,7 @@ const NODE_ENV = process.env.NODE_ENV;
     ExerciseModule,
     WorkoutPlanModule,
     WorkoutModule,
-    // JwtModule.registerAsync(jwtConfig.asProvider()),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
 
   controllers: [AppController],

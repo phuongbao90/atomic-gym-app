@@ -15,6 +15,12 @@ export const appRoutes = {
   createExercise: "/(app)/exercises/create",
   exercise: (id: string) => `/(app)/exercises/${id}`,
 
+  workoutPlans: {
+    create: "/(app)/workout-plans/create",
+    edit: (id: string) => `/(app)/workout-plans/${id}/edit`,
+    detail: (id: string) => `/(app)/workout-plans/${id}`,
+  },
+
   settings: "/(app)/settings",
   profile: "/(app)/profile",
-} as const;
+} as const

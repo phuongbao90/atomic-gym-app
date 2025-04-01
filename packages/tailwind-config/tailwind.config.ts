@@ -1,27 +1,23 @@
-import type { Config } from "tailwindcss";
+import type { Config } from "tailwindcss"
 
 // @ts-expect-error
 const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: "#eff6ff",
-          100: "#dbeafe",
-          200: "#bfdbfe",
-          300: "#93c5fd",
-          400: "#60a5fa",
-          500: "#3b82f6",
-          600: "#2563eb",
-          700: "#1d4ed8",
-          800: "#1e40af",
-          900: "#1e3a8a",
-          950: "#172554",
-        },
+        // primary: "#bcf352",
+        // secondary: "#8a69fb",
+        // destructive: "#ff0000",
+        // light: "#ffffff",
+        // dark: "#000000",
+        // inactive: "#808080",
+        // main: "#000000",
+        // page: "#ffffff",
+        // pageDark: "#2a2c38",
       },
     },
   },
 
   plugins: [],
-};
-export default config;
+}
+export default config

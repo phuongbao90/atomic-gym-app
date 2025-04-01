@@ -1,4 +1,4 @@
-import { ScrollView, ScrollViewProps } from "react-native";
+import { ScrollView, ScrollViewProps } from "react-native"
 
 export function AppScrollView({
   children,
@@ -15,5 +15,5 @@ export function AppScrollView({
     >
       {children}
     </ScrollView>
-  );
+  )
 }

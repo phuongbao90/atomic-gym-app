@@ -1,4 +1,4 @@
-import { WorkoutPlanLevel, WorkoutPlanObjective } from '@prisma/client';
+import { WorkoutPlanCategory, WorkoutPlanLevel } from "@prisma/client";
 import {
   IsBoolean,
   IsEnum,
@@ -7,12 +7,12 @@ import {
   IsString,
   IsUrl,
   MinLength,
-} from 'class-validator';
+} from "class-validator";
 
 export class CreateWorkoutPlanDto {
   @IsString()
   @IsNotEmpty()
-  @MinLength(3, { message: 'Tên lịch tập phải có ít nhất 3 ký tự' })
+  @MinLength(3, { message: "Tên lịch tập phải có ít nhất 3 ký tự" })
   name: string;
 
   @IsUrl()
@@ -23,9 +23,9 @@ export class CreateWorkoutPlanDto {
   @IsOptional()
   description?: string;
 
-  @IsEnum(WorkoutPlanObjective)
+  @IsEnum(WorkoutPlanCategory)
   @IsOptional()
-  objective?: WorkoutPlanObjective;
+  category?: WorkoutPlanCategory;
 
   @IsEnum(WorkoutPlanLevel)
   @IsOptional()
@@ -38,4 +38,10 @@ export class CreateWorkoutPlanDto {
   @IsBoolean()
   @IsOptional()
   isPremium?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  isFeatured?: boolean;
+
+  workouts?: number[];
 }

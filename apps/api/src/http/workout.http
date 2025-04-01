@@ -1,20 +1,17 @@
-POST {{BASE_URL}}/workout
+POST {{BASE_URL}}/workouts
 Authorization: Bearer {{$global.accessToken}}
 {
   "name": "Chest day",
   "workoutPlanId": 1,
   "exerciseIds": [1]
-
 }
 
 
-###
-
-GET {{BASE_URL}}/workout/plan/1
+### Get all workouts by workout plan id
+GET {{BASE_URL}}/workouts/plan/2
 Authorization: Bearer {{$global.accessToken}}
 
 
 ###
-
-GET {{BASE_URL}}/workout/1
+GET {{BASE_URL}}/workouts/3
 Authorization: Bearer {{$global.accessToken}}

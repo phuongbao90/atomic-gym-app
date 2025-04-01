@@ -1,4 +1,4 @@
-POST {{BASE_URL}}/exercise
+POST {{BASE_URL}}/exercises
 Authorization: Bearer {{$global.accessToken}}
 {
   "name": "Chest Press",
@@ -9,7 +9,7 @@ Authorization: Bearer {{$global.accessToken}}
 
 ### Update Exercise
 
-PATCH {{BASE_URL}}/exercise/1
+PATCH {{BASE_URL}}/exercises/1
 Authorization: Bearer {{$global.accessToken}}
 {
   "name": "Chest Press 2",
@@ -20,16 +20,18 @@ Authorization: Bearer {{$global.accessToken}}
 
 
 ### Get All Exercises
+GET {{BASE_URL}}/exercises
+Authorization: Bearer {{$global.accessToken}}
 
-GET {{BASE_URL}}/exercise
+### Get All Exercises with search
+GET {{BASE_URL}}/exercises?limit=15&search=Voluntarius
 Authorization: Bearer {{$global.accessToken}}
 
 ### Get Exercise by Id
-
-GET {{BASE_URL}}/exercise/2
+GET {{BASE_URL}}/exercises/1
 Authorization: Bearer {{$global.accessToken}}
 
 ### Delete Exercise
 
-DELETE {{BASE_URL}}/exercise/6
+DELETE {{BASE_URL}}/exercises/6
 Authorization: Bearer {{$global.accessToken}}

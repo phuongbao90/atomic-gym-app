@@ -1,0 +1,11 @@
+{
+  "title": "Settings",
+  "preferences": "Preferences",
+  "units-of-measurement": "Units of measurement",
+  "appearance": "Appearance",
+  "weight-increment": "Weight increment",
+  "default-sets": "Default sets",
+  "default-warm-up-time": "Default warm-up time",
+  "default-cooldown-time": "Default cooldown time",
+  "default-rest-time": "Default rest time"
+}

@@ -1,7 +1,8 @@
-import { cx } from "class-variance-authority";
-import { useColorScheme } from "nativewind";
-import { Text, TextProps } from "react-native";
-import { typography } from "../../styles/typography";
+import { cx } from "class-variance-authority"
+import { Text, TextProps } from "react-native"
+import { typographyCva } from "../../styles/typography"
+import { appStore$ } from "../../stores/app-store"
+import { use$ } from "@legendapp/state/react"
 
 export const AppText = ({
   children,
@@ -9,21 +10,21 @@ export const AppText = ({
   intent = "ordinary",
   ...props
 }: TextProps & {
-  intent?: "ordinary" | "label";
+  intent?: "ordinary" | "label"
 }) => {
-  const theme = useColorScheme();
+  const theme = use$(appStore$.theme)
   return (
     <Text
       {...props}
       className={cx(
-        typography({
+        typographyCva({
           intent: intent,
-          theme: theme.colorScheme,
+          theme: theme,
         }),
-        className,
+        className
       )}
     >
       {children}
     </Text>
-  );
-};
+  )
+}

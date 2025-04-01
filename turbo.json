@@ -19,7 +19,14 @@
     "debug": {
       "outputs": [".expo/**"],
       "persistent": true,
-      "dependsOn": ["^app-config#debug_config", "^app#debug_app"]
+      "dependsOn": [
+        "^app-config#debug_config",
+        "^app#debug_app",
+        "^api#debug_api"
+      ]
+    },
+    "debug_api": {
+      "outputs": ["dist/**"]
     },
     "debug_app": {
       "outputs": ["build/**"]

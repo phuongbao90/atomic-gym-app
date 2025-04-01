@@ -1,48 +1,6 @@
-const margins = {
-  sm: 2,
-  md: 4,
-  lg: 8,
-  xl: 12,
-};
-const radius = {
-  sm: 4,
-  md: 8,
-  lg: 12,
-  xl: 16,
-};
-const spacing = {
-  sm: 4,
-  md: 8,
-  lg: 12,
-  xl: 16,
-};
-
-export const tabBarStyle = {
-  light: {
-    backgroundColor: "white",
-    borderTopColor: "white",
-    iconColor: {
-      focused: "black",
-      unfocused: "lightgray",
-    },
-    labelColor: {
-      focused: "black",
-      unfocused: "lightgray",
-    },
-  },
-  dark: {
-    backgroundColor: "black",
-    borderTopColor: "black",
-    iconColor: {
-      focused: "white",
-      unfocused: "gray",
-    },
-    labelColor: {
-      focused: "white",
-      unfocused: "gray",
-    },
-  },
-} as const;
+export const PRIMARY_COLOR = "#bcf352"
+export const SECONDARY_COLOR = "#8a69fb"
+export const DESTRUCTIVE_COLOR = "#ff0000"
 
 export const theme = {
   icon: {
@@ -67,94 +25,21 @@ export const theme = {
       main: "white",
     },
   },
-} as const;
+} as const
 
-export const lightTheme = {
-  colors: {
-    typography: "#000000",
-    background: "#ffffff",
+export const colors = {
+  pageBackground: {
+    dark: "#25293c",
+    light: "#ffffff",
   },
-  margins,
-  radius,
-  spacing,
-  button: {
-    text: {
-      enabled: {
-        background: "transparent",
-        border: "transparent",
-      },
-      disabled: {
-        background: "transparent",
-        border: "transparent",
-      },
-      pressed: {
-        background: "transparent",
-        border: "transparent",
-      },
+  text: {
+    dark: {
+      inactive: "#808080",
+      main: "#ffffff",
     },
-    outlined: {
-      enabled: {},
-      disabled: {},
-      pressed: {},
-    },
-    contained: {
-      enabled: {},
-      disabled: {},
-      pressed: {},
+    light: {
+      inactive: "#808080",
+      main: "#000000",
     },
   },
-} as const;
-
-export const darkTheme = {
-  colors: {
-    typography: "#ffffff",
-    background: "#000000",
-  },
-  margins,
-  radius,
-  spacing,
-
-  button: {
-    text: {
-      enabled: {
-        background: "transparent",
-        border: "transparent",
-      },
-      disabled: {
-        background: "transparent",
-        border: "transparent",
-      },
-      pressed: {
-        background: "transparent",
-        border: "transparent",
-      },
-    },
-    outlined: {
-      enabled: {},
-      disabled: {},
-      pressed: {},
-    },
-    contained: {
-      enabled: {},
-      disabled: {},
-      pressed: {},
-    },
-  },
-} as const;
-
-// define other themes
-
-// export function Theme({
-//   children,
-//   name,
-// }: {
-//   children: React.ReactNode;
-//   name: keyof typeof themes;
-// }) {
-//   const { colorScheme } = useColorScheme();
-//   if (!colorScheme) return null;
-//   return (
-//     //@ts-expect-error
-//     <View style={[themes[name][colorScheme!], { flex: 1 }]}>{children}</View>
-//   );
-// }
+} as const

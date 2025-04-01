@@ -1,27 +1,27 @@
-import { faker } from "@faker-js/faker";
-import { randBetweenDate, randNumber, randProduct } from "@ngneat/falso";
-import { PrismaClient } from "@prisma/client";
-import * as bcrypt from "bcrypt";
-
+import { faker } from "@faker-js/faker"
+import { randBetweenDate, randNumber, randProduct } from "@ngneat/falso"
+import { PrismaClient } from "@prisma/client"
+import * as bcrypt from "bcrypt"
+import { muscleGroups } from "app-config"
 console.log(
   "---------------------------------Seeding database---------------------------------"
-);
+)
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 async function main() {
   try {
-    await prisma.user.deleteMany();
-    await prisma.exercise.deleteMany();
-    await prisma.exerciseLog.deleteMany();
-    await prisma.muscleGroup.deleteMany();
-    await prisma.post.deleteMany();
-    await prisma.workout.deleteMany();
-    await prisma.workoutPlan.deleteMany();
+    await prisma.user.deleteMany()
+    await prisma.exercise.deleteMany()
+    await prisma.exerciseLog.deleteMany()
+    await prisma.muscleGroup.deleteMany()
+    await prisma.post.deleteMany()
+    await prisma.workout.deleteMany()
+    await prisma.workoutPlan.deleteMany()
 
-    const userCount = 15;
-    const workoutPlanCount = 50;
-    const exerciseCount = 100;
+    const userCount = 15
+    const workoutPlanCount = 50
+    const exerciseCount = 100
     const categories = [
       "Chest",
       "Back",
@@ -33,7 +33,7 @@ async function main() {
       "Quads",
       "Hamstrings",
       "Calves",
-    ];
+    ]
 
     // Create users
     for (let index = 1; index <= userCount; index++) {
@@ -43,18 +43,31 @@ async function main() {
           email: `bao${index}@gmail.com`,
           password: await bcrypt.hash("123456#@Nn", 10),
         },
-      });
+      })
+    }
+
+    for (const muscleGroup of muscleGroups) {
+      await prisma.muscleGroup.create({
+        data: {
+          id: muscleGroup.id,
+          name: muscleGroup.name,
+          slug: muscleGroup.slug,
+          image: faker.image.url(),
+          parentId: muscleGroup.parentId,
+        },
+      })
     }
 
     // Create muscle groups
-    categories.forEach(async (category) => {
-      await prisma.muscleGroup.create({
-        data: {
-          name: category,
-          image: faker.image.url(),
-        },
-      });
-    });
+    // for (const category of categories) {
+    //   await prisma.muscleGroup.create({
+    //     data: {
+    //       name: category,
+    //       slug: category.toLowerCase().replace(/\s+/g, "-"),
+    //       image: faker.image.url(),
+    //     },
+    //   })
+    // }
 
     // Create exercises
     for (let index = 1; index <= exerciseCount; index++) {
@@ -66,7 +79,7 @@ async function main() {
             "FREE_WEIGHT",
             "CARDIO",
           ]),
-          muscleGroups: {
+          primaryMuscle: {
             connect: [
               {
                 id: randNumber({ min: 1, max: categories.length }),
@@ -78,7 +91,7 @@ async function main() {
           description: faker.lorem.paragraph(),
           notes: faker.lorem.paragraph(),
         },
-      });
+      })
     }
 
     // Create workout plans
@@ -88,13 +101,6 @@ async function main() {
           name: faker.lorem.sentence(),
           cover_image: faker.image.url(),
           description: faker.lorem.paragraph(),
-          objective: faker.helpers.arrayElement([
-            "STRENGTH",
-            "ENDURANCE",
-            "BALANCE",
-            "FLEXIBILITY",
-            "LOOSE_WEIGHT",
-          ]),
           level: faker.helpers.arrayElement([
             "BEGINNER",
             "INTERMEDIATE",
@@ -103,8 +109,17 @@ async function main() {
           createdById: randNumber({ min: 1, max: userCount }),
           isPublic: faker.datatype.boolean(),
           isPremium: faker.datatype.boolean(),
+          isFeatured: faker.datatype.boolean(),
+          isSingle: faker.datatype.boolean(),
+          category: faker.helpers.arrayElement([
+            "STRENGTH",
+            "ENDURANCE",
+            "BALANCE",
+            "FLEXIBILITY",
+            "LOOSE_WEIGHT",
+          ]),
         },
-      });
+      })
     }
 
     // Create workouts
@@ -122,25 +137,25 @@ async function main() {
           workoutPlanId: randNumber({ min: 1, max: workoutPlanCount }),
           order: index,
         },
-      });
+      })
     }
 
     console.log(
       "---------------------------------Database seeded successfully---------------------------------"
-    );
+    )
   } catch (error) {
     console.error(
       "---------------------------------Error seeding database---------------------------------\n",
       error
-    );
+    )
   }
 }
 main()
   .then(async () => {
-    await prisma.$disconnect();
+    await prisma.$disconnect()
   })
   .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+    console.error(e)
+    await prisma.$disconnect()
+    process.exit(1)
+  })

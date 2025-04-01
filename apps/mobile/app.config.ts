@@ -1,11 +1,11 @@
-import { ExpoConfig } from "@expo/config";
+import { ExpoConfig } from "@expo/config"
 
-const ENV = process.env.EXPO_PUBLIC_NODE_ENV;
-const IS_DEV = ENV === "development";
-const VERSION_NUMBER = "0.0.1";
-const VERSION_CODE = 1;
+const ENV = process.env.EXPO_PUBLIC_NODE_ENV
+const IS_DEV = ENV === "development"
+const VERSION_NUMBER = "0.0.1"
+const VERSION_CODE = 1
 
-const appId = IS_DEV ? "com.phuongbao90.gymapp.stag" : "com.phuongbao90.gymapp";
+const appId = IS_DEV ? "com.phuongbao90.gymapp.stag" : "com.phuongbao90.gymapp"
 
 export default (): ExpoConfig => ({
   name: IS_DEV ? "gymapp-stag" : "gymapp",
@@ -38,6 +38,10 @@ export default (): ExpoConfig => ({
     config: {
       usesNonExemptEncryption: false,
     },
+  },
+  androidStatusBar: {
+    translucent: true,
+    barStyle: "dark-content",
   },
   android: {
     versionCode: getFullVersionNumber(VERSION_NUMBER, VERSION_CODE),
@@ -179,17 +183,17 @@ export default (): ExpoConfig => ({
     "./scripts/fix-rn-firebase-plugin",
     "./scripts/inject-android-config",
   ],
-});
+})
 
 function getFullVersionNumber(version: string, buildNumber: number) {
-  const versionNumber = version?.split(".") ?? [];
-  const majorVersion = versionNumber[0] ?? "";
-  const minorVersion = versionNumber[1] ?? "";
-  const patchVersion = versionNumber[2] ?? "";
+  const versionNumber = version?.split(".") ?? []
+  const majorVersion = versionNumber[0] ?? ""
+  const minorVersion = versionNumber[1] ?? ""
+  const patchVersion = versionNumber[2] ?? ""
   const fullVersionNumber =
     Number(majorVersion) * 10000000 +
     Number(minorVersion) * 10000 +
     Number(patchVersion) * 100 +
-    Number(buildNumber);
-  return fullVersionNumber;
+    Number(buildNumber)
+  return fullVersionNumber
 }

@@ -1,14 +1,13 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRegisterMutation } from "app";
-import { Controller, useForm } from "react-hook-form";
-import { View } from "react-native";
-import { z } from "zod";
-import { AppButton } from "../../src/components/ui/app-button";
-import { AppHeader } from "../../src/components/ui/app-header";
-import { AppInput } from "../../src/components/ui/app-input";
-import { AppScreen } from "../../src/components/ui/app-screen";
-import { AppScrollView } from "../../src/components/ui/app-scrollview";
-import { authStore$ } from "../../src/stores/auth-store";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Controller, useForm } from "react-hook-form"
+import { Button, View } from "react-native"
+import { z } from "zod"
+import { AppHeader } from "../../src/components/ui/app-header"
+import { AppInput } from "../../src/components/ui/app-input"
+import { AppScreen } from "../../src/components/ui/app-screen"
+import { AppScrollView } from "../../src/components/ui/app-scrollview"
+import { authStore$ } from "../../src/stores/auth-store"
+import { useSignup } from "app"
 
 const registerSchema = z
   .object({
@@ -20,34 +19,34 @@ const registerSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
-  });
+  })
 
 const initialValues = {
   email: "bao1112@gmail.com",
   name: "Bao1112",
   password: "123456#@Nn",
   confirmPassword: "123456#@Nn",
-};
+}
 
 export default function Register() {
   const { control, handleSubmit } = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: initialValues,
-  });
+  })
 
-  const registerMutation = useRegisterMutation();
+  const signupMutation = useSignup()
 
   function onSubmit(values: z.infer<typeof registerSchema>) {
-    registerMutation.mutate(values, {
+    signupMutation.mutate(values, {
       onSuccess: (result) => {
-        console.log("register success ", result);
-        authStore$.setIsLoggedIn(true);
+        console.log("register success ", result)
+        authStore$.setIsLoggedIn(true)
       },
-    });
+    })
   }
 
   return (
-    <AppScreen>
+    <AppScreen name="register-screen">
       <AppHeader title="Register" center withBackButton />
       <AppScrollView>
         <View style={{ gap: 32 }}>
@@ -106,8 +105,8 @@ export default function Register() {
             )}
           />
         </View>
-        <AppButton title="Register" onPress={handleSubmit(onSubmit)} />
+        <Button title="Register" onPress={handleSubmit(onSubmit)} />
       </AppScrollView>
     </AppScreen>
-  );
+  )
 }

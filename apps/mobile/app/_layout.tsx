@@ -1,73 +1,73 @@
-import "react-native-get-random-values";
-import "react-native-reanimated";
-import "react-native-url-polyfill/auto";
-import "../global.css";
+import "react-native-get-random-values"
+import "react-native-reanimated"
+import "react-native-url-polyfill/auto"
+import "../global.css"
 
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { PortalProvider } from "@gorhom/portal";
-import { use$ } from "@legendapp/state/react";
-import { setAccessToken } from "app";
-import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
-import * as SecureStore from "expo-secure-store";
-import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { KeyboardProvider } from "react-native-keyboard-controller";
-import { useMMKVBoolean } from "react-native-mmkv";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Toaster } from "sonner-native";
-import { ReactQueryProvider } from "../src/lib/react-query";
-import { storageKeyNames } from "../src/lib/storage/app-storage";
-import { authStore$ } from "../src/stores/auth-store";
-import Onboarding from "./onboarding";
-import { SafeAreaView, View } from "react-native";
-import { syncObservable } from "@legendapp/state/sync";
-import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv";
-import { appStore$ } from "../src/stores/app-store";
-import { primaryColors } from "app-config";
-import "../src/configs/i18n";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
+import { PortalProvider } from "@gorhom/portal"
+import { use$ } from "@legendapp/state/react"
+import { setAccessToken } from "app"
+import { useFonts } from "expo-font"
+import { SplashScreen, Stack } from "expo-router"
+import * as SecureStore from "expo-secure-store"
+import { StatusBar } from "expo-status-bar"
+import { useEffect } from "react"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
+import { KeyboardProvider } from "react-native-keyboard-controller"
+import { useMMKVBoolean } from "react-native-mmkv"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { Toaster } from "sonner-native"
+import { ReactQueryProvider } from "../src/lib/react-query"
+import { storageKeyNames } from "../src/lib/storage/app-storage"
+import { authStore$ } from "../src/stores/auth-store"
+import Onboarding from "./onboarding"
+import { SafeAreaView, View } from "react-native"
+import { syncObservable } from "@legendapp/state/sync"
+import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv"
+import { appStore$ } from "../src/stores/app-store"
+import { primaryColors } from "app-config"
+import "../src/configs/i18n"
 
 syncObservable(appStore$, {
   persist: {
     name: "appStore",
     plugin: ObservablePersistMMKV,
   },
-});
+})
 syncObservable(authStore$, {
   persist: {
     name: "authStore",
     plugin: ObservablePersistMMKV,
   },
-});
+})
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
-  const insets = useSafeAreaInsets();
-  const theme = use$(appStore$.theme);
+  const insets = useSafeAreaInsets()
+  const theme = use$(appStore$.theme)
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-  });
+  })
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      SplashScreen.hideAsync()
     }
-  }, [loaded]);
+  }, [loaded])
 
   useEffect(() => {
     SecureStore.getItemAsync("accessToken").then((token) => {
       // console.log("setting access token", token);
       if (token) {
-        setAccessToken(token);
+        setAccessToken(token)
       }
-    });
-  }, []);
+    })
+  }, [])
 
   if (!loaded) {
-    return null;
+    return null
   }
 
   return (
@@ -76,14 +76,15 @@ export default function RootLayout() {
         <GestureHandlerRootView style={{ flex: 1 }}>
           <BottomSheetModalProvider>
             <PortalProvider>
-              <StatusBar
-                backgroundColor={
-                  theme === "dark" ? primaryColors[300] : primaryColors[600]
-                }
-                translucent={theme === "dark"}
+              {/* <StatusBar
+                // backgroundColor={
+                //   theme === "dark" ? primaryColors[300] : primaryColors[600]
+                // }
+                // translucent={theme === "dark"}
+                translucent={true}
                 animated
-                style="dark"
-              />
+                // style="dark"
+              /> */}
               <SafeAreaView className="flex-1" style={{ top: insets.top }}>
                 <App />
                 <Toaster position="bottom-center" duration={3000} />
@@ -93,15 +94,15 @@ export default function RootLayout() {
         </GestureHandlerRootView>
       </KeyboardProvider>
     </ReactQueryProvider>
-  );
+  )
 }
 
 const App = () => {
-  const [isOnboarded] = useMMKVBoolean(storageKeyNames.isOnboarded);
-  const isLoggedIn = use$(authStore$.isLoggedIn);
+  const [isOnboarded] = useMMKVBoolean(storageKeyNames.isOnboarded)
+  const isLoggedIn = use$(authStore$.isLoggedIn)
 
   if (!isOnboarded) {
-    return <Onboarding />;
+    return <Onboarding />
   }
 
   if (!isLoggedIn) {
@@ -110,7 +111,7 @@ const App = () => {
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
-    );
+    )
   }
 
   return (
@@ -118,5 +119,5 @@ const App = () => {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>
-  );
-};
+  )
+}

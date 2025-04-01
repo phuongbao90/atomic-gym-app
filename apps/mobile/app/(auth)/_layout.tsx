@@ -1,12 +1,12 @@
-import { Redirect, Stack } from "expo-router";
-import { appRoutes } from "../../src/configs/routes";
-import { use$ } from "@legendapp/state/react";
-import { authStore$ } from "../../src/stores/auth-store";
+import { Redirect, Stack } from "expo-router"
+import { appRoutes } from "../../src/configs/routes"
+import { use$ } from "@legendapp/state/react"
+import { authStore$ } from "../../src/stores/auth-store"
 
 export default function AuthLayout() {
-  const isLoggedIn = use$(authStore$.isLoggedIn);
+  const isLoggedIn = use$(authStore$.isLoggedIn)
   if (isLoggedIn) {
-    return <Redirect href={appRoutes.home} />;
+    return <Redirect href={appRoutes.home} />
   }
 
   return (
@@ -36,5 +36,5 @@ export default function AuthLayout() {
         }}
       />
     </Stack>
-  );
+  )
 }

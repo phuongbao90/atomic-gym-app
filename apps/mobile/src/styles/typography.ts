@@ -1,9 +1,7 @@
-import { cva, type VariantProps } from "class-variance-authority";
-import { Appearance, Text, TextProps } from "react-native";
+import { cva, type VariantProps } from "class-variance-authority"
+import { Appearance, Text, TextProps } from "react-native"
 
-console.log("Appearance ", Appearance.getColorScheme());
-
-export const typography = cva([], {
+export const typographyCva = cva([], {
   variants: {
     intent: {
       primary: "",
@@ -54,4 +52,4 @@ export const typography = cva([], {
     intent: "ordinary",
     theme: "light",
   },
-});
+})

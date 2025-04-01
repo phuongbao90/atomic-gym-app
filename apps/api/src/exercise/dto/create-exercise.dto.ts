@@ -1,29 +1,29 @@
-import { ExerciseCategory } from "@prisma/client";
+import { ExerciseCategory } from "@prisma/client"
 import {
   IsArray,
   IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
-} from "class-validator";
+} from "class-validator"
 
 export class CreateExerciseDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name: string
 
   @IsString()
   @IsOptional()
-  description: string;
+  description: string
 
   @IsEnum(ExerciseCategory)
-  category: ExerciseCategory;
+  category: ExerciseCategory
 
   @IsArray()
   @IsOptional()
-  muscleGroups: number[];
+  primaryMuscle: number[]
 
   @IsString()
   @IsOptional()
-  notes: string;
+  notes: string
 }

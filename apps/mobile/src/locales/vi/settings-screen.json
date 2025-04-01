@@ -1,0 +1,11 @@
+{
+  "title": "Cài đặt",
+  "preferences": "Tùy chọn",
+  "units-of-measurement": "Đơn vị đo lường",
+  "appearance": "Giao diện",
+  "weight-increment": "Đơn vị tăng trọng lượng tạ",
+  "default-sets": "Số lượng tập mặc định",
+  "default-warm-up-time": "Thời gian chuẩn bị mặc định",
+  "default-cooldown-time": "Thời gian hồi phục mặc định",
+  "default-rest-time": "Thời gian nghỉ mặc định"
+}

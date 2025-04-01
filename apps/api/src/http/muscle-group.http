@@ -1,21 +1,15 @@
-POST {{BASE_URL}}/muscle-group
+POST {{BASE_URL}}/muscle-groups
 Authorization: Bearer {{$global.accessToken}}
 {
-  "name": "leg"
+  "name": "leg",
+  "parentId": 2,
+  "slug": "leg"
 }
 
-GET {{BASE_URL}}/muscle-group
+### Get All Muscle Groups
+GET {{BASE_URL}}/muscle-groups
 Authorization: Bearer {{$global.accessToken}}
 
-GET {{BASE_URL}}/muscle-group/1
+### Get exercise by muscle group
+GET {{BASE_URL}}/muscle-groups/5/exercises
 Authorization: Bearer {{$global.accessToken}}
-
-DELETE {{BASE_URL}}/muscle-group/1
-Authorization: Bearer {{$global.accessToken}}
-
-
-PUT {{BASE_URL}}/muscle-group/1
-Authorization: Bearer {{$global.accessToken}}
-{
-  "name": "chest"
-}

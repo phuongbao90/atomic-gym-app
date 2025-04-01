@@ -1,104 +1,107 @@
-import { PlatformPressable } from "@react-navigation/elements";
-import { ColorNameOrHex } from "app-config";
-import * as Haptics from "expo-haptics";
-import { ReactNode } from "react";
+import { PlatformPressable } from "@react-navigation/elements"
+import * as Haptics from "expo-haptics"
+import React, { ReactNode } from "react"
 import {
   GestureResponderEvent,
   Pressable,
   PressableProps,
   StyleSheet,
   Text,
+  TouchableOpacity,
   useColorScheme,
-} from "react-native";
+  View,
+} from "react-native"
+import { cva, type VariantProps } from "class-variance-authority"
+import { colors } from "react-native-keyboard-controller/lib/typescript/components/KeyboardToolbar/colors"
+import { cn } from "../../utils/cn"
+import { buttonCva, buttonTextCva } from "../../styles/button-cva"
 
-export const AppButton = ({
-  title,
-  onPress,
-  children,
-  haptic = false,
-  variant = "contained",
-  radius = "lg",
-  spacing = "md",
-  color,
-}: {
-  title: string;
-  children?: ReactNode;
-  haptic?: boolean;
-  variant?: "contained" | "outlined" | "text";
-  radius?: "sm" | "md" | "lg" | "xl";
-  spacing?: "sm" | "md" | "lg" | "xl";
-  color?: ColorNameOrHex;
-} & PressableProps) => {
-  const isLightTheme = useColorScheme() === "dark";
-
-  function handlePress(ev: GestureResponderEvent) {
-    if (haptic) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
-    onPress?.(ev);
-  }
-
-  // const styles = useStyles();
-
-  if (children) {
-    return (
-      <PlatformPressable onPress={handlePress} style={styles.button}>
-        {children}
-      </PlatformPressable>
-    );
-  }
-
-  return (
-    <PlatformPressable
-      onPress={handlePress}
-      style={[
-        styles.button,
-        isLightTheme ? styles.lightContained : styles.darkContained,
-      ]}
-    >
-      <Text
-        style={[
-          isLightTheme ? styles.lightContainedText : styles.darkContainedText,
-        ]}
-      >
-        {title}
-      </Text>
-    </PlatformPressable>
-  );
-};
-
-// const styles = createStyleSheet((theme) => ({
-//   button: {
-//     backgroundColor: theme.button.contained.enabled.background,
-//     padding: 10,
-//     borderRadius: 10,
-//     alignItems: "center",
-//     justifyContent: "center",
-//     alignSelf: "center",
-//     marginTop: "auto",
+// const buttonTextVariants = cva("text-base font-medium text-foreground", {
+//   variants: {
+//     variant: {
+//       default: "text-white",
+//       destructive: "text-white",
+//       outline: "group-active:text-accent-foreground",
+//       secondary:
+//         "text-secondary-foreground group-active:text-secondary-foreground",
+//       ghost: "group-active:text-accent-foreground",
+//       link: "text-primary group-active:underline",
+//     },
+//     size: {
+//       default: "",
+//       sm: "",
+//       lg: "text-lg",
+//       icon: "",
+//     },
 //   },
-// }));
+//   defaultVariants: {
+//     variant: "default",
+//     size: "default",
+//   },
+// })
 
-const styles = StyleSheet.create({
-  button: {
-    padding: 10,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    // width: "70%",
-    alignSelf: "center",
-    marginTop: "auto",
-  },
-  darkContained: {
-    backgroundColor: "black",
-  },
-  lightContained: {
-    backgroundColor: "white",
-  },
-  darkContainedText: {
-    color: "white",
-  },
-  lightContainedText: {
-    color: "black",
-  },
-});
+type ButtonProps = React.ComponentPropsWithoutRef<typeof Pressable> & {
+  title: string
+  size?: "sx" | "sm" | "md" | "lg" | "xl"
+  color?: "default" | "primary" | "secondary" | "danger"
+  disabled?: boolean
+  fullWidth?: boolean
+  radius?: "sm" | "md" | "lg" | "xl"
+  containerClassName?: string
+  textClassName?: string
+  className?: string
+}
+
+export const AppButton = React.forwardRef<
+  React.ElementRef<typeof Pressable>,
+  ButtonProps
+>(
+  (
+    {
+      className,
+      size,
+      color,
+      disabled,
+      fullWidth,
+      radius,
+      containerClassName,
+      textClassName,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <View className={cn("flex-1 flex-col items-start", containerClassName)}>
+        <Pressable
+          className={cn(
+            buttonCva({ size, color, disabled, fullWidth, radius, className })
+          )}
+          ref={ref}
+          {...props}
+        >
+          <View>
+            <Text
+              className={cn(
+                buttonTextCva({
+                  size,
+                  color,
+                  disabled,
+                  className: textClassName,
+                })
+              )}
+            >
+              {props.title}
+            </Text>
+          </View>
+        </Pressable>
+      </View>
+    )
+  }
+)
+
+export const OutlineButton = React.forwardRef<
+  React.ElementRef<typeof Pressable>,
+  ButtonProps
+>((props, ref) => {
+  return <AppButton {...props} ref={ref} />
+})

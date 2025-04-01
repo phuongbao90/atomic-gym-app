@@ -1,25 +1,41 @@
-POST {{BASE_URL}}/workout-plan
+POST {{BASE_URL}}/workout-plans
 Authorization: Bearer {{$global.accessToken}}
 {
   "name": "Workout Plan 1"
 }
 
-###
+### ------------------------------------------------------------ find many
 
-GET {{BASE_URL}}/workout-plan/my-plans
+###
+GET {{BASE_URL}}/workout-plans
 Authorization: Bearer {{$global.accessToken}}
 
-###
-
-GET {{BASE_URL}}/workout-plan/public-plans
+# get my plans
+GET {{BASE_URL}}/workout-plans?me=true
 Authorization: Bearer {{$global.accessToken}}
 
-###
-
-GET {{BASE_URL}}/workout-plan/1
+# get by category: STRENGTH ENDURANCE BALANCE FLEXIBILITY LOOSE_WEIGHT
+GET {{BASE_URL}}/workout-plans?category=ENDURANCE
 Authorization: Bearer {{$global.accessToken}}
 
-###
+# get by featured
+GET {{BASE_URL}}/workout-plans?isFeatured=true
+Authorization: Bearer {{$global.accessToken}}
 
-DELETE {{BASE_URL}}/workout-plan/1
+# get single plans
+GET {{BASE_URL}}/workout-plans?isSingle=true
+Authorization: Bearer {{$global.accessToken}}
+
+# get workout plans in groups
+GET {{BASE_URL}}/workout-plans/in-groups
+Authorization: Bearer {{$global.accessToken}}
+
+### ------------------------------------------------------------ find one
+###
+GET {{BASE_URL}}/workout-plans/1
+Authorization: Bearer {{$global.accessToken}}
+
+### ------------------------------------------------------------ delete one
+###
+DELETE {{BASE_URL}}/workout-plans/1
 Authorization: Bearer {{$global.accessToken}}
