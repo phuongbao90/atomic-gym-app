@@ -10,7 +10,13 @@
     "check-types": {
       "dependsOn": ["^check-types"]
     },
+    "test": {},
+    "test:watch": {
+      "cache": false,
+      "persistent": true,
 
+      "inputs": ["**/*.{ts,tsx,js,jsx}"]
+    },
     "start": {
       "outputs": [".expo/**"],
       "persistent": true,

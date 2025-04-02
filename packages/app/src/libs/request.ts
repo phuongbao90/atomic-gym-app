@@ -1,33 +1,10 @@
-// import { API_URL } from "@/configs/env";
-import { atom, createStore } from "jotai"
-import { atomWithStorage } from "jotai/utils"
 import { ofetch } from "ofetch"
 import { ENV } from "../configs/env"
-import { Pagination } from "../types/pagination"
 
 // const API_URL = "http://192.168.31.26:3000";
-const accessTokenAtom = atomWithStorage<string | null>("accessToken", null)
-const store = createStore()
 
-export const setAccessToken = (token: string) => {
-  store.set(accessTokenAtom, token)
-}
-
-export const clearAccessToken = () => {
-  store.set(accessTokenAtom, null)
-}
-
-export const getAccessToken = () => {
-  return store.get(accessTokenAtom)
-}
-
-export const request = async <T>(
-  endpoint: string,
-  options: RequestInit & { includeToken?: boolean }
-) => {
+export const request = async <T>(endpoint: string, options: RequestInit) => {
   try {
-    const includeToken = options.includeToken ?? true
-
     const response = await ofetch<T>(endpoint, {
       ...options,
       baseURL: ENV.API_URL,
@@ -35,10 +12,7 @@ export const request = async <T>(
         "Content-Type": "application/json",
         Accept: "application/json",
         "Cache-Control": "no-cache",
-        ...(includeToken &&
-          store.get(accessTokenAtom) && {
-            Authorization: `Bearer ${store.get(accessTokenAtom)}`,
-          }),
+
         ...options.headers,
       },
       onResponseError: (error) => {

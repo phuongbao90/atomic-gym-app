@@ -12,6 +12,8 @@
     "dev:web": "      turbo watch dev --filter=api --filter=web --filter=app",
     "dev:dashboard": "turbo watch dev --filter=api --filter=dashboard --filter=app",
     "dev:api": "      turbo watch start --filter=api",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
 
     "__": "------------------------------------------",
     "mobile#debug_start_dev": "      ts-node ./scripts/modify-env.cjs dev     ios     && turbo watch start --filter=mobile --filter=api",

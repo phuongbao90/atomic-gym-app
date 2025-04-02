@@ -1,21 +1,24 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import i18n from "../configs/i18n";
-import { use$ } from "@legendapp/state/react";
-import { appStore$ } from "../stores/app-store";
-import Entypo from "@expo/vector-icons/Entypo";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { USFlag } from "../constants/app-assets";
-import { Image } from "expo-image";
-import { VNFlag } from "../constants/app-assets";
+import { StyleSheet, TouchableOpacity, View } from "react-native"
+import i18n from "../configs/i18n"
+import { use$ } from "@legendapp/state/react"
+import { appStore$ } from "../stores/app-store"
+import Entypo from "@expo/vector-icons/Entypo"
+import MaterialIcons from "@expo/vector-icons/MaterialIcons"
+import { USFlag } from "../constants/app-assets"
+import { Image } from "expo-image"
+import { VNFlag } from "../constants/app-assets"
 
 export function Header() {
-  const theme = use$(appStore$.theme);
+  const theme = use$(appStore$.theme)
   return (
-    <View className="flex-row items-center justify-end px-4 py-3 bg-white">
+    <View
+      testID="app-header"
+      className="flex-row items-center justify-end px-4 py-3 bg-white"
+    >
       <View className="flex-row gap-8">
         <TouchableOpacity
           onPress={() => {
-            appStore$.switchTheme();
+            appStore$.switchTheme()
           }}
         >
           {theme === "light" ? (
@@ -26,7 +29,7 @@ export function Header() {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            appStore$.switchLanguage();
+            appStore$.switchLanguage()
           }}
         >
           {i18n.language === "vi" ? (
@@ -37,7 +40,7 @@ export function Header() {
         </TouchableOpacity>
       </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -45,4 +48,4 @@ const styles = StyleSheet.create({
     height: 20,
     aspectRatio: 513 / 342,
   },
-});
+})

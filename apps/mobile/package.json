@@ -6,6 +6,8 @@
     "clean": "rm -rf node_modules && rm -rf ios && rm -rf android && rm -rf .expo && rm -rf .turbo",
     "copy-env-to-eas": "ts-node ./scripts/copy-env-to-eas.ts ",
     "postinstall": "cd ../.. & patch-package",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "_": "----------------------------------------------------------------------------",
     "start": "   cross-env NODE_ENV=$(node ./scripts/read-env.mjs)  npx expo start --dev-client --port 8086 -c",
     "predebug": "cross-env NODE_ENV=$(node ./scripts/read-env.mjs)  EXPO_NO_GIT_STATUS=1     npx expo prebuild    --platform $(node ./scripts/read-platform.mjs) --clean",
@@ -13,9 +15,6 @@
     "build": "yarn copy-env-to-eas && eas build --local --clear-cache",
     "android": "expo run:android",
     "ios": "expo run:ios"
-  },
-  "jest": {
-    "preset": "jest-expo"
   },
   "expo": {
     "doctor": {
@@ -123,12 +122,12 @@
     "@babel/core": "^7.26.10",
     "@babel/plugin-transform-react-jsx": "^7.25.9",
     "@expo/config-types": "^52.0.5",
+    "@testing-library/react-native": "^13.2.0",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/jest": "^29.5.14",
     "@types/lodash": "^4.17.13",
     "@types/qs": "^6.9.17",
     "@types/react": "~18.3.12",
-    "@types/react-test-renderer": "^18.3.0",
     "@types/uuid": "^10.0.0",
     "dotenv": "^16.4.7",
     "husky": "^9.1.7",
@@ -137,7 +136,6 @@
     "lint-staged": "^15.2.11",
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
-    "react-test-renderer": "18.3.1",
     "ts-node": "^10.9.2",
     "typescript": "5.7.2",
     "typescript-config": "*"
