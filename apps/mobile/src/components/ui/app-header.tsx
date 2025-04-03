@@ -1,12 +1,10 @@
 import { useRouter } from "expo-router"
-import { useColorScheme } from "nativewind"
-import { StyleSheet, TouchableOpacity, View } from "react-native"
+import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native"
 import { Divider } from "./divider"
 import { USFlag } from "../../constants/app-assets"
 import { appStore$ } from "../../stores/app-store"
 import { VNFlag } from "../../constants/app-assets"
 import { Image } from "expo-image"
-import { use$ } from "@legendapp/state/react"
 import { AppText } from "./app-text"
 import { ExpoIcon } from "./expo-icon"
 import { cn } from "../../utils/cn"
@@ -19,6 +17,8 @@ export const AppHeader = ({
   withBottomBorder = true,
   Right,
   className,
+  theme,
+  language,
 }: {
   title?: string
   center?: boolean
@@ -26,23 +26,26 @@ export const AppHeader = ({
   withBottomBorder?: boolean
   Right?: React.ReactNode
   className?: string
+  theme: "light" | "dark"
+  language: "vi" | "en"
 }) => {
   const router = useRouter()
-  const mode = useColorScheme()
-  const theme = use$(appStore$.theme)
-  const language = use$(appStore$.language)
 
   return (
     <>
-      <View className={cn("flex-row items-center h-14 z-50", className)}>
+      <View
+        testID="app-header"
+        className={cn("flex-row items-center h-14 z-50", className)}
+      >
         {withBackButton && (
-          <ExpoIcon
-            library="feather"
-            name="chevron-left"
-            size={26}
-            onPress={() => router.back()}
-            className="pl-4"
-          />
+          <Pressable onPress={() => router.back()} testID="back-button">
+            <ExpoIcon
+              library="feather"
+              name="chevron-left"
+              size={26}
+              className="pl-4"
+            />
+          </Pressable>
         )}
         {!!title && (
           <AppText className="flex-1 ml-8 text-xl font-bold">{title}</AppText>
@@ -56,22 +59,34 @@ export const AppHeader = ({
               onPress={() => {
                 appStore$.switchTheme()
               }}
+              testID="theme-button"
             >
-              {theme === "light" ? (
-                <ExpoIcon library="entypo" name="light-up" size={24} />
-              ) : (
-                <ExpoIcon library="materialIcons" name="dark-mode" size={24} />
+              {theme === "light" && (
+                <View testID="light-icon">
+                  <ExpoIcon library="entypo" name="light-up" size={24} />
+                </View>
+              )}
+              {theme === "dark" && (
+                <View testID="dark-icon">
+                  <ExpoIcon
+                    library="materialIcons"
+                    name="dark-mode"
+                    size={24}
+                  />
+                </View>
               )}
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 appStore$.switchLanguage()
               }}
+              testID="language-button"
             >
-              {language === "vi" ? (
-                <Image source={VNFlag} style={styles.flag} />
-              ) : (
-                <Image source={USFlag} style={styles.flag} />
+              {language === "vi" && (
+                <Image source={VNFlag} style={styles.flag} testID="vn-flag" />
+              )}
+              {language === "en" && (
+                <Image source={USFlag} style={styles.flag} testID="us-flag" />
               )}
             </TouchableOpacity>
 
@@ -79,6 +94,7 @@ export const AppHeader = ({
               onPress={() => {
                 router.push("/settings")
               }}
+              testID="settings-button"
             >
               <SimpleLineIcons
                 name="settings"

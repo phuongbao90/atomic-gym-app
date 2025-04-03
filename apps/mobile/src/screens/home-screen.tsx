@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { AppScreen } from "../components/ui/app-screen"
 import { queryClient } from "app"
-import { Button, View } from "react-native"
+import { Button, Text, View } from "react-native"
 import { AppText } from "../../src/components/ui/app-text"
 import { AppScrollView } from "../../src/components/ui/app-scrollview"
 import { AppStorage } from "../../src/lib/storage/app-storage"
@@ -10,12 +10,18 @@ import { appStore$ } from "../../src/stores/app-store"
 import { useRouter } from "expo-router"
 import { AppHeader } from "../components/ui/app-header"
 import { Icon } from "../components/ui/icon"
+import i18n from "../configs/i18n"
+import { use$ } from "@legendapp/state/react"
 
 export function HomeScreen() {
+  const theme = use$(appStore$.theme)
+  const language = use$(appStore$.language)
+
   return (
     <AppScreen name="home-screen">
-      <AppHeader title="Home" />
+      <AppHeader title="Home" theme={theme} language={language} />
       <AppScrollView contentContainerStyle={{ flex: 1 }}>
+        <Text>{i18n.resolvedLanguage}</Text>
         <Icon name="sort-numeric-up-alt" size={22} color="red" />
 
         <DEV />

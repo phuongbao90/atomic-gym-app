@@ -9,10 +9,10 @@ export const appStore$ = observable({
     appStore$.theme.set(nextTheme)
     colorScheme.set(nextTheme)
   },
-  language: "vi",
+  language: "vi" as "vi" | "en",
   switchLanguage: () => {
-    const nextLanguage = appStore$.language.get() === "vi" ? "en" : "vi"
-    appStore$.language.set(nextLanguage)
-    i18n.changeLanguage(nextLanguage)
+    i18n.changeLanguage(i18n.language === "vi" ? "en" : "vi").then(() => {
+      appStore$.language.set(i18n.language as "vi" | "en")
+    })
   },
 })

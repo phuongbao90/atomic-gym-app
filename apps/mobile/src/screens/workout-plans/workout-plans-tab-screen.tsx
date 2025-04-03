@@ -19,9 +19,13 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5"
 import { Divider } from "../../components/ui/divider"
 import { AppButton } from "../../components/ui/app-button"
 import { appRoutes } from "../../configs/routes"
+import { use$ } from "@legendapp/state/react"
+import { appStore$ } from "../../stores/app-store"
 
 export function WorkoutPlansTabScreen() {
   const router = useRouter()
+  const theme = use$(appStore$.theme)
+  const language = use$(appStore$.language)
 
   const { data } = useGetWorkoutPlansInGroups()
   const sections = useMemo(() => {
@@ -78,7 +82,7 @@ export function WorkoutPlansTabScreen() {
 
   return (
     <AppScreen name="workout-plans-screen">
-      <AppHeader title="Workout Plans" />
+      <AppHeader title="Workout Plans" theme={theme} language={language} />
       <SectionList
         sections={sections}
         renderSectionHeader={renderSectionHeader}

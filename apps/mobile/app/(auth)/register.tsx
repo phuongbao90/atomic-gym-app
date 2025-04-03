@@ -8,6 +8,8 @@ import { AppScreen } from "../../src/components/ui/app-screen"
 import { AppScrollView } from "../../src/components/ui/app-scrollview"
 import { authStore$ } from "../../src/stores/auth-store"
 import { useSignup } from "app"
+import { appStore$ } from "../../src/stores/app-store"
+import { use$ } from "@legendapp/state/react"
 
 const registerSchema = z
   .object({
@@ -29,6 +31,9 @@ const initialValues = {
 }
 
 export default function Register() {
+  const theme = use$(appStore$.theme)
+  const language = use$(appStore$.language)
+
   const { control, handleSubmit } = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: initialValues,
@@ -47,7 +52,13 @@ export default function Register() {
 
   return (
     <AppScreen name="register-screen">
-      <AppHeader title="Register" center withBackButton />
+      <AppHeader
+        title="Register"
+        center
+        withBackButton
+        theme={theme}
+        language={language}
+      />
       <AppScrollView>
         <View style={{ gap: 32 }}>
           <Controller

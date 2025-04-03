@@ -7,13 +7,13 @@ import { Button, StyleSheet, TextInput, View } from "react-native"
 import { AppScreen } from "../../src/components/ui/app-screen"
 import { AppScrollView } from "../../src/components/ui/app-scrollview"
 import { appRoutes } from "../../src/configs/routes"
-import { setToken } from "../../src/lib/auth/session-store"
 import { AppStorage } from "../../src/lib/storage/app-storage"
 import { authStore$ } from "../../src/stores/auth-store"
 import { appStore$ } from "../../src/stores/app-store"
 import { AppText } from "../../src/components/ui/app-text"
-import { Header } from "../components/header"
 import { useLogin } from "app"
+import { AppHeader } from "../components/ui/app-header"
+import { use$ } from "@legendapp/state/react"
 
 export function LoginScreen() {
   const { t } = useTranslation("login-screen")
@@ -21,6 +21,8 @@ export function LoginScreen() {
   const [password, setPassword] = useState("123456#@Nn")
   const loginMutation = useLogin()
   const router = useRouter()
+  const theme = use$(appStore$.theme)
+  const language = use$(appStore$.language)
 
   async function handleLogin() {
     try {
@@ -40,8 +42,8 @@ export function LoginScreen() {
   }
 
   return (
-    <AppScreen>
-      <Header />
+    <AppScreen name="login-screen">
+      <AppHeader title={t("login-title")} theme={theme} language={language} />
       <AppScrollView>
         <View className="gap-4 m-4 flex-1">
           <Text className="text-2xl font-bold">{t("login-title")}</Text>

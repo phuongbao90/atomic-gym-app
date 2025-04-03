@@ -10,6 +10,8 @@ import { WorkoutPlanStatistics } from "./components/workout-plan-statistics"
 import { AppText } from "../../components/ui/app-text"
 import { cn } from "../../utils/cn"
 import { TabBarProps, Tabs } from "react-native-collapsible-tab-view"
+import { appStore$ } from "../../stores/app-store"
+import { use$ } from "@legendapp/state/react"
 
 const routes = [
   { key: "first", title: "Overview" },
@@ -46,6 +48,8 @@ const IMAGE_HEIGHT = 300
 export const WorkoutPlanDetailScreen = () => {
   const { id } = useLocalSearchParams()
   const { data: workoutPlan } = useGetWorkoutPlan(Number(id))
+  const theme = use$(appStore$.theme)
+  const language = use$(appStore$.language)
 
   const renderScene = ({ route }: { route: { key: string } }) => {
     switch (route.key) {
@@ -83,6 +87,8 @@ export const WorkoutPlanDetailScreen = () => {
         title="Workout Plan Detail"
         withBackButton
         className="bg-white"
+        theme={theme}
+        language={language}
       />
 
       <Tabs.Container

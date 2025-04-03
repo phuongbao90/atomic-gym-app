@@ -8,7 +8,7 @@ module.exports = {
   // monorepo root
   //   rootDir: "../..",
   transformIgnorePatterns: [
-    "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg)",
+    "<rootDir>/../../node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg)",
   ],
   // All imported modules in your tests should be mocked automatically
   // automock: false,
@@ -145,8 +145,13 @@ module.exports = {
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   setupFilesAfterEnv: [
     "@testing-library/react-native",
-    "<rootDir>/../../setupTests.js",
+    "<rootDir>/setupTests.ts",
   ],
+  moduleNameMapper: {
+    // "^expo-font$": "<rootDir>/__mocks__/expo-fonts.ts",
+    // "^legend-state$": "<rootDir>/__mocks__/legend-state.ts",
+    // "^expo-localization$": "<rootDir>/__mocks__/expo-localization.ts",
+  },
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,

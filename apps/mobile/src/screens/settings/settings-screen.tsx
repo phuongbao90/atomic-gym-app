@@ -12,9 +12,17 @@ import { useTranslation } from "react-i18next"
 
 export function SettingsScreen() {
   const { t } = useTranslation("settings-screen")
+  const theme = use$(appStore$.theme)
+  const language = use$(appStore$.language)
+
   return (
     <AppScreen name="settings-screen">
-      <AppHeader title={t("title")} withBackButton />
+      <AppHeader
+        title={t("title")}
+        withBackButton
+        theme={theme}
+        language={language}
+      />
       <AppScrollView contentContainerClassName="px-4 pt-6">
         <AppText className="text-2xl font-bold mb-6">
           {t("preferences")}
