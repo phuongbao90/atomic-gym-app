@@ -1,0 +1,23 @@
+diff --git a/node_modules/react-native-collapsible-tab-view/lib/commonjs/helpers.js b/node_modules/react-native-collapsible-tab-view/lib/commonjs/helpers.js
+index 03b9d5b..51631bd 100644
+--- a/node_modules/react-native-collapsible-tab-view/lib/commonjs/helpers.js
++++ b/node_modules/react-native-collapsible-tab-view/lib/commonjs/helpers.js
+@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
+   value: true
+ });
+ exports.isRTL = exports.ONE_FRAME_MS = exports.IS_IOS = exports.AnimatedSectionList = exports.AnimatedFlatList = void 0;
+-exports.scrollToImpl = scrollToImpl;
++// exports.scrollToImpl = scrollToImpl;
+ var _reactNative = require("react-native");
+ var _reactNativeReanimated = _interopRequireWildcard(require("react-native-reanimated"));
+ function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
+@@ -28,4 +28,6 @@ function scrollToImpl(ref, x, y, animated) {
+   if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+   (0, _reactNativeReanimated.scrollTo)(ref, x, y, animated);
+ }
+-//# sourceMappingURL=helpers.js.map
+\ No newline at end of file
++
++// https://github.com/PedroBern/react-native-collapsible-tab-view/issues/458
++exports.scrollToImpl = scrollToImpl;
+\ No newline at end of file

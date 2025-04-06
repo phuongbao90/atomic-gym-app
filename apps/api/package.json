@@ -4,6 +4,7 @@
   "description": "backend for gym app",
   "private": true,
   "scripts": {
+    "clean": "rm -rf dist && rm -rf node_modules && yarn reset-db",
     "build": "nest build",
     "start:": "NODE_ENV=development nest start --watch",
     "start:debug": "NODE_ENV=development nest start --debug --watch",

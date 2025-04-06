@@ -1,20 +1,11 @@
-import { jest } from "@jest/globals";
-import { QueryClientProvider, useQuery } from "@tanstack/react-query";
-import { render, renderHook, waitFor } from "@testing-library/react-native";
+import { expect, jest } from "@jest/globals";
+import { waitFor } from "@testing-library/react-native";
 import { useGetWorkoutPlan } from "app";
 import { API_ROUTES } from "app/src/configs/api-routes";
-import { useLocalSearchParams } from "expo-router";
-import { renderRouter, screen } from "expo-router/testing-library";
-// import { useGetWorkoutPlan } from "app";
 import nock from "nock";
-import React from "react";
-import { View } from "react-native";
-import {
-  SafeAreaInsetsContext,
-  SafeAreaProvider,
-} from "react-native-safe-area-context";
-import { mockQueryClient } from "../../../__mocks__/mock-query-client";
 import { WorkoutPlanDetailScreen } from "../workout-plans/workout-plan-detail-screen";
+import { ENV } from "app/src/configs/env";
+import { customRender, customRenderHook } from "../../utils/test-utils";
 
 const ID = 2;
 const mockData = {
@@ -69,39 +60,16 @@ const mockData = {
   ],
 };
 
-// do not mock @tanstack/react-query
-// this will break the query client
-// jest.mock("@tanstack/react-query", () => ({
-//   useQuery: () => ({
-//     data: mockData,
-//     isLoading: false,
-//     isError: false,
-//     error: null,
-//     isSuccess: true,
+// jest.mock("react-native-collapsible-tab-view", () => ({
+//   Tabs: () => ({
+//     ScrollView: () => null,
 //   }),
 // }));
 
-// // Mock react-native-collapsible-tab-view
-// jest.mock("react-native-collapsible-tab-view", () => ({
-//   Tabs: {
-//     Container: ({ children }: { children: React.ReactNode }) => (
-//       <View>{children}</View>
-//     ),
-//     Tab: ({ children }: { children: React.ReactNode }) => (
-//       <View>{children}</View>
-//     ),
-//     ScrollView: ({ children }: { children: React.ReactNode }) => (
-//       <View>{children}</View>
-//     ),
-//   },
-// }))
-
-// Mock expo-router hooks
 jest.mock("expo-router", () => ({
   useLocalSearchParams: () => ({
     id: ID.toString(),
   }),
-  // Add other expo-router exports you need in your tests
   Link: () => null,
   useRouter: () => ({
     push: jest.fn(),
@@ -110,54 +78,23 @@ jest.mock("expo-router", () => ({
   }),
 }));
 
-jest.mock("react-native-collapsible-tab-view");
-
-const Provider = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <QueryClientProvider client={mockQueryClient}>
-      {children}
-    </QueryClientProvider>
-  );
-};
-
-const customRender = (ui: React.ReactElement) => {
-  return render(ui, { wrapper: Provider });
-};
-
-const wrapper = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <QueryClientProvider client={mockQueryClient}>
-      {children}
-    </QueryClientProvider>
-  );
-};
+nock(ENV.API_URL).get(API_ROUTES.plans.detail(ID)).reply(200, {
+  data: mockData,
+});
 
 describe("WorkoutPlanDetailScreen", () => {
   it("should render", async () => {
-    nock("http://192.168.31.63:3000")
-      .get(API_ROUTES.plans.detail(ID))
-      .reply(200, {
-        data: mockData,
-      });
+    const { result } = customRenderHook(() => useGetWorkoutPlan(ID));
+    const { getByText } = customRender(<WorkoutPlanDetailScreen />);
 
-    const { getByText } = render(
-      <SafeAreaProvider>
-        <QueryClientProvider client={mockQueryClient}>
-          <WorkoutPlanDetailScreen />
-        </QueryClientProvider>
-      </SafeAreaProvider>
-    );
-    const { result } = renderHook(() => useGetWorkoutPlan(ID), {
-      wrapper,
-    });
-
-    // console.log("result ", result);
+    expect(getByText("Statistics")).toBeTruthy();
+    expect(getByText("Overview")).toBeTruthy();
+    expect(getByText("Start plan")).toBeTruthy();
 
     expect(result.current.isSuccess).toEqual(false);
     expect(result.current.isLoading).toEqual(true);
     expect(result.current.isError).toEqual(false);
     expect(result.current.data).toEqual(undefined);
-    // console.log("result ", result.current.data);
 
     await waitFor(() => {
       expect(result.current.data).toEqual(mockData);
@@ -165,10 +102,7 @@ describe("WorkoutPlanDetailScreen", () => {
       expect(result.current.isLoading).toEqual(false);
       expect(result.current.isError).toEqual(false);
       expect(getByText(mockData.name)).toBeTruthy();
+      expect(getByText(mockData.description)).toBeTruthy();
     });
-
-    expect(getByText("Start plan")).toBeTruthy();
-    // expect(getByText("Overview")).toBeTruthy();
-    // expect(getByText("Statistics")).toBeTruthy();
   });
 });

@@ -1,16 +1,12 @@
 import mockSafeAreaContext from "react-native-safe-area-context/jest/mock";
-import { mockRouter } from "./__mocks__/mock-router";
-import { mockAppStore$ } from "./__mocks__/stores/app-store";
+
 require("react-native-reanimated").setUpTests();
 jest.mock("react-native/src/private/animated/NativeAnimatedHelper");
-
 jest.mock("expo-font", () => ({
   isLoaded: jest.fn(() => true),
   loadAsync: jest.fn(),
 }));
-// jest.mock("expo-asset")
 jest.mock("expo-localization");
-// jest.mock("expo-router")
 jest.mock("@expo/vector-icons", () => ({
   Feather: "",
   AntDesign: "",
@@ -37,7 +33,12 @@ jest.mock("./src/configs/i18n", () => ({
 }));
 
 jest.mock("expo-router", () => ({
-  useRouter: jest.fn(() => mockRouter),
+  Link: () => null,
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    back: jest.fn(),
+  }),
 }));
 
 jest.mock("react-native-safe-area-context", () => mockSafeAreaContext);

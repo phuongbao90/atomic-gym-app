@@ -14,7 +14,9 @@
       "ios",
       "android",
       ".turbo",
-      ".expo"
+      ".expo",
+      "coverage",
+      "assets"
     ]
   },
   "formatter": {
