@@ -1,7 +1,7 @@
 import Entypo from "@expo/vector-icons/Entypo";
 import { WorkoutPlan } from "app";
 import { Image, ImageBackground } from "expo-image";
-import { Link, useRouter } from "expo-router";
+import { Link } from "expo-router";
 import { Text, View } from "react-native";
 import { appRoutes } from "../configs/routes";
 

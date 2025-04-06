@@ -21,7 +21,10 @@ export const WorkoutItem = ({
   isPremiumPlan: boolean;
 }) => {
   return (
-    <View className="flex-row items-center bg-slate-200 rounded-lg py-3 px-2">
+    <View
+      className="flex-row items-center bg-slate-200 rounded-lg py-3 px-2"
+      testID={`workout-item-${index}`}
+    >
       <Badge label={`Day ${index + 1}`} />
       <View className="mx-4 flex-1">
         <Text numberOfLines={1} style={{ flex: 1 }}>

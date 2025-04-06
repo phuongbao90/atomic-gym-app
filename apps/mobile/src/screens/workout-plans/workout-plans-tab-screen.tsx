@@ -1,16 +1,9 @@
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { use$ } from "@legendapp/state/react";
-import { WorkoutPlan, useGetWorkoutPlansInGroups } from "app";
+import { useGetWorkoutPlansInGroups } from "app";
 import { useRouter } from "expo-router";
 import { useMemo } from "react";
-import {
-  FlatList,
-  Pressable,
-  SectionList,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, Pressable, SectionList, Text, View } from "react-native";
 import { AppButton } from "../../components/ui/app-button";
 import { AppHeader } from "../../components/ui/app-header";
 import { AppScreen } from "../../components/ui/app-screen";
@@ -81,7 +74,7 @@ export function WorkoutPlansTabScreen() {
   }
 
   return (
-    <AppScreen name="workout-plans-screen">
+    <AppScreen name="workout-plans-tab-screen">
       <AppHeader title="Workout Plans" theme={theme} language={language} />
       <SectionList
         sections={sections}

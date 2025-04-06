@@ -1,12 +1,8 @@
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import FontAwesome6 from "@expo/vector-icons/build/FontAwesome6";
 import { Workout, WorkoutPlan } from "app";
 import { capitalizeString } from "app";
 import { cva } from "class-variance-authority";
-import { Text, View } from "react-native";
-import Animated, { useAnimatedScrollHandler } from "react-native-reanimated";
-import { ReanimatedScrollEvent } from "react-native-reanimated/lib/typescript/hook/commonTypes";
-import { AppScrollView } from "../../../components/ui/app-scrollview";
+import { View } from "react-native";
+import { Fragment } from "react";
 import { AppText } from "../../../components/ui/app-text";
 import { Divider } from "../../../components/ui/divider";
 import { ExpoIcon } from "../../../components/ui/expo-icon";
@@ -66,12 +62,13 @@ export const PlanInfo = ({
       <AppText className="text-lg font-bold mb-4">Workouts</AppText>
       <View className="gap-4">
         {item.workouts?.map((workout, index) => (
-          <WorkoutItem
-            key={workout.id}
-            workout={workout as Workout & { _count: { exercises: number } }}
-            index={index}
-            isPremiumPlan={item.isPremium ?? false}
-          />
+          <Fragment key={workout.id}>
+            <WorkoutItem
+              workout={workout as Workout & { _count: { exercises: number } }}
+              index={index}
+              isPremiumPlan={item.isPremium ?? false}
+            />
+          </Fragment>
         ))}
       </View>
     </View>

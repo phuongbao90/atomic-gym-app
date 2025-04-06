@@ -85,7 +85,9 @@ nock(ENV.API_URL).get(API_ROUTES.plans.detail(ID)).reply(200, {
 describe("WorkoutPlanDetailScreen", () => {
   it("should render", async () => {
     const { result } = customRenderHook(() => useGetWorkoutPlan(ID));
-    const { getByText } = customRender(<WorkoutPlanDetailScreen />);
+    const { getByText, getAllByTestId } = customRender(
+      <WorkoutPlanDetailScreen />
+    );
 
     expect(getByText("Statistics")).toBeTruthy();
     expect(getByText("Overview")).toBeTruthy();
@@ -104,5 +106,12 @@ describe("WorkoutPlanDetailScreen", () => {
       expect(getByText(mockData.name)).toBeTruthy();
       expect(getByText(mockData.description)).toBeTruthy();
     });
+    expect(getByText(/improve balance/i)).toBeTruthy();
+    expect(getByText(/beginner/i)).toBeTruthy();
+    expect(getByText(/3 days per week/i)).toBeTruthy();
+    expect(getAllByTestId(/workout-item-\d+/i)).toHaveLength(3);
+    expect(getByText(mockData.workouts[0].name)).toBeTruthy();
+    expect(getByText(mockData.workouts[1].name)).toBeTruthy();
+    expect(getByText(mockData.workouts[2].name)).toBeTruthy();
   });
 });
