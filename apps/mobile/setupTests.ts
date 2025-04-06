@@ -1,6 +1,6 @@
+import mockSafeAreaContext from "react-native-safe-area-context/jest/mock";
 import { mockRouter } from "./__mocks__/mock-router";
 import { mockAppStore$ } from "./__mocks__/stores/app-store";
-import mockSafeAreaContext from "react-native-safe-area-context/jest/mock";
 require("react-native-reanimated").setUpTests();
 jest.mock("react-native/src/private/animated/NativeAnimatedHelper");
 

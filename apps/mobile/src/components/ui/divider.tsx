@@ -1,10 +1,10 @@
-import { cx } from "class-variance-authority"
-import { useColorScheme } from "nativewind"
-import { View } from "react-native"
-import { box } from "../../styles/box"
+import { cx } from "class-variance-authority";
+import { useColorScheme } from "nativewind";
+import { View } from "react-native";
+import { box } from "../../styles/box";
 
 export const Divider = ({ className }: { className?: string }) => {
-  const theme = useColorScheme()
+  const theme = useColorScheme();
 
   return (
     <View
@@ -14,5 +14,5 @@ export const Divider = ({ className }: { className?: string }) => {
         className
       )}
     />
-  )
-}
+  );
+};

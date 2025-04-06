@@ -1,6 +1,6 @@
-export const PRIMARY_COLOR = "#bcf352"
-export const SECONDARY_COLOR = "#8a69fb"
-export const DESTRUCTIVE_COLOR = "#ff0000"
+export const PRIMARY_COLOR = "#bcf352";
+export const SECONDARY_COLOR = "#8a69fb";
+export const DESTRUCTIVE_COLOR = "#ff0000";
 
 export const theme = {
   icon: {
@@ -25,7 +25,7 @@ export const theme = {
       main: "white",
     },
   },
-} as const
+} as const;
 
 export const colors = {
   pageBackground: {
@@ -42,4 +42,4 @@ export const colors = {
       main: "#000000",
     },
   },
-} as const
+} as const;

@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "clean": "rm -rf node_modules && rm -rf ios && rm -rf android && rm -rf .expo && rm -rf .turbo",
+    "lint": "biome check --write .",
     "copy-env-to-eas": "ts-node ./scripts/copy-env-to-eas.ts ",
     "postinstall": "cd ../.. & patch-package",
     "test": "cross-env NODE_ENV=development jest",

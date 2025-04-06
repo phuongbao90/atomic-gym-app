@@ -1,24 +1,24 @@
-import Entypo from "@expo/vector-icons/Entypo"
-import { Workout } from "app"
-import { View, Text } from "react-native"
-import { ExpoIcon } from "./ui/expo-icon"
+import Entypo from "@expo/vector-icons/Entypo";
+import { Workout } from "app";
+import { Text, View } from "react-native";
+import { ExpoIcon } from "./ui/expo-icon";
 
 const Badge = ({ label }: { label: string }) => {
   return (
     <View className="px-5 py-1 bg-primary rounded-2xl">
       <Text className="text-dark">{label}</Text>
     </View>
-  )
-}
+  );
+};
 
 export const WorkoutItem = ({
   workout,
   index,
   isPremiumPlan,
 }: {
-  workout: Workout & { _count: { exercises: number } }
-  index: number
-  isPremiumPlan: boolean
+  workout: Workout & { _count: { exercises: number } };
+  index: number;
+  isPremiumPlan: boolean;
 }) => {
   return (
     <View className="flex-row items-center bg-slate-200 rounded-lg py-3 px-2">
@@ -44,5 +44,5 @@ export const WorkoutItem = ({
         />
       )}
     </View>
-  )
-}
+  );
+};

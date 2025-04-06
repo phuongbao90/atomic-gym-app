@@ -1,14 +1,14 @@
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Divider } from "./divider";
 import { USFlag } from "../../constants/app-assets";
-import { appStore$ } from "../../stores/app-store";
 import { VNFlag } from "../../constants/app-assets";
-import { Image } from "expo-image";
-import { AppText } from "./app-text";
-import { ExpoIcon } from "./expo-icon";
+import { appStore$ } from "../../stores/app-store";
 import { cn } from "../../utils/cn";
-import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
+import { AppText } from "./app-text";
+import { Divider } from "./divider";
+import { ExpoIcon } from "./expo-icon";
 
 export const AppHeader = ({
   title,

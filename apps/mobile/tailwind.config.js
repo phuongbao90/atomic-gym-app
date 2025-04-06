@@ -1,4 +1,4 @@
-import sharedConfig from "tailwind-config"
+import sharedConfig from "tailwind-config";
 // const { colors } = require("./src/styles/themes")
 
 /** @type {import('tailwindcss').Config} */
@@ -28,4 +28,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
+};

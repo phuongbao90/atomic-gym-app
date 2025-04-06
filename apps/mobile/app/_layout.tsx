@@ -7,11 +7,15 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { PortalProvider } from "@gorhom/portal";
 import { use$ } from "@legendapp/state/react";
 
+import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv";
+import { syncObservable } from "@legendapp/state/sync";
+import { primaryColors } from "app-config";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+import { SafeAreaView, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { useMMKVBoolean } from "react-native-mmkv";
@@ -19,17 +23,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Toaster } from "sonner-native";
 import { ReactQueryProvider } from "../src/lib/react-query";
 import { storageKeyNames } from "../src/lib/storage/app-storage";
+import { appStore$ } from "../src/stores/app-store";
 import { authStore$ } from "../src/stores/auth-store";
 import Onboarding from "./onboarding";
-import { SafeAreaView, View } from "react-native";
-import { syncObservable } from "@legendapp/state/sync";
-import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv";
-import { appStore$ } from "../src/stores/app-store";
-import { primaryColors } from "app-config";
 import "../src/configs/i18n";
 import {
-  configureReanimatedLogger,
   ReanimatedLogLevel,
+  configureReanimatedLogger,
 } from "react-native-reanimated";
 
 // This is the default configuration

@@ -1,24 +1,24 @@
-import Feather from "@expo/vector-icons/Feather"
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"
-import { Redirect, Tabs } from "expo-router"
-import { useColorScheme } from "nativewind"
-import { Platform } from "react-native"
-import { appRoutes } from "../../src/configs/routes"
+import Feather from "@expo/vector-icons/Feather";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 // import { tabBarStyle } from "../../src/styles/themes"
-import { use$ } from "@legendapp/state/react"
-import { authStore$ } from "../../src/stores/auth-store"
-import { appStore$ } from "../../src/stores/app-store"
-import { cn } from "../../src/utils/cn"
-import { colors } from "../../src/styles/themes"
+import { use$ } from "@legendapp/state/react";
+import { Redirect, Tabs } from "expo-router";
+import { useColorScheme } from "nativewind";
+import { Platform } from "react-native";
+import { appRoutes } from "../../src/configs/routes";
+import { appStore$ } from "../../src/stores/app-store";
+import { authStore$ } from "../../src/stores/auth-store";
+import { colors } from "../../src/styles/themes";
+import { cn } from "../../src/utils/cn";
 
 const Icon = ({
   name,
   focused,
 }: {
-  name: keyof typeof Feather.glyphMap
-  focused: boolean
+  name: keyof typeof Feather.glyphMap;
+  focused: boolean;
 }) => {
-  const colorMode = use$(appStore$.theme)
+  const colorMode = use$(appStore$.theme);
 
   return (
     <Feather
@@ -28,16 +28,16 @@ const Icon = ({
         focused ? colors.text[colorMode].main : colors.text[colorMode].inactive
       }
     />
-  )
-}
+  );
+};
 
 export default function TabLayout() {
-  const isLoggedIn = use$(authStore$.isLoggedIn)
-  const theme = useColorScheme()
-  const colorMode = use$(appStore$.theme)
+  const isLoggedIn = use$(authStore$.isLoggedIn);
+  const theme = useColorScheme();
+  const colorMode = use$(appStore$.theme);
 
   if (!isLoggedIn) {
-    return <Redirect href={appRoutes.login} />
+    return <Redirect href={appRoutes.login} />;
   }
 
   return (
@@ -109,5 +109,5 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
-  )
+  );
 }

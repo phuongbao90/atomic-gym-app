@@ -1,19 +1,19 @@
-import { View } from "react-native"
-import { AppHeader } from "../../components/ui/app-header"
-import { AppScreen } from "../../components/ui/app-screen"
-import { AppScrollView } from "../../components/ui/app-scrollview"
-import { AppText } from "../../components/ui/app-text"
-import { Icon } from "../../components/ui/icon"
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5"
-import { appStore$ } from "../../stores/app-store"
-import { use$ } from "@legendapp/state/react"
-import { ItemContainer } from "../../components/ui/item-container"
-import { useTranslation } from "react-i18next"
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { use$ } from "@legendapp/state/react";
+import { useTranslation } from "react-i18next";
+import { View } from "react-native";
+import { AppHeader } from "../../components/ui/app-header";
+import { AppScreen } from "../../components/ui/app-screen";
+import { AppScrollView } from "../../components/ui/app-scrollview";
+import { AppText } from "../../components/ui/app-text";
+import { Icon } from "../../components/ui/icon";
+import { ItemContainer } from "../../components/ui/item-container";
+import { appStore$ } from "../../stores/app-store";
 
 export function SettingsScreen() {
-  const { t } = useTranslation("settings-screen")
-  const theme = use$(appStore$.theme)
-  const language = use$(appStore$.language)
+  const { t } = useTranslation("settings-screen");
+  const theme = use$(appStore$.theme);
+  const language = use$(appStore$.language);
 
   return (
     <AppScreen name="settings-screen">
@@ -86,11 +86,11 @@ export function SettingsScreen() {
         </ItemContainer>
       </AppScrollView>
     </AppScreen>
-  )
+  );
 }
 
 const ChevRightIcon = () => {
-  const theme = use$(appStore$.theme)
+  const theme = use$(appStore$.theme);
 
   return (
     <FontAwesome5
@@ -99,5 +99,5 @@ const ChevRightIcon = () => {
       color={theme === "light" ? "black" : "white"}
       className="ml-auto"
     />
-  )
-}
+  );
+};

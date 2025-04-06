@@ -1,28 +1,28 @@
-import { Text } from "react-native"
-import { useTranslation } from "react-i18next"
-import { useRouter } from "expo-router"
-import * as SecureStore from "expo-secure-store"
-import { useState } from "react"
-import { Button, StyleSheet, TextInput, View } from "react-native"
-import { AppScreen } from "../../src/components/ui/app-screen"
-import { AppScrollView } from "../../src/components/ui/app-scrollview"
-import { appRoutes } from "../../src/configs/routes"
-import { AppStorage } from "../../src/lib/storage/app-storage"
-import { authStore$ } from "../../src/stores/auth-store"
-import { appStore$ } from "../../src/stores/app-store"
-import { AppText } from "../../src/components/ui/app-text"
-import { useLogin } from "app"
-import { AppHeader } from "../components/ui/app-header"
-import { use$ } from "@legendapp/state/react"
+import { use$ } from "@legendapp/state/react";
+import { useLogin } from "app";
+import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Text } from "react-native";
+import { Button, StyleSheet, TextInput, View } from "react-native";
+import { AppScreen } from "../../src/components/ui/app-screen";
+import { AppScrollView } from "../../src/components/ui/app-scrollview";
+import { AppText } from "../../src/components/ui/app-text";
+import { appRoutes } from "../../src/configs/routes";
+import { AppStorage } from "../../src/lib/storage/app-storage";
+import { appStore$ } from "../../src/stores/app-store";
+import { authStore$ } from "../../src/stores/auth-store";
+import { AppHeader } from "../components/ui/app-header";
 
 export function LoginScreen() {
-  const { t } = useTranslation("login-screen")
-  const [email, setEmail] = useState("bao5@gmail.com")
-  const [password, setPassword] = useState("123456#@Nn")
-  const loginMutation = useLogin()
-  const router = useRouter()
-  const theme = use$(appStore$.theme)
-  const language = use$(appStore$.language)
+  const { t } = useTranslation("login-screen");
+  const [email, setEmail] = useState("bao5@gmail.com");
+  const [password, setPassword] = useState("123456#@Nn");
+  const loginMutation = useLogin();
+  const router = useRouter();
+  const theme = use$(appStore$.theme);
+  const language = use$(appStore$.language);
 
   async function handleLogin() {
     try {
@@ -30,14 +30,14 @@ export function LoginScreen() {
         { email, password },
         {
           onSuccess: (result) => {
-            console.info("Login success: ")
-            SecureStore.setItemAsync("accessToken", result?.data?.accessToken)
-            authStore$.setIsLoggedIn(true)
+            console.info("Login success: ");
+            SecureStore.setItemAsync("accessToken", result?.data?.accessToken);
+            authStore$.setIsLoggedIn(true);
           },
         }
-      )
+      );
     } catch (error) {
-      console.log("error ====> ", (error as Error)?.message)
+      console.log("error ====> ", (error as Error)?.message);
     }
   }
 
@@ -74,32 +74,32 @@ export function LoginScreen() {
           <Button
             title="Switch theme"
             onPress={() => {
-              appStore$.switchTheme()
+              appStore$.switchTheme();
             }}
           />
           <Button
             title="Login"
             onPress={() => {
-              handleLogin()
+              handleLogin();
             }}
           />
           <Button
             title="signup"
             color={"black"}
             onPress={() => {
-              router.push(appRoutes.register)
+              router.push(appRoutes.register);
             }}
           />
           <Button
             title="Clear onboarding"
             onPress={() => {
-              AppStorage.setIsOnboarded(false)
+              AppStorage.setIsOnboarded(false);
             }}
           />
         </View>
       </AppScrollView>
     </AppScreen>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -107,4 +107,4 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "gray",
   },
-})
+});

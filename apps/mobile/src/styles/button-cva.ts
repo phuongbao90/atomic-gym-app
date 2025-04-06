@@ -1,4 +1,4 @@
-import { cva } from "class-variance-authority"
+import { cva } from "class-variance-authority";
 
 export const buttonCva = cva("group flex-1 items-center justify-center", {
   variants: {
@@ -37,7 +37,7 @@ export const buttonCva = cva("group flex-1 items-center justify-center", {
     color: "default",
     disabled: false,
   },
-})
+});
 
 export const buttonTextCva = cva("", {
   variants: {
@@ -63,4 +63,4 @@ export const buttonTextCva = cva("", {
     size: "md",
     color: "default",
   },
-})
+});

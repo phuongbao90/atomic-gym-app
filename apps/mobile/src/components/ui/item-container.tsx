@@ -1,12 +1,12 @@
-import { View } from "react-native"
-import { cn } from "../../utils/cn"
+import { View } from "react-native";
+import { cn } from "../../utils/cn";
 
 export const ItemContainer = ({
   children,
   className,
 }: {
-  children: React.ReactNode
-  className?: string
+  children: React.ReactNode;
+  className?: string;
 }) => {
   return (
     <View
@@ -17,5 +17,5 @@ export const ItemContainer = ({
     >
       {children}
     </View>
-  )
-}
+  );
+};

@@ -1,17 +1,17 @@
-import { Workout, WorkoutPlan } from "app"
-import { Text, View } from "react-native"
-import { AppScrollView } from "../../../components/ui/app-scrollview"
-import { Divider } from "../../../components/ui/divider"
-import { ListItem } from "../../../components/ui/list-item"
-import MaterialIcons from "@expo/vector-icons/MaterialIcons"
-import { capitalizeString } from "app"
-import FontAwesome6 from "@expo/vector-icons/build/FontAwesome6"
-import { WorkoutItem } from "../../../components/workout-item"
-import { cva } from "class-variance-authority"
-import { ExpoIcon } from "../../../components/ui/expo-icon"
-import { AppText } from "../../../components/ui/app-text"
-import Animated, { useAnimatedScrollHandler } from "react-native-reanimated"
-import { ReanimatedScrollEvent } from "react-native-reanimated/lib/typescript/hook/commonTypes"
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import FontAwesome6 from "@expo/vector-icons/build/FontAwesome6";
+import { Workout, WorkoutPlan } from "app";
+import { capitalizeString } from "app";
+import { cva } from "class-variance-authority";
+import { Text, View } from "react-native";
+import Animated, { useAnimatedScrollHandler } from "react-native-reanimated";
+import { ReanimatedScrollEvent } from "react-native-reanimated/lib/typescript/hook/commonTypes";
+import { AppScrollView } from "../../../components/ui/app-scrollview";
+import { AppText } from "../../../components/ui/app-text";
+import { Divider } from "../../../components/ui/divider";
+import { ExpoIcon } from "../../../components/ui/expo-icon";
+import { ListItem } from "../../../components/ui/list-item";
+import { WorkoutItem } from "../../../components/workout-item";
 
 const mapCategory = cva("", {
   variants: {
@@ -23,14 +23,14 @@ const mapCategory = cva("", {
       LOOSE_WEIGHT: "Loose weight",
     },
   },
-})
+});
 
 export const PlanInfo = ({
   item,
 }: {
-  item: WorkoutPlan | undefined
+  item: WorkoutPlan | undefined;
 }) => {
-  if (!item) return null
+  if (!item) return null;
   return (
     <View className="mt-4">
       <AppText>{item?.description}</AppText>
@@ -75,5 +75,5 @@ export const PlanInfo = ({
         ))}
       </View>
     </View>
-  )
-}
+  );
+};

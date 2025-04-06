@@ -1,7 +1,7 @@
-import { queryClient } from "app";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { queryClient } from "app";
 import { MMKV } from "react-native-mmkv";
 
 const storage = new MMKV();

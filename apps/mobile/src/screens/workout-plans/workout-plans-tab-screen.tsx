@@ -1,4 +1,8 @@
-import { useRouter } from "expo-router"
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { use$ } from "@legendapp/state/react";
+import { WorkoutPlan, useGetWorkoutPlansInGroups } from "app";
+import { useRouter } from "expo-router";
+import { useMemo } from "react";
 import {
   FlatList,
   Pressable,
@@ -6,30 +10,26 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native"
-import { AppHeader } from "../../components/ui/app-header"
-import { AppScreen } from "../../components/ui/app-screen"
-import { useGetWorkoutPlansInGroups, WorkoutPlan } from "app"
-import { useMemo } from "react"
+} from "react-native";
+import { AppButton } from "../../components/ui/app-button";
+import { AppHeader } from "../../components/ui/app-header";
+import { AppScreen } from "../../components/ui/app-screen";
+import { Divider } from "../../components/ui/divider";
 import {
   SingleWorkoutPlanCard,
   WorkoutPlanCard,
-} from "../../components/workout-plan-card"
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5"
-import { Divider } from "../../components/ui/divider"
-import { AppButton } from "../../components/ui/app-button"
-import { appRoutes } from "../../configs/routes"
-import { use$ } from "@legendapp/state/react"
-import { appStore$ } from "../../stores/app-store"
+} from "../../components/workout-plan-card";
+import { appRoutes } from "../../configs/routes";
+import { appStore$ } from "../../stores/app-store";
 
 export function WorkoutPlansTabScreen() {
-  const router = useRouter()
-  const theme = use$(appStore$.theme)
-  const language = use$(appStore$.language)
+  const router = useRouter();
+  const theme = use$(appStore$.theme);
+  const language = use$(appStore$.language);
 
-  const { data } = useGetWorkoutPlansInGroups()
+  const { data } = useGetWorkoutPlansInGroups();
   const sections = useMemo(() => {
-    if (!data) return []
+    if (!data) return [];
     return [
       {
         title: "FEATURED",
@@ -43,13 +43,13 @@ export function WorkoutPlansTabScreen() {
         title: "SINGLE",
         data: [data.single],
       },
-    ]
-  }, [data])
+    ];
+  }, [data]);
 
   function renderSectionHeader({
     section,
   }: { section: (typeof sections)[number] }) {
-    const data = section.data.flat()
+    const data = section.data.flat();
 
     return (
       <>
@@ -77,7 +77,7 @@ export function WorkoutPlansTabScreen() {
           </View>
         )}
       </>
-    )
+    );
   }
 
   return (
@@ -112,12 +112,12 @@ export function WorkoutPlansTabScreen() {
         <AppButton
           title="Build plan"
           onPress={() => {
-            router.navigate(appRoutes.workoutPlans.create)
+            router.navigate(appRoutes.workoutPlans.create);
           }}
         />
       </View>
     </AppScreen>
-  )
+  );
 }
 
 const SectionTitle = ({ title }: { title: string }) => {
@@ -125,5 +125,5 @@ const SectionTitle = ({ title }: { title: string }) => {
     <View className="px-6 py-4">
       <Text className="text-lg font-bold">{title}</Text>
     </View>
-  )
-}
+  );
+};

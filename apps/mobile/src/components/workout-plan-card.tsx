@@ -1,14 +1,14 @@
-import { WorkoutPlan } from "app"
-import { Image, ImageBackground } from "expo-image"
-import { Text, View } from "react-native"
-import Entypo from "@expo/vector-icons/Entypo"
-import { Link, useRouter } from "expo-router"
-import { appRoutes } from "../configs/routes"
+import Entypo from "@expo/vector-icons/Entypo";
+import { WorkoutPlan } from "app";
+import { Image, ImageBackground } from "expo-image";
+import { Link, useRouter } from "expo-router";
+import { Text, View } from "react-native";
+import { appRoutes } from "../configs/routes";
 
 export const WorkoutPlanCard = ({
   item,
 }: {
-  item: WorkoutPlan & { _count?: { workouts: number } }
+  item: WorkoutPlan & { _count?: { workouts: number } };
 }) => {
   return (
     <Link href={appRoutes.workoutPlans.detail(item.id.toString())}>
@@ -36,19 +36,19 @@ export const WorkoutPlanCard = ({
         </ImageBackground>
       </View>
     </Link>
-  )
-}
+  );
+};
 
 const LockIcon = () => (
   <View className="absolute top-2 right-2 w-8 h-8 items-center justify-center rounded-full bg-black/40">
     <Entypo name="lock" size={16} color="white" />
   </View>
-)
+);
 
 export const SingleWorkoutPlanCard = ({
   item,
 }: {
-  item: WorkoutPlan
+  item: WorkoutPlan;
 }) => {
   return (
     <View className="flex-row items-center gap-2">
@@ -68,5 +68,5 @@ export const SingleWorkoutPlanCard = ({
         <Entypo name="lock" size={18} color="gray" className="ml-auto" />
       )}
     </View>
-  )
-}
+  );
+};

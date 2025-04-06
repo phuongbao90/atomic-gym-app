@@ -1,6 +1,6 @@
-import { View } from "react-native"
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5"
-import { cn } from "../../utils/cn"
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { View } from "react-native";
+import { cn } from "../../utils/cn";
 
 export const Icon = ({
   name,
@@ -9,11 +9,11 @@ export const Icon = ({
   className,
   containerClassName,
 }: {
-  name: keyof typeof FontAwesome5.glyphMap
-  size?: number
-  color?: string
-  className?: string
-  containerClassName?: string
+  name: keyof typeof FontAwesome5.glyphMap;
+  size?: number;
+  color?: string;
+  className?: string;
+  containerClassName?: string;
 }) => {
   return (
     <View
@@ -35,5 +35,5 @@ export const Icon = ({
         className={cn("", className)}
       />
     </View>
-  )
-}
+  );
+};

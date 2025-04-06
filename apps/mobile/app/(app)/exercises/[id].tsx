@@ -1,41 +1,41 @@
-import Feather from "@expo/vector-icons/Feather"
-import Ionicons from "@expo/vector-icons/Ionicons"
+import Feather from "@expo/vector-icons/Feather";
+import Ionicons from "@expo/vector-icons/Ionicons";
 // import { BottomSheetModal } from "@gorhom/bottom-sheet";
 // import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { BottomSheetModal } from "@gorhom/bottom-sheet"
-import { Exercise, exerciseQuery } from "app"
-import { Image } from "expo-image"
-import { useLocalSearchParams } from "expo-router"
-import { useColorScheme } from "nativewind"
-import { useRef, useState } from "react"
-import { Linking, TextInput, View, useWindowDimensions } from "react-native"
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { use$ } from "@legendapp/state/react";
+import { Exercise, exerciseQuery } from "app";
+import { Image } from "expo-image";
+import { useLocalSearchParams } from "expo-router";
+import { useColorScheme } from "nativewind";
+import { useRef, useState } from "react";
+import { Linking, TextInput, View, useWindowDimensions } from "react-native";
 // import { SceneMap, TabBar, TabView } from "react-native-tab-view";
-import { ExerciseNoteSheet } from "../../../src/components/bottom-sheets/exercise-note-sheet"
-import { MuscleItem } from "../../../src/components/muscle-item"
-import { AppBottomSheetView } from "../../../src/components/ui/app-bottom-sheet-view"
-import { AppHeader } from "../../../src/components/ui/app-header"
-import { AppScreen } from "../../../src/components/ui/app-screen"
-import { AppText } from "../../../src/components/ui/app-text"
-import { AppScrollView } from "../../../src/components/ui/app-scrollview"
-import { Divider } from "../../../src/components/ui/divider"
-import { ListItem } from "../../../src/components/ui/list-item"
-import { ThemedIcon } from "../../../src/components/ui/themed-icon"
-import { theme } from "../../../src/styles/themes"
-import { appStore$ } from "../../../src/stores/app-store"
-import { use$ } from "@legendapp/state/react"
+import { ExerciseNoteSheet } from "../../../src/components/bottom-sheets/exercise-note-sheet";
+import { MuscleItem } from "../../../src/components/muscle-item";
+import { AppBottomSheetView } from "../../../src/components/ui/app-bottom-sheet-view";
+import { AppHeader } from "../../../src/components/ui/app-header";
+import { AppScreen } from "../../../src/components/ui/app-screen";
+import { AppScrollView } from "../../../src/components/ui/app-scrollview";
+import { AppText } from "../../../src/components/ui/app-text";
+import { Divider } from "../../../src/components/ui/divider";
+import { ListItem } from "../../../src/components/ui/list-item";
+import { ThemedIcon } from "../../../src/components/ui/themed-icon";
+import { appStore$ } from "../../../src/stores/app-store";
+import { theme } from "../../../src/styles/themes";
 
 const Summary = ({ exercise }: { exercise?: Exercise }) => {
-  const ref = useRef<BottomSheetModal>(null)
-  const mode = useColorScheme()
+  const ref = useRef<BottomSheetModal>(null);
+  const mode = useColorScheme();
 
-  const [notes, setNotes] = useState(exercise?.notes)
+  const [notes, setNotes] = useState(exercise?.notes);
 
   function handleSheetChanges(index: number) {
-    console.log("index", index)
+    console.log("index", index);
   }
 
-  if (!exercise) return null
-  return null
+  if (!exercise) return null;
+  return null;
   return (
     <AppScrollView
       contentContainerStyle={{
@@ -65,7 +65,7 @@ const Summary = ({ exercise }: { exercise?: Exercise }) => {
           label="View notes"
           labelClassName="text-xl"
           onPress={() => {
-            ref.current?.present()
+            ref.current?.present();
           }}
           Left={
             <ThemedIcon
@@ -83,7 +83,7 @@ const Summary = ({ exercise }: { exercise?: Exercise }) => {
           onPress={() => {
             Linking.openURL(
               `https://www.youtube.com/results?search_query=${exercise?.name}`
-            )
+            );
           }}
           Left={
             <ThemedIcon
@@ -135,31 +135,31 @@ const Summary = ({ exercise }: { exercise?: Exercise }) => {
         </AppBottomSheetView>
       </BottomSheetModal> */}
     </AppScrollView>
-  )
-}
+  );
+};
 
 const History = ({ exercise }: { exercise?: Exercise }) => {
-  if (!exercise) return null
+  if (!exercise) return null;
   return (
     <View>
       <AppText>{exercise?.name}</AppText>
     </View>
-  )
-}
+  );
+};
 
 const routes = [
   { key: "summary", title: "Summary" },
   { key: "history", title: "History" },
-]
+];
 
 export default function ExercisePage() {
-  const params = useLocalSearchParams()
-  const { data } = exerciseQuery.getExercise(Number(params.id))
-  const layout = useWindowDimensions()
-  const [index, setIndex] = useState(0)
-  const mode = useColorScheme()
-  const theme = use$(appStore$.theme)
-  const language = use$(appStore$.language)
+  const params = useLocalSearchParams();
+  const { data } = exerciseQuery.getExercise(Number(params.id));
+  const layout = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+  const mode = useColorScheme();
+  const theme = use$(appStore$.theme);
+  const language = use$(appStore$.language);
 
   // console.log("data ", data);
 
@@ -192,11 +192,11 @@ export default function ExercisePage() {
         )}
       />
     </AppScreen>
-  )
+  );
 }
 
 const Icons = () => {
-  const mode = useColorScheme()
+  const mode = useColorScheme();
   return (
     <View className="flex-row gap-6">
       <Ionicons
@@ -210,5 +210,5 @@ const Icons = () => {
         color={theme.icon?.[mode.colorScheme!].color}
       />
     </View>
-  )
-}
+  );
+};

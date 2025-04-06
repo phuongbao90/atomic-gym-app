@@ -1,20 +1,20 @@
 import { jest } from "@jest/globals";
 import { QueryClientProvider, useQuery } from "@tanstack/react-query";
-import React from "react";
 import { render, renderHook, waitFor } from "@testing-library/react-native";
-import { mockQueryClient } from "../../../__mocks__/mock-query-client";
-import { WorkoutPlanDetailScreen } from "../workout-plans/workout-plan-detail-screen";
+import { useGetWorkoutPlan } from "app";
+import { API_ROUTES } from "app/src/configs/api-routes";
 import { useLocalSearchParams } from "expo-router";
 import { renderRouter, screen } from "expo-router/testing-library";
+// import { useGetWorkoutPlan } from "app";
+import nock from "nock";
+import React from "react";
 import { View } from "react-native";
 import {
   SafeAreaInsetsContext,
   SafeAreaProvider,
 } from "react-native-safe-area-context";
-// import { useGetWorkoutPlan } from "app";
-import nock from "nock";
-import { API_ROUTES } from "app/src/configs/api-routes";
-import { useGetWorkoutPlan } from "app";
+import { mockQueryClient } from "../../../__mocks__/mock-query-client";
+import { WorkoutPlanDetailScreen } from "../workout-plans/workout-plan-detail-screen";
 
 const ID = 2;
 const mockData = {

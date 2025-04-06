@@ -4,9 +4,9 @@ import {
   StyleProp,
   StyleSheet,
   TextStyle,
-  useWindowDimensions,
   View,
   ViewStyle,
+  useWindowDimensions,
 } from "react-native";
 import {
   Gesture,

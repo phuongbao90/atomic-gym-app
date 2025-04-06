@@ -1,17 +1,17 @@
+import { use$ } from "@legendapp/state/react";
+import { useGetWorkoutPlan } from "app";
 import { Image } from "expo-image";
+import { useLocalSearchParams } from "expo-router";
+import { Pressable, View } from "react-native";
+import { TabBarProps, Tabs } from "react-native-collapsible-tab-view";
+import { AppButton } from "../../components/ui/app-button";
 import { AppHeader } from "../../components/ui/app-header";
 import { AppScreen } from "../../components/ui/app-screen";
-import { useLocalSearchParams } from "expo-router";
-import { useGetWorkoutPlan } from "app";
-import { Pressable, View } from "react-native";
-import { AppButton } from "../../components/ui/app-button";
+import { AppText } from "../../components/ui/app-text";
+import { appStore$ } from "../../stores/app-store";
+import { cn } from "../../utils/cn";
 import { PlanInfo } from "./components/workout-plan-info";
 import { WorkoutPlanStatistics } from "./components/workout-plan-statistics";
-import { AppText } from "../../components/ui/app-text";
-import { cn } from "../../utils/cn";
-import { TabBarProps, Tabs } from "react-native-collapsible-tab-view";
-import { appStore$ } from "../../stores/app-store";
-import { use$ } from "@legendapp/state/react";
 
 const routes = [
   { key: "first", title: "Overview" },

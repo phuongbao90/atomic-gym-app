@@ -1,10 +1,10 @@
-import Entypo from "@expo/vector-icons/Entypo"
-import FontAwesome6 from "@expo/vector-icons/build/FontAwesome6"
-import MaterialIcons from "@expo/vector-icons/MaterialIcons"
-import Feather from "@expo/vector-icons/Feather"
-import { use$ } from "@legendapp/state/react"
-import { appStore$ } from "../../stores/app-store"
-import { IconProps } from "@expo/vector-icons/build/createIconSet"
+import Entypo from "@expo/vector-icons/Entypo";
+import Feather from "@expo/vector-icons/Feather";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import FontAwesome6 from "@expo/vector-icons/build/FontAwesome6";
+import { IconProps } from "@expo/vector-icons/build/createIconSet";
+import { use$ } from "@legendapp/state/react";
+import { appStore$ } from "../../stores/app-store";
 
 export const ExpoIcon = ({
   name,
@@ -12,11 +12,11 @@ export const ExpoIcon = ({
   library,
   ...props
 }: {
-  name: string
-  color?: string
-  library: "entypo" | "fontAwesome6" | "materialIcons" | "feather"
+  name: string;
+  color?: string;
+  library: "entypo" | "fontAwesome6" | "materialIcons" | "feather";
 } & IconProps<string>) => {
-  const theme = use$(appStore$.theme)
+  const theme = use$(appStore$.theme);
 
   switch (library) {
     case "entypo":
@@ -26,7 +26,7 @@ export const ExpoIcon = ({
           color={color ?? (theme === "dark" ? "white" : "black")}
           {...props}
         />
-      )
+      );
     case "fontAwesome6":
       return (
         <FontAwesome6
@@ -34,7 +34,7 @@ export const ExpoIcon = ({
           color={color ?? (theme === "dark" ? "white" : "black")}
           {...props}
         />
-      )
+      );
     case "materialIcons":
       return (
         <MaterialIcons
@@ -42,7 +42,7 @@ export const ExpoIcon = ({
           color={color ?? (theme === "dark" ? "white" : "black")}
           {...props}
         />
-      )
+      );
     case "feather":
       return (
         <Feather
@@ -50,6 +50,6 @@ export const ExpoIcon = ({
           color={color ?? (theme === "dark" ? "white" : "black")}
           {...props}
         />
-      )
+      );
   }
-}
+};

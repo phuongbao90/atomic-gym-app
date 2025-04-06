@@ -23,4 +23,4 @@ export const appRoutes = {
 
   settings: "/(app)/settings",
   profile: "/(app)/profile",
-} as const
+} as const;

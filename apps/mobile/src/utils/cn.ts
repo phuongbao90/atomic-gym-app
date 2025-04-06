@@ -1,8 +1,8 @@
-import { type ClassValue, clsx } from "clsx"
-import { PressableStateCallbackType } from "react-native"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { PressableStateCallbackType } from "react-native";
+import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 export function isTextChildren(
   children:
@@ -11,5 +11,5 @@ export function isTextChildren(
 ) {
   return Array.isArray(children)
     ? children.every((child) => typeof child === "string")
-    : typeof children === "string"
+    : typeof children === "string";
 }

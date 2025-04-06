@@ -58,7 +58,7 @@ export const ListItem = ({
           <View
             className={cx(
               "ml-4 min-w-10 items-center justify-center",
-              rightContainerClassName,
+              rightContainerClassName
             )}
           >
             {Right}

@@ -1,8 +1,8 @@
-import { cx } from "class-variance-authority"
-import { Text, TextProps } from "react-native"
-import { typographyCva } from "../../styles/typography"
-import { appStore$ } from "../../stores/app-store"
-import { use$ } from "@legendapp/state/react"
+import { use$ } from "@legendapp/state/react";
+import { cx } from "class-variance-authority";
+import { Text, TextProps } from "react-native";
+import { appStore$ } from "../../stores/app-store";
+import { typographyCva } from "../../styles/typography";
 
 export const AppText = ({
   children,
@@ -10,9 +10,9 @@ export const AppText = ({
   intent = "ordinary",
   ...props
 }: TextProps & {
-  intent?: "ordinary" | "label"
+  intent?: "ordinary" | "label";
 }) => {
-  const theme = use$(appStore$.theme)
+  const theme = use$(appStore$.theme);
   return (
     <Text
       {...props}
@@ -26,5 +26,5 @@ export const AppText = ({
     >
       {children}
     </Text>
-  )
-}
+  );
+};

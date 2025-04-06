@@ -3,18 +3,18 @@ import { ImageBackground } from "expo-image";
 import { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import z from "zod";
+import {
+  OnBoardingImage1,
+  OnBoardingImage2,
+  OnBoardingImage3,
+  OnBoardingImage4,
+  OnboardBackgroundBlur,
+} from "../../constants/app-assets";
 import { AppStorage } from "../../lib/storage/app-storage";
 import { extractZodErrors } from "../../utils/extract-zod-errors";
 import { showErrorToast } from "../../utils/toast";
 import { OnboardList } from "./onboard-list";
 import { onboardListSchema } from "./onboard-schemas";
-import {
-  OnboardBackgroundBlur,
-  OnBoardingImage1,
-  OnBoardingImage2,
-  OnBoardingImage3,
-  OnBoardingImage4,
-} from "../../constants/app-assets";
 
 const data = [
   {

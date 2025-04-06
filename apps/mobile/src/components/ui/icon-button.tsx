@@ -1,11 +1,11 @@
-import Feather from "@expo/vector-icons/Feather"
-import * as Haptics from "expo-haptics"
-import { Pressable, View } from "react-native"
+import Feather from "@expo/vector-icons/Feather";
+import * as Haptics from "expo-haptics";
+import { Pressable, View } from "react-native";
 
 type IconProps = {
-  size: number
-  color: string
-}
+  size: number;
+  color: string;
+};
 
 const iconMap = {
   chevronLeft: ({ size, color }: IconProps) => (
@@ -26,7 +26,7 @@ const iconMap = {
   close: ({ size, color }: IconProps) => (
     <Feather name="x" size={size} color={color} />
   ),
-}
+};
 
 export const IconButton = ({
   icon,
@@ -39,15 +39,15 @@ export const IconButton = ({
   spacing = "sm",
   tintColor,
 }: {
-  icon: keyof typeof iconMap
-  size: number
-  color: string
-  onPress: () => void
-  haptic?: boolean
-  variant?: "contained" | "outlined" | "text"
-  radius?: "sm" | "md" | "lg" | "xl"
-  spacing?: "sm" | "md" | "lg" | "xl"
-  tintColor?: string
+  icon: keyof typeof iconMap;
+  size: number;
+  color: string;
+  onPress: () => void;
+  haptic?: boolean;
+  variant?: "contained" | "outlined" | "text";
+  radius?: "sm" | "md" | "lg" | "xl";
+  spacing?: "sm" | "md" | "lg" | "xl";
+  tintColor?: string;
 }) => {
   // const styles = useStyles({
   //   button: {
@@ -59,10 +59,10 @@ export const IconButton = ({
 
   const handlePress = () => {
     if (haptic) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    onPress()
-  }
+    onPress();
+  };
 
   return (
     <Pressable onPress={handlePress}>
@@ -70,5 +70,5 @@ export const IconButton = ({
         size,
       })}
     </Pressable>
-  )
-}
+  );
+};

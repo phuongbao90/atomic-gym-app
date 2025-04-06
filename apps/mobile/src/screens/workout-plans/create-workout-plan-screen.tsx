@@ -1,11 +1,11 @@
-import { AppHeader } from "../../components/ui/app-header"
-import { AppScreen } from "../../components/ui/app-screen"
-import { appStore$ } from "../../stores/app-store"
-import { use$ } from "@legendapp/state/react"
+import { use$ } from "@legendapp/state/react";
+import { AppHeader } from "../../components/ui/app-header";
+import { AppScreen } from "../../components/ui/app-screen";
+import { appStore$ } from "../../stores/app-store";
 
 export const CreateWorkoutPlanScreen = () => {
-  const theme = use$(appStore$.theme)
-  const language = use$(appStore$.language)
+  const theme = use$(appStore$.theme);
+  const language = use$(appStore$.language);
 
   return (
     <AppScreen name="create-workout-plan-screen">
@@ -16,5 +16,5 @@ export const CreateWorkoutPlanScreen = () => {
         language={language}
       />
     </AppScreen>
-  )
-}
+  );
+};

@@ -1,7 +1,7 @@
 import { fireEvent, render, waitFor } from "@testing-library/react-native";
-import { AppHeader } from "../ui/app-header";
-import { mockAppStore$ } from "../../../__mocks__/stores/app-store";
 import { mockRouter } from "../../../__mocks__/mock-router";
+import { mockAppStore$ } from "../../../__mocks__/stores/app-store";
+import { AppHeader } from "../ui/app-header";
 
 describe("Header", () => {
   beforeEach(() => {

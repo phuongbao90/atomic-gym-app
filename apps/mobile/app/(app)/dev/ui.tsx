@@ -1,5 +1,5 @@
-import { DevUIScreen } from "../../../src/screens/dev/ui-screen"
+import { DevUIScreen } from "../../../src/screens/dev/ui-screen";
 
 export default function Page() {
-  return <DevUIScreen />
+  return <DevUIScreen />;
 }

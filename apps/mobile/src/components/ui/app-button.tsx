@@ -1,6 +1,7 @@
-import { PlatformPressable } from "@react-navigation/elements"
-import * as Haptics from "expo-haptics"
-import React, { ReactNode } from "react"
+import { PlatformPressable } from "@react-navigation/elements";
+import { type VariantProps, cva } from "class-variance-authority";
+import * as Haptics from "expo-haptics";
+import React, { ReactNode } from "react";
 import {
   GestureResponderEvent,
   Pressable,
@@ -8,13 +9,12 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  useColorScheme,
   View,
-} from "react-native"
-import { cva, type VariantProps } from "class-variance-authority"
-import { colors } from "react-native-keyboard-controller/lib/typescript/components/KeyboardToolbar/colors"
-import { cn } from "../../utils/cn"
-import { buttonCva, buttonTextCva } from "../../styles/button-cva"
+  useColorScheme,
+} from "react-native";
+import { colors } from "react-native-keyboard-controller/lib/typescript/components/KeyboardToolbar/colors";
+import { buttonCva, buttonTextCva } from "../../styles/button-cva";
+import { cn } from "../../utils/cn";
 
 // const buttonTextVariants = cva("text-base font-medium text-foreground", {
 //   variants: {
@@ -41,16 +41,16 @@ import { buttonCva, buttonTextCva } from "../../styles/button-cva"
 // })
 
 type ButtonProps = React.ComponentPropsWithoutRef<typeof Pressable> & {
-  title: string
-  size?: "sx" | "sm" | "md" | "lg" | "xl"
-  color?: "default" | "primary" | "secondary" | "danger"
-  disabled?: boolean
-  fullWidth?: boolean
-  radius?: "sm" | "md" | "lg" | "xl"
-  containerClassName?: string
-  textClassName?: string
-  className?: string
-}
+  title: string;
+  size?: "sx" | "sm" | "md" | "lg" | "xl";
+  color?: "default" | "primary" | "secondary" | "danger";
+  disabled?: boolean;
+  fullWidth?: boolean;
+  radius?: "sm" | "md" | "lg" | "xl";
+  containerClassName?: string;
+  textClassName?: string;
+  className?: string;
+};
 
 export const AppButton = React.forwardRef<
   React.ElementRef<typeof Pressable>,
@@ -95,13 +95,13 @@ export const AppButton = React.forwardRef<
           </View>
         </Pressable>
       </View>
-    )
+    );
   }
-)
+);
 
 export const OutlineButton = React.forwardRef<
   React.ElementRef<typeof Pressable>,
   ButtonProps
 >((props, ref) => {
-  return <AppButton {...props} ref={ref} />
-})
+  return <AppButton {...props} ref={ref} />;
+});
