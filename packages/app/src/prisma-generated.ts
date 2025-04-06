@@ -6,6 +6,38 @@ export type WorkoutPlanLevel = "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
 
 export type WorkoutPlanCategory = "STRENGTH" | "ENDURANCE" | "BALANCE" | "FLEXIBILITY" | "LOOSE_WEIGHT";
 
+export interface Language {
+  id: string;
+  name: string;
+  isDefault: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  texts?: Text[];
+  Translation?: Translation[];
+}
+
+export interface Text {
+  id: number;
+  key: string;
+  originalText: string;
+  language?: Language;
+  languageId: string;
+  translations?: Translation[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Translation {
+  id: number;
+  text?: Text;
+  textId: number;
+  language?: Language;
+  languageId: string;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface User {
   id: number;
   email: string;
@@ -23,8 +55,8 @@ export interface User {
 
 export interface Post {
   id: number;
-  title: string;
-  content: string | null;
+  titleKey: string;
+  contentKey: string | null;
   published: boolean | null;
   authorId: number | null;
 }
@@ -32,7 +64,7 @@ export interface Post {
 export interface MuscleGroup {
   id: number;
   parentId: number | null;
-  name: string;
+  nameKey: string;
   slug: string;
   image: string;
   exercises?: Exercise[];
@@ -40,8 +72,8 @@ export interface MuscleGroup {
 
 export interface Exercise {
   id: number;
-  name: string;
-  description: string;
+  nameKey: string;
+  descriptionKey: string;
   category: ExerciseCategory;
   primaryMuscle?: MuscleGroup[];
   createdBy?: User;
@@ -52,7 +84,7 @@ export interface Exercise {
   ExerciseLog?: ExerciseLog[];
   Workout?: Workout | null;
   workoutId: number | null;
-  notes: string | null;
+  notesKey: string | null;
 }
 
 export interface ExerciseLog {
@@ -69,9 +101,9 @@ export interface ExerciseLog {
 
 export interface WorkoutPlan {
   id: number;
-  name: string;
+  nameKey: string;
   cover_image: string | null;
-  description: string | null;
+  descriptionKey: string | null;
   level: WorkoutPlanLevel | null;
   isPublic: boolean | null;
   isPremium: boolean | null;
@@ -87,7 +119,7 @@ export interface WorkoutPlan {
 
 export interface Workout {
   id: number;
-  name: string;
+  nameKey: string;
   exercises?: Exercise[];
   order: number | null;
   createdAt: Date;

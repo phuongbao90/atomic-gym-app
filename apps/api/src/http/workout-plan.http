@@ -8,7 +8,7 @@ Authorization: Bearer {{$global.accessToken}}
 
 ###
 GET {{BASE_URL}}/workout-plans
-Authorization: Bearer {{$global.accessToken}}
+# Authorization: Bearer {{$global.accessToken}}
 
 # get my plans
 GET {{BASE_URL}}/workout-plans?me=true

@@ -8,11 +8,11 @@ export class Post {
 
     @IsDefined()
     @IsString()
-    title!: string;
+    titleKey!: string;
 
     @IsOptional()
     @IsString()
-    content?: string;
+    contentKey?: string;
 
     @IsOptional()
     @IsBoolean()

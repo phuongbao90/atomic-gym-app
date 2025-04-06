@@ -1,39 +1,89 @@
-import { faker } from "@faker-js/faker"
-import { randBetweenDate, randNumber, randProduct } from "@ngneat/falso"
-import { PrismaClient } from "@prisma/client"
-import * as bcrypt from "bcrypt"
-import { muscleGroups } from "app-config"
+import { faker, fakerVI } from "@faker-js/faker";
+import { randBetweenDate, randNumber, randProduct } from "@ngneat/falso";
+import { PrismaClient } from "@prisma/client";
+import * as bcrypt from "bcrypt";
+import { muscleGroups } from "app-config";
 console.log(
   "---------------------------------Seeding database---------------------------------"
-)
+);
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
+
+async function createTextWithTranslation(
+  key: string,
+  originalText: string,
+  languageId: string
+) {
+  const text = await prisma.text.create({
+    data: {
+      key,
+      originalText,
+      languageId,
+      translations: {
+        create: {
+          languageId,
+          content: originalText,
+        },
+      },
+    },
+  });
+  return text;
+}
+
+async function updateText(key: string, languageId: string, content: string) {
+  const textContent = await prisma.text.findUnique({
+    where: { key },
+  });
+
+  if (textContent) {
+    await prisma.translation.upsert({
+      where: {
+        textId_languageId: {
+          textId: textContent.id,
+          languageId,
+        },
+      },
+      create: {
+        textId: textContent.id,
+        languageId,
+        content,
+      },
+      update: {
+        content,
+      },
+    });
+  }
+}
 
 async function main() {
   try {
-    await prisma.user.deleteMany()
-    await prisma.exercise.deleteMany()
-    await prisma.exerciseLog.deleteMany()
-    await prisma.muscleGroup.deleteMany()
-    await prisma.post.deleteMany()
-    await prisma.workout.deleteMany()
-    await prisma.workoutPlan.deleteMany()
+    // Clean up existing data
+    await prisma.translation.deleteMany();
+    await prisma.text.deleteMany();
+    await prisma.language.deleteMany();
+    await prisma.user.deleteMany();
+    await prisma.exercise.deleteMany();
+    await prisma.exerciseLog.deleteMany();
+    await prisma.muscleGroup.deleteMany();
+    await prisma.post.deleteMany();
+    await prisma.workout.deleteMany();
+    await prisma.workoutPlan.deleteMany();
 
-    const userCount = 15
-    const workoutPlanCount = 50
-    const exerciseCount = 100
-    const categories = [
-      "Chest",
-      "Back",
-      "Shoulder",
-      "Biceps",
-      "Triceps",
-      "Forearms",
-      "Abs",
-      "Quads",
-      "Hamstrings",
-      "Calves",
-    ]
+    const userCount = 15;
+    const workoutPlanCount = 50;
+    const exerciseCount = 100;
+
+    // Create languages
+    const languages = [
+      { id: "en", name: "English", isDefault: false },
+      { id: "vi", name: "Vietnamese", isDefault: true },
+    ];
+
+    for (const language of languages) {
+      await prisma.language.create({
+        data: language,
+      });
+    }
 
     // Create users
     for (let index = 1; index <= userCount; index++) {
@@ -43,37 +93,57 @@ async function main() {
           email: `bao${index}@gmail.com`,
           password: await bcrypt.hash("123456#@Nn", 10),
         },
-      })
+      });
     }
 
+    // Create muscle groups with translations
     for (const muscleGroup of muscleGroups) {
+      const nameKey = `muscleGroup.${muscleGroup.slug}.name`;
+      await createTextWithTranslation(nameKey, muscleGroup.name_vn, "vi");
+      await updateText(nameKey, "en", muscleGroup.name);
+
       await prisma.muscleGroup.create({
         data: {
           id: muscleGroup.id,
-          name: muscleGroup.name,
+          nameKey,
           slug: muscleGroup.slug,
           image: faker.image.url(),
           parentId: muscleGroup.parentId,
         },
-      })
+      });
     }
 
-    // Create muscle groups
-    // for (const category of categories) {
-    //   await prisma.muscleGroup.create({
-    //     data: {
-    //       name: category,
-    //       slug: category.toLowerCase().replace(/\s+/g, "-"),
-    //       image: faker.image.url(),
-    //     },
-    //   })
-    // }
-
-    // Create exercises
+    // Create exercises with translations
     for (let index = 1; index <= exerciseCount; index++) {
+      const name = faker.lorem.sentence();
+      const description = faker.lorem.paragraph();
+      const notes = faker.lorem.paragraph();
+
+      const nameKey = `exercise.${index}.name`;
+      const descriptionKey = `exercise.${index}.description`;
+      const notesKey = `exercise.${index}.notes`;
+
+      await createTextWithTranslation(nameKey, fakerVI.lorem.sentence(), "vi");
+      await createTextWithTranslation(
+        descriptionKey,
+        fakerVI.lorem.paragraph(),
+        "vi"
+      );
+      await createTextWithTranslation(
+        notesKey,
+        fakerVI.lorem.paragraph(),
+        "vi"
+      );
+
+      await updateText(nameKey, "en", name);
+      await updateText(descriptionKey, "en", description);
+      await updateText(notesKey, "en", notes);
+
       await prisma.exercise.create({
         data: {
-          name: faker.lorem.sentence(),
+          nameKey,
+          descriptionKey,
+          notesKey,
           category: faker.helpers.arrayElement([
             "WEIGHT",
             "FREE_WEIGHT",
@@ -82,25 +152,39 @@ async function main() {
           primaryMuscle: {
             connect: [
               {
-                id: randNumber({ min: 1, max: categories.length }),
+                id: randNumber({ min: 1, max: muscleGroups.length }),
               },
             ],
           },
           createdById: randNumber({ min: 1, max: userCount }),
           images: [faker.image.url(), faker.image.url(), faker.image.url()],
-          description: faker.lorem.paragraph(),
-          notes: faker.lorem.paragraph(),
         },
-      })
+      });
     }
 
-    // Create workout plans
+    // Create workout plans with translations
     for (let index = 1; index <= workoutPlanCount; index++) {
+      const name = faker.lorem.sentence();
+      const description = faker.lorem.paragraph();
+
+      const nameKey = `workoutPlan.${index}.name`;
+      const descriptionKey = `workoutPlan.${index}.description`;
+
+      await createTextWithTranslation(nameKey, fakerVI.lorem.sentence(), "vi");
+      await createTextWithTranslation(
+        descriptionKey,
+        fakerVI.lorem.paragraph(),
+        "vi"
+      );
+
+      await updateText(nameKey, "en", name);
+      await updateText(descriptionKey, "en", description);
+
       await prisma.workoutPlan.create({
         data: {
-          name: faker.lorem.sentence(),
+          nameKey,
+          descriptionKey,
           cover_image: faker.image.url(),
-          description: faker.lorem.paragraph(),
           level: faker.helpers.arrayElement([
             "BEGINNER",
             "INTERMEDIATE",
@@ -119,14 +203,20 @@ async function main() {
             "LOOSE_WEIGHT",
           ]),
         },
-      })
+      });
     }
 
-    // Create workouts
+    // Create workouts with translations
     for (let index = 1; index <= workoutPlanCount; index++) {
+      const name = faker.lorem.sentence();
+      const nameKey = `workout.${index}.name`;
+
+      await createTextWithTranslation(nameKey, fakerVI.lorem.sentence(), "vi");
+      await updateText(nameKey, "en", name);
+
       await prisma.workout.create({
         data: {
-          name: faker.lorem.sentence(),
+          nameKey,
           exercises: {
             connect: Array(randNumber({ min: 3, max: 10 }))
               .fill(null)
@@ -137,25 +227,25 @@ async function main() {
           workoutPlanId: randNumber({ min: 1, max: workoutPlanCount }),
           order: index,
         },
-      })
+      });
     }
 
     console.log(
       "---------------------------------Database seeded successfully---------------------------------"
-    )
+    );
   } catch (error) {
     console.error(
       "---------------------------------Error seeding database---------------------------------\n",
       error
-    )
+    );
   }
 }
 main()
   .then(async () => {
-    await prisma.$disconnect()
+    await prisma.$disconnect();
   })
   .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });

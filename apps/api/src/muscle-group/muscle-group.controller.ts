@@ -1,8 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common"
-import { Auth } from "../auth/decorator/auth.decorator"
-import { AuthType } from "../auth/type/auth-type"
-import { MuscleGroupService } from "./muscle-group.service"
-import { CreateMuscleGroupDto } from "./dto/create-muscle-group.dto"
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Req,
+} from "@nestjs/common";
+import { Auth } from "../auth/decorator/auth.decorator";
+import { AuthType } from "../auth/type/auth-type";
+import { MuscleGroupService } from "./muscle-group.service";
+import { CreateMuscleGroupDto } from "./dto/create-muscle-group.dto";
+import { MuscleGroup } from "src/generated/models";
+import { Request } from "express";
 
 @Controller("muscle-groups")
 @Auth(AuthType.Bearer)
@@ -10,32 +21,17 @@ export class MuscleGroupController {
   constructor(private readonly muscleGroupService: MuscleGroupService) {}
 
   @Post()
-  create(@Body() body: CreateMuscleGroupDto) {
-    return this.muscleGroupService.create(body)
+  create(@Body() body: Omit<MuscleGroup, "id">) {
+    return this.muscleGroupService.create(body);
   }
 
   @Get()
-  findAll() {
-    return this.muscleGroupService.findAll()
+  findAll(@Req() request: Request) {
+    return this.muscleGroupService.findAll(request);
   }
 
   @Get(":id/exercises")
-  findExercises(@Param("id") id: number) {
-    return this.muscleGroupService.findExercises(id)
+  findExercises(@Param("id") id: number, @Req() request: Request) {
+    return this.muscleGroupService.findExercises(id, request);
   }
-
-  // @Get(":id")
-  // findOne(@Param("id") id: number) {
-  //   return this.muscleGroupService.findOne(id)
-  // }
-
-  // @Delete(":id")
-  // delete(@Param("id") id: number) {
-  //   return this.muscleGroupService.delete(id)
-  // }
-
-  // @Put(":id")
-  // update(@Param("id") id: number, @Body() body: CreateMuscleGroupDto) {
-  //   return this.muscleGroupService.update(id, body)
-  // }
 }

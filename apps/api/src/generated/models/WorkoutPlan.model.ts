@@ -10,7 +10,7 @@ export class WorkoutPlan {
 
     @IsDefined()
     @IsString()
-    name!: string;
+    nameKey!: string;
 
     @IsOptional()
     @IsString()
@@ -18,7 +18,7 @@ export class WorkoutPlan {
 
     @IsOptional()
     @IsString()
-    description?: string;
+    descriptionKey?: string;
 
     @IsOptional()
     @IsIn(getEnumValues(WorkoutPlanLevel))

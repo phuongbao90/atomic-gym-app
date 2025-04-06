@@ -8,15 +8,16 @@ import {
   Put,
   Query,
   Req,
-} from "@nestjs/common"
-import { CreateWorkoutPlanDto } from "./dto/create-workout-plan.dto"
-import { Request } from "express"
-import { WorkoutPlanService } from "./workout-plan.service"
-import { PrismaService } from "src/prisma/prisma.service"
-import { JwtService } from "@nestjs/jwt"
-import { REQUEST_USER_KEY } from "src/auth/constant/auth.constant"
-import { JwtUser } from "src/auth/type/jwt-user-type"
-import { WorkoutPlanQueryDto } from "./dto/workout-plan-query.dto"
+} from "@nestjs/common";
+import { CreateWorkoutPlanDto } from "./dto/create-workout-plan.dto";
+import { Request } from "express";
+import { WorkoutPlanService } from "./workout-plan.service";
+import { PrismaService } from "src/prisma/prisma.service";
+import { JwtService } from "@nestjs/jwt";
+import { REQUEST_USER_KEY } from "src/auth/constant/auth.constant";
+import { JwtUser } from "src/auth/type/jwt-user-type";
+import { WorkoutPlanQueryDto } from "./dto/workout-plan-query.dto";
+import { WorkoutPlan } from "src/generated/models";
 
 @Controller("workout-plans")
 export class WorkoutPlanController {
@@ -27,8 +28,8 @@ export class WorkoutPlanController {
   ) {}
 
   @Post()
-  async create(@Body() body: CreateWorkoutPlanDto, @Req() req: Request) {
-    return this.workoutPlanService.createWorkoutPlan(body, req)
+  async create(@Body() body: Omit<WorkoutPlan, "id">, @Req() req: Request) {
+    return this.workoutPlanService.createWorkoutPlan(body, req);
   }
 
   @Get()
@@ -36,7 +37,7 @@ export class WorkoutPlanController {
     @Req() req: Request,
     @Query() query: WorkoutPlanQueryDto
   ) {
-    return this.workoutPlanService.getWorkoutPlans(req, query)
+    return this.workoutPlanService.getWorkoutPlans(req, query);
   }
 
   @Get("in-groups")
@@ -44,17 +45,17 @@ export class WorkoutPlanController {
     @Req() req: Request,
     @Query() query: WorkoutPlanQueryDto
   ) {
-    return this.workoutPlanService.getWorkoutPlansInGroups()
+    return this.workoutPlanService.getWorkoutPlansInGroups();
   }
 
   @Get(":id")
   async getWorkoutPlanById(@Param("id") id: number) {
-    return this.workoutPlanService.getWorkoutPlanById(id)
+    return this.workoutPlanService.getWorkoutPlanById(id);
   }
 
   @Delete(":id")
   async deleteWorkoutPlanById(@Param("id") id: number, @Req() req: Request) {
-    return this.workoutPlanService.deleteWorkoutPlanById(id, req)
+    return this.workoutPlanService.deleteWorkoutPlanById(id, req);
   }
 
   @Put(":id")
@@ -63,6 +64,6 @@ export class WorkoutPlanController {
     @Body() body: Partial<CreateWorkoutPlanDto>,
     @Req() req: Request
   ) {
-    return this.workoutPlanService.updateWorkoutPlanById(id, body, req)
+    return this.workoutPlanService.updateWorkoutPlanById(id, body, req);
   }
 }

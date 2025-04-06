@@ -1,15 +1,19 @@
 POST {{BASE_URL}}/muscle-groups
 Authorization: Bearer {{$global.accessToken}}
 {
-  "name": "leg",
-  "parentId": 2,
-  "slug": "leg"
+  "nameKey": "muscleGroup.test-1.name",
+  "slug": "test-1",
+  "image": "https://via.placeholder.com/150",
+  "parentId": 2
 }
 
 ### Get All Muscle Groups
 GET {{BASE_URL}}/muscle-groups
 Authorization: Bearer {{$global.accessToken}}
+Accept-Language: vi-VN
 
 ### Get exercise by muscle group
+
 GET {{BASE_URL}}/muscle-groups/5/exercises
 Authorization: Bearer {{$global.accessToken}}
+Accept-Language: vi-VN

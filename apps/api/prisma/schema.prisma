@@ -26,6 +26,40 @@ datasource db {
   url      = "postgresql://bao:3246@localhost:5432/gymapp"
 }
 
+model Language {
+  id          String        @id
+  name        String        @unique
+  isDefault   Boolean       @default(false)
+  createdAt   DateTime      @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime      @updatedAt @db.Timestamptz(6)
+  texts       Text[]
+  Translation Translation[]
+}
+
+model Text {
+  id           Int           @id @default(autoincrement())
+  key          String        @unique
+  originalText String
+  language     Language      @relation(fields: [languageId], references: [id])
+  languageId   String
+  translations Translation[]
+  createdAt    DateTime      @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime      @updatedAt @db.Timestamptz(6)
+}
+
+model Translation {
+  id         Int      @id @default(autoincrement())
+  text       Text     @relation(fields: [textId], references: [id])
+  textId     Int
+  language   Language @relation(fields: [languageId], references: [id])
+  languageId String
+  content    String
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime @updatedAt @db.Timestamptz(6)
+
+  @@unique([textId, languageId])
+}
+
 model User {
   id          Int           @id @default(autoincrement())
   email       String        @unique
@@ -43,12 +77,11 @@ model User {
 }
 
 model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean? @default(false)
-
-  authorId Int?
+  id         Int      @id @default(autoincrement())
+  titleKey   String // Reference to Text.key
+  contentKey String? // Reference to Text.key
+  published  Boolean? @default(false)
+  authorId   Int?
 }
 
 enum ExerciseCategory {
@@ -62,27 +95,27 @@ enum ExerciseCategory {
 model MuscleGroup {
   id        Int        @id @default(autoincrement())
   parentId  Int?
-  name      String     @unique
+  nameKey   String     @unique // Reference to Text.key
   slug      String     @unique
   image     String
   exercises Exercise[]
 }
 
 model Exercise {
-  id            Int              @id @default(autoincrement())
-  name          String
-  description   String
-  category      ExerciseCategory
-  primaryMuscle MuscleGroup[]
-  createdBy     User             @relation(fields: [createdById], references: [id])
-  createdById   Int
-  images        String[]
-  createdAt     DateTime         @default(now()) @db.Timestamptz(6)
-  updatedAt     DateTime         @updatedAt @db.Timestamptz(6)
-  ExerciseLog   ExerciseLog[]
-  Workout       Workout?         @relation(fields: [workoutId], references: [id])
-  workoutId     Int?
-  notes         String?
+  id             Int              @id @default(autoincrement())
+  nameKey        String // Reference to Text.key
+  descriptionKey String // Reference to Text.key
+  category       ExerciseCategory
+  primaryMuscle  MuscleGroup[]
+  createdBy      User             @relation(fields: [createdById], references: [id])
+  createdById    Int
+  images         String[]
+  createdAt      DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime         @updatedAt @db.Timestamptz(6)
+  ExerciseLog    ExerciseLog[]
+  Workout        Workout?         @relation(fields: [workoutId], references: [id])
+  workoutId      Int?
+  notesKey       String? // Reference to Text.key
 }
 
 model ExerciseLog {
@@ -112,26 +145,26 @@ enum WorkoutPlanCategory {
 }
 
 model WorkoutPlan {
-  id          Int                 @id @default(autoincrement())
-  name        String
-  cover_image String?
-  description String?
-  level       WorkoutPlanLevel?
-  isPublic    Boolean?            @default(true)
-  isPremium   Boolean?            @default(false)
-  isFeatured  Boolean?            @default(false)
-  isSingle    Boolean?            @default(false)
-  category    WorkoutPlanCategory
-  workouts    Workout[]
-  createdBy   User                @relation(fields: [createdById], references: [id])
-  createdById Int
-  createdAt   DateTime            @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime            @updatedAt @db.Timestamptz(6)
+  id             Int                 @id @default(autoincrement())
+  nameKey        String // Reference to Text.key
+  cover_image    String?
+  descriptionKey String? // Reference to Text.key
+  level          WorkoutPlanLevel?
+  isPublic       Boolean?            @default(true)
+  isPremium      Boolean?            @default(false)
+  isFeatured     Boolean?            @default(false)
+  isSingle       Boolean?            @default(false)
+  category       WorkoutPlanCategory
+  workouts       Workout[]
+  createdBy      User                @relation(fields: [createdById], references: [id])
+  createdById    Int
+  createdAt      DateTime            @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime            @updatedAt @db.Timestamptz(6)
 }
 
 model Workout {
   id            Int         @id @default(autoincrement())
-  name          String
+  nameKey       String // Reference to Text.key
   exercises     Exercise[]
   order         Int?
   createdAt     DateTime    @default(now()) @db.Timestamptz(6)

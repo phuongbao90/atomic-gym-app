@@ -1,17 +1,21 @@
-import { Body, Controller, Get, Param, Post, Req } from "@nestjs/common"
-import { WorkoutService } from "./workout.service"
-import { CreateWorkoutDto } from "./dto/create-workout.dto"
-import { Request } from "express"
-import { CommonQueryParamsDto } from "src/common/dto/paginated-query.dto"
-import { PaginatedQuery } from "src/common/decorator/paginated-query.decorator"
+import { Body, Controller, Get, Param, Post, Req } from "@nestjs/common";
+import { WorkoutService } from "./workout.service";
+import { CreateWorkoutDto } from "./dto/create-workout.dto";
+import { Request } from "express";
+import { CommonQueryParamsDto } from "src/common/dto/paginated-query.dto";
+import { PaginatedQuery } from "src/common/decorator/paginated-query.decorator";
+import { Workout } from "src/generated/models";
 
 @Controller("workouts")
 export class WorkoutController {
   constructor(private workoutService: WorkoutService) {}
 
   @Post()
-  async createWorkout(@Body() body: CreateWorkoutDto, @Req() request: Request) {
-    return this.workoutService.createWorkout(body, request)
+  async createWorkout(
+    @Body() body: Omit<Workout, "id">,
+    @Req() request: Request
+  ) {
+    return this.workoutService.createWorkout(body, request);
   }
 
   @Get("/plan/:id")
@@ -19,11 +23,11 @@ export class WorkoutController {
     @Param("id") id: number,
     @PaginatedQuery() query: CommonQueryParamsDto
   ) {
-    return this.workoutService.getWorkoutsByWorkoutPlanId(id, query)
+    return this.workoutService.getWorkoutsByWorkoutPlanId(id, query);
   }
 
   @Get(":id")
   async getWorkoutById(@Param("id") id: number) {
-    return this.workoutService.getWorkoutById(id)
+    return this.workoutService.getWorkoutById(id);
   }
 }

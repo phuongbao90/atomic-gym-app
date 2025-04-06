@@ -8,7 +8,7 @@ export class Workout {
 
     @IsDefined()
     @IsString()
-    name!: string;
+    nameKey!: string;
 
     @IsDefined()
     exercises!: Exercise[];

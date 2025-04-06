@@ -10,11 +10,11 @@ export class Exercise {
 
     @IsDefined()
     @IsString()
-    name!: string;
+    nameKey!: string;
 
     @IsDefined()
     @IsString()
-    description!: string;
+    descriptionKey!: string;
 
     @IsDefined()
     @IsIn(getEnumValues(ExerciseCategory))
@@ -54,5 +54,5 @@ export class Exercise {
 
     @IsOptional()
     @IsString()
-    notes?: string;
+    notesKey?: string;
 }

@@ -12,7 +12,7 @@ export class MuscleGroup {
 
     @IsDefined()
     @IsString()
-    name!: string;
+    nameKey!: string;
 
     @IsDefined()
     @IsString()
