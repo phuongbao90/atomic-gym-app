@@ -47,7 +47,7 @@
     },
     "formatter": {
       "quoteStyle": "double",
-      "semicolons": "asNeeded",
+      "semicolons": "always",
       "trailingCommas": "es5"
     }
   },

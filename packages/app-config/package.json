@@ -6,7 +6,9 @@
   "scripts": {
     "clean": "rm -rf build",
     "build_config": "tsup --clean",
-    "debug_config": "tsup --watch"
+    "debug_config": "tsup --watch",
+    "test": "jest",
+    "test:watch": "tsup --watch"
   },
   "files": ["build", "src"],
   "devDependencies": {

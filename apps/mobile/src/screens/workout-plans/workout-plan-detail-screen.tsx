@@ -1,25 +1,25 @@
-import { Image } from "expo-image"
-import { AppHeader } from "../../components/ui/app-header"
-import { AppScreen } from "../../components/ui/app-screen"
-import { useLocalSearchParams } from "expo-router"
-import { useGetWorkoutPlan } from "app"
-import { Pressable, View } from "react-native"
-import { AppButton } from "../../components/ui/app-button"
-import { PlanInfo } from "./components/workout-plan-info"
-import { WorkoutPlanStatistics } from "./components/workout-plan-statistics"
-import { AppText } from "../../components/ui/app-text"
-import { cn } from "../../utils/cn"
-import { TabBarProps, Tabs } from "react-native-collapsible-tab-view"
-import { appStore$ } from "../../stores/app-store"
-import { use$ } from "@legendapp/state/react"
+import { Image } from "expo-image";
+import { AppHeader } from "../../components/ui/app-header";
+import { AppScreen } from "../../components/ui/app-screen";
+import { useLocalSearchParams } from "expo-router";
+import { useGetWorkoutPlan } from "app";
+import { Pressable, View } from "react-native";
+import { AppButton } from "../../components/ui/app-button";
+import { PlanInfo } from "./components/workout-plan-info";
+import { WorkoutPlanStatistics } from "./components/workout-plan-statistics";
+import { AppText } from "../../components/ui/app-text";
+import { cn } from "../../utils/cn";
+import { TabBarProps, Tabs } from "react-native-collapsible-tab-view";
+import { appStore$ } from "../../stores/app-store";
+import { use$ } from "@legendapp/state/react";
 
 const routes = [
   { key: "first", title: "Overview" },
   { key: "second", title: "Statistics" },
-]
+];
 
 const TabBar = (props: TabBarProps<string>) => {
-  const { index, tabNames } = props || {}
+  const { index, tabNames } = props || {};
 
   return (
     <View className="flex-row justify-around">
@@ -40,27 +40,16 @@ const TabBar = (props: TabBarProps<string>) => {
         </Pressable>
       ))}
     </View>
-  )
-}
+  );
+};
 
-const IMAGE_HEIGHT = 300
+const IMAGE_HEIGHT = 300;
 
 export const WorkoutPlanDetailScreen = () => {
-  const { id } = useLocalSearchParams()
-  const { data: workoutPlan } = useGetWorkoutPlan(Number(id))
-  const theme = use$(appStore$.theme)
-  const language = use$(appStore$.language)
-
-  const renderScene = ({ route }: { route: { key: string } }) => {
-    switch (route.key) {
-      case "first":
-        return <PlanInfo item={workoutPlan} />
-      case "second":
-        return <WorkoutPlanStatistics />
-      default:
-        return null
-    }
-  }
+  const { id } = useLocalSearchParams();
+  const { data: workoutPlan } = useGetWorkoutPlan(Number(id));
+  const theme = use$(appStore$.theme);
+  const language = use$(appStore$.language);
 
   const renderHeader = () => {
     return (
@@ -74,17 +63,17 @@ export const WorkoutPlanDetailScreen = () => {
         source={{ uri: workoutPlan?.cover_image }}
         contentFit="cover"
       />
-    )
-  }
+    );
+  };
 
   const renderTabBar = (props: TabBarProps<string>) => {
-    return <TabBar {...props} />
-  }
+    return <TabBar {...props} />;
+  };
 
   return (
     <AppScreen name="workout-plan-detail-screen">
       <AppHeader
-        title="Workout Plan Detail"
+        title={workoutPlan?.name}
         withBackButton
         className="bg-white"
         theme={theme}
@@ -126,5 +115,5 @@ export const WorkoutPlanDetailScreen = () => {
         </AppScreen.FooterContainer>
       </AppScreen.Footer>
     </AppScreen>
-  )
-}
+  );
+};

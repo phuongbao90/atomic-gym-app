@@ -1,14 +1,14 @@
-import { useRouter } from "expo-router"
-import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native"
-import { Divider } from "./divider"
-import { USFlag } from "../../constants/app-assets"
-import { appStore$ } from "../../stores/app-store"
-import { VNFlag } from "../../constants/app-assets"
-import { Image } from "expo-image"
-import { AppText } from "./app-text"
-import { ExpoIcon } from "./expo-icon"
-import { cn } from "../../utils/cn"
-import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons"
+import { useRouter } from "expo-router";
+import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Divider } from "./divider";
+import { USFlag } from "../../constants/app-assets";
+import { appStore$ } from "../../stores/app-store";
+import { VNFlag } from "../../constants/app-assets";
+import { Image } from "expo-image";
+import { AppText } from "./app-text";
+import { ExpoIcon } from "./expo-icon";
+import { cn } from "../../utils/cn";
+import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 
 export const AppHeader = ({
   title,
@@ -20,16 +20,16 @@ export const AppHeader = ({
   theme,
   language,
 }: {
-  title?: string
-  center?: boolean
-  withBackButton?: boolean
-  withBottomBorder?: boolean
-  Right?: React.ReactNode
-  className?: string
-  theme: "light" | "dark"
-  language: "vi" | "en"
+  title?: string;
+  center?: boolean;
+  withBackButton?: boolean;
+  withBottomBorder?: boolean;
+  Right?: React.ReactNode;
+  className?: string;
+  theme: "light" | "dark";
+  language: "vi" | "en";
 }) => {
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <>
@@ -48,7 +48,9 @@ export const AppHeader = ({
           </Pressable>
         )}
         {!!title && (
-          <AppText className="flex-1 ml-8 text-xl font-bold">{title}</AppText>
+          <AppText numberOfLines={1} className="flex-1 ml-8 text-xl font-bold">
+            {title}
+          </AppText>
         )}
 
         {!!Right && <View style={styles.right}>{Right}</View>}
@@ -57,7 +59,7 @@ export const AppHeader = ({
           <View className="flex-row gap-8">
             <TouchableOpacity
               onPress={() => {
-                appStore$.switchTheme()
+                appStore$.switchTheme();
               }}
               testID="theme-button"
             >
@@ -78,7 +80,7 @@ export const AppHeader = ({
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                appStore$.switchLanguage()
+                appStore$.switchLanguage();
               }}
               testID="language-button"
             >
@@ -92,7 +94,7 @@ export const AppHeader = ({
 
             <TouchableOpacity
               onPress={() => {
-                router.push("/settings")
+                router.push("/settings");
               }}
               testID="settings-button"
             >
@@ -107,8 +109,8 @@ export const AppHeader = ({
       </View>
       {withBottomBorder && <Divider />}
     </>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -140,4 +142,4 @@ const styles = StyleSheet.create({
     height: 22,
     aspectRatio: 513 / 342,
   },
-})
+});
