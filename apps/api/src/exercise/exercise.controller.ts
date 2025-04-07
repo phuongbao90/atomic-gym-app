@@ -17,6 +17,8 @@ import { CreateExerciseDto } from "./dto/create-exercise.dto";
 import { ExerciseService } from "./exercise.service";
 import { ExerciseQueryParamsDto } from "./dto/exercise-query-params.dto";
 import { Exercise } from "src/generated/models";
+import { Language } from "@prisma/client";
+import { GetLanguage } from "../common/decorators/get-language.decorator";
 
 @Controller("exercises")
 @Auth(AuthType.Bearer)
@@ -24,27 +26,40 @@ export class ExerciseController {
   constructor(private readonly exerciseService: ExerciseService) {}
 
   @Post()
-  create(@Body() body: Omit<Exercise, "id">, @Req() request: Request) {
-    return this.exerciseService.create(body, request);
+  create(
+    @Body() body: CreateExerciseDto,
+    @Req() request: Request,
+    @GetLanguage() language: Language
+  ) {
+    return this.exerciseService.create(body, request, language);
   }
 
   @Get()
-  findAll(@PaginatedQuery() query: ExerciseQueryParamsDto) {
-    console.log("query ", query);
-
-    return this.exerciseService.findAll(query);
+  findAll(
+    @PaginatedQuery() query: ExerciseQueryParamsDto,
+    @GetLanguage() language: Language
+  ) {
+    return this.exerciseService.findAll(query, language);
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.exerciseService.findOne(+id);
+  findOne(@Param("id") id: string, @GetLanguage() language: Language) {
+    return this.exerciseService.findOne(+id, language);
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body() body: Partial<CreateExerciseDto>) {
-    return this.exerciseService.update(+id, {
-      ...body,
-    });
+  update(
+    @Param("id") id: string,
+    @Body() body: Partial<CreateExerciseDto>,
+    @GetLanguage() language: Language
+  ) {
+    return this.exerciseService.update(
+      +id,
+      {
+        ...body,
+      },
+      language
+    );
   }
 
   @Delete(":id")
@@ -53,7 +68,7 @@ export class ExerciseController {
   }
 
   @Get("workout/:id")
-  findByWorkout(@Param("id") id: string) {
-    return this.exerciseService.findByWorkout(+id);
+  findByWorkout(@Param("id") id: string, @GetLanguage() language: Language) {
+    return this.exerciseService.findByWorkout(+id, language);
   }
 }

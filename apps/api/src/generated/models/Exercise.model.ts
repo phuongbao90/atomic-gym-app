@@ -1,5 +1,5 @@
-import { IsInt, IsDefined, IsString, IsIn, IsDate, IsOptional } from "class-validator";
-import { MuscleGroup, User, ExerciseLog, Workout } from "./";
+import { IsInt, IsDefined, IsString, IsOptional, IsIn, IsDate } from "class-validator";
+import { MuscleGroup, User, ExerciseLog, Workout, ExerciseTranslation } from "./";
 import { getEnumValues } from "../helpers";
 import { ExerciseCategory } from "../enums";
 
@@ -8,13 +8,9 @@ export class Exercise {
     @IsInt()
     id!: number;
 
-    @IsDefined()
+    @IsOptional()
     @IsString()
-    nameKey!: string;
-
-    @IsDefined()
-    @IsString()
-    descriptionKey!: string;
+    notes?: string;
 
     @IsDefined()
     @IsIn(getEnumValues(ExerciseCategory))
@@ -52,7 +48,6 @@ export class Exercise {
     @IsInt()
     workoutId?: number;
 
-    @IsOptional()
-    @IsString()
-    notesKey?: string;
+    @IsDefined()
+    translations!: ExerciseTranslation[];
 }

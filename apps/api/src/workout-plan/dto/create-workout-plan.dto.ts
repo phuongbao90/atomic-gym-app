@@ -1,5 +1,6 @@
 import { WorkoutPlanCategory, WorkoutPlanLevel } from "@prisma/client";
 import {
+  IsArray,
   IsBoolean,
   IsEnum,
   IsNotEmpty,
@@ -43,5 +44,7 @@ export class CreateWorkoutPlanDto {
   @IsOptional()
   isFeatured?: boolean;
 
-  workouts?: number[];
+  @IsArray()
+  @IsOptional()
+  workoutIds?: number[];
 }

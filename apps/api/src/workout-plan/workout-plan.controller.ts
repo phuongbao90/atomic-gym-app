@@ -1,69 +1,79 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  Param,
   Post,
-  Put,
-  Query,
+  Body,
+  Param,
+  Delete,
   Req,
+  Query,
+  Put,
+  UseGuards,
 } from "@nestjs/common";
+import { WorkoutPlanService } from "./workout-plan.service";
 import { CreateWorkoutPlanDto } from "./dto/create-workout-plan.dto";
 import { Request } from "express";
-import { WorkoutPlanService } from "./workout-plan.service";
-import { PrismaService } from "src/prisma/prisma.service";
-import { JwtService } from "@nestjs/jwt";
-import { REQUEST_USER_KEY } from "src/auth/constant/auth.constant";
-import { JwtUser } from "src/auth/type/jwt-user-type";
 import { WorkoutPlanQueryDto } from "./dto/workout-plan-query.dto";
-import { WorkoutPlan } from "src/generated/models";
+import { Language } from "@prisma/client";
+import { GetLanguage } from "../common/decorators/get-language.decorator";
+// import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 
 @Controller("workout-plans")
 export class WorkoutPlanController {
-  constructor(
-    private workoutPlanService: WorkoutPlanService,
-    private prisma: PrismaService,
-    private jwtService: JwtService
-  ) {}
+  constructor(private readonly workoutPlanService: WorkoutPlanService) {}
 
   @Post()
-  async create(@Body() body: Omit<WorkoutPlan, "id">, @Req() req: Request) {
-    return this.workoutPlanService.createWorkoutPlan(body, req);
+  // @UseGuards(JwtAuthGuard)
+  create(
+    @Body() createWorkoutPlanDto: CreateWorkoutPlanDto,
+    @Req() request: Request,
+    @GetLanguage() language: Language
+  ) {
+    return this.workoutPlanService.createWorkoutPlan(
+      createWorkoutPlanDto,
+      request,
+      language
+    );
   }
 
   @Get()
-  async getWorkoutPlans(
-    @Req() req: Request,
-    @Query() query: WorkoutPlanQueryDto
+  findAll(
+    @Req() request: Request,
+    @Query() query: WorkoutPlanQueryDto,
+    @GetLanguage() language: Language
   ) {
-    return this.workoutPlanService.getWorkoutPlans(req, query);
+    return this.workoutPlanService.getWorkoutPlans(request, query, language);
   }
 
-  @Get("in-groups")
-  async getWorkoutPlansInGroups(
-    @Req() req: Request,
-    @Query() query: WorkoutPlanQueryDto
-  ) {
-    return this.workoutPlanService.getWorkoutPlansInGroups();
+  @Get("groups")
+  findAllInGroups(@GetLanguage() language: Language) {
+    return this.workoutPlanService.getWorkoutPlansInGroups(language);
   }
 
   @Get(":id")
-  async getWorkoutPlanById(@Param("id") id: number) {
-    return this.workoutPlanService.getWorkoutPlanById(id);
-  }
-
-  @Delete(":id")
-  async deleteWorkoutPlanById(@Param("id") id: number, @Req() req: Request) {
-    return this.workoutPlanService.deleteWorkoutPlanById(id, req);
+  findOne(@Param("id") id: string, @GetLanguage() language: Language) {
+    return this.workoutPlanService.getWorkoutPlanById(+id, language);
   }
 
   @Put(":id")
-  async updateWorkoutPlanById(
-    @Param("id") id: number,
-    @Body() body: Partial<CreateWorkoutPlanDto>,
-    @Req() req: Request
+  // @UseGuards(JwtAuthGuard)
+  update(
+    @Param("id") id: string,
+    @Body() updateWorkoutPlanDto: Partial<CreateWorkoutPlanDto>,
+    @Req() request: Request,
+    @GetLanguage() language: Language
   ) {
-    return this.workoutPlanService.updateWorkoutPlanById(id, body, req);
+    return this.workoutPlanService.updateWorkoutPlanById(
+      +id,
+      updateWorkoutPlanDto,
+      request,
+      language
+    );
+  }
+
+  @Delete(":id")
+  // @UseGuards(JwtAuthGuard)
+  remove(@Param("id") id: string, @Req() request: Request) {
+    return this.workoutPlanService.deleteWorkoutPlanById(+id, request);
   }
 }

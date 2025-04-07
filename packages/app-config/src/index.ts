@@ -1,2 +1,1 @@
-export * from "./app-colors"
-export * from "./muscle-groups"
+export * from "./app-colors";

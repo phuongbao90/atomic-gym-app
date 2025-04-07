@@ -26,38 +26,9 @@ datasource db {
   url      = "postgresql://bao:3246@localhost:5432/gymapp"
 }
 
-model Language {
-  id          String        @id
-  name        String        @unique
-  isDefault   Boolean       @default(false)
-  createdAt   DateTime      @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime      @updatedAt @db.Timestamptz(6)
-  texts       Text[]
-  Translation Translation[]
-}
-
-model Text {
-  id           Int           @id @default(autoincrement())
-  key          String        @unique
-  originalText String
-  language     Language      @relation(fields: [languageId], references: [id])
-  languageId   String
-  translations Translation[]
-  createdAt    DateTime      @default(now()) @db.Timestamptz(6)
-  updatedAt    DateTime      @updatedAt @db.Timestamptz(6)
-}
-
-model Translation {
-  id         Int      @id @default(autoincrement())
-  text       Text     @relation(fields: [textId], references: [id])
-  textId     Int
-  language   Language @relation(fields: [languageId], references: [id])
-  languageId String
-  content    String
-  createdAt  DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt  DateTime @updatedAt @db.Timestamptz(6)
-
-  @@unique([textId, languageId])
+enum Language {
+  vi // Vietnamese (default/fallback)
+  en // English
 }
 
 model User {
@@ -93,29 +64,50 @@ enum ExerciseCategory {
 }
 
 model MuscleGroup {
-  id        Int        @id @default(autoincrement())
-  parentId  Int?
-  nameKey   String     @unique // Reference to Text.key
-  slug      String     @unique
-  image     String
-  exercises Exercise[]
+  id           Int                      @id @default(autoincrement())
+  parentId     Int?
+  image        String
+  exercises    Exercise[]
+  translations MuscleGroupTranslation[]
+}
+
+model MuscleGroupTranslation {
+  muscleGroupId Int // foreign key to Exercise
+  language      Language // language code (e.g., 'vi', 'en')
+  name          String // localized name
+  slug          String
+  muscleGroup   MuscleGroup @relation(fields: [muscleGroupId], references: [id], onDelete: Cascade)
+
+  @@id([muscleGroupId, language]) // composite primary key for uniqueness
+  @@index([language])
 }
 
 model Exercise {
-  id             Int              @id @default(autoincrement())
-  nameKey        String // Reference to Text.key
-  descriptionKey String // Reference to Text.key
-  category       ExerciseCategory
-  primaryMuscle  MuscleGroup[]
-  createdBy      User             @relation(fields: [createdById], references: [id])
-  createdById    Int
-  images         String[]
-  createdAt      DateTime         @default(now()) @db.Timestamptz(6)
-  updatedAt      DateTime         @updatedAt @db.Timestamptz(6)
-  ExerciseLog    ExerciseLog[]
-  Workout        Workout?         @relation(fields: [workoutId], references: [id])
-  workoutId      Int?
-  notesKey       String? // Reference to Text.key
+  id            Int                   @id @default(autoincrement())
+  notes         String? // Reference to Text.key
+  category      ExerciseCategory
+  primaryMuscle MuscleGroup[]
+  createdBy     User                  @relation(fields: [createdById], references: [id])
+  createdById   Int
+  images        String[]
+  createdAt     DateTime              @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime              @updatedAt @db.Timestamptz(6)
+  ExerciseLog   ExerciseLog[]
+  Workout       Workout?              @relation(fields: [workoutId], references: [id])
+  workoutId     Int?
+  translations  ExerciseTranslation[]
+}
+
+model ExerciseTranslation {
+  exerciseId  Int // foreign key to Exercise
+  language    Language // language code (e.g., 'vi', 'en')
+  name        String // localized name
+  description String // localized description
+  slug        String // localized description
+  exercise    Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@id([exerciseId, language]) // composite primary key for uniqueness
+  @@index([language])
 }
 
 model ExerciseLog {
@@ -145,30 +137,52 @@ enum WorkoutPlanCategory {
 }
 
 model WorkoutPlan {
-  id             Int                 @id @default(autoincrement())
-  nameKey        String // Reference to Text.key
-  cover_image    String?
-  descriptionKey String? // Reference to Text.key
-  level          WorkoutPlanLevel?
-  isPublic       Boolean?            @default(true)
-  isPremium      Boolean?            @default(false)
-  isFeatured     Boolean?            @default(false)
-  isSingle       Boolean?            @default(false)
-  category       WorkoutPlanCategory
-  workouts       Workout[]
-  createdBy      User                @relation(fields: [createdById], references: [id])
-  createdById    Int
-  createdAt      DateTime            @default(now()) @db.Timestamptz(6)
-  updatedAt      DateTime            @updatedAt @db.Timestamptz(6)
+  id           Int                      @id @default(autoincrement())
+  cover_image  String?
+  level        WorkoutPlanLevel?
+  isPublic     Boolean?                 @default(true)
+  isPremium    Boolean?                 @default(false)
+  isFeatured   Boolean?                 @default(false)
+  isSingle     Boolean?                 @default(false)
+  category     WorkoutPlanCategory
+  workouts     Workout[]
+  createdBy    User                     @relation(fields: [createdById], references: [id])
+  createdById  Int
+  createdAt    DateTime                 @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime                 @updatedAt @db.Timestamptz(6)
+  translations WorkoutPlanTranslation[]
+}
+
+model WorkoutPlanTranslation {
+  workoutPlanId Int // foreign key to WorkoutPlan
+  language      Language // language code (e.g., 'vi', 'en')
+  name          String // localized name
+  description   String // localized description
+  slug          String // localized description
+  workoutPlan   WorkoutPlan @relation(fields: [workoutPlanId], references: [id], onDelete: Cascade)
+
+  @@id([workoutPlanId, language]) // composite primary key for uniqueness
+  @@index([language])
 }
 
 model Workout {
-  id            Int         @id @default(autoincrement())
-  nameKey       String // Reference to Text.key
+  id            Int                  @id @default(autoincrement())
   exercises     Exercise[]
   order         Int?
-  createdAt     DateTime    @default(now()) @db.Timestamptz(6)
-  updatedAt     DateTime    @updatedAt @db.Timestamptz(6)
-  WorkoutPlan   WorkoutPlan @relation(fields: [workoutPlanId], references: [id])
+  createdAt     DateTime             @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime             @updatedAt @db.Timestamptz(6)
+  WorkoutPlan   WorkoutPlan          @relation(fields: [workoutPlanId], references: [id])
   workoutPlanId Int
+  translations  WorkoutTranslation[]
+}
+
+model WorkoutTranslation {
+  workoutId Int // foreign key to Workout
+  language  Language // language code (e.g., 'vi', 'en')
+  name      String // localized name
+  slug      String // localized name
+  workout   Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+
+  @@id([workoutId, language]) // composite primary key for uniqueness
+  @@index([language])
 }

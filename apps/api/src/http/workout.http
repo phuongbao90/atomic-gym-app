@@ -8,7 +8,7 @@ Authorization: Bearer {{$global.accessToken}}
 
 
 ### Get all workouts by workout plan id
-GET {{BASE_URL}}/workouts/plan/2
+GET {{BASE_URL}}/workouts/plan/1
 Authorization: Bearer {{$global.accessToken}}
 
 

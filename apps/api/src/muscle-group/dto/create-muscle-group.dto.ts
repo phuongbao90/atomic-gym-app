@@ -1,5 +1,7 @@
+import { Language } from "@prisma/client";
 import {
   IsArray,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -26,4 +28,8 @@ export class CreateMuscleGroupDto {
 
   @IsString()
   slug: string;
+
+  @IsOptional()
+  @IsEnum(Language)
+  language: Language = "vi";
 }

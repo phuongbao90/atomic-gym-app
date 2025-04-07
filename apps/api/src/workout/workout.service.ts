@@ -7,15 +7,22 @@ import { Request } from "express";
 import { CommonQueryParamsDto } from "src/common/dto/paginated-query.dto";
 import { paginateOutput } from "src/common/utils/pagination.utils";
 import { Workout } from "src/generated/models";
+import { Language } from "@prisma/client";
+import { slugify } from "src/helpers/slugify";
 
 @Injectable()
 export class WorkoutService {
   constructor(private prisma: PrismaService) {}
 
-  async createWorkout(body: Omit<Workout, "id">, request: Request) {
+  async createWorkout(
+    body: CreateWorkoutDto,
+    request: Request,
+    language: Language
+  ) {
     const user: JwtUser = request[REQUEST_USER_KEY];
 
     const workoutPlanId = body.workoutPlanId;
+
     let order: number;
     try {
       const workoutPlan = await this.prisma.workoutPlan.findUnique({
@@ -34,27 +41,47 @@ export class WorkoutService {
     }
 
     try {
-      return this.prisma.workout.create({
+      const workout = await this.prisma.workout.create({
         data: {
-          nameKey: body.nameKey,
           exercises: {
-            connect: body.exercises.map((exercise) => ({ id: exercise.id })),
+            connect: body.exerciseIds.map((exerciseId) => ({ id: exerciseId })),
           },
           workoutPlanId,
           order,
         },
       });
+      const translation = await this.prisma.workoutTranslation.create({
+        data: {
+          workoutId: workout.id,
+          language,
+          name: body.name,
+          slug: slugify(body.name),
+        },
+      });
+
+      return {
+        ...workout,
+        translation,
+      };
     } catch (error) {
       throw new BadRequestException(error.message);
     }
   }
 
-  async getWorkoutsByWorkoutPlanId(id: number, query: CommonQueryParamsDto) {
+  async getWorkoutsByWorkoutPlanId(
+    id: number,
+    query: CommonQueryParamsDto,
+    language: Language
+  ) {
     const workouts = await this.prisma.workout.findMany({
       where: { workoutPlanId: id },
       include: {
-        // exercises: true,
         _count: { select: { exercises: true } },
+        translations: {
+          where: {
+            language,
+          },
+        },
       },
     });
 
@@ -65,11 +92,18 @@ export class WorkoutService {
     return paginateOutput(workouts, total, query);
   }
 
-  async getWorkoutById(id: number) {
+  async getWorkoutById(id: number, language: Language) {
     return this.prisma.workout.findUnique({
-      where: { id },
+      where: {
+        id,
+      },
       include: {
         exercises: true,
+        translations: {
+          where: {
+            language,
+          },
+        },
       },
     });
   }

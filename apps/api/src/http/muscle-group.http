@@ -10,10 +10,10 @@ Authorization: Bearer {{$global.accessToken}}
 ### Get All Muscle Groups
 GET {{BASE_URL}}/muscle-groups
 Authorization: Bearer {{$global.accessToken}}
-Accept-Language: vi-VN
+Accept-Language: vi
 
 ### Get exercise by muscle group
 
 GET {{BASE_URL}}/muscle-groups/5/exercises
 Authorization: Bearer {{$global.accessToken}}
-Accept-Language: vi-VN
+Accept-Language: vi

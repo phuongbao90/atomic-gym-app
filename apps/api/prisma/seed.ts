@@ -1,66 +1,22 @@
-import { faker, fakerVI } from "@faker-js/faker";
+import { faker, fakerVI, fakerEN_US } from "@faker-js/faker";
 import { randBetweenDate, randNumber, randProduct } from "@ngneat/falso";
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt";
-import { muscleGroups } from "app-config";
+import { muscleGroups } from "./data/muscle-groups";
+
 console.log(
   "---------------------------------Seeding database---------------------------------"
 );
 
 const prisma = new PrismaClient();
 
-async function createTextWithTranslation(
-  key: string,
-  originalText: string,
-  languageId: string
-) {
-  const text = await prisma.text.create({
-    data: {
-      key,
-      originalText,
-      languageId,
-      translations: {
-        create: {
-          languageId,
-          content: originalText,
-        },
-      },
-    },
-  });
-  return text;
-}
-
-async function updateText(key: string, languageId: string, content: string) {
-  const textContent = await prisma.text.findUnique({
-    where: { key },
-  });
-
-  if (textContent) {
-    await prisma.translation.upsert({
-      where: {
-        textId_languageId: {
-          textId: textContent.id,
-          languageId,
-        },
-      },
-      create: {
-        textId: textContent.id,
-        languageId,
-        content,
-      },
-      update: {
-        content,
-      },
-    });
-  }
-}
-
 async function main() {
   try {
     // Clean up existing data
-    await prisma.translation.deleteMany();
-    await prisma.text.deleteMany();
-    await prisma.language.deleteMany();
+    await prisma.muscleGroupTranslation.deleteMany();
+    await prisma.exerciseTranslation.deleteMany();
+    await prisma.workoutTranslation.deleteMany();
+    await prisma.workoutPlanTranslation.deleteMany();
     await prisma.user.deleteMany();
     await prisma.exercise.deleteMany();
     await prisma.exerciseLog.deleteMany();
@@ -79,12 +35,6 @@ async function main() {
       { id: "vi", name: "Vietnamese", isDefault: true },
     ];
 
-    for (const language of languages) {
-      await prisma.language.create({
-        data: language,
-      });
-    }
-
     // Create users
     for (let index = 1; index <= userCount; index++) {
       await prisma.user.create({
@@ -98,52 +48,37 @@ async function main() {
 
     // Create muscle groups with translations
     for (const muscleGroup of muscleGroups) {
-      const nameKey = `muscleGroup.${muscleGroup.slug}.name`;
-      await createTextWithTranslation(nameKey, muscleGroup.name_vn, "vi");
-      await updateText(nameKey, "en", muscleGroup.name);
-
       await prisma.muscleGroup.create({
         data: {
           id: muscleGroup.id,
-          nameKey,
-          slug: muscleGroup.slug,
           image: faker.image.url(),
           parentId: muscleGroup.parentId,
+        },
+      });
+      await prisma.muscleGroupTranslation.create({
+        data: {
+          muscleGroupId: muscleGroup.id,
+          language: "vi",
+          name: muscleGroup.name_vn,
+          slug: slugify(muscleGroup.name_vn),
+        },
+      });
+      await prisma.muscleGroupTranslation.create({
+        data: {
+          muscleGroupId: muscleGroup.id,
+          language: "en",
+          name: muscleGroup.name,
+          slug: slugify(muscleGroup.name),
         },
       });
     }
 
     // Create exercises with translations
     for (let index = 1; index <= exerciseCount; index++) {
-      const name = faker.lorem.sentence();
-      const description = faker.lorem.paragraph();
-      const notes = faker.lorem.paragraph();
-
-      const nameKey = `exercise.${index}.name`;
-      const descriptionKey = `exercise.${index}.description`;
-      const notesKey = `exercise.${index}.notes`;
-
-      await createTextWithTranslation(nameKey, fakerVI.lorem.sentence(), "vi");
-      await createTextWithTranslation(
-        descriptionKey,
-        fakerVI.lorem.paragraph(),
-        "vi"
-      );
-      await createTextWithTranslation(
-        notesKey,
-        fakerVI.lorem.paragraph(),
-        "vi"
-      );
-
-      await updateText(nameKey, "en", name);
-      await updateText(descriptionKey, "en", description);
-      await updateText(notesKey, "en", notes);
-
       await prisma.exercise.create({
         data: {
-          nameKey,
-          descriptionKey,
-          notesKey,
+          id: index,
+          notes: faker.lorem.paragraph(),
           category: faker.helpers.arrayElement([
             "WEIGHT",
             "FREE_WEIGHT",
@@ -160,30 +95,35 @@ async function main() {
           images: [faker.image.url(), faker.image.url(), faker.image.url()],
         },
       });
+
+      const viName = fakerVI.lorem.sentence();
+      const enName = fakerEN_US.lorem.sentence();
+
+      await prisma.exerciseTranslation.create({
+        data: {
+          exerciseId: index,
+          language: "vi",
+          name: viName,
+          slug: slugify(viName),
+          description: fakerVI.lorem.paragraph(),
+        },
+      });
+      await prisma.exerciseTranslation.create({
+        data: {
+          exerciseId: index,
+          language: "en",
+          name: enName,
+          slug: slugify(enName),
+          description: fakerEN_US.lorem.paragraph(),
+        },
+      });
     }
 
     // Create workout plans with translations
     for (let index = 1; index <= workoutPlanCount; index++) {
-      const name = faker.lorem.sentence();
-      const description = faker.lorem.paragraph();
-
-      const nameKey = `workoutPlan.${index}.name`;
-      const descriptionKey = `workoutPlan.${index}.description`;
-
-      await createTextWithTranslation(nameKey, fakerVI.lorem.sentence(), "vi");
-      await createTextWithTranslation(
-        descriptionKey,
-        fakerVI.lorem.paragraph(),
-        "vi"
-      );
-
-      await updateText(nameKey, "en", name);
-      await updateText(descriptionKey, "en", description);
-
       await prisma.workoutPlan.create({
         data: {
-          nameKey,
-          descriptionKey,
+          id: index,
           cover_image: faker.image.url(),
           level: faker.helpers.arrayElement([
             "BEGINNER",
@@ -204,19 +144,35 @@ async function main() {
           ]),
         },
       });
+
+      const viName = fakerVI.lorem.sentence();
+      const enName = fakerEN_US.lorem.sentence();
+
+      await prisma.workoutPlanTranslation.create({
+        data: {
+          workoutPlanId: index,
+          language: "vi",
+          name: viName,
+          slug: slugify(viName),
+          description: fakerVI.lorem.paragraph(),
+        },
+      });
+      await prisma.workoutPlanTranslation.create({
+        data: {
+          workoutPlanId: index,
+          language: "en",
+          name: enName,
+          slug: slugify(enName),
+          description: fakerEN_US.lorem.paragraph(),
+        },
+      });
     }
 
     // Create workouts with translations
     for (let index = 1; index <= workoutPlanCount; index++) {
-      const name = faker.lorem.sentence();
-      const nameKey = `workout.${index}.name`;
-
-      await createTextWithTranslation(nameKey, fakerVI.lorem.sentence(), "vi");
-      await updateText(nameKey, "en", name);
-
       await prisma.workout.create({
         data: {
-          nameKey,
+          id: index,
           exercises: {
             connect: Array(randNumber({ min: 3, max: 10 }))
               .fill(null)
@@ -226,6 +182,26 @@ async function main() {
           },
           workoutPlanId: randNumber({ min: 1, max: workoutPlanCount }),
           order: index,
+        },
+      });
+
+      const viName = fakerVI.lorem.sentence();
+      const enName = fakerEN_US.lorem.sentence();
+
+      await prisma.workoutTranslation.create({
+        data: {
+          workoutId: index,
+          language: "vi",
+          name: viName,
+          slug: slugify(viName),
+        },
+      });
+      await prisma.workoutTranslation.create({
+        data: {
+          workoutId: index,
+          language: "en",
+          name: enName,
+          slug: slugify(enName),
         },
       });
     }
@@ -249,3 +225,41 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
+
+function convert_vi_to_en(_str: string) {
+  if (typeof _str !== "string") return "";
+  let str = _str;
+  str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+  str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+  str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+  str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+  str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+  str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+  str = str.replace(/đ/g, "d");
+  str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+  str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+  str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+  str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+  str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+  str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+  str = str.replace(/Đ/g, "D");
+  str = str.replace(
+    /!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g,
+    " "
+  );
+  str = str.replace(/\s+/g, " ");
+  return str;
+}
+
+export function slugify(string: string) {
+  const denicodeString = convert_vi_to_en(string);
+
+  return denicodeString
+    .toString()
+    .normalize("NFKD")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-");
+}

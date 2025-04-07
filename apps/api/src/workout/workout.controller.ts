@@ -4,7 +4,8 @@ import { CreateWorkoutDto } from "./dto/create-workout.dto";
 import { Request } from "express";
 import { CommonQueryParamsDto } from "src/common/dto/paginated-query.dto";
 import { PaginatedQuery } from "src/common/decorator/paginated-query.decorator";
-import { Workout } from "src/generated/models";
+import { Language } from "@prisma/client";
+import { GetLanguage } from "../common/decorators/get-language.decorator";
 
 @Controller("workouts")
 export class WorkoutController {
@@ -12,22 +13,27 @@ export class WorkoutController {
 
   @Post()
   async createWorkout(
-    @Body() body: Omit<Workout, "id">,
-    @Req() request: Request
+    @Body() body: CreateWorkoutDto,
+    @Req() request: Request,
+    @GetLanguage() language: Language
   ) {
-    return this.workoutService.createWorkout(body, request);
+    return this.workoutService.createWorkout(body, request, language);
   }
 
   @Get("/plan/:id")
   async getWorkoutsByWorkoutPlanId(
     @Param("id") id: number,
-    @PaginatedQuery() query: CommonQueryParamsDto
+    @PaginatedQuery() query: CommonQueryParamsDto,
+    @GetLanguage() language: Language
   ) {
-    return this.workoutService.getWorkoutsByWorkoutPlanId(id, query);
+    return this.workoutService.getWorkoutsByWorkoutPlanId(id, query, language);
   }
 
   @Get(":id")
-  async getWorkoutById(@Param("id") id: number) {
-    return this.workoutService.getWorkoutById(id);
+  async getWorkoutById(
+    @Param("id") id: number,
+    @GetLanguage() language: Language
+  ) {
+    return this.workoutService.getWorkoutById(id, language);
   }
 }

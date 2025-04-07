@@ -1,5 +1,5 @@
 import { IsInt, IsDefined, IsString, IsOptional, IsIn, IsBoolean, IsDate } from "class-validator";
-import { Workout, User } from "./";
+import { Workout, User, WorkoutPlanTranslation } from "./";
 import { getEnumValues } from "../helpers";
 import { WorkoutPlanLevel, WorkoutPlanCategory } from "../enums";
 
@@ -8,17 +8,9 @@ export class WorkoutPlan {
     @IsInt()
     id!: number;
 
-    @IsDefined()
-    @IsString()
-    nameKey!: string;
-
     @IsOptional()
     @IsString()
     cover_image?: string;
-
-    @IsOptional()
-    @IsString()
-    descriptionKey?: string;
 
     @IsOptional()
     @IsIn(getEnumValues(WorkoutPlanLevel))
@@ -61,4 +53,7 @@ export class WorkoutPlan {
     @IsDefined()
     @IsDate()
     updatedAt!: Date;
+
+    @IsDefined()
+    translations!: WorkoutPlanTranslation[];
 }

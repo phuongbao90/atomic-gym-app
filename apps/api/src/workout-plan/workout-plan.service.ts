@@ -11,21 +11,23 @@ import { REQUEST_USER_KEY } from "../auth/constant/auth.constant";
 import { JwtUser } from "../auth/type/jwt-user-type";
 import { WorkoutPlanQueryDto } from "./dto/workout-plan-query.dto";
 import { paginateOutput } from "src/common/utils/pagination.utils";
-import { Prisma } from "@prisma/client";
-import { WorkoutPlan } from "src/generated/models";
+import { Language, Prisma } from "@prisma/client";
+import { slugify } from "src/helpers/slugify";
 
 @Injectable()
 export class WorkoutPlanService {
   constructor(private prisma: PrismaService) {}
-  async createWorkoutPlan(body: Omit<WorkoutPlan, "id">, request: Request) {
-    const user: JwtUser = request[REQUEST_USER_KEY];
 
+  async createWorkoutPlan(
+    body: CreateWorkoutPlanDto,
+    request: Request,
+    language: Language
+  ) {
+    const user: JwtUser = request[REQUEST_USER_KEY];
     try {
-      return this.prisma.workoutPlan.create({
+      const plan = await this.prisma.workoutPlan.create({
         data: {
           createdById: user.sub,
-          nameKey: body.nameKey,
-          descriptionKey: body.descriptionKey,
           cover_image: body.cover_image,
           level: body.level,
           isPublic: body.isPublic,
@@ -35,15 +37,30 @@ export class WorkoutPlanService {
           workouts: {},
         },
       });
-      // return this.prisma.workoutPlan.create({
-      //   data: { ...body, createdById: user.sub },
-      // });
+      const translation = await this.prisma.workoutPlanTranslation.create({
+        data: {
+          workoutPlanId: plan.id,
+          language,
+          name: body.name,
+          slug: slugify(body.name),
+          description: body.description,
+        },
+      });
+
+      return {
+        ...plan,
+        translation,
+      };
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  async getWorkoutPlans(request: Request, query: WorkoutPlanQueryDto) {
+  async getWorkoutPlans(
+    request: Request,
+    query: WorkoutPlanQueryDto,
+    language: Language
+  ) {
     const user: JwtUser = request[REQUEST_USER_KEY];
     const { isPublic, isPremium, me, category, isSingle, isFeatured } = query;
 
@@ -62,23 +79,35 @@ export class WorkoutPlanService {
       ...workoutPlanQuery,
       include: {
         _count: { select: { workouts: true } },
+        translations: {
+          where: {
+            language,
+          },
+        },
       },
     });
 
-    const total = await this.prisma.workoutPlan.count(
-      workoutPlanQuery as Prisma.WorkoutPlanCountArgs
-    );
+    const total = await this.prisma.workoutPlan.count({
+      where: {
+        ...workoutPlanQuery.where,
+      },
+    });
 
     return paginateOutput(workoutPlans, total, query);
   }
 
-  async getWorkoutPlansInGroups() {
+  async getWorkoutPlansInGroups(language: Language) {
     const workoutPlans = await this.prisma.workoutPlan.findMany({
       where: {
         isFeatured: true,
       },
       include: {
         _count: { select: { workouts: true } },
+        translations: {
+          where: {
+            language,
+          },
+        },
       },
       take: 6,
     });
@@ -88,6 +117,13 @@ export class WorkoutPlanService {
         isSingle: true,
         isFeatured: false,
       },
+      include: {
+        translations: {
+          where: {
+            language,
+          },
+        },
+      },
       take: 12,
     });
 
@@ -96,27 +132,29 @@ export class WorkoutPlanService {
       'name', category,
       'data', json_agg(
         json_build_object(
-          'id', id,
-          'name', name,
-          'description', description,
-          'category', category,
-          'isFeatured', "isFeatured",
-          'cover_image', "cover_image",
-          'level', "level",
-          'isPremium', "isPremium",
+          'id', wp.id,
+          'category', wp.category,
+          'isFeatured', wp."isFeatured",
+          'cover_image', wp."cover_image",
+          'level', wp."level",
+          'isPremium', wp."isPremium",
+          'name', wpt.name,
+          'description', wpt.description,
+          'slug', wpt.slug,
           '_count', json_build_object(
             'workouts', (
               SELECT COUNT(*)
               FROM "Workout"
-              WHERE "Workout"."workoutPlanId" = "WorkoutPlan".id
+              WHERE "Workout"."workoutPlanId" = wp.id
             )
           )
         )
       )
     )::json as result
-    FROM "WorkoutPlan"
-    WHERE "isFeatured" = false
-    GROUP BY category
+    FROM "WorkoutPlan" wp
+    LEFT JOIN "WorkoutPlanTranslation" wpt ON wp.id = wpt."workoutPlanId" AND wpt.language = ${language}::"Language"
+    WHERE wp."isFeatured" = false
+    GROUP BY wp.category
   `;
 
     return {
@@ -126,13 +164,23 @@ export class WorkoutPlanService {
     };
   }
 
-  async getWorkoutPlanById(id: number) {
+  async getWorkoutPlanById(id: number, language: Language) {
     return this.prisma.workoutPlan.findUnique({
       where: { id },
       include: {
+        translations: {
+          where: {
+            language,
+          },
+        },
         workouts: {
           include: {
             _count: { select: { exercises: true } },
+            translations: {
+              where: {
+                language,
+              },
+            },
           },
         },
       },
@@ -157,14 +205,46 @@ export class WorkoutPlanService {
   async updateWorkoutPlanById(
     id: number,
     body: Partial<CreateWorkoutPlanDto>,
-    request: Request
+    request: Request,
+    language: Language
   ) {
     const user: JwtUser = request[REQUEST_USER_KEY];
 
-    return this.prisma.workoutPlan.update({
-      where: { id, createdById: user.sub },
-      // @ts-ignore
+    const workoutPlan = await this.prisma.workoutPlan.update({
+      where: {
+        id,
+        createdById: user.sub,
+        translations: {
+          some: {
+            language,
+          },
+        },
+      },
+      data: {
+        cover_image: body.cover_image,
+        level: body.level,
+        isPublic: body.isPublic,
+        isPremium: body.isPremium,
+        isFeatured: body.isFeatured,
+        category: body.category,
+        workouts: {
+          connect: body.workoutIds.map((workoutId) => ({ id: workoutId })),
+        },
+      },
+    });
+    const translation = await this.prisma.workoutPlanTranslation.update({
+      where: {
+        workoutPlanId_language: {
+          workoutPlanId: id,
+          language,
+        },
+      },
       data: body,
     });
+
+    return {
+      ...workoutPlan,
+      translation,
+    };
   }
 }
