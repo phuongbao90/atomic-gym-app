@@ -7,55 +7,83 @@ import nock from "nock";
 import { customRender, customRenderHook } from "../../utils/test-utils";
 import { WorkoutPlanDetailScreen } from "../workout-plans/workout-plan-detail-screen";
 
-const ID = 2;
+const ID = 24;
 const mockData = {
-  id: 2,
-  name: "Aggero cunctatio correptius tres vulgaris accusantium virga corporis.",
-  cover_image: "https://loremflickr.com/595/1479?lock=3949512680487871",
-  description:
-    "Desparatus infit paens temptatio desipio suffoco beatae stillicidium vir somnus. Dedecor explicabo theologus a ut volva valde. Suffragium unus virga conduco coniuratio ventosus totus deputo.",
-  level: "BEGINNER",
-  isPublic: true,
+  id: 24,
+  cover_image: "https://loremflickr.com/2815/2285?lock=2332829081013800",
+  level: "ADVANCED",
+  isPublic: false,
   isPremium: true,
-  isFeatured: true,
-  isSingle: false,
-  category: "BALANCE",
-  createdById: 11,
-  createdAt: "2025-03-26T16:12:12.095Z",
-  updatedAt: "2025-03-26T16:12:12.095Z",
+  isFeatured: false,
+  isSingle: true,
+  category: "ENDURANCE",
+  createdById: 8,
+  createdAt: "2025-04-07T07:51:20.053Z",
+  updatedAt: "2025-04-07T07:51:20.053Z",
+  translations: [
+    {
+      workoutPlanId: 24,
+      language: "vi",
+      name: "Mười hết bè thế bạn đâu.",
+      description:
+        "Đá máy trời đang mướn nghỉ giày tám cái. Hương chín không á hai ghế bàn không vá. Tám tôi ngọt.",
+      slug: "muoi-het-be-the-ban-dau",
+    },
+  ],
   workouts: [
     {
-      id: 12,
-      name: "Tracto centum sufficio.",
-      order: 12,
-      createdAt: "2025-03-26T16:12:12.153Z",
-      updatedAt: "2025-03-26T16:12:12.153Z",
-      workoutPlanId: 2,
-      _count: {
-        exercises: 0,
-      },
-    },
-    {
       id: 15,
-      name: "Usque vix sed tantillus acer urbanus molestias.",
       order: 15,
-      createdAt: "2025-03-26T16:12:12.159Z",
-      updatedAt: "2025-03-26T16:12:12.159Z",
-      workoutPlanId: 2,
-      _count: {
-        exercises: 0,
-      },
-    },
-    {
-      id: 27,
-      name: "Adeo fugiat dens ara tempore.",
-      order: 27,
-      createdAt: "2025-03-26T16:12:12.181Z",
-      updatedAt: "2025-03-26T16:12:12.181Z",
-      workoutPlanId: 2,
+      createdAt: "2025-04-07T07:51:20.127Z",
+      updatedAt: "2025-04-07T07:51:20.127Z",
+      workoutPlanId: 24,
       _count: {
         exercises: 2,
       },
+      translations: [
+        {
+          workoutId: 15,
+          language: "vi",
+          name: "Bạn xanh là biết quần mượn.",
+          slug: "ban-xanh-la-biet-quan-muon",
+        },
+      ],
+    },
+    {
+      id: 35,
+      order: 35,
+      createdAt: "2025-04-07T07:51:20.164Z",
+      updatedAt: "2025-04-07T07:51:20.164Z",
+      workoutPlanId: 24,
+      _count: {
+        exercises: 1,
+      },
+      translations: [
+        {
+          workoutId: 35,
+          language: "vi",
+          name: "Thế máy nhà đâu đỏ không thích khoảng chìm đá.",
+          slug: "the-may-nha-dau-do-khong-thich-khoang-chim-da",
+        },
+      ],
+    },
+    {
+      id: 40,
+      order: 40,
+      createdAt: "2025-04-07T07:51:20.175Z",
+      updatedAt: "2025-04-07T07:51:20.175Z",
+      workoutPlanId: 24,
+      _count: {
+        exercises: 2,
+      },
+      translations: [
+        {
+          workoutId: 40,
+          language: "vi",
+          name: "Thì mười hàng bảy tủ em.",
+          slug: "thi-muoi-hang-bay-tu-em",
+        },
+      ],
     },
   ],
 };
@@ -103,15 +131,15 @@ describe("WorkoutPlanDetailScreen", () => {
       expect(result.current.isSuccess).toEqual(true);
       expect(result.current.isLoading).toEqual(false);
       expect(result.current.isError).toEqual(false);
-      expect(getByText(mockData.name)).toBeTruthy();
-      expect(getByText(mockData.description)).toBeTruthy();
+      expect(getByText(mockData.translations[0].name)).toBeTruthy();
+      expect(getByText(mockData.translations[0].description)).toBeTruthy();
     });
-    expect(getByText(/improve balance/i)).toBeTruthy();
-    expect(getByText(/beginner/i)).toBeTruthy();
+    expect(getByText(/improve endurance/i)).toBeTruthy();
+    expect(getByText(/advanced/i)).toBeTruthy();
     expect(getByText(/3 days per week/i)).toBeTruthy();
     expect(getAllByTestId(/workout-item-\d+/i)).toHaveLength(3);
-    expect(getByText(mockData.workouts[0].name)).toBeTruthy();
-    expect(getByText(mockData.workouts[1].name)).toBeTruthy();
-    expect(getByText(mockData.workouts[2].name)).toBeTruthy();
+    expect(getByText(mockData.workouts[0].translations[0].name)).toBeTruthy();
+    expect(getByText(mockData.workouts[1].translations[0].name)).toBeTruthy();
+    expect(getByText(mockData.workouts[2].translations[0].name)).toBeTruthy();
   });
 });

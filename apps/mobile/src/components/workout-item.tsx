@@ -27,7 +27,7 @@ export const WorkoutItem = ({
       <Badge label={`Day ${index + 1}`} />
       <View className="mx-4 flex-1">
         <Text numberOfLines={1} style={{ flex: 1 }}>
-          {workout.name}
+          {workout?.translations?.[0]?.name}
         </Text>
         {!!workout?._count?.exercises && (
           <Text>{`${workout._count.exercises} exercise${
