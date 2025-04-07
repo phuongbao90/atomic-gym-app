@@ -31,6 +31,8 @@ import {
   ReanimatedLogLevel,
   configureReanimatedLogger,
 } from "react-native-reanimated";
+import { createOfetchInstance } from "app";
+import i18n from "../src/configs/i18n";
 
 // This is the default configuration
 configureReanimatedLogger({
@@ -66,6 +68,19 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
+
+  // useEffect(() => {
+  // createOfetchInstance({
+  //   "Accept-Language": appStore$.language.get(),
+  // });
+  // }, []);
+
+  useEffect(() => {
+    i18n.changeLanguage(appStore$.language.get());
+    createOfetchInstance({
+      "Accept-Language": appStore$.language.get(),
+    });
+  }, []);
 
   useEffect(() => {
     SecureStore.getItemAsync("accessToken").then((token) => {

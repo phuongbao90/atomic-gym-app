@@ -73,7 +73,7 @@ export const WorkoutPlanDetailScreen = () => {
   return (
     <AppScreen name="workout-plan-detail-screen">
       <AppHeader
-        title={workoutPlan?.name}
+        title={workoutPlan?.translations?.[0]?.name}
         withBackButton
         className="bg-white"
         theme={theme}
@@ -104,7 +104,7 @@ export const WorkoutPlanDetailScreen = () => {
               paddingHorizontal: 12,
             }}
           >
-            <WorkoutPlanStatistics />
+            <WorkoutPlanStatistics item={workoutPlan} />
           </Tabs.ScrollView>
         </Tabs.Tab>
       </Tabs.Container>

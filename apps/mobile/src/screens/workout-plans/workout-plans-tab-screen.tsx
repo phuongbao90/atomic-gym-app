@@ -19,6 +19,7 @@ export function WorkoutPlansTabScreen() {
   const router = useRouter();
   const theme = use$(appStore$.theme);
   const language = use$(appStore$.language);
+  console.log("language ", language);
 
   const { data } = useGetWorkoutPlansInGroups();
   const sections = useMemo(() => {

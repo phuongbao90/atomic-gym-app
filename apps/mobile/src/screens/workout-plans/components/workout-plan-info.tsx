@@ -29,7 +29,7 @@ export const PlanInfo = ({
   if (!item) return null;
   return (
     <View className="mt-4">
-      <AppText>{item?.description}</AppText>
+      <AppText>{item?.translations?.[0]?.description}</AppText>
 
       <Divider className="my-2" />
 
@@ -61,15 +61,19 @@ export const PlanInfo = ({
 
       <AppText className="text-lg font-bold mb-4">Workouts</AppText>
       <View className="gap-4">
-        {item.workouts?.map((workout, index) => (
-          <Fragment key={workout.id}>
-            <WorkoutItem
-              workout={workout as Workout & { _count: { exercises: number } }}
-              index={index}
-              isPremiumPlan={item.isPremium ?? false}
-            />
-          </Fragment>
-        ))}
+        {Number(item?.workouts?.length) > 0 ? (
+          item.workouts?.map((workout, index) => (
+            <Fragment key={workout.id}>
+              <WorkoutItem
+                workout={workout as Workout & { _count: { exercises: number } }}
+                index={index}
+                isPremiumPlan={item.isPremium ?? false}
+              />
+            </Fragment>
+          ))
+        ) : (
+          <AppText className="text-center text-gray-500">empty</AppText>
+        )}
       </View>
     </View>
   );

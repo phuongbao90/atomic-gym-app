@@ -4,7 +4,8 @@ const _ENV =
     | "testing"
     | "production") || process.env.NODE_ENV;
 
-const url = "192.168.31.63";
+// const url = "192.168.31.63";
+const url = "localhost";
 
 const _API_URL = {
   // development: "http://192.168.110.112:3000",

@@ -20,7 +20,7 @@ export const useGetWorkoutPlan = (id: number) => {
   return useQuery({
     queryKey: workoutPlanKeys.detail(id),
     queryFn: () => getWorkoutPlan(id),
-    select: (data) => data.data,
+    select: (data) => data?.data,
     enabled: !!id,
   });
 };
@@ -29,6 +29,6 @@ export const useGetWorkoutPlansInGroups = () => {
   return useQuery({
     queryKey: workoutPlanKeys.inGroups(),
     queryFn: () => getWorkoutPlansInGroups(),
-    select: (data) => data.data,
+    select: (data) => data?.data,
   });
 };

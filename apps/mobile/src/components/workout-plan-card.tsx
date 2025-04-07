@@ -5,10 +5,17 @@ import { Link } from "expo-router";
 import { Text, View } from "react-native";
 import { appRoutes } from "../configs/routes";
 
+type AutoTransformedWorkoutPlan = WorkoutPlan & {
+  _count?: { workouts: number };
+  name: string;
+};
+
 export const WorkoutPlanCard = ({
   item,
 }: {
-  item: WorkoutPlan & { _count?: { workouts: number } };
+  item: (WorkoutPlan | AutoTransformedWorkoutPlan) & {
+    _count?: { workouts: number };
+  };
 }) => {
   return (
     <Link href={appRoutes.workoutPlans.detail(item.id.toString())}>
@@ -23,7 +30,10 @@ export const WorkoutPlanCard = ({
         >
           <View className="items-start justify-end flex-1 px-2 pb-2 gap-1 bg-black/30">
             {item.isPremium && <LockIcon />}
-            <Text className="text-white text-lg font-bold">{item.name}</Text>
+            <Text className="text-white text-lg font-bold">
+              {item.translations?.[0]?.name ||
+                (item as AutoTransformedWorkoutPlan)?.name}
+            </Text>
             <View className="flex-row items-center gap-1">
               <Text className="text-white text-xs">{item.level}</Text>
               {!!item?._count?.workouts && (
@@ -62,7 +72,7 @@ export const SingleWorkoutPlanCard = ({
         className="text-base font-semibold"
         style={{ maxWidth: "82%" }}
       >
-        {item.name}
+        {item.translations?.[0]?.name}
       </Text>
       {item.isPremium && (
         <Entypo name="lock" size={18} color="gray" className="ml-auto" />

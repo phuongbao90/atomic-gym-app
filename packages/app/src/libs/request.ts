@@ -1,33 +1,59 @@
-import { ofetch } from "ofetch"
-import { ENV } from "../configs/env"
+import { ofetch } from "ofetch";
+import { ENV } from "../configs/env";
 
-// const API_URL = "http://192.168.31.26:3000";
+let ofetchInstance: ReturnType<typeof ofetch.create> | null = null;
+
+export function createOfetchInstance(headers?: Record<string, string>) {
+  ofetchInstance = ofetch.create({
+    baseURL: ENV.API_URL,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Cache-Control": "no-cache",
+      ...headers,
+    },
+  });
+}
 
 export const request = async <T>(endpoint: string, options: RequestInit) => {
   try {
-    const response = await ofetch<T>(endpoint, {
-      ...options,
-      baseURL: ENV.API_URL,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "Cache-Control": "no-cache",
+    if (!ofetchInstance) {
+      createOfetchInstance();
+      // const response = await ofetch<T>(endpoint, {
+      //   ...options,
+      //   headers: {
+      //     ...options.headers,
+      //   },
+      //   onResponseError: (error) => {
+      //     console.log("onResponseError ====>", error);
+      //     throw error;
+      //   },
+      //   onRequestError: (error) => {
+      //     console.log("onRequestError ====>", error);
+      //     throw error;
+      //   },
+      // });
 
+      // return response;
+    }
+    const response = await (ofetchInstance || ofetch)<T>(endpoint, {
+      ...options,
+      headers: {
         ...options.headers,
       },
       onResponseError: (error) => {
-        console.log("onResponseError ====>", error)
-        throw error
+        console.log("onResponseError ====>", error);
+        throw error;
       },
       onRequestError: (error) => {
-        console.log("onRequestError ====>", error)
-        throw error
+        console.log("onRequestError ====>", error);
+        throw error;
       },
-    })
+    });
 
-    return response
+    return response;
   } catch (error) {
-    console.log("error ====>", error)
-    throw error
+    console.log("error ====>", error);
+    throw error;
   }
-}
+};

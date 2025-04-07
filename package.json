@@ -2,6 +2,8 @@
   "name": "gym-app-turbo",
   "private": true,
   "scripts": {
+    "fix-expo-cannot-connect-to-backend": "adb reverse tcp:3000 tcp:3000",
+    "*": "------------------------------------------",
     "clean": "turbo run clean && rm -rf node_modules && rm -rf yarn.lock && yarn install",
     "clear-daemon": "npx turbo daemon clean",
     "validate-package": "npx syncpack list",

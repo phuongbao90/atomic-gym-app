@@ -45,7 +45,7 @@ export class WorkoutPlanController {
     return this.workoutPlanService.getWorkoutPlans(request, query, language);
   }
 
-  @Get("groups")
+  @Get("in-groups")
   findAllInGroups(@GetLanguage() language: Language) {
     return this.workoutPlanService.getWorkoutPlansInGroups(language);
   }
