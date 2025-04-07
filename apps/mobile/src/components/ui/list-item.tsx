@@ -1,7 +1,6 @@
 import { cx } from "class-variance-authority";
 import { ReactNode } from "react";
 import { Pressable, View } from "react-native";
-import { typography } from "../../styles/typography";
 import { AppText } from "./app-text";
 import { Divider } from "./divider";
 

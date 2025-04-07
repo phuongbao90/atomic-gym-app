@@ -1,5 +1,4 @@
-import { type VariantProps, cva } from "class-variance-authority";
-import { Appearance, Text, TextProps } from "react-native";
+import { cva } from "class-variance-authority";
 
 export const typographyCva = cva([], {
   variants: {

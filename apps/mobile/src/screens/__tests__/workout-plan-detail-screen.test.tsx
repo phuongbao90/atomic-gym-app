@@ -2,10 +2,10 @@ import { expect, jest } from "@jest/globals";
 import { waitFor } from "@testing-library/react-native";
 import { useGetWorkoutPlan } from "app";
 import { API_ROUTES } from "app/src/configs/api-routes";
-import nock from "nock";
-import { WorkoutPlanDetailScreen } from "../workout-plans/workout-plan-detail-screen";
 import { ENV } from "app/src/configs/env";
+import nock from "nock";
 import { customRender, customRenderHook } from "../../utils/test-utils";
+import { WorkoutPlanDetailScreen } from "../workout-plans/workout-plan-detail-screen";
 
 const ID = 2;
 const mockData = {

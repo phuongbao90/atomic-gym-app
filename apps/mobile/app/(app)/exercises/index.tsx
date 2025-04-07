@@ -14,9 +14,9 @@ export default function Exercises() {
   const theme = use$(appStore$.theme);
   const language = use$(appStore$.language);
 
-  const query = exerciseQuery.getExercises();
+  const _query = exerciseQuery.getExercises();
 
-  const renderItem = ({ item }: { item: Exercise }) => {
+  const _renderItem = ({ item }: { item: Exercise }) => {
     return <ExerciseItem item={item} />;
   };
 

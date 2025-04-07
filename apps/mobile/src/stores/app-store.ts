@@ -1,7 +1,7 @@
 import { observable } from "@legendapp/state";
+import { createOfetchInstance, queryClient } from "app";
 import { colorScheme } from "nativewind";
 import i18n from "../configs/i18n";
-import { createOfetchInstance, queryClient } from "app";
 
 export const appStore$ = observable({
   theme: "light" as "light" | "dark",

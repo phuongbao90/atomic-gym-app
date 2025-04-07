@@ -1,18 +1,5 @@
-import { PlatformPressable } from "@react-navigation/elements";
-import { type VariantProps, cva } from "class-variance-authority";
-import * as Haptics from "expo-haptics";
-import React, { ReactNode } from "react";
-import {
-  GestureResponderEvent,
-  Pressable,
-  PressableProps,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  useColorScheme,
-} from "react-native";
-import { colors } from "react-native-keyboard-controller/lib/typescript/components/KeyboardToolbar/colors";
+import React from "react";
+import { Pressable, Text, View } from "react-native";
 import { buttonCva, buttonTextCva } from "../../styles/button-cva";
 import { cn } from "../../utils/cn";
 

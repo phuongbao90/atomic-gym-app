@@ -36,7 +36,15 @@
         "noNonNullAssertion": "info"
       },
       "correctness": {
-        "useExhaustiveDependencies": "warn"
+        "useExhaustiveDependencies": "warn",
+        "noUnusedVariables": {
+          "level": "error",
+          "fix": "safe"
+        },
+        "noUnusedImports": {
+          "level": "error",
+          "fix": "safe"
+        }
       },
       "suspicious": {
         "noExplicitAny": "info"

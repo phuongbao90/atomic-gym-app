@@ -22,7 +22,7 @@ export default function ParallaxScrollView({
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollViewOffset(scrollRef);
 
-  const headerAnimatedStyle = useAnimatedStyle(() => {
+  const _headerAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
@@ -46,7 +46,7 @@ export default function ParallaxScrollView({
   return null;
 }
 
-const styles = StyleSheet.create({
+const _styles = StyleSheet.create({
   container: {
     flex: 1,
   },

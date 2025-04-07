@@ -9,13 +9,11 @@ import { use$ } from "@legendapp/state/react";
 
 import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv";
 import { syncObservable } from "@legendapp/state/sync";
-import { primaryColors } from "app-config";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { SafeAreaView, View } from "react-native";
+import { SafeAreaView } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { useMMKVBoolean } from "react-native-mmkv";
@@ -27,11 +25,11 @@ import { appStore$ } from "../src/stores/app-store";
 import { authStore$ } from "../src/stores/auth-store";
 import Onboarding from "./onboarding";
 import "../src/configs/i18n";
+import { createOfetchInstance } from "app";
 import {
   ReanimatedLogLevel,
   configureReanimatedLogger,
 } from "react-native-reanimated";
-import { createOfetchInstance } from "app";
 import i18n from "../src/configs/i18n";
 
 // This is the default configuration
@@ -58,7 +56,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const insets = useSafeAreaInsets();
-  const theme = use$(appStore$.theme);
+  const _theme = use$(appStore$.theme);
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });

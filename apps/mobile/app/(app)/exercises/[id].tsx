@@ -9,11 +9,8 @@ import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
 import { useColorScheme } from "nativewind";
 import { useRef, useState } from "react";
-import { Linking, TextInput, View, useWindowDimensions } from "react-native";
-// import { SceneMap, TabBar, TabView } from "react-native-tab-view";
-import { ExerciseNoteSheet } from "../../../src/components/bottom-sheets/exercise-note-sheet";
+import { Linking, View, useWindowDimensions } from "react-native";
 import { MuscleItem } from "../../../src/components/muscle-item";
-import { AppBottomSheetView } from "../../../src/components/ui/app-bottom-sheet-view";
 import { AppHeader } from "../../../src/components/ui/app-header";
 import { AppScreen } from "../../../src/components/ui/app-screen";
 import { AppScrollView } from "../../../src/components/ui/app-scrollview";
@@ -26,9 +23,9 @@ import { theme } from "../../../src/styles/themes";
 
 const Summary = ({ exercise }: { exercise?: Exercise }) => {
   const ref = useRef<BottomSheetModal>(null);
-  const mode = useColorScheme();
+  const _mode = useColorScheme();
 
-  const [notes, setNotes] = useState(exercise?.notes);
+  const [_notes, _setNotes] = useState(exercise?.notes);
 
   function handleSheetChanges(index: number) {
     console.log("index", index);

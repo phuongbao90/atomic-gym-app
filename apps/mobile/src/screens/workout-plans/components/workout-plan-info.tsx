@@ -1,8 +1,8 @@
 import { Workout, WorkoutPlan } from "app";
 import { capitalizeString } from "app";
 import { cva } from "class-variance-authority";
-import { View } from "react-native";
 import { Fragment } from "react";
+import { View } from "react-native";
 import { AppText } from "../../../components/ui/app-text";
 import { Divider } from "../../../components/ui/divider";
 import { ExpoIcon } from "../../../components/ui/expo-icon";

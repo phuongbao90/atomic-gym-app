@@ -9,7 +9,6 @@ import { appRoutes } from "../../src/configs/routes";
 import { appStore$ } from "../../src/stores/app-store";
 import { authStore$ } from "../../src/stores/auth-store";
 import { colors } from "../../src/styles/themes";
-import { cn } from "../../src/utils/cn";
 
 const Icon = ({
   name,
@@ -33,7 +32,7 @@ const Icon = ({
 
 export default function TabLayout() {
   const isLoggedIn = use$(authStore$.isLoggedIn);
-  const theme = useColorScheme();
+  const _theme = useColorScheme();
   const colorMode = use$(appStore$.theme);
 
   if (!isLoggedIn) {

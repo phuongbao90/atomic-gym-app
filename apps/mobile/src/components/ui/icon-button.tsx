@@ -1,6 +1,6 @@
 import Feather from "@expo/vector-icons/Feather";
 import * as Haptics from "expo-haptics";
-import { Pressable, View } from "react-native";
+import { Pressable } from "react-native";
 
 type IconProps = {
   size: number;

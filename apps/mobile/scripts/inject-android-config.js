@@ -1,7 +1,7 @@
 const { withAppBuildGradle } = require("@expo/config-plugins");
 
 // eslint-disable-next-line no-undef
-module.exports = withAppBuildGradleDependencies = (config, customName) => {
+module.exports = withAppBuildGradleDependencies = (config, _customName) => {
   return withAppBuildGradle(config, (config) => {
     const initialIndex = config.modResults.contents.indexOf("dependencies {");
 

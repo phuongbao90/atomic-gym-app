@@ -1,7 +1,4 @@
 import { BottomSheetView } from "@gorhom/bottom-sheet";
-
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useRef } from "react";
 import { AppText } from "../ui/app-text";
 
 export const ExerciseNoteSheet = () => {

@@ -16,7 +16,7 @@ export const AppStorage = {
   getIsOnboarded: () => {
     try {
       return storage.getBoolean(storageKeyNames.isOnboarded);
-    } catch (error) {
+    } catch (_error) {
       return false;
     }
   },
@@ -30,7 +30,7 @@ export const AppStorage = {
   getLanguage: () => {
     try {
       return storage.getString(storageKeyNames.language);
-    } catch (error) {
+    } catch (_error) {
       return null;
     }
   },

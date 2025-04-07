@@ -1,10 +1,8 @@
 import { use$ } from "@legendapp/state/react";
 import { queryClient } from "app";
 import { useRouter } from "expo-router";
-import { useTranslation } from "react-i18next";
 import { Button, Text, View } from "react-native";
 import { AppScrollView } from "../../src/components/ui/app-scrollview";
-import { AppText } from "../../src/components/ui/app-text";
 import { AppStorage } from "../../src/lib/storage/app-storage";
 import { appStore$ } from "../../src/stores/app-store";
 import { authStore$ } from "../../src/stores/auth-store";

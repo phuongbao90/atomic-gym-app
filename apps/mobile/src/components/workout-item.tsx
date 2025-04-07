@@ -1,4 +1,3 @@
-import Entypo from "@expo/vector-icons/Entypo";
 import { Workout } from "app";
 import { Text, View } from "react-native";
 import { ExpoIcon } from "./ui/expo-icon";
