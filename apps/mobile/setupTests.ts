@@ -1,6 +1,16 @@
-import mockSafeAreaContext from "react-native-safe-area-context/jest/mock";
+import "react-native-gesture-handler/jestSetup";
+import { ReanimatedLogLevel } from "react-native-reanimated";
+import { configureReanimatedLogger } from "react-native-reanimated";
 
-require("react-native-reanimated").setUpTests();
+import mockSafeAreaContext from "react-native-safe-area-context/jest/mock";
+jest.mock("react-native-safe-area-context", () => mockSafeAreaContext);
+
+require("react-native-reanimated").setUpTests({});
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false, // Reanimated runs in strict mode by default
+});
+
 jest.mock("react-native/src/private/animated/NativeAnimatedHelper");
 jest.mock("expo-font", () => ({
   isLoaded: jest.fn(() => true),
@@ -32,16 +42,7 @@ jest.mock("./src/configs/i18n", () => ({
   },
 }));
 
-jest.mock("expo-router", () => ({
-  Link: () => null,
-  useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    back: jest.fn(),
-  }),
-}));
-
-jest.mock("react-native-safe-area-context", () => mockSafeAreaContext);
+jest.mock("expo-router");
 
 global.beforeAll(() => {});
 

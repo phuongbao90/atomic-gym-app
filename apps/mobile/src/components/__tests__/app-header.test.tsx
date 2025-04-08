@@ -1,6 +1,7 @@
 import { fireEvent, render, waitFor } from "@testing-library/react-native";
 import { mockAppStore$ } from "../../../__mocks__/stores/app-store";
 import { AppHeader } from "../ui/app-header";
+import { useRouter } from "../../../__mocks__/expo-router";
 
 describe("Header", () => {
   beforeEach(() => {
@@ -68,7 +69,7 @@ describe("Header", () => {
 
     fireEvent.press(getByTestId("settings-button"));
 
-    // expect(mockRouter.push).toHaveBeenCalledWith("/settings");
+    expect(useRouter().push).toHaveBeenCalledWith("/settings");
   });
 
   it("should go back to previous screen when back button is pressed", () => {
@@ -80,10 +81,8 @@ describe("Header", () => {
       />
     );
 
-    // User action: press back button
     fireEvent.press(getByTestId("back-button"));
 
-    // Verify the outcome: navigation occurred
-    // expect(mockRouter.back).toHaveBeenCalledTimes(1);
+    expect(useRouter().back).toHaveBeenCalledTimes(1);
   });
 });

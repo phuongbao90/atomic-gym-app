@@ -8,10 +8,10 @@ const emitter = new EventEmitter();
 
 // Define a mock router with navigation methods as jest.fn() for assertions
 const router = {
-  push: jest.fn<(path: string | object) => void>(),
-  replace: jest.fn<(path: string | object) => void>(),
-  back: jest.fn<() => void>(),
-  navigate: jest.fn<(path: string | object) => void>(),
+  push: jest.fn(),
+  replace: jest.fn(),
+  back: jest.fn(),
+  navigate: jest.fn(),
   // You can extend this router object with additional methods if needed
 };
 

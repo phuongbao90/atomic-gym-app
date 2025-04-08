@@ -12,7 +12,6 @@ import { ExpoIcon } from "./expo-icon";
 
 export const AppHeader = ({
   title,
-  center = false,
   withBackButton = false,
   withBottomBorder = true,
   Right,
@@ -21,7 +20,6 @@ export const AppHeader = ({
   language,
 }: {
   title?: string;
-  center?: boolean;
   withBackButton?: boolean;
   withBottomBorder?: boolean;
   Right?: React.ReactNode;
