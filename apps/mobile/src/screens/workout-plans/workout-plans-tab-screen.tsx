@@ -85,6 +85,7 @@ export function WorkoutPlansTabScreen() {
         renderSectionHeader={renderSectionHeader}
         renderItem={() => null}
         showsVerticalScrollIndicator={false}
+        initialNumToRender={100}
         ListFooterComponent={
           <>
             <SectionTitle title={capitalize(t("exercises"))} />
@@ -92,6 +93,7 @@ export function WorkoutPlansTabScreen() {
               onPress={() => {
                 router.push(appRoutes.exercises.list());
               }}
+              testID="view-all-exercises-button"
             >
               <View className="px-6 bg-slate-300 dark:bg-slate-700">
                 <Divider />
@@ -115,10 +117,12 @@ export function WorkoutPlansTabScreen() {
       />
       <View className="absolute bottom-6 right-6">
         <AppButton
+          testID="build-plan-button"
           title={t("build_plan")}
           onPress={() => {
             router.navigate(appRoutes.workoutPlans.create());
           }}
+          color="primary"
         />
       </View>
     </AppScreen>

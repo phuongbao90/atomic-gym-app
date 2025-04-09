@@ -1,8 +1,8 @@
 import Entypo from "@expo/vector-icons/Entypo";
 import { WorkoutPlan } from "app";
 import { Image, ImageBackground } from "expo-image";
-import { Link } from "expo-router";
-import { Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Pressable, Text, View } from "react-native";
 import { appRoutes } from "../configs/routes";
 import { AppText } from "./ui/app-text";
 import { useTranslation } from "react-i18next";
@@ -19,9 +19,15 @@ export const WorkoutPlanCard = ({
     _count?: { workouts: number };
   };
 }) => {
+  const router = useRouter();
   const { t } = useTranslation();
   return (
-    <Link href={appRoutes.workoutPlans.detail(item.id.toString())}>
+    <Pressable
+      onPress={() => {
+        router.push(appRoutes.workoutPlans.detail(item.id.toString()));
+      }}
+      testID="workout-plan-card"
+    >
       <View className="w-72 h-44 rounded-lg overflow-hidden">
         <ImageBackground
           source={{ uri: item.cover_image }}
@@ -51,7 +57,7 @@ export const WorkoutPlanCard = ({
           </View>
         </ImageBackground>
       </View>
-    </Link>
+    </Pressable>
   );
 };
 
@@ -66,8 +72,15 @@ export const SingleWorkoutPlanCard = ({
 }: {
   item: WorkoutPlan;
 }) => {
+  const router = useRouter();
+
   return (
-    <Link href={appRoutes.workouts.detail(item.id.toString())}>
+    <Pressable
+      onPress={() => {
+        router.push(appRoutes.workouts.detail(item.id.toString()));
+      }}
+      testID="single-workout-plan-card"
+    >
       <View className="flex-row items-center gap-4">
         <Image
           source={{ uri: item.cover_image }}
@@ -85,6 +98,6 @@ export const SingleWorkoutPlanCard = ({
           <Entypo name="lock" size={18} color="gray" className="ml-auto" />
         )}
       </View>
-    </Link>
+    </Pressable>
   );
 };
