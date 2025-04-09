@@ -1,5 +1,5 @@
 import { faker, fakerVI, fakerEN_US } from "@faker-js/faker";
-import { randBetweenDate, randNumber, randProduct } from "@ngneat/falso";
+import { randNumber } from "@ngneat/falso";
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { muscleGroups } from "./data/muscle-groups";
@@ -30,10 +30,10 @@ async function main() {
     const exerciseCount = 100;
 
     // Create languages
-    const languages = [
-      { id: "en", name: "English", isDefault: false },
-      { id: "vi", name: "Vietnamese", isDefault: true },
-    ];
+    // const languages = [
+    //   { id: "en", name: "English", isDefault: false },
+    //   { id: "vi", name: "Vietnamese", isDefault: true },
+    // ];
 
     // Create users
     for (let index = 1; index <= userCount; index++) {
@@ -185,23 +185,20 @@ async function main() {
         },
       });
 
-      const viName = fakerVI.lorem.sentence();
-      const enName = fakerEN_US.lorem.sentence();
-
       await prisma.workoutTranslation.create({
         data: {
           workoutId: index,
           language: "vi",
-          name: viName,
-          slug: slugify(viName),
+          name: fakerVI.lorem.sentence(),
+          slug: slugify(fakerVI.lorem.sentence()),
         },
       });
       await prisma.workoutTranslation.create({
         data: {
           workoutId: index,
           language: "en",
-          name: enName,
-          slug: slugify(enName),
+          name: fakerEN_US.lorem.sentence(),
+          slug: slugify(fakerEN_US.lorem.sentence()),
         },
       });
     }

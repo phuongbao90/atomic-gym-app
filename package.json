@@ -4,7 +4,7 @@
   "scripts": {
     "fix-expo-cannot-connect-to-backend": "adb reverse tcp:3000 tcp:3000",
     "*": "------------------------------------------",
-    "clean": "turbo run clean && rm -rf node_modules && rm -rf yarn.lock && yarn install",
+    "clean": "turbo run clean && rm -rf node_modules && rm -rf yarn.lock && yarn install && cd apps/api && yarn reset-db",
     "clear-daemon": "npx turbo daemon clean",
     "validate-package": "npx syncpack list",
     "postinstall": "patch-package",

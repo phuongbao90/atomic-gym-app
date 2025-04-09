@@ -6,12 +6,10 @@ import "../global.css";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { PortalProvider } from "@gorhom/portal";
 import { use$ } from "@legendapp/state/react";
-
 import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv";
 import { syncObservable } from "@legendapp/state/sync";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
-import * as SecureStore from "expo-secure-store";
 import { useEffect } from "react";
 import { SafeAreaView } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -56,7 +54,6 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const insets = useSafeAreaInsets();
-  const _theme = use$(appStore$.theme);
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -67,25 +64,11 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  // useEffect(() => {
-  // createOfetchInstance({
-  //   "Accept-Language": appStore$.language.get(),
-  // });
-  // }, []);
-
   useEffect(() => {
-    i18n.changeLanguage(appStore$.language.get());
-    createOfetchInstance({
-      "Accept-Language": appStore$.language.get(),
-    });
-  }, []);
-
-  useEffect(() => {
-    SecureStore.getItemAsync("accessToken").then((token) => {
-      // console.log("setting access token", token);
-      if (token) {
-        // setAccessToken(token)
-      }
+    i18n.changeLanguage(appStore$.language.get(), () => {
+      createOfetchInstance({
+        "Accept-Language": appStore$.language.get(),
+      });
     });
   }, []);
 

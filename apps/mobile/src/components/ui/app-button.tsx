@@ -37,6 +37,7 @@ type ButtonProps = React.ComponentPropsWithoutRef<typeof Pressable> & {
   containerClassName?: string;
   textClassName?: string;
   className?: string;
+  testID?: string;
 };
 
 export const AppButton = React.forwardRef<
@@ -53,12 +54,16 @@ export const AppButton = React.forwardRef<
       radius,
       containerClassName,
       textClassName,
+      testID,
       ...props
     },
     ref
   ) => {
     return (
-      <View className={cn("flex-1 flex-col items-start", containerClassName)}>
+      <View
+        className={cn("flex-1 flex-col items-start", containerClassName)}
+        testID={testID}
+      >
         <Pressable
           className={cn(
             buttonCva({ size, color, disabled, fullWidth, radius, className })
@@ -69,6 +74,7 @@ export const AppButton = React.forwardRef<
           <View>
             <Text
               className={cn(
+                "font-semibold",
                 buttonTextCva({
                   size,
                   color,

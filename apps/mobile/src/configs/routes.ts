@@ -11,16 +11,28 @@ export const appRoutes = {
   history: "/history",
   statistics: "/statistics",
 
-  exercises: "/(app)/exercises",
-  createExercise: "/(app)/exercises/create",
-  exercise: (id: string) => `/(app)/exercises/${id}`,
+  // exercises: "/exercises",
+  // createExercise: "/exercises/create",
+  // exercise: (id: string) => `/exercises/${id}`,
+  exercises: {
+    base: "/exercises" as const,
+    list: () => `${appRoutes.exercises.base}` as const,
+    detail: (id: string) => `${appRoutes.exercises.base}/${id}` as const,
+    create: () => `${appRoutes.exercises.base}/create` as const,
+  } as const,
 
   workoutPlans: {
-    create: "/(app)/workout-plans/create",
-    edit: (id: string) => `/(app)/workout-plans/${id}/edit`,
-    detail: (id: string) => `/(app)/workout-plans/${id}`,
+    base: "/workout-plans" as const,
+    create: () => `${appRoutes.workoutPlans.base}/create` as const,
+    edit: (id: string) => `${appRoutes.workoutPlans.base}/${id}/edit` as const,
+    detail: (id: string) => `${appRoutes.workoutPlans.base}/${id}` as const,
   },
 
-  settings: "/(app)/settings",
-  profile: "/(app)/profile",
+  workouts: {
+    base: "/workouts" as const,
+    detail: (id: string) => `${appRoutes.workouts.base}/${id}` as const,
+  } as const,
+
+  settings: "/settings",
+  profile: "/profile",
 } as const;

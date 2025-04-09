@@ -15,8 +15,8 @@ export interface User {
   gender: string | null;
   age: number | null;
   password: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   Exercise?: Exercise[];
   ExerciseLog?: ExerciseLog[];
   WorkoutPlan?: WorkoutPlan[];
@@ -55,8 +55,8 @@ export interface Exercise {
   createdBy?: User;
   createdById: number;
   images: string[];
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   ExerciseLog?: ExerciseLog[];
   Workout?: Workout | null;
   workoutId: number | null;
@@ -78,7 +78,7 @@ export interface ExerciseLog {
   exerciseId: number;
   user?: User;
   userId: number;
-  date: Date;
+  date: string;
   repetitions: number;
   weight: number | null;
   notes: string | null;
@@ -96,8 +96,8 @@ export interface WorkoutPlan {
   workouts?: Workout[];
   createdBy?: User;
   createdById: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   translations?: WorkoutPlanTranslation[];
 }
 
@@ -114,8 +114,8 @@ export interface Workout {
   id: number;
   exercises?: Exercise[];
   order: number | null;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   WorkoutPlan?: WorkoutPlan;
   workoutPlanId: number;
   translations?: WorkoutTranslation[];

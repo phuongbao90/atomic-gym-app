@@ -1,29 +1,29 @@
-import { useAppInfiniteQuery } from "../helpers"
+import { useAppInfiniteQuery } from "../helpers";
 import {
   getWorkout,
   getWorkouts,
   getWorkoutsByWorkoutPlanId,
-} from "./workouts.requests"
-import { WorkoutQuery } from "./workouts.types"
-import { useQuery } from "@tanstack/react-query"
-import { workoutKeys } from "./workouts.keys"
+} from "./workouts.requests";
+import { WorkoutQuery } from "./workouts.types";
+import { useQuery } from "@tanstack/react-query";
+import { workoutKeys } from "./workouts.keys";
 
 export const useGetWorkouts = (query: WorkoutQuery) => {
   return useAppInfiniteQuery({
     queryKey: workoutKeys.list(query),
     queryFn: ({ pageParam = 1 }) =>
       getWorkouts({ ...query, page: pageParam as number }),
-  })
-}
+  });
+};
 
 export const useGetWorkout = (id: number) => {
   return useQuery({
+    enabled: !!id,
     queryKey: workoutKeys.detail(id),
     queryFn: () => getWorkout(id),
-    enabled: !!id,
     select: (data) => data.data,
-  })
-}
+  });
+};
 
 export const useGetWorkoutsByWorkoutPlanId = (planId: number) => {
   return useQuery({
@@ -31,5 +31,5 @@ export const useGetWorkoutsByWorkoutPlanId = (planId: number) => {
     queryFn: () => getWorkoutsByWorkoutPlanId(planId),
     enabled: !!planId,
     select: (data) => data.data,
-  })
-}
+  });
+};

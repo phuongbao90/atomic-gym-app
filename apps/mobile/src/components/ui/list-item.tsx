@@ -19,6 +19,7 @@ type Props = {
   leftContainerClassName?: string;
   withTopDivider?: boolean;
   withBottomDivider?: boolean;
+  testID?: string;
 };
 
 export const ListItem = ({
@@ -36,11 +37,17 @@ export const ListItem = ({
   leftContainerClassName,
   withTopDivider,
   withBottomDivider,
+  testID,
 }: Props) => {
   return (
-    <Pressable onPress={onPress} disabled={disabled}>
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      testID={testID}
+      hitSlop={10}
+    >
       {withTopDivider && <Divider />}
-      <View className={`flex-row items-center py-4 ${containerClassName}`}>
+      <View className={`flex-row items-center ${containerClassName}`}>
         {!!Left && (
           <View className={cx("min-w-12", leftContainerClassName)}>{Left}</View>
         )}

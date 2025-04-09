@@ -13,6 +13,7 @@ generator client {
 generator typescriptInterfaces {
   provider = "prisma-generator-typescript-interfaces"
   output   = "../../../packages/app/src/prisma-generated.ts"
+  dateType = "string"
 }
 
 generator class_validator {

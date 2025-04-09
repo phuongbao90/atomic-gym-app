@@ -1,14 +1,20 @@
-import { expect, jest } from "@jest/globals";
+import { expect } from "@jest/globals";
 import { waitFor } from "@testing-library/react-native";
-import { useGetWorkoutPlan } from "app";
+import { useGetWorkoutPlan, Workout, WorkoutPlan } from "app";
 import { API_ROUTES } from "app/src/configs/api-routes";
 import { ENV } from "app/src/configs/env";
 import nock from "nock";
 import { customRender, customRenderHook } from "../../utils/test-utils";
 import { WorkoutPlanDetailScreen } from "../workout-plans/workout-plan-detail-screen";
+import { setSearchParams } from "../../../__mocks__/expo-router";
 
-const ID = 24;
-const mockData = {
+const mockData: WorkoutPlan & {
+  workouts: (Workout & {
+    _count: {
+      exercises: number;
+    };
+  })[];
+} = {
   id: 24,
   cover_image: "https://loremflickr.com/2815/2285?lock=2332829081013800",
   level: "ADVANCED",
@@ -37,6 +43,7 @@ const mockData = {
       createdAt: "2025-04-07T07:51:20.127Z",
       updatedAt: "2025-04-07T07:51:20.127Z",
       workoutPlanId: 24,
+      //@ts-ignore
       _count: {
         exercises: 2,
       },
@@ -86,40 +93,22 @@ const mockData = {
       ],
     },
   ],
-};
-
-// jest.mock("react-native-collapsible-tab-view", () => ({
-//   Tabs: () => ({
-//     ScrollView: () => null,
-//   }),
-// }));
-
-jest.mock("expo-router", () => ({
-  useLocalSearchParams: () => ({
-    id: ID.toString(),
-  }),
-  Link: () => null,
-  useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    back: jest.fn(),
-  }),
-}));
-
-nock(ENV.API_URL).get(API_ROUTES.plans.detail(ID)).reply(200, {
-  data: mockData,
-});
+} as const;
 
 describe("WorkoutPlanDetailScreen", () => {
   it("should render", async () => {
-    const { result } = customRenderHook(() => useGetWorkoutPlan(ID));
+    setSearchParams({ id: mockData.id.toString() });
+    nock(ENV.API_URL).get(API_ROUTES.plans.detail(mockData.id)).reply(200, {
+      data: mockData,
+    });
+    const { result } = customRenderHook(() => useGetWorkoutPlan(mockData.id));
     const { getByText, getAllByTestId } = customRender(
       <WorkoutPlanDetailScreen />
     );
 
-    expect(getByText("Statistics")).toBeTruthy();
-    expect(getByText("Overview")).toBeTruthy();
-    expect(getByText("Start plan")).toBeTruthy();
+    expect(getByText(/tổng quan/i)).toBeTruthy();
+    expect(getByText(/thống kê/i)).toBeTruthy();
+    expect(getByText(/tiến hành buổi tập/i)).toBeTruthy();
 
     expect(result.current.isSuccess).toEqual(false);
     expect(result.current.isLoading).toEqual(true);
@@ -131,15 +120,23 @@ describe("WorkoutPlanDetailScreen", () => {
       expect(result.current.isSuccess).toEqual(true);
       expect(result.current.isLoading).toEqual(false);
       expect(result.current.isError).toEqual(false);
-      expect(getByText(mockData.translations[0].name)).toBeTruthy();
-      expect(getByText(mockData.translations[0].description)).toBeTruthy();
+      expect(getByText(mockData?.translations?.[0]?.name!)).toBeTruthy();
+      expect(getByText(mockData?.translations?.[0]?.description!)).toBeTruthy();
     });
-    expect(getByText(/improve endurance/i)).toBeTruthy();
-    expect(getByText(/advanced/i)).toBeTruthy();
-    expect(getByText(/3 days per week/i)).toBeTruthy();
-    expect(getAllByTestId(/workout-item-\d+/i)).toHaveLength(3);
-    expect(getByText(mockData.workouts[0].translations[0].name)).toBeTruthy();
-    expect(getByText(mockData.workouts[1].translations[0].name)).toBeTruthy();
-    expect(getByText(mockData.workouts[2].translations[0].name)).toBeTruthy();
+    expect(getByText(/Cải thiện độ bền/i)).toBeTruthy();
+    expect(getByText(/Nâng cao/i)).toBeTruthy();
+    expect(getByText(/3 ngày một tuần/i)).toBeTruthy();
+
+    await waitFor(() => {
+      expect(getAllByTestId(/workout-item-\d+/i)).toHaveLength(3);
+      expect(getByText(mockData?.workouts?.[0]?.translations?.[0]?.name!));
+
+      expect(
+        getByText(mockData?.workouts?.[1]?.translations?.[0]?.name!)
+      ).toBeTruthy();
+      expect(
+        getByText(mockData?.workouts?.[2]?.translations?.[0]?.name!)
+      ).toBeTruthy();
+    });
   });
 });

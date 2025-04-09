@@ -12,14 +12,16 @@ import { appStore$ } from "../../stores/app-store";
 import { cn } from "../../utils/cn";
 import { PlanInfo } from "./components/workout-plan-info";
 import { WorkoutPlanStatistics } from "./components/workout-plan-statistics";
+import { useTranslation } from "react-i18next";
 
 const routes = [
-  { key: "first", title: "Overview" },
-  { key: "second", title: "Statistics" },
+  { key: "first", title: "overview" },
+  { key: "second", title: "statistics" },
 ];
 
 const TabBar = (props: TabBarProps<string>) => {
   const { index, tabNames } = props || {};
+  const { t } = useTranslation();
 
   return (
     <View className="flex-row justify-around">
@@ -35,7 +37,9 @@ const TabBar = (props: TabBarProps<string>) => {
               "border-b-2 border-primary": index.get() === i,
             })}
           >
-            <AppText className="text-lg font-bold">{routes[i].title}</AppText>
+            <AppText className="text-lg font-bold">
+              {t(routes[i].title)}
+            </AppText>
           </View>
         </Pressable>
       ))}
@@ -50,6 +54,7 @@ export const WorkoutPlanDetailScreen = () => {
   const { data: workoutPlan } = useGetWorkoutPlan(Number(id));
   const theme = use$(appStore$.theme);
   const language = use$(appStore$.language);
+  const { t } = useTranslation();
 
   const renderHeader = () => {
     return (
@@ -75,7 +80,6 @@ export const WorkoutPlanDetailScreen = () => {
       <AppHeader
         title={workoutPlan?.translations?.[0]?.name}
         withBackButton
-        className="bg-white"
         theme={theme}
         language={language}
       />
@@ -111,7 +115,7 @@ export const WorkoutPlanDetailScreen = () => {
 
       <AppScreen.Footer>
         <AppScreen.FooterContainer className="px-4 py-2">
-          <AppButton title="Start plan" fullWidth color="primary" />
+          <AppButton title={t("start_plan")} fullWidth color="primary" />
         </AppScreen.FooterContainer>
       </AppScreen.Footer>
     </AppScreen>

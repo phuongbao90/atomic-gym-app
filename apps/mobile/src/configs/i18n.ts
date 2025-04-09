@@ -2,13 +2,14 @@ import * as Localization from "expo-localization";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import { AppStorage } from "../lib/storage/app-storage";
+
 import commonEn from "../locales/en/common.json";
-import homeScreenEn from "../locales/en/home-screen.json";
-import loginScreenEn from "../locales/en/login-screen.json";
-import settingsScreenEn from "../locales/en/settings-screen.json";
 import commonVi from "../locales/vi/common.json";
 import homeScreenVi from "../locales/vi/home-screen.json";
+import homeScreenEn from "../locales/en/home-screen.json";
+import loginScreenEn from "../locales/en/login-screen.json";
 import loginScreenVi from "../locales/vi/login-screen.json";
+import settingsScreenEn from "../locales/en/settings-screen.json";
 import settingsScreenVi from "../locales/vi/settings-screen.json";
 
 const initI18n = async () => {

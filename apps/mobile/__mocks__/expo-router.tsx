@@ -37,19 +37,19 @@ const navigation = {
   // (You can add other navigation methods as needed, e.g. setParams, etc.)
 };
 
+// Default search params
+const defaultSearchParams = {};
+
 // Hooks implementation
 export const useRouter = () => router;
 export const useNavigation = () => navigation;
 export const usePathname = () => currentPath;
 export const useSegments = () =>
   currentPath === "/" ? [] : currentPath.replace(/^\/+|\/+$/g, "").split("/"); // split path into segments
-export const useLocalSearchParams = jest.fn(() => ({}));
+export const useLocalSearchParams = jest.fn(() => defaultSearchParams);
 
-// Optionally, expose the router object for direct import in tests (to spy or trigger events)
-export { router };
-
-// Provide dummy components for Expo Router's navigators/links (if used in your app)
-export const Link: React.FC<{ href: any; [prop: string]: any }> = ({
+// Provide dummy components for Expo Router's navigators/links
+export const Link: React.FC<{ href: string; [prop: string]: any }> = ({
   children,
   ...props
 }) => (
@@ -57,6 +57,24 @@ export const Link: React.FC<{ href: any; [prop: string]: any }> = ({
     {children}
   </Text>
 );
+
 // If your app uses <Stack>, <Tabs>, etc. from expo-router in layouts, you can add mocks:
 // export const Stack = ({ children }: any) => <>{children}</>;
 // export const Tabs = ({ children }: any) => <>{children}</>;
+
+// Optionally, expose the router object for direct import in tests (to spy or trigger events)
+export { router };
+
+// Helper function to override default search params in tests
+export const setSearchParams = (params: Record<string, any>) => {
+  useLocalSearchParams.mockImplementation(() => params);
+};
+
+// Helper function to reset mocks
+export const resetMocks = () => {
+  router.push.mockClear();
+  router.replace.mockClear();
+  router.back.mockClear();
+  router.navigate.mockClear();
+  useLocalSearchParams.mockImplementation(() => defaultSearchParams);
+};

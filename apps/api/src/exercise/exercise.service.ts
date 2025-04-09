@@ -86,6 +86,15 @@ export class ExerciseService {
         id,
       },
       include: {
+        primaryMuscle: {
+          include: {
+            translations: {
+              where: {
+                language,
+              },
+            },
+          },
+        },
         translations: {
           where: {
             language,

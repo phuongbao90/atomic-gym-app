@@ -1,7 +1,8 @@
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { BottomSheetViewProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetView/types";
-import { useColorScheme } from "nativewind";
-import { theme } from "../../styles/themes";
+import { appStore$ } from "../../stores/app-store";
+import { use$ } from "@legendapp/state/react";
+import { cn } from "../../utils/cn";
 
 export const AppBottomSheetView = ({
   children,
@@ -9,17 +10,16 @@ export const AppBottomSheetView = ({
 }: {
   children: React.ReactNode;
 } & BottomSheetViewProps) => {
-  const mode = useColorScheme();
+  const mode = use$(appStore$.theme);
   return (
     <BottomSheetView
       {...props}
-      style={[
-        {
-          flex: 1,
-          backgroundColor: theme.pageBackground[mode.colorScheme!],
-        },
-        props.style,
-      ]}
+      style={[{ flex: 1 }, props.style]}
+      className={cn(
+        // "flex-1",
+        mode === "dark" ? "bg-pageDark" : "bg-page",
+        props.className
+      )}
     >
       {children}
     </BottomSheetView>

@@ -6,7 +6,6 @@ import { CreateWorkoutDto } from "./dto/create-workout.dto";
 import { Request } from "express";
 import { CommonQueryParamsDto } from "src/common/dto/paginated-query.dto";
 import { paginateOutput } from "src/common/utils/pagination.utils";
-import { Workout } from "src/generated/models";
 import { Language } from "@prisma/client";
 import { slugify } from "src/helpers/slugify";
 
@@ -98,7 +97,15 @@ export class WorkoutService {
         id,
       },
       include: {
-        exercises: true,
+        exercises: {
+          include: {
+            translations: {
+              where: {
+                language,
+              },
+            },
+          },
+        },
         translations: {
           where: {
             language,

@@ -1,15 +1,16 @@
-import { Exercise } from "app";
+import { MuscleGroup } from "app";
 import { Image } from "expo-image";
-import { useColorScheme } from "nativewind";
 import { View } from "react-native";
 import { AppText } from "./ui/app-text";
+import { use$ } from "@legendapp/state/react";
+import { appStore$ } from "../stores/app-store";
 
 export const MuscleItem = ({
   muscleGroup,
 }: {
-  muscleGroup: Exercise["muscleGroups"][number];
+  muscleGroup: MuscleGroup;
 }) => {
-  const theme = useColorScheme();
+  const theme = use$(appStore$.theme);
   return (
     <View className="flex-row items-center gap-6" key={muscleGroup.id}>
       <Image
@@ -19,11 +20,13 @@ export const MuscleItem = ({
           height: 100,
           borderRadius: 100,
           borderWidth: 2,
-          borderColor: theme.colorScheme === "dark" ? "white" : "black",
+          borderColor: theme === "dark" ? "white" : "black",
         }}
         contentFit="cover"
       />
-      <AppText className="text-lg font-semibold">{muscleGroup.name}</AppText>
+      <AppText className="text-xl font-semibold">
+        {muscleGroup.translations?.[0].name}
+      </AppText>
     </View>
   );
 };

@@ -1,8 +1,9 @@
 import { use$ } from "@legendapp/state/react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { appStore$ } from "../../stores/app-store";
 import { cn } from "../../utils/cn";
+import { AppText } from "./app-text";
 
 export const AppScreen = ({
   children,
@@ -18,7 +19,9 @@ export const AppScreen = ({
       {children}
 
       {__DEV__ && (
-        <Text className="absolute bottom-0 right-0 pr-1 z-50">{name}</Text>
+        <AppText className="absolute bottom-0 right-0 pr-1 z-50">
+          {name}
+        </AppText>
       )}
     </View>
   );

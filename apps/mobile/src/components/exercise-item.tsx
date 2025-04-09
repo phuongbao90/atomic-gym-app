@@ -8,13 +8,15 @@ export const ExerciseItem = ({ item }: { item: Exercise }) => {
   const router = useRouter();
   return (
     <ListItem
-      label={item.name}
+      testID={`exercise-item-${item.id}`}
+      label={item?.translations?.[0]?.name || ""}
       labelClassName="text-lg font-bold"
       labelContainerClassName="ml-4"
       subLabel={item.category}
       subLabelClassName="text-sm"
-      withBottomDivider
-      onPress={() => router.push(appRoutes.exercise(item.id.toString()))}
+      onPress={() =>
+        router.push(appRoutes.exercises.detail(item.id.toString()))
+      }
       Left={
         item.images[0] ? (
           <Image

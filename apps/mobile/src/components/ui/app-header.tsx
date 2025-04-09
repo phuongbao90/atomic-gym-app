@@ -9,6 +9,7 @@ import { cn } from "../../utils/cn";
 import { AppText } from "./app-text";
 import { Divider } from "./divider";
 import { ExpoIcon } from "./expo-icon";
+import { useLanguage } from "../../hooks/use-language";
 
 export const AppHeader = ({
   title,
@@ -28,6 +29,7 @@ export const AppHeader = ({
   language: "vi" | "en";
 }) => {
   const router = useRouter();
+  const { switchLanguage } = useLanguage();
 
   return (
     <>
@@ -78,7 +80,7 @@ export const AppHeader = ({
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                appStore$.switchLanguage();
+                switchLanguage(language);
               }}
               testID="language-button"
             >

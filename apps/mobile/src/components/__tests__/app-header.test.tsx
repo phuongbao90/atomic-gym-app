@@ -1,88 +1,91 @@
-import { fireEvent, render, waitFor } from "@testing-library/react-native";
-import { mockAppStore$ } from "../../../__mocks__/stores/app-store";
+import { fireEvent, render } from "@testing-library/react-native";
+import { View } from "react-native";
 import { AppHeader } from "../ui/app-header";
 import { useRouter } from "../../../__mocks__/expo-router";
 
-describe("Header", () => {
+// Mock expo-router
+
+// Mock useLanguage hook
+jest.mock("../../hooks/use-language", () => ({
+  useLanguage: () => ({
+    switchLanguage: jest.fn(),
+  }),
+}));
+
+describe("AppHeader", () => {
+  const mockRouter = useRouter();
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  afterAll(() => {
-    jest.clearAllMocks();
-  });
+  it("renders correctly with default props", () => {
+    const { getByTestId } = render(<AppHeader theme="light" language="vi" />);
 
-  // Language
-  it("should switch from Vietnamese to English flag when language button is pressed", async () => {
-    const { getByTestId, rerender, queryByTestId } = render(
-      <AppHeader theme="light" language="vi" />
-    );
-    expect(getByTestId("vn-flag")).toBeTruthy();
-    expect(queryByTestId("en-flag")).toBeNull();
-    fireEvent.press(getByTestId("language-button"));
-    mockAppStore$.switchLanguage();
-    await waitFor(() => {
-      // expect(mockedI18n.language).toBe("en")
-      expect(mockAppStore$.language.get()).toBe("en");
-    });
-    rerender(
-      <AppHeader
-        theme={mockAppStore$.theme.get()}
-        language={mockAppStore$.language.get()}
-      />
-    );
-    await waitFor(() => {
-      expect(getByTestId("us-flag")).toBeTruthy();
-    });
-  });
-
-  // Theme
-  it("should change to dark theme icon when the user clicks on the theme icon", async () => {
-    const { getByTestId, rerender, queryByTestId } = render(
-      <AppHeader theme={mockAppStore$.theme.get()} language="vi" />
-    );
-
+    expect(getByTestId("app-header")).toBeTruthy();
     expect(getByTestId("light-icon")).toBeTruthy();
-    expect(queryByTestId("dark-icon")).toBeNull();
-
-    fireEvent.press(getByTestId("theme-button"));
-    mockAppStore$.switchTheme();
-
-    await waitFor(() => {
-      expect(mockAppStore$.theme.get()).toBe("dark");
-    });
-
-    rerender(
-      <AppHeader
-        theme={mockAppStore$.theme.get()}
-        language={mockAppStore$.language.get()}
-      />
-    );
-
-    expect(getByTestId("dark-icon")).toBeTruthy();
+    expect(getByTestId("vn-flag")).toBeTruthy();
   });
 
-  it("should navigate to settings screen when settings button is pressed", async () => {
+  it("renders back button when withBackButton is true", () => {
     const { getByTestId } = render(
-      <AppHeader theme={mockAppStore$.theme.get()} language="vi" />
+      <AppHeader theme="light" language="vi" withBackButton />
     );
 
-    fireEvent.press(getByTestId("settings-button"));
-
-    expect(useRouter().push).toHaveBeenCalledWith("/settings");
+    expect(getByTestId("back-button")).toBeTruthy();
   });
 
-  it("should go back to previous screen when back button is pressed", () => {
+  it("calls router.back() when back button is pressed", () => {
     const { getByTestId } = render(
-      <AppHeader
-        theme={mockAppStore$.theme.get()}
-        language="vi"
-        withBackButton={true}
-      />
+      <AppHeader theme="light" language="vi" withBackButton />
     );
 
     fireEvent.press(getByTestId("back-button"));
+    expect(mockRouter.back).toHaveBeenCalledTimes(1);
+  });
 
-    expect(useRouter().back).toHaveBeenCalledTimes(1);
+  it("calls router.push('/settings') when settings button is pressed", () => {
+    const { getByTestId } = render(<AppHeader theme="light" language="vi" />);
+
+    fireEvent.press(getByTestId("settings-button"));
+    expect(mockRouter.push).toHaveBeenCalledWith("/settings");
+  });
+
+  it("displays correct theme icon based on theme prop", () => {
+    const { getByTestId, rerender } = render(
+      <AppHeader theme="light" language="vi" />
+    );
+    expect(getByTestId("light-icon")).toBeTruthy();
+
+    rerender(<AppHeader theme="dark" language="vi" />);
+    expect(getByTestId("dark-icon")).toBeTruthy();
+  });
+
+  it("displays correct language flag based on language prop", () => {
+    const { getByTestId, rerender } = render(
+      <AppHeader theme="light" language="vi" />
+    );
+    expect(getByTestId("vn-flag")).toBeTruthy();
+
+    rerender(<AppHeader theme="light" language="en" />);
+    expect(getByTestId("us-flag")).toBeTruthy();
+  });
+
+  it("renders title when provided", () => {
+    const title = "Test Title";
+    const { getByText } = render(
+      <AppHeader theme="light" language="vi" title={title} />
+    );
+
+    expect(getByText(title)).toBeTruthy();
+  });
+
+  it("renders custom right component when provided", () => {
+    const RightComponent = () => <View testID="custom-right" />;
+    const { getByTestId } = render(
+      <AppHeader theme="light" language="vi" Right={<RightComponent />} />
+    );
+
+    expect(getByTestId("custom-right")).toBeTruthy();
   });
 });
