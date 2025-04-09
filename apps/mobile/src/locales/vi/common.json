@@ -12,9 +12,11 @@
   "days_per_week": "{{count}} ngày một tuần",
   "day_per_week": "{{count}} ngày một tuần",
   "workouts": "Buổi tập",
+  "workout_plans": "Giáo án luyện tập",
   "overview": "Tổng quan",
   "statistics": "Thống kê",
-  "exercises": "{{count}} bài tập",
+  "exercises_count": "{{count}} bài tập",
+  "exercises": "bài tập",
   "start_plan": "Tiến hành buổi tập",
   "day": "Ngày {{count}}",
   "summary": "Tóm tắt",
@@ -24,5 +26,14 @@
   "save": "Lưu",
   "view_notes": "Xem ghi chú",
   "view_on_youtube": "Xem trên Youtube",
-  "no_exercise_history": "Bạn chưa ghi lại lịch sử luyện tập nào cho bài tập này."
+  "no_exercise_history": "Bạn chưa ghi lại lịch sử luyện tập nào cho bài tập này.",
+  "view_all_exercises": "Xem tất cả bài tập",
+  "FEATURED": "đề xuất",
+  "STRENGTH": "sức mạnh",
+  "ENDURANCE": "độ bền",
+  "BALANCE": "cân bằng",
+  "FLEXIBILITY": "độ mềm dẻo",
+  "LOOSE_WEIGHT": "Giảm cân",
+  "SINGLE_PLANS": "Giáo án đơn",
+  "build_plan": "Xây dựng giáo án"
 }

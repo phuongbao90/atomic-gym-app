@@ -12,9 +12,11 @@
   "days_per_week": "{{count}} days per week",
   "day_per_week": "{{count}} day per week",
   "workouts": "Workouts",
+  "workout_plans": "Workout Plans",
   "overview": "Overview",
   "statistics": "Statistics",
-  "exercises": "{{count}} exercises",
+  "exercises_count": "{{count}} exercises",
+  "exercises": "exercises",
   "start_plan": "Start plan",
   "day": "Day {{count}}",
   "summary": "Summary",
@@ -24,5 +26,14 @@
   "save": "Save",
   "view_notes": "View Notes",
   "view_on_youtube": "View on Youtube",
-  "no_exercise_history": "You haven't logged any exercise history yet."
+  "no_exercise_history": "You haven't logged any exercise history yet.",
+  "view_all_exercises": "View all exercises",
+  "FEATURED": "featured",
+  "STRENGTH": "strength",
+  "ENDURANCE": "endurance",
+  "BALANCE": "balance",
+  "FLEXIBILITY": "flexibility",
+  "LOOSE_WEIGHT": "Loose weight",
+  "SINGLE_PLANS": "Single Plans",
+  "build_plan": "Build plan"
 }

@@ -3,7 +3,7 @@ import { use$ } from "@legendapp/state/react";
 import { useGetWorkoutPlansInGroups } from "app";
 import { useRouter } from "expo-router";
 import { useMemo } from "react";
-import { FlatList, Pressable, SectionList, Text, View } from "react-native";
+import { FlatList, Pressable, SectionList, View } from "react-native";
 import { AppButton } from "../../components/ui/app-button";
 import { AppHeader } from "../../components/ui/app-header";
 import { AppScreen } from "../../components/ui/app-screen";
@@ -14,12 +14,15 @@ import {
 } from "../../components/workout-plan-card";
 import { appRoutes } from "../../configs/routes";
 import { appStore$ } from "../../stores/app-store";
+import { useTranslation } from "react-i18next";
+import { capitalize } from "lodash";
+import { AppText } from "../../components/ui/app-text";
 
 export function WorkoutPlansTabScreen() {
   const router = useRouter();
   const theme = use$(appStore$.theme);
   const language = use$(appStore$.language);
-  console.log("language ", language);
+  const { t } = useTranslation();
 
   const { data } = useGetWorkoutPlansInGroups();
   const sections = useMemo(() => {
@@ -34,7 +37,7 @@ export function WorkoutPlansTabScreen() {
         data: [item.result.data],
       })),
       {
-        title: "SINGLE",
+        title: "SINGLE_PLANS",
         data: [data.single],
       },
     ];
@@ -47,8 +50,8 @@ export function WorkoutPlansTabScreen() {
 
     return (
       <>
-        <SectionTitle title={section.title} />
-        {section.title !== "SINGLE" ? (
+        <SectionTitle title={t(section.title)} />
+        {section.title !== "SINGLE_PLANS" ? (
           <FlatList
             data={data}
             horizontal
@@ -76,7 +79,7 @@ export function WorkoutPlansTabScreen() {
 
   return (
     <AppScreen name="workout-plans-tab-screen">
-      <AppHeader title="Workout Plans" theme={theme} language={language} />
+      <AppHeader title={t("workout_plans")} theme={theme} language={language} />
       <SectionList
         sections={sections}
         renderSectionHeader={renderSectionHeader}
@@ -84,15 +87,23 @@ export function WorkoutPlansTabScreen() {
         showsVerticalScrollIndicator={false}
         ListFooterComponent={
           <>
-            <SectionTitle title="Exercises" />
-            <Pressable>
-              <View className="px-6 bg-black">
+            <SectionTitle title={capitalize(t("exercises"))} />
+            <Pressable
+              onPress={() => {
+                router.push(appRoutes.exercises.list());
+              }}
+            >
+              <View className="px-6 bg-slate-300 dark:bg-slate-700">
                 <Divider />
-                <View className="flex-row items-center gap-2 py-4">
-                  <FontAwesome5 name="dumbbell" size={20} color="black" />
-                  <Text className="text-lg text-gray-500">
-                    View all 300+ exercises
-                  </Text>
+                <View className="flex-row items-center gap-4 py-4">
+                  <FontAwesome5
+                    name="dumbbell"
+                    size={20}
+                    color={theme === "dark" ? "white" : "black"}
+                  />
+                  <AppText className="text-lg">
+                    {t("view_all_exercises")}
+                  </AppText>
                 </View>
                 <Divider />
               </View>
@@ -104,9 +115,9 @@ export function WorkoutPlansTabScreen() {
       />
       <View className="absolute bottom-6 right-6">
         <AppButton
-          title="Build plan"
+          title={t("build_plan")}
           onPress={() => {
-            router.navigate(appRoutes.workoutPlans.create);
+            router.navigate(appRoutes.workoutPlans.create());
           }}
         />
       </View>
@@ -117,7 +128,7 @@ export function WorkoutPlansTabScreen() {
 const SectionTitle = ({ title }: { title: string }) => {
   return (
     <View className="px-6 py-4">
-      <Text className="text-lg font-bold">{title}</Text>
+      <AppText className="text-lg font-bold uppercase">{title}</AppText>
     </View>
   );
 };

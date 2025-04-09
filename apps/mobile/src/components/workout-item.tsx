@@ -35,7 +35,9 @@ export const WorkoutItem = ({
             {workout?.translations?.[0]?.name}
           </Text>
           {!!workout?._count?.exercises && (
-            <Text>{t("exercises", { count: workout._count.exercises })}</Text>
+            <Text>
+              {t("exercises_count", { count: workout._count.exercises })}
+            </Text>
           )}
         </View>
         {isPremiumPlan && (

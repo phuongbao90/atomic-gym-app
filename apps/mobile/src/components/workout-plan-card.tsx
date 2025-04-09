@@ -4,6 +4,8 @@ import { Image, ImageBackground } from "expo-image";
 import { Link } from "expo-router";
 import { Text, View } from "react-native";
 import { appRoutes } from "../configs/routes";
+import { AppText } from "./ui/app-text";
+import { useTranslation } from "react-i18next";
 
 type AutoTransformedWorkoutPlan = WorkoutPlan & {
   _count?: { workouts: number };
@@ -17,6 +19,7 @@ export const WorkoutPlanCard = ({
     _count?: { workouts: number };
   };
 }) => {
+  const { t } = useTranslation();
   return (
     <Link href={appRoutes.workoutPlans.detail(item.id.toString())}>
       <View className="w-72 h-44 rounded-lg overflow-hidden">
@@ -35,10 +38,13 @@ export const WorkoutPlanCard = ({
                 (item as AutoTransformedWorkoutPlan)?.name}
             </Text>
             <View className="flex-row items-center gap-1">
-              <Text className="text-white text-xs">{item.level}</Text>
+              {item.level && (
+                <Text className="text-white text-xs">{t(item.level)}</Text>
+              )}
+
               {!!item?._count?.workouts && (
                 <Text className="text-white text-xs">
-                  {item?._count?.workouts} days per week
+                  {t("days_per_week", { count: item?._count?.workouts })}
                 </Text>
               )}
             </View>
@@ -61,22 +67,24 @@ export const SingleWorkoutPlanCard = ({
   item: WorkoutPlan;
 }) => {
   return (
-    <View className="flex-row items-center gap-2">
-      <Image
-        source={{ uri: item.cover_image }}
-        style={{ width: 46, height: 46, borderRadius: 10 }}
-        contentFit="cover"
-      />
-      <Text
-        numberOfLines={1}
-        className="text-base font-semibold"
-        style={{ maxWidth: "82%" }}
-      >
-        {item.translations?.[0]?.name}
-      </Text>
-      {item.isPremium && (
-        <Entypo name="lock" size={18} color="gray" className="ml-auto" />
-      )}
-    </View>
+    <Link href={appRoutes.workouts.detail(item.id.toString())}>
+      <View className="flex-row items-center gap-4">
+        <Image
+          source={{ uri: item.cover_image }}
+          style={{ width: 46, height: 46, borderRadius: 10 }}
+          contentFit="cover"
+        />
+        <AppText
+          numberOfLines={1}
+          className="text-base font-semibold"
+          style={{ maxWidth: "82%" }}
+        >
+          {item.translations?.[0]?.name}
+        </AppText>
+        {item.isPremium && (
+          <Entypo name="lock" size={18} color="gray" className="ml-auto" />
+        )}
+      </View>
+    </Link>
   );
 };
