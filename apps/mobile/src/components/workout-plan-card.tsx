@@ -36,6 +36,7 @@ export const WorkoutPlanCard = ({
             height: "100%",
           }}
           contentFit="cover"
+          testID="workout-plan-card-image"
         >
           <View className="items-start justify-end flex-1 px-2 pb-2 gap-1 bg-black/30">
             {item.isPremium && <LockIcon />}
@@ -62,7 +63,10 @@ export const WorkoutPlanCard = ({
 };
 
 const LockIcon = () => (
-  <View className="absolute top-2 right-2 w-8 h-8 items-center justify-center rounded-full bg-black/40">
+  <View
+    className="absolute top-2 right-2 w-8 h-8 items-center justify-center rounded-full bg-black/40"
+    testID="lock-icon"
+  >
     <Entypo name="lock" size={16} color="white" />
   </View>
 );
@@ -86,6 +90,7 @@ export const SingleWorkoutPlanCard = ({
           source={{ uri: item.cover_image }}
           style={{ width: 46, height: 46, borderRadius: 10 }}
           contentFit="cover"
+          testID="single-workout-plan-card-image"
         />
         <AppText
           numberOfLines={1}
@@ -95,7 +100,13 @@ export const SingleWorkoutPlanCard = ({
           {item.translations?.[0]?.name}
         </AppText>
         {item.isPremium && (
-          <Entypo name="lock" size={18} color="gray" className="ml-auto" />
+          <Entypo
+            name="lock"
+            size={18}
+            color="gray"
+            className="ml-auto"
+            testID="lock-icon"
+          />
         )}
       </View>
     </Pressable>

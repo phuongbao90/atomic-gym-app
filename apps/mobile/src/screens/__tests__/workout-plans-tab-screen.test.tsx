@@ -772,7 +772,7 @@ describe("WorkoutPlansTabScreen", () => {
       appRoutes.workoutPlans.create()
     );
 
-    expect(getAllByTestId("single-workout-plan-card").length).toEqual(
+    expect(getAllByTestId(/^single-workout-plan-card$/i).length).toEqual(
       mockData.single.length
     );
 
@@ -780,7 +780,7 @@ describe("WorkoutPlansTabScreen", () => {
       return acc + curr.result.data.length;
     }, 0);
 
-    expect(getAllByTestId(/^workout-plan-card/i).length).toEqual(
+    expect(getAllByTestId(/^workout-plan-card$/i).length).toEqual(
       mockData.isFeatured.length + categoryLength
     );
 
