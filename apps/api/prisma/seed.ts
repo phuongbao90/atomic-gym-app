@@ -60,6 +60,7 @@ async function main() {
           muscleGroupId: muscleGroup.id,
           language: "vi",
           name: muscleGroup.name_vn,
+          normalizedName: removeDiacritics(muscleGroup.name_vn),
           slug: slugify(muscleGroup.name_vn),
         },
       });
@@ -68,6 +69,7 @@ async function main() {
           muscleGroupId: muscleGroup.id,
           language: "en",
           name: muscleGroup.name,
+          normalizedName: removeDiacritics(muscleGroup.name),
           slug: slugify(muscleGroup.name),
         },
       });
@@ -104,6 +106,7 @@ async function main() {
           exerciseId: index,
           language: "vi",
           name: viName,
+          normalizedName: removeDiacritics(viName),
           slug: slugify(viName),
           description: fakerVI.lorem.paragraph(),
         },
@@ -113,6 +116,7 @@ async function main() {
           exerciseId: index,
           language: "en",
           name: enName,
+          normalizedName: removeDiacritics(enName),
           slug: slugify(enName),
           description: fakerEN_US.lorem.paragraph(),
         },
@@ -153,6 +157,7 @@ async function main() {
           workoutPlanId: index,
           language: "vi",
           name: viName,
+          normalizedName: removeDiacritics(viName),
           slug: slugify(viName),
           description: fakerVI.lorem.paragraph(),
         },
@@ -162,6 +167,7 @@ async function main() {
           workoutPlanId: index,
           language: "en",
           name: enName,
+          normalizedName: removeDiacritics(enName),
           slug: slugify(enName),
           description: fakerEN_US.lorem.paragraph(),
         },
@@ -170,6 +176,8 @@ async function main() {
 
     // Create workouts with translations
     for (let index = 1; index <= workoutPlanCount; index++) {
+      const viName = fakerVI.lorem.sentence();
+      const enName = fakerEN_US.lorem.sentence();
       await prisma.workout.create({
         data: {
           id: index,
@@ -189,16 +197,18 @@ async function main() {
         data: {
           workoutId: index,
           language: "vi",
-          name: fakerVI.lorem.sentence(),
-          slug: slugify(fakerVI.lorem.sentence()),
+          name: viName,
+          normalizedName: removeDiacritics(viName),
+          slug: slugify(viName),
         },
       });
       await prisma.workoutTranslation.create({
         data: {
           workoutId: index,
           language: "en",
-          name: fakerEN_US.lorem.sentence(),
-          slug: slugify(fakerEN_US.lorem.sentence()),
+          name: enName,
+          normalizedName: removeDiacritics(enName),
+          slug: slugify(enName),
         },
       });
     }
@@ -259,4 +269,9 @@ export function slugify(string: string) {
     .replace(/\s+/g, "-")
     .replace(/[^\w\-]+/g, "")
     .replace(/\-\-+/g, "-");
+}
+
+export function removeDiacritics(str: string) {
+  const denicodeString = convert_vi_to_en(str);
+  return denicodeString.toString().normalize("NFKD").toLowerCase().trim();
 }

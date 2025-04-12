@@ -33,6 +33,7 @@ export class MuscleGroupService {
 
   async findAll(language: Language) {
     return this.prisma.muscleGroup.findMany({
+      take: 200,
       include: {
         translations: {
           where: {

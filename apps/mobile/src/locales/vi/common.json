@@ -35,5 +35,10 @@
   "FLEXIBILITY": "linh hoạt",
   "LOOSE_WEIGHT": "Giảm cân",
   "SINGLE_PLANS": "Giáo án đơn",
-  "build_plan": "Xây dựng giáo án"
+  "build_plan": "Xây dựng giáo án",
+  "all_muscles": "Tất cả nhóm cơ",
+  "all_equipment": "Tất cả thiết bị",
+  "all_levels": "Tất cả cấp độ",
+  "search": "Tìm kiếm",
+  "clear": "Xóa"
 }

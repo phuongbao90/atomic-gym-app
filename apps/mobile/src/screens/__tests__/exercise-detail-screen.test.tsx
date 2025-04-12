@@ -1,12 +1,12 @@
 import { Exercise, useGetExercise } from "app";
-import { customRender } from "../../utils/test-utils";
+import { customRenderUI } from "../../utils/test-utils";
 import { API_ROUTES } from "app/src/configs/api-routes";
 import { ENV } from "app/src/configs/env";
 import nock from "nock";
 import { useLocalSearchParams } from "../../../__mocks__/expo-router";
-import { customRenderHook } from "../../utils/test-utils";
+import { customRenderQueryHook } from "../../utils/test-utils";
 import { ExerciseDetailScreen } from "../exercises/exercise-detail-screen";
-import { waitFor } from "@testing-library/react-native";
+import { screen, waitFor } from "@testing-library/react-native";
 
 const exerciseData: Exercise = {
   id: 20,
@@ -57,11 +57,11 @@ describe("ExerciseDetailScreen", () => {
       .reply(200, {
         data: exerciseData,
       });
-    const { result } = customRenderHook(() => useGetExercise(exerciseData.id));
-
-    const { getByText, getByTestId, getAllByTestId } = customRender(
-      <ExerciseDetailScreen />
+    const { result } = customRenderQueryHook<Exercise>(() =>
+      useGetExercise(exerciseData.id)
     );
+
+    const { getByText } = customRenderUI(<ExerciseDetailScreen />);
 
     expect(getByText(/tóm tắt/i)).toBeDefined();
     expect(getByText(/lịch sử/i)).toBeDefined();
@@ -79,7 +79,9 @@ describe("ExerciseDetailScreen", () => {
 
     await waitFor(() => {
       const exercise: Exercise = result.current.data!;
-      expect(getByText(exercise?.translations?.[0]?.name!)).toBeDefined();
+      expect(
+        screen.getAllByText(exercise?.translations?.[0]?.name!)
+      ).toBeDefined();
       expect(
         getByText(exercise?.translations?.[0]?.description!)
       ).toBeDefined();

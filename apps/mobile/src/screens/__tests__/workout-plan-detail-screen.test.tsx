@@ -4,7 +4,7 @@ import { useGetWorkoutPlan, Workout, WorkoutPlan } from "app";
 import { API_ROUTES } from "app/src/configs/api-routes";
 import { ENV } from "app/src/configs/env";
 import nock from "nock";
-import { customRender, customRenderHook } from "../../utils/test-utils";
+import { customRenderUI, customRenderQueryHook } from "../../utils/test-utils";
 import { WorkoutPlanDetailScreen } from "../workout-plans/workout-plan-detail-screen";
 import { setSearchParams } from "../../../__mocks__/expo-router";
 
@@ -101,8 +101,10 @@ describe("WorkoutPlanDetailScreen", () => {
     nock(ENV.API_URL).get(API_ROUTES.plans.detail(mockData.id)).reply(200, {
       data: mockData,
     });
-    const { result } = customRenderHook(() => useGetWorkoutPlan(mockData.id));
-    const { getByText, getAllByTestId } = customRender(
+    const { result } = customRenderQueryHook(() =>
+      useGetWorkoutPlan(mockData.id)
+    );
+    const { getByText, getAllByTestId } = customRenderUI(
       <WorkoutPlanDetailScreen />
     );
 

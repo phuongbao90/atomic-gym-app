@@ -1,4 +1,4 @@
-function convert_vi_to_en(_str: string) {
+export function convert_vi_to_en(_str: string) {
   if (typeof _str !== "string") return "";
   let str = _str;
   str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
@@ -34,4 +34,9 @@ export function slugify(string: string) {
     .replace(/\s+/g, "-")
     .replace(/[^\w\-]+/g, "")
     .replace(/\-\-+/g, "-");
+}
+
+export function removeDiacritics(str: string) {
+  const denicodeString = convert_vi_to_en(str);
+  return denicodeString.toString().normalize("NFKD").toLowerCase().trim();
 }

@@ -1,7 +1,7 @@
 import { waitFor } from "@testing-library/react-native";
 import { Exercise, useGetWorkout } from "app";
 import { WorkoutDetailScreen } from "../workouts/workout-detail-screen";
-import { customRender, customRenderHook } from "../../utils/test-utils";
+import { customRenderUI, customRenderQueryHook } from "../../utils/test-utils";
 import nock from "nock";
 import { ENV } from "app/src/configs/env";
 import { API_ROUTES } from "app/src/configs/api-routes";
@@ -177,10 +177,10 @@ describe("WorkoutDetailScreen", () => {
         data: mockDataWithExercises,
       });
     setSearchParams({ id: mockDataWithExercises.id.toString() });
-    const { result } = customRenderHook(() =>
+    const { result } = customRenderQueryHook(() =>
       useGetWorkout(mockDataWithExercises.id)
     );
-    const { getByText, getByTestId, getAllByTestId } = customRender(
+    const { getByText, getByTestId, getAllByTestId } = customRenderUI(
       <WorkoutDetailScreen />
     );
 
@@ -198,10 +198,16 @@ describe("WorkoutDetailScreen", () => {
     await waitFor(() => {
       const { exercises } = result.current.data!;
       expect(
-        getByText(result.current.data?.translations?.[0]?.name!)
+        getByText(result.current.data?.translations?.[0]?.name!, {
+          exact: false,
+        })
       ).toBeDefined();
-      expect(getByText(exercises?.[0]?.translations?.[0]?.name!)).toBeDefined();
-      expect(getAllByTestId(/exercise-item-\d+/i)).toHaveLength(5);
+      expect(
+        getByText(exercises?.[0]?.translations?.[0]?.name!, {
+          exact: false,
+        })
+      ).toBeDefined();
+      expect(getAllByTestId(/exercise-item-\d+$/i)).toHaveLength(5);
       expect(getByTestId("start-workout-button")).toBeTruthy();
     });
   });
@@ -212,10 +218,10 @@ describe("WorkoutDetailScreen", () => {
         data: mockDataWithoutExercises,
       });
     setSearchParams({ id: mockDataWithoutExercises.id.toString() });
-    const { result } = customRenderHook(() =>
+    const { result } = customRenderQueryHook(() =>
       useGetWorkout(mockDataWithoutExercises.id)
     );
-    const { getByText } = customRender(<WorkoutDetailScreen />);
+    const { getByText } = customRenderUI(<WorkoutDetailScreen />);
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);

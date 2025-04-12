@@ -10,10 +10,13 @@
     "test": "jest",
     "test:watch": "tsup --watch"
   },
-  "files": ["build", "src"],
+  "files": [
+    "build",
+    "src"
+  ],
   "devDependencies": {
-    "typescript": "5.7.2",
     "tsup": "^8.0.1",
+    "typescript": "5.7.2",
     "typescript-config": "*"
   }
 }

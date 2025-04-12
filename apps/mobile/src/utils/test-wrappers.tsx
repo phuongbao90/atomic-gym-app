@@ -1,9 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, renderHook } from "@testing-library/react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import i18n from "i18next";
-import { initReactI18next, I18nextProvider } from "react-i18next";
-
+import { I18nextProvider, initReactI18next } from "react-i18next";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import commonEn from "../locales/en/common.json";
 import commonVi from "../locales/vi/common.json";
 import homeScreenVi from "../locales/vi/home-screen.json";
@@ -12,9 +10,20 @@ import loginScreenEn from "../locales/en/login-screen.json";
 import loginScreenVi from "../locales/vi/login-screen.json";
 import settingsScreenEn from "../locales/en/settings-screen.json";
 import settingsScreenVi from "../locales/vi/settings-screen.json";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import i18n from "i18next";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { PortalProvider } from "@gorhom/portal";
 
-// Initialize i18n for testing
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    },
+  },
+});
+
 i18n.use(initReactI18next).init({
   lng: "vi", // Set default language for tests to match the mockData
   fallbackLng: "vi",
@@ -39,38 +48,28 @@ i18n.use(initReactI18next).init({
   },
 });
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-    },
-  },
-});
+export const DefaultMockWrapper = ({
+  children,
+}: { children: React.ReactNode }) => {
+  // const queryClient = new QueryClient({
+  //   defaultOptions: {
+  //     queries: {
+  //       retry: false, // don't retry failing queries during tests
+  //     },
+  //   },
+  // });
 
-const DefaultWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
-        <BottomSheetModalProvider>
-          <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
-        </BottomSheetModalProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <BottomSheetModalProvider>
+            <PortalProvider>
+              <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+            </PortalProvider>
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
       </QueryClientProvider>
     </SafeAreaProvider>
   );
-};
-
-export const customRender = (
-  ui: React.ReactElement,
-  wrapper: React.ComponentType<any> | undefined = DefaultWrapper
-) => {
-  return render(ui, { wrapper });
-};
-
-export const customRenderHook = (
-  hook: () => any,
-  wrapper: React.ComponentType<any> | undefined = DefaultWrapper
-) => {
-  return renderHook(hook, { wrapper });
 };

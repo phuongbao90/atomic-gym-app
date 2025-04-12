@@ -10,13 +10,11 @@ import {
 } from "@nestjs/common";
 import { Request } from "express";
 import { PaginatedQuery } from "src/common/decorator/paginated-query.decorator";
-import { CommonQueryParamsDto } from "src/common/dto/paginated-query.dto";
 import { Auth } from "../auth/decorator/auth.decorator";
 import { AuthType } from "../auth/type/auth-type";
 import { CreateExerciseDto } from "./dto/create-exercise.dto";
 import { ExerciseService } from "./exercise.service";
 import { ExerciseQueryParamsDto } from "./dto/exercise-query-params.dto";
-import { Exercise } from "src/generated/models";
 import { Language } from "@prisma/client";
 import { GetLanguage } from "../common/decorators/get-language.decorator";
 

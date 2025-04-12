@@ -1,4 +1,4 @@
-import { IsInt, IsDefined, IsIn, IsString } from "class-validator";
+import { IsInt, IsDefined, IsIn, IsString, IsOptional } from "class-validator";
 import { WorkoutPlan } from "./";
 import { getEnumValues } from "../helpers";
 import { Language } from "../enums";
@@ -15,6 +15,10 @@ export class WorkoutPlanTranslation {
     @IsDefined()
     @IsString()
     name!: string;
+
+    @IsOptional()
+    @IsString()
+    normalizedName?: string;
 
     @IsDefined()
     @IsString()

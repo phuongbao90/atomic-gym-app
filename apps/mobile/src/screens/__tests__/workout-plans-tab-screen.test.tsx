@@ -1,5 +1,5 @@
 import { useGetWorkoutPlansInGroups, WorkoutPlanInGroups } from "app";
-import { customRender, customRenderHook } from "../../utils/test-utils";
+import { customRenderUI, customRenderQueryHook } from "../../utils/test-utils";
 import { WorkoutPlansTabScreen } from "../workout-plans/workout-plans-tab-screen";
 import nock from "nock";
 import { ENV } from "app/src/configs/env";
@@ -737,8 +737,10 @@ describe("WorkoutPlansTabScreen", () => {
     nock(ENV.API_URL).get(API_ROUTES.plans.inGroups).reply(200, {
       data: mockData,
     });
-    const { result } = customRenderHook(() => useGetWorkoutPlansInGroups());
-    const { getByTestId, getByText, getAllByTestId } = customRender(
+    const { result } = customRenderQueryHook(() =>
+      useGetWorkoutPlansInGroups()
+    );
+    const { getByTestId, getByText, getAllByTestId } = customRenderUI(
       <WorkoutPlansTabScreen />
     );
 

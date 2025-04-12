@@ -1,5 +1,5 @@
 import { fireEvent, screen } from "@testing-library/react-native";
-import { customRender } from "../../utils/test-utils";
+import { customRenderUI } from "../../utils/test-utils";
 import { SingleWorkoutPlanCard, WorkoutPlanCard } from "../workout-plan-card";
 import { appRoutes } from "../../configs/routes";
 import { useRouter } from "../../../__mocks__/expo-router";
@@ -86,7 +86,7 @@ const premiumSinglePlan = {
 
 describe("WorkoutPlanCard", () => {
   it("with exercises", () => {
-    customRender(<WorkoutPlanCard item={planWithExercises as any} />);
+    customRenderUI(<WorkoutPlanCard item={planWithExercises as any} />);
 
     screen.getByText(planWithExercises.name);
     screen.getByText(/trung bình/i);
@@ -105,7 +105,7 @@ describe("WorkoutPlanCard", () => {
   });
 
   it("with premium", () => {
-    customRender(<WorkoutPlanCard item={premiumPlan as any} />);
+    customRenderUI(<WorkoutPlanCard item={premiumPlan as any} />);
 
     screen.getByText(/nâng cao/i);
     expect(screen.getByTestId("lock-icon")).toBeTruthy();
@@ -115,12 +115,12 @@ describe("WorkoutPlanCard", () => {
 
 describe("SinglePlanCard", () => {
   it("premium", () => {
-    customRender(<SingleWorkoutPlanCard item={premiumSinglePlan as any} />);
+    customRenderUI(<SingleWorkoutPlanCard item={premiumSinglePlan as any} />);
 
     expect(screen.getByTestId("lock-icon")).toBeTruthy();
   });
   it("single", () => {
-    customRender(<SingleWorkoutPlanCard item={singlePlan as any} />);
+    customRenderUI(<SingleWorkoutPlanCard item={singlePlan as any} />);
 
     expect(screen.queryByText(/ngày một tuần/i)).toBeNull();
 

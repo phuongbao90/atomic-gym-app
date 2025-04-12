@@ -1,3 +1,5 @@
-import { CommonQueryParams } from "../../types/meta"
+import { CommonQueryParams } from "../../types/meta";
 
-export type ExerciseQuery = CommonQueryParams & {}
+export type ExerciseQuery = CommonQueryParams & {
+  muscleGroupId?: number;
+};

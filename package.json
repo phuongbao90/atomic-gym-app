@@ -6,17 +6,15 @@
     "*": "------------------------------------------",
     "clean": "turbo run clean && rm -rf node_modules && rm -rf yarn.lock && yarn install && cd apps/api && yarn reset-db",
     "clear-daemon": "npx turbo daemon clean",
-    "validate-package": "npx syncpack list",
+    "validate-package": "npx sherif@latest -i react -i react-dom -i @types/react",
     "postinstall": "patch-package",
     "build": "fastlane start",
-
     "_": "------------------------------------------",
     "dev:web": "      turbo watch dev --filter=api --filter=web --filter=app",
     "dev:dashboard": "turbo watch dev --filter=api --filter=dashboard --filter=app",
     "dev:api": "      turbo watch start --filter=api",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
-
     "__": "------------------------------------------",
     "mobile#debug_start_dev": "      ts-node ./scripts/modify-env.cjs dev     ios     && turbo watch start --filter=mobile --filter=api",
     "mobile#debug_android_dev": "    ts-node ./scripts/modify-env.cjs dev     android && turbo watch debug --filter=mobile",
@@ -26,10 +24,10 @@
     "mobile#build_ios_prod": "       ts-node ./scripts/modify-env.cjs prod    ios     && turbo run build_app && cd apps/mobile && yarn build -- --profile production     --platform ios      --non-interactive --output ./build/prod/app.ipa"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "dotenv-mono": "^1.3.14",
-    "turbo": "^2.5.0",
-    "typescript": "5.7.2",
-    "@biomejs/biome": "1.9.4"
+    "turbo": "2.5.1-canary.0",
+    "typescript": "5.7.2"
   },
   "engines": {
     "node": ">=18"

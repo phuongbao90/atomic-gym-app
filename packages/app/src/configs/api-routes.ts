@@ -1,7 +1,19 @@
-import { ExerciseQuery } from "../query/exercises/exercises.types"
-import { WorkoutPlanQuery } from "../query/workout-plans/workout-plans.types"
-import { WorkoutQuery } from "../query/workouts/workouts.types"
-import { stringify } from "qs"
+import { isObject } from "lodash";
+import { ExerciseQuery } from "../query/exercises/exercises.types";
+import { WorkoutPlanQuery } from "../query/workout-plans/workout-plans.types";
+import { WorkoutQuery } from "../query/workouts/workouts.types";
+import { stringify as _stringify } from "qs";
+
+const stringify = (obj: any | undefined | null) => {
+  if (!obj || Object.keys(obj).length === 0 || !isObject(obj)) return "";
+
+  const query = Object.fromEntries(
+    Object.entries(obj).filter(
+      ([_, value]) => value !== undefined && value !== null && value !== ""
+    )
+  );
+  return _stringify(query, { skipNulls: true });
+};
 
 export const API_ROUTES = {
   auth: {
@@ -34,8 +46,16 @@ export const API_ROUTES = {
 
   exercises: {
     base: "/exercises",
-    query: (query?: ExerciseQuery) =>
-      `${API_ROUTES.exercises.base}${query ? `?${stringify(query)}` : ""}`,
+    query: (query?: ExerciseQuery) => {
+      return `${API_ROUTES.exercises.base}${query ? `?${stringify(query)}` : ""}`;
+    },
+
     detail: (id: number) => `${API_ROUTES.exercises.base}/${id}`,
   },
-}
+
+  muscleGroups: {
+    base: "/muscle-groups",
+    query: () => `${API_ROUTES.muscleGroups.base}`,
+    detail: (id: number) => `${API_ROUTES.muscleGroups.base}/${id}`,
+  },
+};

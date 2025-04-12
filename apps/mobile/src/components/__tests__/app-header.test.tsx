@@ -15,10 +15,6 @@ jest.mock("../../hooks/use-language", () => ({
 describe("AppHeader", () => {
   const mockRouter = useRouter();
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it("renders correctly with default props", () => {
     const { getByTestId } = render(<AppHeader theme="light" language="vi" />);
 

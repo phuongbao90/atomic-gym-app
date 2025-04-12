@@ -6,8 +6,8 @@ import { JwtUser } from "../auth/type/jwt-user-type";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateExerciseDto } from "./dto/create-exercise.dto";
 import { ExerciseQueryParamsDto } from "./dto/exercise-query-params.dto";
-import { Language } from "@prisma/client";
-import { slugify } from "src/helpers/slugify";
+import { Language, Prisma } from "@prisma/client";
+import { slugify, convert_vi_to_en } from "src/helpers/slugify";
 
 @Injectable()
 export class ExerciseService {
@@ -44,19 +44,43 @@ export class ExerciseService {
   }
 
   async findAll(query: ExerciseQueryParamsDto, language: Language) {
-    const { page, limit, search } = query;
+    const { page, limit, search, muscleGroupId } = query;
+
+    console.log("muscleGroupId ==========> ", query);
+
+    const normalizedSearch = search ? convert_vi_to_en(search) : "";
+
+    const searchQuery = {
+      language,
+
+      OR: [
+        {
+          normalizedName: {
+            contains: normalizedSearch?.toLowerCase(),
+          },
+        },
+        {
+          name: {
+            contains: normalizedSearch?.toLowerCase(),
+          },
+        },
+      ],
+    } as Prisma.ExerciseTranslationWhereInput;
 
     const exercises = await this.prisma.exercise.findMany({
       where: {
         translations: {
-          some: {
-            name: {
-              contains: search,
+          some: searchQuery,
+        },
+        ...(muscleGroupId && {
+          primaryMuscle: {
+            some: {
+              id: +muscleGroupId,
             },
           },
-        },
+        }),
       },
-      take: page * limit,
+      take: limit,
       skip: (page - 1) * limit,
       include: {
         primaryMuscle: {
@@ -75,7 +99,20 @@ export class ExerciseService {
         },
       },
     });
-    const total = await this.prisma.exercise.count();
+    const total = await this.prisma.exercise.count({
+      where: {
+        translations: {
+          some: searchQuery,
+        },
+        ...(muscleGroupId && {
+          primaryMuscle: {
+            some: {
+              id: +muscleGroupId,
+            },
+          },
+        }),
+      },
+    });
 
     return paginateOutput(exercises, total, query);
   }

@@ -12,7 +12,7 @@ export const ExpoIcon = ({
   library,
   ...props
 }: {
-  name: string;
+  name: keyof typeof Feather.glyphMap;
   color?: string;
   library: "entypo" | "fontAwesome6" | "materialIcons" | "feather";
 } & IconProps<string>) => {

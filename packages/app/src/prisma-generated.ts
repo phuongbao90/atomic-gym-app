@@ -43,6 +43,7 @@ export interface MuscleGroupTranslation {
   muscleGroupId: number;
   language: Language;
   name: string;
+  normalizedName: string | null;
   slug: string;
   muscleGroup?: MuscleGroup;
 }
@@ -67,6 +68,7 @@ export interface ExerciseTranslation {
   exerciseId: number;
   language: Language;
   name: string;
+  normalizedName: string | null;
   description: string;
   slug: string;
   exercise?: Exercise;
@@ -105,6 +107,7 @@ export interface WorkoutPlanTranslation {
   workoutPlanId: number;
   language: Language;
   name: string;
+  normalizedName: string | null;
   description: string;
   slug: string;
   workoutPlan?: WorkoutPlan;
@@ -125,6 +128,7 @@ export interface WorkoutTranslation {
   workoutId: number;
   language: Language;
   name: string;
+  normalizedName: string | null;
   slug: string;
   workout?: Workout;
 }
