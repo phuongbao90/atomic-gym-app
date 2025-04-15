@@ -1,8 +1,8 @@
-import { API_ROUTES } from "../../configs/api-routes"
-import { request } from "../../libs/request"
-import { Exercise } from "../../prisma-generated"
-import { ApiReponseWithMeta, ApiResponse } from "../../types/meta"
-import { ExerciseQuery } from "./exercises.types"
+import { API_ROUTES } from "../../configs/api-routes";
+import { request } from "../../libs/request";
+import { Exercise } from "../../prisma-generated";
+import { ApiReponseWithMeta, ApiResponse } from "../../types/meta";
+import { ExerciseQuery } from "./exercises.types";
 
 export const getExercises = (query: ExerciseQuery) => {
   return request<ApiReponseWithMeta<Exercise[]>>(
@@ -10,18 +10,24 @@ export const getExercises = (query: ExerciseQuery) => {
     {
       method: "GET",
     }
-  )
-}
+  );
+};
 
 export const getExercise = (id: number) => {
   return request<ApiResponse<Exercise>>(API_ROUTES.exercises.detail(id), {
     method: "GET",
-  })
-}
+  });
+};
 
-export const createExercise = (exercise: Partial<Exercise>) => {
+export const createExercise = (
+  exercise: Partial<Exercise> & {
+    name: string;
+    description?: string;
+    primaryMuscleIds: number[];
+  }
+) => {
   return request<ApiResponse<Exercise>>(API_ROUTES.exercises.base, {
     method: "POST",
     body: JSON.stringify(exercise),
-  })
-}
+  });
+};

@@ -40,5 +40,28 @@
   "all_equipment": "Tất cả thiết bị",
   "all_levels": "Tất cả cấp độ",
   "search": "Tìm kiếm",
-  "clear": "Xóa"
+  "clear": "Xóa",
+
+  "take_photo": "Chụp ảnh",
+  "select_from_library": "Chọn từ thư viện",
+  "camera_permission_required": "Chúng tôi cần quyền truy cập vào camera của bạn để chụp ảnh",
+  "login_required": "Yêu cầu đăng nhập",
+  "login_required_description": "Vui lòng đăng nhập để tiếp tục",
+  "weight_category": "Kháng lưc",
+  "free_weight": "Tạ tự do",
+  "cardio": "Cardio",
+
+  "exercise_name": "Tên bài tập",
+  "exercise_description": "Mô tả bài tập",
+  "exercise_category": "loại bài tập",
+  "exercise_primary_muscle": "nhóm cơ chính",
+
+  "create_exercise": "Tạo bài tập",
+  "create_exercise_success": "Tạo bài tập thành công",
+
+  "camera_permission_required_title": "Bật quyền truy cập camera",
+  "camera_permission_required_description": "Chúng tôi cần quyền truy cập vào camera của bạn để chụp ảnh",
+  "library_permission_required_title": "Bật quyền truy cập thư viện",
+  "library_permission_required_description": "Chúng tôi cần quyền truy cập vào thư viện của bạn để chọn ảnh",
+  "allow": "Cho phép"
 }

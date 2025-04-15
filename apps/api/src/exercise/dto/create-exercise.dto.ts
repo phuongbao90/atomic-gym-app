@@ -9,6 +9,10 @@ import {
 } from "class-validator";
 
 export class CreateExerciseDto {
+  @IsNumber()
+  @IsOptional()
+  id: number;
+
   @IsString()
   @IsNotEmpty()
   name: string;

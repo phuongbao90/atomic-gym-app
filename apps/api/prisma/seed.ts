@@ -4,6 +4,12 @@ import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { muscleGroups } from "./data/muscle-groups";
 
+/**
+ * error with auto increment id:
+ * Autoincrement creates its own sequence starting from 1 which you can read more about here.
+ * https://github.com/prisma/prisma/discussions/5256
+ */
+
 console.log(
   "---------------------------------Seeding database---------------------------------"
 );
@@ -77,9 +83,9 @@ async function main() {
 
     // Create exercises with translations
     for (let index = 1; index <= exerciseCount; index++) {
-      await prisma.exercise.create({
+      const exercise = await prisma.exercise.create({
         data: {
-          id: index,
+          // id: index,
           notes: faker.lorem.paragraph(),
           category: faker.helpers.arrayElement([
             "WEIGHT",
@@ -103,7 +109,7 @@ async function main() {
 
       await prisma.exerciseTranslation.create({
         data: {
-          exerciseId: index,
+          exerciseId: exercise.id,
           language: "vi",
           name: viName,
           normalizedName: removeDiacritics(viName),
@@ -113,7 +119,7 @@ async function main() {
       });
       await prisma.exerciseTranslation.create({
         data: {
-          exerciseId: index,
+          exerciseId: exercise.id,
           language: "en",
           name: enName,
           normalizedName: removeDiacritics(enName),
@@ -125,9 +131,9 @@ async function main() {
 
     // Create workout plans with translations
     for (let index = 1; index <= workoutPlanCount; index++) {
-      await prisma.workoutPlan.create({
+      const workoutPlan = await prisma.workoutPlan.create({
         data: {
-          id: index,
+          // id: index,
           cover_image: faker.image.url(),
           level: faker.helpers.arrayElement([
             "BEGINNER",
@@ -154,7 +160,7 @@ async function main() {
 
       await prisma.workoutPlanTranslation.create({
         data: {
-          workoutPlanId: index,
+          workoutPlanId: workoutPlan.id,
           language: "vi",
           name: viName,
           normalizedName: removeDiacritics(viName),
@@ -164,7 +170,7 @@ async function main() {
       });
       await prisma.workoutPlanTranslation.create({
         data: {
-          workoutPlanId: index,
+          workoutPlanId: workoutPlan.id,
           language: "en",
           name: enName,
           normalizedName: removeDiacritics(enName),
@@ -178,9 +184,9 @@ async function main() {
     for (let index = 1; index <= workoutPlanCount; index++) {
       const viName = fakerVI.lorem.sentence();
       const enName = fakerEN_US.lorem.sentence();
-      await prisma.workout.create({
+      const workout = await prisma.workout.create({
         data: {
-          id: index,
+          // id: index,
           exercises: {
             connect: Array(randNumber({ min: 3, max: 10 }))
               .fill(null)
@@ -195,7 +201,7 @@ async function main() {
 
       await prisma.workoutTranslation.create({
         data: {
-          workoutId: index,
+          workoutId: workout.id,
           language: "vi",
           name: viName,
           normalizedName: removeDiacritics(viName),
@@ -204,7 +210,7 @@ async function main() {
       });
       await prisma.workoutTranslation.create({
         data: {
-          workoutId: index,
+          workoutId: workout.id,
           language: "en",
           name: enName,
           normalizedName: removeDiacritics(enName),

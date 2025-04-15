@@ -6,6 +6,7 @@ import { Pressable, Text, View } from "react-native";
 import { appRoutes } from "../configs/routes";
 import { AppText } from "./ui/app-text";
 import { useTranslation } from "react-i18next";
+import { usePreventRepeatPress } from "../hooks/use-prevent-repeat-press";
 
 type AutoTransformedWorkoutPlan = WorkoutPlan & {
   _count?: { workouts: number };
@@ -21,10 +22,14 @@ export const WorkoutPlanCard = ({
 }) => {
   const router = useRouter();
   const { t } = useTranslation();
+  const debouncedPress = usePreventRepeatPress();
+
   return (
     <Pressable
       onPress={() => {
-        router.push(appRoutes.workoutPlans.detail(item.id.toString()));
+        debouncedPress(() => {
+          router.push(appRoutes.workoutPlans.detail(item.id.toString()));
+        });
       }}
       testID="workout-plan-card"
     >
@@ -77,11 +82,14 @@ export const SingleWorkoutPlanCard = ({
   item: WorkoutPlan;
 }) => {
   const router = useRouter();
+  const debouncedPress = usePreventRepeatPress();
 
   return (
     <Pressable
       onPress={() => {
-        router.push(appRoutes.workouts.detail(item.id.toString()));
+        debouncedPress(() => {
+          router.push(appRoutes.workouts.detail(item.id.toString()));
+        });
       }}
       testID="single-workout-plan-card"
     >

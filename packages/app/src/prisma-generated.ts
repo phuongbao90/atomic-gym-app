@@ -69,7 +69,7 @@ export interface ExerciseTranslation {
   language: Language;
   name: string;
   normalizedName: string | null;
-  description: string;
+  description: string | null;
   slug: string;
   exercise?: Exercise;
 }

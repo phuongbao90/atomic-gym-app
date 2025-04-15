@@ -145,7 +145,7 @@ module.exports = {
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   setupFilesAfterEnv: [
     "@testing-library/react-native",
-    "<rootDir>/setupTests.ts",
+    "<rootDir>/setupTests.js",
   ],
   moduleNameMapper: {
     // "^expo-font$": "<rootDir>/__mocks__/expo-fonts.ts",

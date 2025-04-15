@@ -29,6 +29,9 @@ import {
   configureReanimatedLogger,
 } from "react-native-reanimated";
 import i18n from "../src/configs/i18n";
+import { ModalProvider } from "react-native-modalfy";
+import { modalStack } from "../src/lib/modal/modal-stack";
+import { DevFloatingButtons } from "../src/components/dev-floating-buttons";
 
 // This is the default configuration
 configureReanimatedLogger({
@@ -80,9 +83,10 @@ export default function RootLayout() {
     <ReactQueryProvider>
       <KeyboardProvider>
         <GestureHandlerRootView style={{ flex: 1 }}>
-          <BottomSheetModalProvider>
-            <PortalProvider>
-              {/* <StatusBar
+          <ModalProvider stack={modalStack}>
+            <BottomSheetModalProvider>
+              <PortalProvider>
+                {/* <StatusBar
                 // backgroundColor={
                 //   theme === "dark" ? primaryColors[300] : primaryColors[600]
                 // }
@@ -91,12 +95,14 @@ export default function RootLayout() {
                 animated
                 // style="dark"
               /> */}
-              <SafeAreaView className="flex-1" style={{ top: insets.top }}>
-                <App />
-                <Toaster position="bottom-center" duration={3000} />
-              </SafeAreaView>
-            </PortalProvider>
-          </BottomSheetModalProvider>
+                <SafeAreaView className="flex-1" style={{ top: insets.top }}>
+                  <App />
+                  <Toaster position="top-center" duration={2000} />
+                  {__DEV__ && <DevFloatingButtons />}
+                </SafeAreaView>
+              </PortalProvider>
+            </BottomSheetModalProvider>
+          </ModalProvider>
         </GestureHandlerRootView>
       </KeyboardProvider>
     </ReactQueryProvider>

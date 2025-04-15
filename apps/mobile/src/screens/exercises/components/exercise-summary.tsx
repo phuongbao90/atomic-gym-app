@@ -33,7 +33,6 @@ export const ExerciseSummary = ({
   }, [exercise?.notes]);
 
   const handleDismiss = useCallback(() => {
-    console.log("dismiss");
     setNotes(exercise?.notes);
   }, [exercise?.notes]);
 

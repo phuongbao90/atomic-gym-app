@@ -14,10 +14,7 @@
     "test": "jest",
     "test:watch": "tsup --watch"
   },
-  "files": [
-    "build",
-    "src"
-  ],
+  "files": ["build", "src"],
   "devDependencies": {
     "@testing-library/react-native": "^13.2.0",
     "@total-typescript/ts-reset": "^0.6.1",
@@ -36,6 +33,7 @@
     "@tanstack/query-async-storage-persister": "*",
     "@tanstack/query-sync-storage-persister": "*",
     "@tanstack/react-query": "*",
-    "@tanstack/react-query-persist-client": "*"
+    "@tanstack/react-query-persist-client": "*",
+    "expo-secure-store": "*"
   }
 }

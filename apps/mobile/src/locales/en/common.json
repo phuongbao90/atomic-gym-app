@@ -40,5 +40,28 @@
   "all_equipment": "All Equipment",
   "all_levels": "All Levels",
   "search": "Search",
-  "clear": "Clear"
+  "clear": "Clear",
+
+  "take_photo": "Take photo",
+  "select_from_library": "Select from library",
+  "camera_permission_required": "We need your permission to show the camera",
+  "login_required": "Login required",
+  "login_required_description": "Please login to continue",
+  "weight_category": "Weight",
+  "free_weight": "Free Weight",
+  "cardio": "Cardio",
+
+  "exercise_name": "Exercise name",
+  "exercise_description": "Exercise description",
+  "exercise_category": "Exercise category",
+  "exercise_primary_muscle": "Primary muscle",
+
+  "create_exercise": "Create Exercise",
+  "create_exercise_success": "Exercise created successfully",
+
+  "camera_permission_required_title": "Turn on camera permission",
+  "camera_permission_required_description": "We need your permission to show the camera",
+  "library_permission_required_title": "Turn on library permission",
+  "library_permission_required_description": "We need your permission to show the library",
+  "allow": "Allow"
 }

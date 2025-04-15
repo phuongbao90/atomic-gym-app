@@ -1,5 +1,11 @@
+import React from "react";
+
 import nock from "nock";
 import "react-native-gesture-handler/jestSetup";
+
+jest.mock("react-native-keyboard-controller", () =>
+  require("react-native-keyboard-controller/jest")
+);
 
 import mockSafeAreaContext from "react-native-safe-area-context/jest/mock";
 jest.mock("react-native-safe-area-context", () => mockSafeAreaContext);
@@ -10,6 +16,7 @@ jest.mock("react-native/Libraries/Settings/Settings", () => ({
 
 import { ReanimatedLogLevel } from "react-native-reanimated";
 import { configureReanimatedLogger } from "react-native-reanimated";
+import { cleanup } from "@testing-library/react-native";
 require("react-native-reanimated").setUpTests({
   enableGestureHandler: true,
 });
@@ -109,6 +116,7 @@ global.afterEach(() => {
   nock.abortPendingRequests();
   nock.cleanAll();
   jest.clearAllMocks();
+  cleanup();
 });
 
 global.afterAll(() => {});

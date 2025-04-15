@@ -10,6 +10,7 @@ import { AppText } from "./app-text";
 import { Divider } from "./divider";
 import { ExpoIcon } from "./expo-icon";
 import { useLanguage } from "../../hooks/use-language";
+import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
 
 export const AppHeader = ({
   title,
@@ -30,6 +31,7 @@ export const AppHeader = ({
 }) => {
   const router = useRouter();
   const { switchLanguage } = useLanguage();
+  const debouncedPress = usePreventRepeatPress();
 
   return (
     <>
@@ -38,7 +40,14 @@ export const AppHeader = ({
         className={cn("flex-row items-center h-14 z-50", className)}
       >
         {withBackButton && (
-          <Pressable onPress={() => router.back()} testID="back-button">
+          <Pressable
+            onPress={() =>
+              debouncedPress(() => {
+                router.back();
+              })
+            }
+            testID="back-button"
+          >
             <ExpoIcon
               library="feather"
               name="chevron-left"
@@ -59,7 +68,9 @@ export const AppHeader = ({
           <View className="flex-row gap-8">
             <TouchableOpacity
               onPress={() => {
-                appStore$.switchTheme();
+                debouncedPress(() => {
+                  appStore$.switchTheme();
+                });
               }}
               testID="theme-button"
             >
@@ -80,7 +91,9 @@ export const AppHeader = ({
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                switchLanguage(language);
+                debouncedPress(() => {
+                  switchLanguage(language);
+                });
               }}
               testID="language-button"
             >
@@ -94,7 +107,9 @@ export const AppHeader = ({
 
             <TouchableOpacity
               onPress={() => {
-                router.push("/settings");
+                debouncedPress(() => {
+                  router.push("/settings");
+                });
               }}
               testID="settings-button"
             >

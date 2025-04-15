@@ -6,13 +6,20 @@ import { IconProps } from "@expo/vector-icons/build/createIconSet";
 import { use$ } from "@legendapp/state/react";
 import { appStore$ } from "../../stores/app-store";
 
+const Mapping = {
+  entypo: Feather.glyphMap,
+  fontAwesome6: FontAwesome6.glyphMap,
+  materialIcons: MaterialIcons.glyphMap,
+  feather: Feather.glyphMap,
+} as const;
+
 export const ExpoIcon = ({
   name,
   color,
   library,
   ...props
 }: {
-  name: keyof typeof Feather.glyphMap;
+  name: keyof (typeof Mapping)[keyof typeof Mapping]; // i want this to be dependent on the library
   color?: string;
   library: "entypo" | "fontAwesome6" | "materialIcons" | "feather";
 } & IconProps<string>) => {

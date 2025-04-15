@@ -1,10 +1,22 @@
 POST {{BASE_URL}}/exercises
 Authorization: Bearer {{$global.accessToken}}
+Accept-Language: en
 {
-  "name": "Chest Press",
-  "description": "Chest Press description",
+  "name": "leg press 3",
+  // "notes": "Chest Press notes",
   "category": "WEIGHT",
-  "muscleGroups": [1]
+  "primaryMuscleIds": [5],
+  "images": ["https://picsum.photos/200/300"]
+  // "description": "Chest Press description"
+  // "id": 101
+  // "translations": [
+  //   {
+  //     "language": "en",
+  //     "name": "Chest Press",
+  //     "description": "Chest Press description"
+  //   }
+  // ]
+
 }
 
 ### Update Exercise

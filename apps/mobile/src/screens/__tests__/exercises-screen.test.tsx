@@ -1901,8 +1901,8 @@ describe("ExercisesScreen", () => {
     const list = screen.getByTestId("exercises-list");
     const { onEndReached } = list.props;
 
-    act(() => {
-      onEndReached?.({ distanceFromEnd: 0 });
+    await act(async () => {
+      await onEndReached?.({ distanceFromEnd: 0 });
     });
 
     // Wait for second page to be fetched

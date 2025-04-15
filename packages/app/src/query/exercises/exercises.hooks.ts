@@ -28,6 +28,12 @@ export const useGetExercise = (id: number) => {
 
 export const useCreateExercise = () => {
   return useMutation({
-    mutationFn: (exercise: Partial<Exercise>) => createExercise(exercise),
+    mutationFn: (
+      exercise: Partial<Exercise> & {
+        name: string;
+        description?: string;
+        primaryMuscleIds: number[];
+      }
+    ) => createExercise(exercise),
   });
 };

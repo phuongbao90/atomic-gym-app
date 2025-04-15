@@ -14,6 +14,7 @@ import { useMemo, useRef, useState } from "react";
 import { AppText } from "../../components/ui/app-text";
 import {
   ActivityIndicator,
+  Alert,
   TextInput,
   TouchableOpacity,
   View,
@@ -24,10 +25,12 @@ import { colors, PRIMARY_COLOR } from "../../styles/themes";
 import { useDebounce } from "../../hooks/use-debounce";
 import { SelectMuscleGroupSheet } from "../../components/bottom-sheets/select-muscle-group";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { FloatingButton } from "../../components/ui/floating-button";
 import { appRoutes } from "../../configs/routes";
 import { router } from "expo-router";
 import { Env } from "../../configs/env";
+import { authStore$ } from "../../stores/auth-store";
+import { toast } from "sonner-native";
+import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
 
 export const ExercisesScreen = () => {
   const { t } = useTranslation();
@@ -36,9 +39,12 @@ export const ExercisesScreen = () => {
   const listRef = useRef<LegendListRef | null>(null);
   const [search, setSearch] = useState("");
   const searchDebounced = useDebounce(search, 500);
+  const debouncedPress = usePreventRepeatPress();
   const muscleGroupModalRef = useRef<BottomSheetModal>(null);
   const [selectedMuscleGroup, setSelectedMuscleGroup] =
     useState<MuscleGroup | null>(null);
+
+  const isLoggedIn = use$(authStore$.isLoggedIn);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetExercises({
@@ -76,9 +82,11 @@ export const ExercisesScreen = () => {
         </View>
         <View className="flex-row items-center gap-2">
           <TouchableOpacity
-            onPress={() => {
-              muscleGroupModalRef.current?.present();
-            }}
+            onPress={() =>
+              debouncedPress(() => {
+                muscleGroupModalRef.current?.present();
+              })
+            }
             testID="select-muscle-group-button"
           >
             <View className="flex-row items-center gap-2 border border-slate-500 dark:border-slate-900 rounded-md p-2">
@@ -162,10 +170,22 @@ export const ExercisesScreen = () => {
         setSelectedMuscleGroup={setSelectedMuscleGroup}
       />
 
-      <FloatingButton
-        onPress={() => router.push(appRoutes.exercises.create())}
+      <TouchableOpacity
+        className="absolute bottom-8 right-4 bg-primary-500 rounded-full p-4 dark:bg-primary bg-primaryDarken"
+        onPress={() =>
+          debouncedPress(() => {
+            if (!isLoggedIn) {
+              Alert.alert(t("login_required"), t("login_required_description"));
+              return;
+            }
+            router.push(appRoutes.exercises.create());
+          })
+        }
         testID="create-exercise-button"
-      />
+        hitSlop={20}
+      >
+        <ExpoIcon library="feather" name="plus" color="black" size={18} />
+      </TouchableOpacity>
     </AppScreen>
   );
 };

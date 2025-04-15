@@ -13,6 +13,9 @@ import settingsScreenVi from "../locales/vi/settings-screen.json";
 import i18n from "i18next";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { PortalProvider } from "@gorhom/portal";
+import { KeyboardProvider } from "react-native-keyboard-controller";
+import { ModalProvider } from "react-native-modalfy";
+import { modalStack } from "../lib/modal/modal-stack";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -62,13 +65,17 @@ export const DefaultMockWrapper = ({
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <BottomSheetModalProvider>
-            <PortalProvider>
-              <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
-            </PortalProvider>
-          </BottomSheetModalProvider>
-        </GestureHandlerRootView>
+        <KeyboardProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <ModalProvider stack={modalStack}>
+              <BottomSheetModalProvider>
+                <PortalProvider>
+                  <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+                </PortalProvider>
+              </BottomSheetModalProvider>
+            </ModalProvider>
+          </GestureHandlerRootView>
+        </KeyboardProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
   );

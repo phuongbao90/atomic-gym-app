@@ -105,7 +105,7 @@ model ExerciseTranslation {
   language       Language // language code (e.g., 'vi', 'en')
   name           String // localized name
   normalizedName String? // localized name
-  description    String // localized description
+  description    String? // localized description
   slug           String // localized description
   exercise       Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
 

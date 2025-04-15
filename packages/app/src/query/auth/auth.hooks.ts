@@ -1,12 +1,12 @@
-import { useMutation } from "@tanstack/react-query"
-import { login, signup } from "./auth.requests"
+import { useMutation } from "@tanstack/react-query";
+import { login, signup } from "./auth.requests";
 
 export const useLogin = () => {
   return useMutation({
     mutationFn: login,
     onSuccess: (data) => {},
-  })
-}
+  });
+};
 
 export const useSignup = () => {
   return useMutation({
@@ -14,5 +14,5 @@ export const useSignup = () => {
     onSuccess: (data) => {
       // data.data.accessToken
     },
-  })
-}
+  });
+};

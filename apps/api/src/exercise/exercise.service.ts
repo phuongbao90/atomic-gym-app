@@ -18,12 +18,24 @@ export class ExerciseService {
 
     const exercise = await this.prisma.exercise.create({
       data: {
+        ...(body?.id && { id: body.id }),
         notes: body.notes,
         category: body.category,
         createdById: user.sub,
         images: body.images,
         primaryMuscle: {
           connect: body.primaryMuscleIds.map((muscleId) => ({ id: muscleId })),
+        },
+      },
+      include: {
+        primaryMuscle: {
+          include: {
+            translations: {
+              where: {
+                language,
+              },
+            },
+          },
         },
       },
     });
@@ -45,8 +57,6 @@ export class ExerciseService {
 
   async findAll(query: ExerciseQueryParamsDto, language: Language) {
     const { page, limit, search, muscleGroupId } = query;
-
-    console.log("muscleGroupId ==========> ", query);
 
     const normalizedSearch = search ? convert_vi_to_en(search) : "";
 

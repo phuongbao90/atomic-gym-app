@@ -14,6 +14,7 @@ import { AppStorage } from "../../src/lib/storage/app-storage";
 import { appStore$ } from "../../src/stores/app-store";
 import { authStore$ } from "../../src/stores/auth-store";
 import { AppHeader } from "../components/ui/app-header";
+import { setToken } from "../lib/auth/session-store";
 
 export function LoginScreen() {
   const { t } = useTranslation("login-screen");
@@ -33,11 +34,12 @@ export function LoginScreen() {
             console.info("Login success: ");
             SecureStore.setItemAsync("accessToken", result?.data?.accessToken);
             authStore$.setIsLoggedIn(true);
+            setToken(result?.data?.accessToken);
           },
         }
       );
     } catch (error) {
-      console.log("error ====> ", (error as Error)?.message);
+      console.error("error ====> ", (error as Error)?.message);
     }
   }
 
@@ -94,6 +96,12 @@ export function LoginScreen() {
             title="Clear onboarding"
             onPress={() => {
               AppStorage.setIsOnboarded(false);
+            }}
+          />
+          <Button
+            title="use as guest"
+            onPress={() => {
+              router.push("/(tabs)");
             }}
           />
         </View>

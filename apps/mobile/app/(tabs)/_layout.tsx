@@ -1,12 +1,13 @@
 import Feather from "@expo/vector-icons/Feather";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { use$ } from "@legendapp/state/react";
-import { Redirect, Tabs } from "expo-router";
+// import { Redirect, Tabs } from "expo-router";
 import { Platform } from "react-native";
-import { appRoutes } from "../../src/configs/routes";
+// import { appRoutes } from "../../src/configs/routes";
 import { appStore$ } from "../../src/stores/app-store";
-import { authStore$ } from "../../src/stores/auth-store";
+// import { authStore$ } from "../../src/stores/auth-store";
 import { colors } from "../../src/styles/themes";
+import { Tabs } from "expo-router";
 
 const Icon = ({
   name,
@@ -29,12 +30,12 @@ const Icon = ({
 };
 
 export default function TabLayout() {
-  const isLoggedIn = use$(authStore$.isLoggedIn);
+  // const isLoggedIn = use$(authStore$.isLoggedIn);
   const colorMode = use$(appStore$.theme);
 
-  if (!isLoggedIn) {
-    return <Redirect href={appRoutes.login} />;
-  }
+  // if (!isLoggedIn) {
+  //   return <Redirect href={appRoutes.login} />;
+  // }
 
   return (
     <Tabs

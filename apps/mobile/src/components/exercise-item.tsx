@@ -3,6 +3,7 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { appRoutes } from "../configs/routes";
 import { ListItem } from "./ui/list-item";
+import { usePreventRepeatPress } from "../hooks/use-prevent-repeat-press";
 
 export const ExerciseItem = ({
   item,
@@ -12,6 +13,7 @@ export const ExerciseItem = ({
   index: number;
 }) => {
   const router = useRouter();
+  const debouncedPress = usePreventRepeatPress();
 
   return (
     <ListItem
@@ -22,7 +24,9 @@ export const ExerciseItem = ({
       subLabel={`${item.primaryMuscle?.[0]?.translations?.[0]?.name}`}
       subLabelClassName="text-sm"
       onPress={() =>
-        router.push(appRoutes.exercises.detail(item.id.toString()))
+        debouncedPress(() => {
+          router.push(appRoutes.exercises.detail(item.id.toString()));
+        })
       }
       Left={
         item.images[0] ? (
