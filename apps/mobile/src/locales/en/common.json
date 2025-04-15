@@ -63,5 +63,11 @@
   "camera_permission_required_description": "We need your permission to show the camera",
   "library_permission_required_title": "Turn on library permission",
   "library_permission_required_description": "We need your permission to show the library",
-  "allow": "Allow"
+  "allow": "Allow",
+
+  "required_exercise_name": "Exercise name is required",
+  "required_exercise_category": "Exercise category is required",
+  "required_exercise_primary_muscle": "Exercise primary muscle is required",
+  "required_exercise_description": "Exercise description is required",
+  "required_exercise_images": "Exercise images are required"
 }

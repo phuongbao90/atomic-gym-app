@@ -79,15 +79,12 @@ export const CreateExerciseForm = ({
   const theme = use$(appStore$.theme);
 
   const [isFocus, setIsFocus] = useState(false);
-  // const [categoryValue, setCategoryValue] = useState("WEIGHT");
   const [primaryMuscle, setPrimaryMuscle] = useState<null | MuscleGroup>(null);
   const modalRef = useRef<BottomSheetModal>(null);
 
   function handleOpenMediaModal() {
     openModal("TakeOrSelectMediaModal", {
       onComplete: (media) => {
-        console.log("onComplete =======> ", media);
-
         form.setValue("imageUrl", media);
       },
     });
@@ -106,6 +103,7 @@ export const CreateExerciseForm = ({
     },
     { label: t("cardio"), value: "CARDIO", itemTestIDField: "cardio_test_id" },
   ] as const;
+
   const categoryValue = form.watch("category");
   const selectedCategory = useMemo(() => {
     return exerciseCategories.find(
@@ -120,8 +118,6 @@ export const CreateExerciseForm = ({
         name="imageUrl"
         rules={{}}
         render={({ field: { onChange, onBlur, value } }) => {
-          // console.log(" image vale ======> ", value);
-
           return value ? (
             <ImageBackground
               source={value}
@@ -164,12 +160,13 @@ export const CreateExerciseForm = ({
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
+                onFocus={() => form.clearErrors("name")}
                 className="border border-slate-700 dark:border-slate-500 rounded-md p-3 text-black dark:text-white text-xl"
                 placeholderTextColor={colors.text.light.inactive}
               />
               {form.formState.errors.name && (
-                <AppText className="text-red-500 text-sm">
-                  {t("required")}
+                <AppText className="text-red-500 dark:text-red-400 text-sm">
+                  {t("required_exercise_name")}
                 </AppText>
               )}
             </>
@@ -199,68 +196,78 @@ export const CreateExerciseForm = ({
           rules={{ required: true }}
           render={({ field: { onChange, onBlur, value } }) => {
             return (
-              <Dropdown
-                testID="select-category-dropdown"
-                //@ts-expect-error
-                data={exerciseCategories}
-                maxHeight={300}
-                labelField="label"
-                valueField="value"
-                placeholder={
-                  selectedCategory?.label || `${t("exercise_category")}`
-                }
-                // value={value}
-                onFocus={() => setIsFocus(true)}
-                onBlur={() => setIsFocus(false)}
-                onChange={(item) => {
-                  form.setValue("category", item.value);
-                  // setCategoryValue(item.value);
-                  setIsFocus(false);
-                }}
-                renderLeftIcon={() => (
-                  <ExpoIcon
-                    color={
+              <>
+                <Dropdown
+                  testID="select-category-dropdown"
+                  //@ts-expect-error
+                  data={exerciseCategories}
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={
+                    selectedCategory?.label || `${t("exercise_category")}`
+                  }
+                  // value={value}
+                  onFocus={() => {
+                    setIsFocus(true);
+                    form.clearErrors("category");
+                  }}
+                  onBlur={() => setIsFocus(false)}
+                  onChange={(item) => {
+                    form.setValue("category", item.value);
+                    // setCategoryValue(item.value);
+                    setIsFocus(false);
+                  }}
+                  renderLeftIcon={() => (
+                    <ExpoIcon
+                      color={
+                        theme === "light"
+                          ? colors.text.light.inactive
+                          : colors.text.dark.inactive
+                      }
+                      library="materialIcons"
+                      name="category"
+                      size={20}
+                    />
+                  )}
+                  // styles
+                  itemTextStyle={{
+                    color:
                       theme === "light"
                         ? colors.text.light.inactive
-                        : colors.text.dark.inactive
-                    }
-                    library="materialIcons"
-                    name="category"
-                    size={20}
-                  />
-                )}
-                // styles
-                itemTextStyle={{
-                  color:
-                    theme === "light"
-                      ? colors.text.light.inactive
-                      : colors.text.dark.inactive,
-                }}
-                style={[
-                  styles.dropdown,
-                  {
-                    borderColor:
+                        : colors.text.dark.inactive,
+                  }}
+                  style={[
+                    styles.dropdown,
+                    {
+                      borderColor:
+                        theme === "light"
+                          ? TwColors.slate[700]
+                          : TwColors.slate[500],
+                    },
+                  ]}
+                  containerStyle={{
+                    borderWidth: 0,
+                  }}
+                  placeholderStyle={{
+                    fontSize: 16,
+                    color:
                       theme === "light"
-                        ? TwColors.slate[700]
-                        : TwColors.slate[500],
-                  },
-                ]}
-                containerStyle={{
-                  borderWidth: 0,
-                }}
-                placeholderStyle={{
-                  fontSize: 16,
-                  color:
-                    theme === "light"
-                      ? colors.text.light.inactive
-                      : colors.text.dark.inactive,
-                }}
-                selectedTextStyle={styles.dropdownSelectedTextStyle}
-                iconStyle={styles.dropdownIconStyle}
-                itemContainerStyle={{
-                  backgroundColor: theme === "light" ? "white" : "#10172a",
-                }}
-              />
+                        ? colors.text.light.inactive
+                        : colors.text.dark.inactive,
+                  }}
+                  selectedTextStyle={styles.dropdownSelectedTextStyle}
+                  iconStyle={styles.dropdownIconStyle}
+                  itemContainerStyle={{
+                    backgroundColor: theme === "light" ? "white" : "#10172a",
+                  }}
+                />
+                {form.formState.errors.category && (
+                  <AppText className="text-red-500 dark:text-red-400 text-sm">
+                    {t("required_exercise_category")}
+                  </AppText>
+                )}
+              </>
             );
           }}
         />
@@ -273,7 +280,10 @@ export const CreateExerciseForm = ({
             <View>
               <TouchableOpacity
                 testID="primary-muscle-button"
-                onPress={() => modalRef.current?.present()}
+                onPress={() => {
+                  modalRef.current?.present();
+                  form.clearErrors("primaryMuscleId");
+                }}
                 className="w-full rounded-md border border-slate-700 dark:border-slate-500 p-3"
               >
                 <AppText className="text-xl text-slate-700 dark:text-slate-500">
@@ -282,8 +292,8 @@ export const CreateExerciseForm = ({
                 </AppText>
               </TouchableOpacity>
               {form.formState.errors.primaryMuscleId && (
-                <AppText className="text-red-500 text-sm">
-                  {t("required")}
+                <AppText className="text-red-500 dark:text-red-400 text-sm">
+                  {t("required_exercise_primary_muscle")}
                 </AppText>
               )}
             </View>

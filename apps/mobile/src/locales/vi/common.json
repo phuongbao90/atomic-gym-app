@@ -63,5 +63,11 @@
   "camera_permission_required_description": "Chúng tôi cần quyền truy cập vào camera của bạn để chụp ảnh",
   "library_permission_required_title": "Bật quyền truy cập thư viện",
   "library_permission_required_description": "Chúng tôi cần quyền truy cập vào thư viện của bạn để chọn ảnh",
-  "allow": "Cho phép"
+  "allow": "Cho phép",
+
+  "required_exercise_name": "Tên bài tập là bắt buộc",
+  "required_exercise_category": "Loại bài tập là bắt buộc",
+  "required_exercise_primary_muscle": "Nhóm cơ chính là bắt buộc",
+  "required_exercise_description": "Mô tả bài tập là bắt buộc",
+  "required_exercise_images": "Ảnh bài tập là bắt buộc"
 }

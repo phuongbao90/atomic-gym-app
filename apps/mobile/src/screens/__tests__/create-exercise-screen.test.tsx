@@ -408,6 +408,13 @@ const mockPickerOptions = {
   quality: 0.8,
 };
 
+const grantedPermission = {
+  granted: true,
+  status: "granted",
+  expires: "never",
+  canAskAgain: true,
+};
+
 //* another way to mock the useCreateExercise hook (1)
 // jest.mock("app", () => ({
 //   ...jest.requireActual("app"),
@@ -415,34 +422,14 @@ const mockPickerOptions = {
 // }));
 
 describe("CreateExerciseScreen", () => {
-  beforeEach(() => {
-    // Reset all mocks before each test
-    jest.clearAllMocks();
-  });
+  const mockUseCameraPermissions = require("expo-camera").useCameraPermissions;
+  const mockUseMediaLibraryPermissions =
+    require("expo-image-picker").useMediaLibraryPermissions;
 
   it("should render", async () => {
-    const mockUseCameraPermissions =
-      require("expo-camera").useCameraPermissions;
-
-    mockUseCameraPermissions.mockReturnValue([
-      {
-        granted: true,
-        status: "granted",
-        expires: "never",
-        canAskAgain: true,
-      },
-      jest.fn(),
-    ]);
-
-    const mockUseMediaLibraryPermissions =
-      require("expo-image-picker").useMediaLibraryPermissions;
+    mockUseCameraPermissions.mockReturnValue([grantedPermission, jest.fn()]);
     mockUseMediaLibraryPermissions.mockReturnValue([
-      {
-        granted: true,
-        status: "granted",
-        expires: "never",
-        canAskAgain: true,
-      },
+      grantedPermission,
       jest.fn(),
     ]);
 
@@ -569,6 +556,30 @@ describe("CreateExerciseScreen", () => {
     unmount();
   });
 
+  it("should display error messages if fields are empty", async () => {
+    nock(ENV.API_URL).get(API_ROUTES.muscleGroups.query()).reply(200, {
+      data: muscleGroups,
+    });
+    customRenderUI(<CreateExerciseScreen />);
+
+    const saveButton = screen.getByTestId("save-button");
+    await act(async () => {
+      fireEvent.press(saveButton);
+    });
+
+    // screen.debug();
+
+    expect(
+      await screen.findByText(/tên bài tập là bắt buộc/i)
+    ).toBeOnTheScreen();
+    expect(
+      await screen.findByText(/loại bài tập là bắt buộc/i)
+    ).toBeOnTheScreen();
+    expect(
+      await screen.findByText(/nhóm cơ chính là bắt buộc/i)
+    ).toBeOnTheScreen();
+  });
+
   describe("useCreateExercise hook", () => {
     it("should create exercise successfully", async () => {
       // Mock the create exercise mutation
@@ -629,28 +640,11 @@ describe("CreateExerciseScreen", () => {
   describe("Image Selection", () => {
     it("should handle taking photo from camera", async () => {
       // Set up the camera permissions mock
-      const mockUseCameraPermissions =
-        require("expo-camera").useCameraPermissions;
 
-      mockUseCameraPermissions.mockReturnValue([
-        {
-          granted: true,
-          status: "granted",
-          expires: "never",
-          canAskAgain: true,
-        },
-        jest.fn(),
-      ]);
+      mockUseCameraPermissions.mockReturnValue([grantedPermission, jest.fn()]);
 
-      const mockUseMediaLibraryPermissions =
-        require("expo-image-picker").useMediaLibraryPermissions;
       mockUseMediaLibraryPermissions.mockReturnValue([
-        {
-          granted: true,
-          status: "granted",
-          expires: "never",
-          canAskAgain: true,
-        },
+        grantedPermission,
         jest.fn(),
       ]);
 
@@ -699,28 +693,9 @@ describe("CreateExerciseScreen", () => {
     });
 
     it("should handle selecting image from library", async () => {
-      const mockUseCameraPermissions =
-        require("expo-camera").useCameraPermissions;
-
-      mockUseCameraPermissions.mockReturnValue([
-        {
-          granted: true,
-          status: "granted",
-          expires: "never",
-          canAskAgain: true,
-        },
-        jest.fn(),
-      ]);
-
-      const mockUseMediaLibraryPermissions =
-        require("expo-image-picker").useMediaLibraryPermissions;
+      mockUseCameraPermissions.mockReturnValue([grantedPermission, jest.fn()]);
       mockUseMediaLibraryPermissions.mockReturnValue([
-        {
-          granted: true,
-          status: "granted",
-          expires: "never",
-          canAskAgain: true,
-        },
+        grantedPermission,
         jest.fn(),
       ]);
 
