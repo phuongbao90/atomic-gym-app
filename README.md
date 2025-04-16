@@ -1,81 +1,123 @@
-# Turborepo starter
+# Gym App
 
-This is an official starter Turborepo.
+A modern, full-stack gym management application built with React Native, Expo, and TypeScript. This monorepo project uses Turborepo for efficient development and deployment.
 
-## Using this example
+## 🚀 Features
 
-Run the following command:
+- Mobile app for gym members and trainers
+- API backend for data management
+- Real-time workout tracking
+- Exercise library and workout plans
+- Progress tracking and analytics
+- User authentication and profile management
 
-```sh
-npx create-turbo@latest
-```
+## 🛠 Tech Stack
 
-## What's inside?
+- **Frontend**: React Native, Expo
+- **Backend**: Node.js, NestJs, TypeScript
+- **Build Tool**: Turborepo
+- **Mobile Development**: Expo EAS Build
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+## 📦 Project Structure
 
 ```
-cd my-turborepo
-pnpm build
+gym-app-turbo/
+├── apps/
+│   ├── mobile/     # React Native mobile app
+│   └── api/        # Backend API
+├── packages/       # Shared packages
+├── scripts/        # Development scripts
+└── patches/        # Package patches
 ```
 
-### Develop
+## 🚀 Getting Started
 
-To develop all apps and packages, run the following command:
+### Prerequisites
 
-```
-cd my-turborepo
-pnpm dev
-```
+- Node.js >= 18
+- Yarn 1.22.22
+- Expo CLI
+- iOS/Android development environment (for mobile development)
 
-### Remote Caching
+### Installation
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
+1. Clone the repository:
+```bash
+git clone [repository-url]
+cd gym-app-turbo
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
+2. Install dependencies:
+```bash
+yarn install
 ```
 
-## Useful Links
+3. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
 
-Learn more about the power of Turborepo:
+### Development
 
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+#### Mobile App Development
+
+```bash
+# Start development server for mobile app
+yarn mobile#debug_start_dev
+
+# Debug on Android
+yarn mobile#debug_android_dev
+
+# Debug on iOS
+yarn mobile#debug_ios_dev
+```
+
+#### API Development
+
+```bash
+# Start API server
+yarn dev:api
+```
+
+### Building for Production
+
+```bash
+# Build Android APK
+yarn mobile#build_android_prod
+
+# Build Android AAB
+yarn mobile#build_android_prodAab
+
+# Build iOS IPA
+yarn mobile#build_ios_prod
+```
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+yarn test
+
+# Run tests in watch mode
+yarn test:watch
+```
+
+## 🔧 Development Scripts
+
+- `yarn clean` - Clean all build artifacts and dependencies
+- `yarn clear-daemon` - Clear Turborepo daemon
+- `yarn validate-package` - Validate package dependencies
+- `yarn fix-expo-cannot-connect-to-backend` - Fix Expo backend connection issues
+
+## 📝 Code Style
+
+- TypeScript for type safety
+- Biome for code formatting and linting
+- Follow React Native and Expo best practices
+- Use functional components and hooks
+- Implement proper error handling and validation
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
