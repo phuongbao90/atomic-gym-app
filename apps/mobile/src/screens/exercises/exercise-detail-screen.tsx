@@ -1,10 +1,8 @@
-import { use$ } from "@legendapp/state/react";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { TouchableOpacity, useWindowDimensions, View } from "react-native";
 import { AppHeader } from "../../components/ui/app-header";
 import { AppScreen } from "../../components/ui/app-screen";
-import { appStore$ } from "../../stores/app-store";
 import { TabView } from "react-native-tab-view";
 import { ExerciseSummary } from "./components/exercise-summary";
 import { ExerciseHistoryLogs } from "./components/exercise-history-logs";
@@ -12,6 +10,7 @@ import { useGetExercise } from "app";
 import { AppText } from "../../components/ui/app-text";
 import { cn } from "../../utils/cn";
 import { useTranslation } from "react-i18next";
+import { useAppSelector } from "../../stores/redux-store";
 
 const routes = [
   { key: "summary", title: "summary" } as const,
@@ -34,8 +33,8 @@ type TabBarProps = {
 
 export const ExerciseDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const theme = use$(appStore$.theme);
-  const language = use$(appStore$.language);
+  const theme = useAppSelector((state) => state.app.theme);
+  const language = useAppSelector((state) => state.app.language);
   const { t } = useTranslation();
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);

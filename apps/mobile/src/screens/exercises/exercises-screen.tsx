@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { AppHeader } from "../../components/ui/app-header";
 import { AppScreen } from "../../components/ui/app-screen";
-import { use$ } from "@legendapp/state/react";
-import { appStore$ } from "../../stores/app-store";
 import { capitalize } from "lodash";
 import {
   LegendList,
@@ -28,14 +26,13 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { appRoutes } from "../../configs/routes";
 import { router } from "expo-router";
 import { Env } from "../../configs/env";
-import { authStore$ } from "../../stores/auth-store";
-import { toast } from "sonner-native";
 import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
+import { useAppSelector } from "../../stores/redux-store";
 
 export const ExercisesScreen = () => {
   const { t } = useTranslation();
-  const theme = use$(appStore$.theme);
-  const language = use$(appStore$.language);
+  const theme = useAppSelector((state) => state.app.theme);
+  const language = useAppSelector((state) => state.app.language);
   const listRef = useRef<LegendListRef | null>(null);
   const [search, setSearch] = useState("");
   const searchDebounced = useDebounce(search, 500);
@@ -44,7 +41,7 @@ export const ExercisesScreen = () => {
   const [selectedMuscleGroup, setSelectedMuscleGroup] =
     useState<MuscleGroup | null>(null);
 
-  const isLoggedIn = use$(authStore$.isLoggedIn);
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetExercises({

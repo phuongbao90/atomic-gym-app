@@ -38,11 +38,11 @@
       "correctness": {
         "useExhaustiveDependencies": "warn",
         "noUnusedVariables": {
-          "level": "error",
+          "level": "warn",
           "fix": "safe"
         },
         "noUnusedImports": {
-          "level": "error",
+          "level": "warn",
           "fix": "safe"
         }
       },

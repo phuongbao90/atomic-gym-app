@@ -1,19 +1,18 @@
-import { use$ } from "@legendapp/state/react";
 import { queryClient } from "app";
 import { useRouter } from "expo-router";
 import { Button, Text, View } from "react-native";
 import { AppScrollView } from "../../src/components/ui/app-scrollview";
 import { AppStorage } from "../../src/lib/storage/app-storage";
-import { appStore$ } from "../../src/stores/app-store";
-import { authStore$ } from "../../src/stores/auth-store";
 import { AppHeader } from "../components/ui/app-header";
 import { AppScreen } from "../components/ui/app-screen";
 import { Icon } from "../components/ui/icon";
 import i18n from "../configs/i18n";
+import { useAppDispatch, useAppSelector } from "../stores/redux-store";
+import { logout } from "../stores/slices/auth-slice";
 
 export function HomeScreen() {
-  const theme = use$(appStore$.theme);
-  const language = use$(appStore$.language);
+  const theme = useAppSelector((state) => state.app.theme);
+  const language = useAppSelector((state) => state.app.language);
 
   return (
     <AppScreen name="home-screen">
@@ -30,6 +29,7 @@ export function HomeScreen() {
 
 const DEV = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   return (
     <View className="flex-row items-center justify-center gap-4 mt-auto mb-2">
       <Button
@@ -49,7 +49,7 @@ const DEV = () => {
       <Button
         title="logout"
         onPress={() => {
-          authStore$.setIsLoggedIn(false);
+          dispatch(logout());
           queryClient.clear();
         }}
       />

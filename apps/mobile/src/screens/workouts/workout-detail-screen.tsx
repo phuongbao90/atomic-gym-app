@@ -1,7 +1,5 @@
-import { use$ } from "@legendapp/state/react";
 import { AppHeader } from "../../components/ui/app-header";
 import { AppScreen } from "../../components/ui/app-screen";
-import { appStore$ } from "../../stores/app-store";
 import { useLocalSearchParams } from "expo-router";
 import { useGetWorkout } from "app";
 import { ActivityIndicator, View } from "react-native";
@@ -10,9 +8,11 @@ import { AppFlatList } from "../../components/ui/app-flat-list";
 import { AppButton } from "../../components/ui/app-button";
 import { useTranslation } from "react-i18next";
 import { AppText } from "../../components/ui/app-text";
+import { useAppSelector } from "../../stores/redux-store";
+
 export function WorkoutDetailScreen() {
-  const theme = use$(appStore$.theme);
-  const language = use$(appStore$.language);
+  const theme = useAppSelector((state) => state.app.theme);
+  const language = useAppSelector((state) => state.app.language);
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation();
 
@@ -40,7 +40,9 @@ export function WorkoutDetailScreen() {
 
       <AppFlatList
         data={workout?.exercises}
-        renderItem={({ item }) => <ExerciseItem item={item} />}
+        renderItem={({ item, index }) => (
+          <ExerciseItem item={item} index={index} />
+        )}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{
           paddingTop: 12,

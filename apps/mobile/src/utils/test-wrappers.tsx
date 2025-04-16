@@ -16,6 +16,8 @@ import { PortalProvider } from "@gorhom/portal";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { ModalProvider } from "react-native-modalfy";
 import { modalStack } from "../lib/modal/modal-stack";
+import { store } from "../stores/redux-store";
+import { Provider } from "react-redux";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -64,19 +66,21 @@ export const DefaultMockWrapper = ({
 
   return (
     <SafeAreaProvider>
-      <QueryClientProvider client={queryClient}>
-        <KeyboardProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <ModalProvider stack={modalStack}>
-              <BottomSheetModalProvider>
-                <PortalProvider>
-                  <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
-                </PortalProvider>
-              </BottomSheetModalProvider>
-            </ModalProvider>
-          </GestureHandlerRootView>
-        </KeyboardProvider>
-      </QueryClientProvider>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <KeyboardProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <ModalProvider stack={modalStack}>
+                <BottomSheetModalProvider>
+                  <PortalProvider>
+                    <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+                  </PortalProvider>
+                </BottomSheetModalProvider>
+              </ModalProvider>
+            </GestureHandlerRootView>
+          </KeyboardProvider>
+        </QueryClientProvider>
+      </Provider>
     </SafeAreaProvider>
   );
 };

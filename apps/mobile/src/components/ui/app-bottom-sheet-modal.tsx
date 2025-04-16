@@ -5,10 +5,9 @@ import {
   BottomSheetModalProps,
 } from "@gorhom/bottom-sheet";
 import { AppBottomSheetView } from "./app-bottom-sheet-view";
-import { use$ } from "@legendapp/state/react";
-import { appStore$ } from "../../stores/app-store";
 import { colors } from "../../styles/themes";
 import { StyleSheet, View } from "react-native";
+import { useAppSelector } from "../../stores/redux-store";
 
 const CustomBackdrop = (props: BottomSheetBackdropProps) => {
   return (
@@ -33,7 +32,7 @@ export const AppBottomSheetModal = (
     testID?: string;
   }
 ) => {
-  const theme = use$(appStore$.theme);
+  const theme = useAppSelector((state) => state.app.theme);
   return (
     <View testID={props.testID}>
       <BottomSheetModal

@@ -7,23 +7,22 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { appStore$ } from "../stores/app-store";
 import { Image } from "expo-image";
 import { USFlag } from "../constants/app-assets";
 import { VNFlag } from "../constants/app-assets";
-import { use$ } from "@legendapp/state/react";
-import { useLanguage } from "../hooks/use-language";
+import { useAppDispatch, useAppSelector } from "../stores/redux-store";
+import { switchLanguage, switchTheme } from "../stores/slices/app-slice";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const DevFloatingButtons = () => {
   const isExpanded = useSharedValue(false);
+  const language = useAppSelector((state) => state.app.language);
+  const dispatch = useAppDispatch();
 
   const handlePress = () => {
     isExpanded.value = !isExpanded.value;
   };
-  const language = use$(appStore$.language);
-  const { switchLanguage } = useLanguage();
 
   const plusIconStyle = useAnimatedStyle(() => {
     // highlight-next-line
@@ -57,7 +56,7 @@ export const DevFloatingButtons = () => {
           index={1}
           buttonLetter={"T"}
           onPress={() => {
-            appStore$.switchTheme();
+            dispatch(switchTheme());
             handlePress();
           }}
         />
@@ -65,7 +64,7 @@ export const DevFloatingButtons = () => {
           isExpanded={isExpanded}
           index={2}
           onPress={() => {
-            switchLanguage(language);
+            dispatch(switchLanguage());
             handlePress();
           }}
         >

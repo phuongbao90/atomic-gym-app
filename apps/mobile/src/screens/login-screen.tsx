@@ -1,4 +1,3 @@
-import { use$ } from "@legendapp/state/react";
 import { useLogin } from "app";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
@@ -11,10 +10,11 @@ import { AppScrollView } from "../../src/components/ui/app-scrollview";
 import { AppText } from "../../src/components/ui/app-text";
 import { appRoutes } from "../../src/configs/routes";
 import { AppStorage } from "../../src/lib/storage/app-storage";
-import { appStore$ } from "../../src/stores/app-store";
-import { authStore$ } from "../../src/stores/auth-store";
 import { AppHeader } from "../components/ui/app-header";
 import { setToken } from "../lib/auth/session-store";
+import { useAppDispatch, useAppSelector } from "../stores/redux-store";
+import { login } from "../stores/slices/auth-slice";
+import { switchTheme } from "../stores/slices/app-slice";
 
 export function LoginScreen() {
   const { t } = useTranslation("login-screen");
@@ -22,8 +22,9 @@ export function LoginScreen() {
   const [password, setPassword] = useState("123456#@Nn");
   const loginMutation = useLogin();
   const router = useRouter();
-  const theme = use$(appStore$.theme);
-  const language = use$(appStore$.language);
+  const theme = useAppSelector((state) => state.app.theme);
+  const language = useAppSelector((state) => state.app.language);
+  const dispatch = useAppDispatch();
 
   async function handleLogin() {
     try {
@@ -33,7 +34,7 @@ export function LoginScreen() {
           onSuccess: (result) => {
             console.info("Login success: ");
             SecureStore.setItemAsync("accessToken", result?.data?.accessToken);
-            authStore$.setIsLoggedIn(true);
+            dispatch(login());
             setToken(result?.data?.accessToken);
           },
         }
@@ -76,7 +77,7 @@ export function LoginScreen() {
           <Button
             title="Switch theme"
             onPress={() => {
-              appStore$.switchTheme();
+              dispatch(switchTheme());
             }}
           />
           <Button

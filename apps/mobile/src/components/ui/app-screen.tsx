@@ -1,9 +1,8 @@
-import { use$ } from "@legendapp/state/react";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { appStore$ } from "../../stores/app-store";
 import { cn } from "../../utils/cn";
 import { AppText } from "./app-text";
+import { useAppSelector } from "../../stores/redux-store";
 
 export const AppScreen = ({
   children,
@@ -12,7 +11,7 @@ export const AppScreen = ({
   children: React.ReactNode;
   name: string;
 }) => {
-  const theme = use$(appStore$.theme);
+  const theme = useAppSelector((state) => state.app.theme);
 
   return (
     <View className={`flex-1 ${theme === "dark" ? "bg-pageDark" : "bg-page"}`}>
@@ -49,7 +48,7 @@ AppScreen.FooterContainer = ({
   className?: string;
 }) => {
   const insets = useSafeAreaInsets();
-  const theme = use$(appStore$.theme);
+  const theme = useAppSelector((state) => state.app.theme);
   return (
     <View
       className={cn(

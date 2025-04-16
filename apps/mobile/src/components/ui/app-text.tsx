@@ -1,8 +1,7 @@
-import { use$ } from "@legendapp/state/react";
 import { cx } from "class-variance-authority";
 import { Text, TextProps } from "react-native";
-import { appStore$ } from "../../stores/app-store";
 import { typographyCva } from "../../styles/typography";
+import { useAppSelector } from "../../stores/redux-store";
 
 export const AppText = ({
   children,
@@ -12,7 +11,7 @@ export const AppText = ({
 }: TextProps & {
   intent?: "ordinary" | "label";
 }) => {
-  const theme = use$(appStore$.theme);
+  const theme = useAppSelector((state) => state.app.theme);
   return (
     <Text
       {...props}

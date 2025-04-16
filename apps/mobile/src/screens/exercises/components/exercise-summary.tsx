@@ -12,17 +12,16 @@ import { Image } from "expo-image";
 import { useTranslation } from "react-i18next";
 import { MuscleItem } from "../../../components/muscle-item";
 import { AppBottomSheetView } from "../../../components/ui/app-bottom-sheet-view";
-import { appStore$ } from "../../../stores/app-store";
-import { use$ } from "@legendapp/state/react";
 import { colors } from "../../../styles/themes";
 import { AppBottomSheetModal } from "../../../components/ui/app-bottom-sheet-modal";
+import { useAppSelector } from "../../../stores/redux-store";
 
 export const ExerciseSummary = ({
   exercise,
 }: { exercise: Exercise | undefined }) => {
   const ref = useRef<BottomSheetModal>(null);
   const { t } = useTranslation();
-  const theme = use$(appStore$.theme);
+  const theme = useAppSelector((state) => state.app.theme);
   const [notes, setNotes] = useState(exercise?.notes);
 
   const handleSaveNotes = useCallback(() => {

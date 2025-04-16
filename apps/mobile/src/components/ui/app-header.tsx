@@ -4,13 +4,13 @@ import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import { USFlag } from "../../constants/app-assets";
 import { VNFlag } from "../../constants/app-assets";
-import { appStore$ } from "../../stores/app-store";
+import { switchLanguage, switchTheme } from "../../stores/slices/app-slice";
 import { cn } from "../../utils/cn";
 import { AppText } from "./app-text";
 import { Divider } from "./divider";
 import { ExpoIcon } from "./expo-icon";
-import { useLanguage } from "../../hooks/use-language";
 import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
+import { useAppDispatch } from "../../stores/redux-store";
 
 export const AppHeader = ({
   title,
@@ -30,8 +30,8 @@ export const AppHeader = ({
   language: "vi" | "en";
 }) => {
   const router = useRouter();
-  const { switchLanguage } = useLanguage();
   const debouncedPress = usePreventRepeatPress();
+  const dispatch = useAppDispatch();
 
   return (
     <>
@@ -69,7 +69,7 @@ export const AppHeader = ({
             <TouchableOpacity
               onPress={() => {
                 debouncedPress(() => {
-                  appStore$.switchTheme();
+                  dispatch(switchTheme());
                 });
               }}
               testID="theme-button"
@@ -92,7 +92,7 @@ export const AppHeader = ({
             <TouchableOpacity
               onPress={() => {
                 debouncedPress(() => {
-                  switchLanguage(language);
+                  dispatch(switchLanguage());
                 });
               }}
               testID="language-button"

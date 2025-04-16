@@ -6,8 +6,6 @@ import {
   ScrollView,
 } from "react-native";
 import { AppScreen } from "../../components/ui/app-screen";
-import { use$ } from "@legendapp/state/react";
-import { appStore$ } from "../../stores/app-store";
 import { useTranslation } from "react-i18next";
 import { ExpoIcon } from "../../components/ui/expo-icon";
 import { AppText } from "../../components/ui/app-text";
@@ -30,6 +28,7 @@ import {
   CreateExerciseFormValues,
   useCreateExerciseForm,
 } from "../../hooks/use-create-exercise-form";
+import { useAppSelector } from "../../stores/redux-store";
 
 export const CreateExerciseScreen = () => {
   const form = useCreateExerciseForm();
@@ -76,7 +75,7 @@ export const CreateExerciseForm = ({
 }) => {
   const { t } = useTranslation();
   const { openModal } = useModal();
-  const theme = use$(appStore$.theme);
+  const theme = useAppSelector((state) => state.app.theme);
 
   const [isFocus, setIsFocus] = useState(false);
   const [primaryMuscle, setPrimaryMuscle] = useState<null | MuscleGroup>(null);

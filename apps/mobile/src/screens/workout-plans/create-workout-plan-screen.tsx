@@ -1,11 +1,10 @@
-import { use$ } from "@legendapp/state/react";
 import { AppHeader } from "../../components/ui/app-header";
 import { AppScreen } from "../../components/ui/app-screen";
-import { appStore$ } from "../../stores/app-store";
+import { useAppSelector } from "../../stores/redux-store";
 
 export const CreateWorkoutPlanScreen = () => {
-  const theme = use$(appStore$.theme);
-  const language = use$(appStore$.language);
+  const theme = useAppSelector((state) => state.app.theme);
+  const language = useAppSelector((state) => state.app.language);
 
   return (
     <AppScreen name="create-workout-plan-screen">

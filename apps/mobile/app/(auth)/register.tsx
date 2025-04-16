@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { use$ } from "@legendapp/state/react";
 import { useSignup } from "app";
 import { Controller, useForm } from "react-hook-form";
 import { Button, View } from "react-native";
@@ -8,8 +7,8 @@ import { AppHeader } from "../../src/components/ui/app-header";
 import { AppInput } from "../../src/components/ui/app-input";
 import { AppScreen } from "../../src/components/ui/app-screen";
 import { AppScrollView } from "../../src/components/ui/app-scrollview";
-import { appStore$ } from "../../src/stores/app-store";
-import { authStore$ } from "../../src/stores/auth-store";
+import { useAppDispatch, useAppSelector } from "../../src/stores/redux-store";
+import { login } from "../../src/stores/slices/auth-slice";
 
 const registerSchema = z
   .object({
@@ -31,8 +30,9 @@ const initialValues = {
 };
 
 export default function Register() {
-  const theme = use$(appStore$.theme);
-  const language = use$(appStore$.language);
+  const theme = useAppSelector((state) => state.app.theme);
+  const language = useAppSelector((state) => state.app.language);
+  const dispatch = useAppDispatch();
 
   const { control, handleSubmit } = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -45,7 +45,7 @@ export default function Register() {
     signupMutation.mutate(values, {
       onSuccess: (result) => {
         console.log("register success ", result);
-        authStore$.setIsLoggedIn(true);
+        dispatch(login());
       },
     });
   }
@@ -54,7 +54,6 @@ export default function Register() {
     <AppScreen name="register-screen">
       <AppHeader
         title="Register"
-        center
         withBackButton
         theme={theme}
         language={language}

@@ -1,4 +1,3 @@
-import { use$ } from "@legendapp/state/react";
 import { useGetWorkoutPlan } from "app";
 import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
@@ -8,11 +7,11 @@ import { AppButton } from "../../components/ui/app-button";
 import { AppHeader } from "../../components/ui/app-header";
 import { AppScreen } from "../../components/ui/app-screen";
 import { AppText } from "../../components/ui/app-text";
-import { appStore$ } from "../../stores/app-store";
 import { cn } from "../../utils/cn";
 import { PlanInfo } from "./components/workout-plan-info";
 import { WorkoutPlanStatistics } from "./components/workout-plan-statistics";
 import { useTranslation } from "react-i18next";
+import { useAppSelector } from "../../stores/redux-store";
 
 const routes = [
   { key: "first", title: "overview" },
@@ -52,8 +51,8 @@ const IMAGE_HEIGHT = 300;
 export const WorkoutPlanDetailScreen = () => {
   const { id } = useLocalSearchParams();
   const { data: workoutPlan } = useGetWorkoutPlan(Number(id));
-  const theme = use$(appStore$.theme);
-  const language = use$(appStore$.language);
+  const theme = useAppSelector((state) => state.app.theme);
+  const language = useAppSelector((state) => state.app.language);
   const { t } = useTranslation();
 
   const renderHeader = () => {

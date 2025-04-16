@@ -1,5 +1,4 @@
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { use$ } from "@legendapp/state/react";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { AppHeader } from "../../components/ui/app-header";
@@ -8,12 +7,13 @@ import { AppScrollView } from "../../components/ui/app-scrollview";
 import { AppText } from "../../components/ui/app-text";
 import { Icon } from "../../components/ui/icon";
 import { ItemContainer } from "../../components/ui/item-container";
-import { appStore$ } from "../../stores/app-store";
+import { useAppSelector } from "../../stores/redux-store";
 
 export function SettingsScreen() {
   const { t } = useTranslation("settings-screen");
-  const theme = use$(appStore$.theme);
-  const language = use$(appStore$.language);
+
+  const theme = useAppSelector((state) => state.app.theme);
+  const language = useAppSelector((state) => state.app.language);
 
   return (
     <AppScreen name="settings-screen">
@@ -90,7 +90,7 @@ export function SettingsScreen() {
 }
 
 const ChevRightIcon = () => {
-  const theme = use$(appStore$.theme);
+  const theme = useAppSelector((state) => state.app.theme);
 
   return (
     <FontAwesome5

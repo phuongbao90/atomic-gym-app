@@ -1,10 +1,9 @@
-import { use$ } from "@legendapp/state/react";
 import { Redirect, Stack } from "expo-router";
 import { appRoutes } from "../../src/configs/routes";
-import { authStore$ } from "../../src/stores/auth-store";
+import { useAppSelector } from "../../src/stores/redux-store";
 
 export default function AuthLayout() {
-  const isLoggedIn = use$(authStore$.isLoggedIn);
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
   if (isLoggedIn) {
     return <Redirect href={appRoutes.home} />;
   }

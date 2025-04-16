@@ -1,8 +1,7 @@
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { BottomSheetViewProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetView/types";
-import { appStore$ } from "../../stores/app-store";
-import { use$ } from "@legendapp/state/react";
 import { cn } from "../../utils/cn";
+import { useAppSelector } from "../../stores/redux-store";
 
 export const AppBottomSheetView = ({
   children,
@@ -10,7 +9,7 @@ export const AppBottomSheetView = ({
 }: {
   children: React.ReactNode;
 } & BottomSheetViewProps) => {
-  const mode = use$(appStore$.theme);
+  const mode = useAppSelector((state) => state.app.theme);
   return (
     <BottomSheetView
       {...props}

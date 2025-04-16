@@ -3,8 +3,7 @@ import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome6 from "@expo/vector-icons/build/FontAwesome6";
 import { IconProps } from "@expo/vector-icons/build/createIconSet";
-import { use$ } from "@legendapp/state/react";
-import { appStore$ } from "../../stores/app-store";
+import { useAppSelector } from "../../stores/redux-store";
 
 const Mapping = {
   entypo: Feather.glyphMap,
@@ -23,7 +22,7 @@ export const ExpoIcon = ({
   color?: string;
   library: "entypo" | "fontAwesome6" | "materialIcons" | "feather";
 } & IconProps<string>) => {
-  const theme = use$(appStore$.theme);
+  const theme = useAppSelector((state) => state.app.theme);
 
   switch (library) {
     case "entypo":

@@ -6,8 +6,6 @@ import "../global.css";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { PortalProvider } from "@gorhom/portal";
 import { use$ } from "@legendapp/state/react";
-import { ObservablePersistMMKV } from "@legendapp/state/persist-plugins/mmkv";
-import { syncObservable } from "@legendapp/state/sync";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
@@ -19,37 +17,22 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Toaster } from "sonner-native";
 import { ReactQueryProvider } from "../src/lib/react-query";
 import { storageKeyNames } from "../src/lib/storage/app-storage";
-import { appStore$ } from "../src/stores/app-store";
-import { authStore$ } from "../src/stores/auth-store";
 import Onboarding from "./onboarding";
 import "../src/configs/i18n";
-import { createOfetchInstance } from "app";
 import {
   ReanimatedLogLevel,
   configureReanimatedLogger,
 } from "react-native-reanimated";
-import i18n from "../src/configs/i18n";
 import { ModalProvider } from "react-native-modalfy";
 import { modalStack } from "../src/lib/modal/modal-stack";
 import { DevFloatingButtons } from "../src/components/dev-floating-buttons";
+import { Provider } from "react-redux";
+import { store, useAppSelector } from "../src/stores/redux-store";
 
 // This is the default configuration
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
   strict: false, // Reanimated runs in strict mode by default
-});
-
-syncObservable(appStore$, {
-  persist: {
-    name: "appStore",
-    plugin: ObservablePersistMMKV,
-  },
-});
-syncObservable(authStore$, {
-  persist: {
-    name: "authStore",
-    plugin: ObservablePersistMMKV,
-  },
 });
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -67,26 +50,19 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  useEffect(() => {
-    i18n.changeLanguage(appStore$.language.get(), () => {
-      createOfetchInstance({
-        "Accept-Language": appStore$.language.get(),
-      });
-    });
-  }, []);
-
   if (!loaded) {
     return null;
   }
 
   return (
-    <ReactQueryProvider>
-      <KeyboardProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <ModalProvider stack={modalStack}>
-            <BottomSheetModalProvider>
-              <PortalProvider>
-                {/* <StatusBar
+    <Provider store={store}>
+      <ReactQueryProvider>
+        <KeyboardProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <ModalProvider stack={modalStack}>
+              <BottomSheetModalProvider>
+                <PortalProvider>
+                  {/* <StatusBar
                 // backgroundColor={
                 //   theme === "dark" ? primaryColors[300] : primaryColors[600]
                 // }
@@ -95,23 +71,24 @@ export default function RootLayout() {
                 animated
                 // style="dark"
               /> */}
-                <SafeAreaView className="flex-1" style={{ top: insets.top }}>
-                  <App />
-                  <Toaster position="top-center" duration={2000} />
-                  {__DEV__ && <DevFloatingButtons />}
-                </SafeAreaView>
-              </PortalProvider>
-            </BottomSheetModalProvider>
-          </ModalProvider>
-        </GestureHandlerRootView>
-      </KeyboardProvider>
-    </ReactQueryProvider>
+                  <SafeAreaView className="flex-1" style={{ top: insets.top }}>
+                    <App />
+                    <Toaster position="top-center" duration={2000} />
+                    {__DEV__ && <DevFloatingButtons />}
+                  </SafeAreaView>
+                </PortalProvider>
+              </BottomSheetModalProvider>
+            </ModalProvider>
+          </GestureHandlerRootView>
+        </KeyboardProvider>
+      </ReactQueryProvider>
+    </Provider>
   );
 }
 
 const App = () => {
   const [isOnboarded] = useMMKVBoolean(storageKeyNames.isOnboarded);
-  const isLoggedIn = use$(authStore$.isLoggedIn);
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
 
   if (!isOnboarded) {
     return <Onboarding />;

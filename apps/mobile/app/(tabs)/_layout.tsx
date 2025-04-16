@@ -1,13 +1,9 @@
 import Feather from "@expo/vector-icons/Feather";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { use$ } from "@legendapp/state/react";
-// import { Redirect, Tabs } from "expo-router";
 import { Platform } from "react-native";
-// import { appRoutes } from "../../src/configs/routes";
-import { appStore$ } from "../../src/stores/app-store";
-// import { authStore$ } from "../../src/stores/auth-store";
 import { colors } from "../../src/styles/themes";
 import { Tabs } from "expo-router";
+import { useAppSelector } from "../../src/stores/redux-store";
 
 const Icon = ({
   name,
@@ -16,7 +12,7 @@ const Icon = ({
   name: keyof typeof Feather.glyphMap;
   focused: boolean;
 }) => {
-  const colorMode = use$(appStore$.theme);
+  const colorMode = useAppSelector((state) => state.app.theme);
 
   return (
     <Feather
@@ -30,8 +26,8 @@ const Icon = ({
 };
 
 export default function TabLayout() {
-  // const isLoggedIn = use$(authStore$.isLoggedIn);
-  const colorMode = use$(appStore$.theme);
+  // const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const colorMode = useAppSelector((state) => state.app.theme);
 
   // if (!isLoggedIn) {
   //   return <Redirect href={appRoutes.login} />;

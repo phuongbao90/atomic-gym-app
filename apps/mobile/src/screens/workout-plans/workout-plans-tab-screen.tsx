@@ -1,5 +1,4 @@
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { use$ } from "@legendapp/state/react";
 import { useGetWorkoutPlansInGroups } from "app";
 import { useRouter } from "expo-router";
 import { useMemo } from "react";
@@ -13,15 +12,15 @@ import {
   WorkoutPlanCard,
 } from "../../components/workout-plan-card";
 import { appRoutes } from "../../configs/routes";
-import { appStore$ } from "../../stores/app-store";
+import { useAppSelector } from "../../stores/redux-store";
 import { useTranslation } from "react-i18next";
 import { capitalize } from "lodash";
 import { AppText } from "../../components/ui/app-text";
 
 export function WorkoutPlansTabScreen() {
   const router = useRouter();
-  const theme = use$(appStore$.theme);
-  const language = use$(appStore$.language);
+  const theme = useAppSelector((state) => state.app.theme);
+  const language = useAppSelector((state) => state.app.language);
   const { t } = useTranslation();
 
   const { data } = useGetWorkoutPlansInGroups();

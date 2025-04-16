@@ -2,8 +2,7 @@ import { MuscleGroup } from "app";
 import { Image } from "expo-image";
 import { View } from "react-native";
 import { AppText } from "./ui/app-text";
-import { use$ } from "@legendapp/state/react";
-import { appStore$ } from "../stores/app-store";
+import { useAppSelector } from "../stores/redux-store";
 import { cn } from "../utils/cn";
 
 export const MuscleItem = ({
@@ -15,7 +14,7 @@ export const MuscleItem = ({
   vertical?: boolean;
   className?: string;
 }) => {
-  const theme = use$(appStore$.theme);
+  const theme = useAppSelector((state) => state.app.theme);
   return (
     <View
       testID={`muscle-item-${muscleGroup.id}`}
