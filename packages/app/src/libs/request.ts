@@ -5,6 +5,8 @@ import * as SecureStore from "expo-secure-store";
 let ofetchInstance: ReturnType<typeof ofetch.create> | null = null;
 
 export function createOfetchInstance(headers?: Record<string, string>) {
+  console.log("headers ", headers);
+
   ofetchInstance = ofetch.create({
     baseURL: ENV.API_URL,
     headers: {

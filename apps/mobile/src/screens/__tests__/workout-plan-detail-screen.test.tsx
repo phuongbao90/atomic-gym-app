@@ -1,8 +1,7 @@
 import { expect } from "@jest/globals";
 import { waitFor } from "@testing-library/react-native";
 import { useGetWorkoutPlan, Workout, WorkoutPlan } from "app";
-import { API_ROUTES } from "app/src/configs/api-routes";
-import { ENV } from "app/src/configs/env";
+import { API_ROUTES, ENV } from "app";
 import nock from "nock";
 import { customRenderUI, customRenderQueryHook } from "../../utils/test-utils";
 import { WorkoutPlanDetailScreen } from "../workout-plans/workout-plan-detail-screen";

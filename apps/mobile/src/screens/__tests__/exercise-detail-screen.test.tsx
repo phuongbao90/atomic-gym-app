@@ -1,7 +1,6 @@
 import { Exercise, useGetExercise } from "app";
 import { customRenderUI } from "../../utils/test-utils";
-import { API_ROUTES } from "app/src/configs/api-routes";
-import { ENV } from "app/src/configs/env";
+import { API_ROUTES, ENV } from "app";
 import nock from "nock";
 import { useLocalSearchParams } from "../../../__mocks__/expo-router";
 import { customRenderQueryHook } from "../../utils/test-utils";

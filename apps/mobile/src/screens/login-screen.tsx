@@ -24,6 +24,8 @@ export function LoginScreen() {
   const router = useRouter();
   const theme = useAppSelector((state) => state.app.theme);
   const language = useAppSelector((state) => state.app.language);
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+
   const dispatch = useAppDispatch();
 
   async function handleLogin() {

@@ -6,10 +6,7 @@ import {
 import { SelectMuscleGroupSheet } from "../select-muscle-group";
 import React from "react";
 import nock from "nock";
-import { ENV } from "app/src/configs/env";
-import { API_ROUTES } from "app/src/configs/api-routes";
-
-import { MuscleGroup } from "app";
+import { ENV, MuscleGroup, API_ROUTES } from "app";
 import { useGetMuscleGroups } from "app";
 import { act, fireEvent, screen, waitFor } from "@testing-library/react-native";
 

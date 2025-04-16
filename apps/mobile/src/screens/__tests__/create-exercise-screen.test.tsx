@@ -1,11 +1,11 @@
-import { ENV } from "app/src/configs/env";
+import { ENV } from "app";
 import { customRenderQueryHook, customRenderUI } from "../../utils/test-utils";
 import {
   CreateExerciseForm,
   CreateExerciseScreen,
 } from "../exercises/create-exercise-screen";
 import nock from "nock";
-import { API_ROUTES } from "app/src/configs/api-routes";
+import { API_ROUTES } from "app";
 import { ExerciseCategory, useCreateExercise, useGetMuscleGroups } from "app";
 import { MuscleGroup } from "app";
 import {

@@ -5,10 +5,9 @@ import "../global.css";
 
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { PortalProvider } from "@gorhom/portal";
-import { use$ } from "@legendapp/state/react";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { SafeAreaView } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
@@ -27,7 +26,10 @@ import { ModalProvider } from "react-native-modalfy";
 import { modalStack } from "../src/lib/modal/modal-stack";
 import { DevFloatingButtons } from "../src/components/dev-floating-buttons";
 import { Provider } from "react-redux";
-import { store, useAppSelector } from "../src/stores/redux-store";
+import { persistor, store, useAppSelector } from "../src/stores/redux-store";
+import i18n from "../src/configs/i18n";
+import { createOfetchInstance } from "app";
+import { PersistGate } from "redux-persist/integration/react";
 
 // This is the default configuration
 configureReanimatedLogger({
@@ -45,9 +47,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
+    if (loaded) SplashScreen.hideAsync();
   }, [loaded]);
 
   if (!loaded) {
@@ -56,13 +56,14 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
-      <ReactQueryProvider>
-        <KeyboardProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <ModalProvider stack={modalStack}>
-              <BottomSheetModalProvider>
-                <PortalProvider>
-                  {/* <StatusBar
+      <PersistGate loading={null} persistor={persistor}>
+        <ReactQueryProvider>
+          <KeyboardProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <ModalProvider stack={modalStack}>
+                <BottomSheetModalProvider>
+                  <PortalProvider>
+                    {/* <StatusBar
                 // backgroundColor={
                 //   theme === "dark" ? primaryColors[300] : primaryColors[600]
                 // }
@@ -71,17 +72,21 @@ export default function RootLayout() {
                 animated
                 // style="dark"
               /> */}
-                  <SafeAreaView className="flex-1" style={{ top: insets.top }}>
-                    <App />
-                    <Toaster position="top-center" duration={2000} />
-                    {__DEV__ && <DevFloatingButtons />}
-                  </SafeAreaView>
-                </PortalProvider>
-              </BottomSheetModalProvider>
-            </ModalProvider>
-          </GestureHandlerRootView>
-        </KeyboardProvider>
-      </ReactQueryProvider>
+                    <SafeAreaView
+                      className="flex-1"
+                      style={{ top: insets.top }}
+                    >
+                      <App />
+                      <Toaster position="top-center" duration={2000} />
+                      {__DEV__ && <DevFloatingButtons />}
+                    </SafeAreaView>
+                  </PortalProvider>
+                </BottomSheetModalProvider>
+              </ModalProvider>
+            </GestureHandlerRootView>
+          </KeyboardProvider>
+        </ReactQueryProvider>
+      </PersistGate>
     </Provider>
   );
 }
@@ -89,6 +94,18 @@ export default function RootLayout() {
 const App = () => {
   const [isOnboarded] = useMMKVBoolean(storageKeyNames.isOnboarded);
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const language = useAppSelector((state) => state.app.language);
+  const runOnce = useRef(false);
+
+  useEffect(() => {
+    if (runOnce.current) return;
+    runOnce.current = true;
+    i18n.changeLanguage(language, () => {
+      createOfetchInstance({
+        "Accept-Language": language,
+      });
+    });
+  }, [language]);
 
   if (!isOnboarded) {
     return <Onboarding />;

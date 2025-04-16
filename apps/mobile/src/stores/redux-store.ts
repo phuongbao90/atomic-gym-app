@@ -4,16 +4,58 @@ import { appReducer } from "./slices/app-slice";
 import { themeListener } from "./middlewares/theme-middleware";
 import { languageListener } from "./middlewares/language-middleware";
 import { useDispatch, useSelector } from "react-redux";
-export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    app: appReducer,
+import {
+  PERSIST,
+  PAUSE,
+  REGISTER,
+  PURGE,
+  FLUSH,
+  persistReducer,
+  REHYDRATE,
+  persistStore,
+} from "redux-persist";
+import { combineReducers } from "@reduxjs/toolkit";
+import { MMKV } from "react-native-mmkv";
+export const storage = new MMKV();
+
+//TO BE USED IN REDUX PERSIST
+const reduxPersistStorage = {
+  setItem: (key: string, value: any) => {
+    storage.set(key, value);
+    return Promise.resolve(true);
   },
+  getItem: (key: string) => {
+    const value = storage.getString(key);
+    return Promise.resolve(value);
+  },
+  removeItem: (key: string) => {
+    storage.delete(key);
+    return Promise.resolve();
+  },
+};
+
+const persistConfig = {
+  key: "root",
+  version: 1,
+  storage: reduxPersistStorage,
+  whitelist: ["auth", "app"],
+};
+
+const reducer = combineReducers({
+  auth: authReducer,
+  app: appReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, reducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().prepend(
-      themeListener.middleware,
-      languageListener.middleware
-    ),
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }).prepend(themeListener.middleware, languageListener.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
@@ -24,3 +66,5 @@ export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 
 export const useAppSelector = useSelector.withTypes<RootState>();
+
+export const persistor = persistStore(store);

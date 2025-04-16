@@ -6393,7 +6393,7 @@ expo-device@~7.0.3:
   dependencies:
     ua-parser-js "^0.7.33"
 
-expo-file-system@~18.0.12:
+expo-file-system@^18.0.12, expo-file-system@~18.0.12:
   version "18.0.12"
   resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-18.0.12.tgz#6ceeeb0725f6c5faaf58112f18c073c2acfb3027"
   integrity sha512-HAkrd/mb8r+G3lJ9MzmGeuW2B+BxQR1joKfeCyY4deLl1zoZ48FrAWjgZjHK9aHUVhJ0ehzInu/NQtikKytaeg==
@@ -11011,6 +11011,16 @@ redent@^3.0.0:
   dependencies:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
+
+redux-persist-expo-file-system-storage@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/redux-persist-expo-file-system-storage/-/redux-persist-expo-file-system-storage-1.1.6.tgz#733f97845aa229783564cb5c7546c163ff695c6a"
+  integrity sha512-a9sFQUQM8ae5MoWDIISQ9lr2p3eXfKSZlKtd2cpWq7kg4uzA0YkB0ZyfbFFQmQvG//4p0yuSlLcdeyXjUuSdoA==
+
+redux-persist@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/redux-persist/-/redux-persist-6.0.0.tgz#b4d2972f9859597c130d40d4b146fecdab51b3a8"
+  integrity sha512-71LLMbUq2r02ng2We9S215LtPu3fY0KgaGE0k8WRgl6RkqxtGfl7HUozz1Dftwsb0D/5mZ8dwAaPbtnzfvbEwQ==
 
 redux-thunk@^3.1.0:
   version "3.1.0"

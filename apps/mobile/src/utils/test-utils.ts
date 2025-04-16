@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { render, renderHook } from "@testing-library/react-native";
 import { DefaultMockWrapper } from "./test-wrappers";
-import { ApiReponseWithMeta } from "app/src/types/meta";
+import { ApiReponseWithMeta } from "app";
 
 // Initialize i18n for testing
 

@@ -3,8 +3,7 @@ import { Exercise, useGetWorkout } from "app";
 import { WorkoutDetailScreen } from "../workouts/workout-detail-screen";
 import { customRenderUI, customRenderQueryHook } from "../../utils/test-utils";
 import nock from "nock";
-import { ENV } from "app/src/configs/env";
-import { API_ROUTES } from "app/src/configs/api-routes";
+import { ENV, API_ROUTES } from "app";
 import { setSearchParams } from "../../../__mocks__/expo-router";
 
 const mockDataWithExercises: Exercise = {
