@@ -192,6 +192,20 @@ export class WorkoutPlanService {
                 language,
               },
             },
+            workoutExercises: {
+              include: {
+                sets: true,
+                exercise: {
+                  include: {
+                    translations: {
+                      where: {
+                        language,
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
         },
       },

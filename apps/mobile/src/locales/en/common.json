@@ -91,5 +91,8 @@
     "stringMin": "{{field}} must contain at least {{count}} character(s)"
   },
 
-  "edit_exercise": "Edit Exercise"
+  "edit_exercise": "Edit Exercise",
+  "rest": "rest",
+
+  "edit_set": "Edit Set"
 }

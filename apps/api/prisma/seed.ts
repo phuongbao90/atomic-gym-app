@@ -184,7 +184,7 @@ async function main() {
                           create: Array(randNumber({ min: 1, max: 4 }))
                             .fill(null)
                             .map((_, setIndex) => ({
-                              restTime: randNumber({ min: 1, max: 10 }),
+                              restTime: randNumber({ min: 30, max: 300 }),
                               isWarmup: faker.datatype.boolean(),
                               isDropSet: faker.datatype.boolean(),
                               isUntilFailure: faker.datatype.boolean(),

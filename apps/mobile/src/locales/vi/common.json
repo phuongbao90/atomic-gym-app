@@ -91,5 +91,8 @@
     "stringMin": "{{field}} phải chứa ít nhất {{count}} ký tự"
   },
 
-  "edit_exercise": "Chỉnh sửa bài tập"
+  "edit_exercise": "Chỉnh sửa bài tập",
+  "rest": "nghỉ",
+
+  "edit_set": "Chỉnh sửa hiệp"
 }

@@ -46,6 +46,7 @@ import { appRoutes } from "../../configs/routes";
 import {
   CreateWorkoutPlanSchema,
   Exercise,
+  ExerciseWithSet,
   tryCatch,
   useCreateWorkoutPlan,
 } from "app";
@@ -354,7 +355,7 @@ const ExerciseItem = ({
   index,
   workoutIndex,
 }: {
-  item: Exercise;
+  item: ExerciseWithSet;
   index: number;
   workoutIndex: number;
 }) => {
@@ -438,7 +439,7 @@ const ExerciseItem = ({
           {item.translations?.[0]?.name}
         </AppText>
         <AppText className="text-gray-300">
-          {t("sets_count", { count: 4 })}
+          {t("sets_count", { count: item.sets.length })}
         </AppText>
       </View>
       <TouchableOpacity

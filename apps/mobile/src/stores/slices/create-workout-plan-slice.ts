@@ -1,7 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Exercise } from "app";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Exercise, ExerciseWithSet } from "app";
 import { ImagePickerAsset } from "expo-image-picker";
 import { DEFAULT_WORKOUT_PLAN_IMAGE } from "../../constants/constants";
+import { RootState, useAppSelector } from "../redux-store";
 
 const initialState = {
   workoutPlan: {
@@ -62,7 +63,7 @@ const initialState = {
     ] as {
       name: string;
       order: number;
-      exercises: Exercise[];
+      exercises: ExerciseWithSet[];
     }[],
   },
 };
@@ -98,16 +99,31 @@ export const createWorkoutPlanSlice = createSlice({
     resetCreateWorkoutPlan: (state) => {
       state.workoutPlan = initialState.workoutPlan;
     },
-    addExercisesToWorkout: (
-      state,
-      action: PayloadAction<{
-        workoutIndex: number;
-        exercises: Exercise[];
-      }>
-    ) => {
-      const { workoutIndex, exercises } = action.payload;
-      state.workoutPlan.workouts[workoutIndex].exercises.push(...exercises);
-    },
+    // addExercisesToWorkout: (
+    //   state,
+    //   action: PayloadAction<{
+    //     workoutIndex: number;
+    //     exercises: Exercise[];
+    //   }>
+    // ) => {
+    //   const { workoutIndex, exercises } = action.payload;
+    //   const defaultSets = useAppSelector((s) => s.app.defaultSets);
+    //   const exercisesWithDefaultSets = exercises.map((exercise) => ({
+    //     ...exercise,
+    //     sets: Array(defaultSets)
+    //       .fill(null)
+    //       .map((_, i) => ({
+    //         id: i,
+    //         restTime: 0,
+    //         isWarmup: false,
+    //         isDropSet: false,
+    //         isUntilFailure: false,
+    //       })),
+    //   }));
+    //   state.workoutPlan.workouts[workoutIndex].exercises.push(
+    //     ...exercisesWithDefaultSets
+    //   );
+    // },
     replaceExerciseInWorkout: (
       state,
       action: PayloadAction<{
@@ -141,8 +157,75 @@ export const createWorkoutPlanSlice = createSlice({
       const workout = state.workoutPlan.workouts[workoutIndex];
       state.workoutPlan.workouts.push(workout);
     },
+    removeExerciseSet: (
+      state,
+      action: PayloadAction<{
+        workoutIndex: number;
+        exerciseIndex: number;
+        setIndex: number;
+      }>
+    ) => {
+      const { workoutIndex, exerciseIndex, setIndex } = action.payload;
+      state.workoutPlan.workouts[workoutIndex].exercises[
+        exerciseIndex
+      ].sets.splice(setIndex, 1);
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(
+      addExercisesToWorkout.fulfilled,
+      (
+        state,
+        action: PayloadAction<{
+          workoutIndex: number;
+          exercises: Exercise[];
+          defaultSets: number;
+          defaultRestTime: number;
+        }>
+      ) => {
+        const { workoutIndex, exercises, defaultSets, defaultRestTime } =
+          action.payload;
+        const exercisesWithDefaultSets = exercises.map((exercise) => ({
+          ...exercise,
+          sets: Array(defaultSets)
+            .fill(null)
+            .map((_, i) => ({
+              id: i,
+              restTime: defaultRestTime,
+              isWarmup: false,
+              isDropSet: false,
+              isUntilFailure: false,
+            })),
+        }));
+        state.workoutPlan.workouts[workoutIndex].exercises.push(
+          ...exercisesWithDefaultSets
+        );
+      }
+    );
   },
 });
+
+export const addExercisesToWorkout = createAsyncThunk(
+  "createWorkoutPlan/addExercisesToWorkout",
+  async (
+    payload: {
+      workoutIndex: number;
+      exercises: Exercise[];
+    },
+    { getState }
+  ) => {
+    const state = getState() as RootState;
+    const defaultSets = state.app.defaultSets;
+    const defaultRestTime = state.app.defaultRestTime;
+
+    return {
+      defaultSets,
+      defaultRestTime,
+      workoutIndex: payload.workoutIndex,
+      exercises: payload.exercises,
+    };
+  }
+);
 
 export const {
   addWorkout,
@@ -152,10 +235,10 @@ export const {
   updateWorkoutPlanImage,
   updateActiveWorkoutIndex,
   resetCreateWorkoutPlan,
-  addExercisesToWorkout,
   removeExerciseFromWorkout,
   replaceExerciseInWorkout,
   duplicateWorkout,
+  removeExerciseSet,
 } = createWorkoutPlanSlice.actions;
 
 export const createWorkoutPlanReducer = createWorkoutPlanSlice.reducer;

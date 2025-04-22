@@ -48,6 +48,15 @@ export const appRoutes = {
       `${appRoutes.workoutPlans.base}/exercise-detail?${QueryString.stringify(
         params
       )}` as const,
+
+    editSet: (params: {
+      workoutIndex: number;
+      exerciseIndex: number;
+      setIndex: number;
+    }) =>
+      `${appRoutes.workoutPlans.base}/edit-set?${QueryString.stringify(
+        params
+      )}` as const,
   },
 
   workouts: {
