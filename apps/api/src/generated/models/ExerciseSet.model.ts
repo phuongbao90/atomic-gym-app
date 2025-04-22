@@ -1,7 +1,7 @@
 import { IsInt, IsDefined, IsBoolean } from "class-validator";
 import { WorkoutExercise } from "./";
 
-export class Set {
+export class ExerciseSet {
     @IsDefined()
     @IsInt()
     id!: number;

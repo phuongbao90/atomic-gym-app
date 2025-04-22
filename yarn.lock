@@ -3191,6 +3191,13 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
+"@quidone/react-native-wheel-picker@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@quidone/react-native-wheel-picker/-/react-native-wheel-picker-1.4.0.tgz#695f3e6c3ae7fd5cec3772434d0e56fca066c532"
+  integrity sha512-5O7ePg+US0HCIcsFw0uY+H267O2PxWHzU2gOmbXGgmSVgQgPcj53h6DcvZxbHpgh6mwrLoAUhOIdON1qP6pe1w==
+  dependencies:
+    "@rozhkov/react-useful-hooks" "^1.0.9"
+
 "@radix-ui/react-compose-refs@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-compose-refs/-/react-compose-refs-1.0.0.tgz#37595b1f16ec7f228d698590e78eeed18ff218ae"
@@ -3565,6 +3572,13 @@
   version "4.39.0"
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.39.0.tgz#bfe0214e163f70c4fec1c8f7bb8ce266f4c05b7e"
   integrity sha512-yAkUOkIKZlK5dl7u6dg897doBgLXmUHhIINM2c+sND3DZwnrdQkkSiDh7N75Ll4mM4dxSkYfXqU9fW3lLkMFug==
+
+"@rozhkov/react-useful-hooks@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@rozhkov/react-useful-hooks/-/react-useful-hooks-1.0.9.tgz#13eef9eca0e46d26a64c3a5727c7de2e9a5e4a2f"
+  integrity sha512-RffdvTrJI7RIvQOYM8/JrDZguNLpKCGjh7UyOjepiJRDtjM10ef+QX0xa6vOLReQ+8kzubBjQ42YM6aj1GotDg==
+  dependencies:
+    default-values "^1.0.1"
 
 "@scarf/scarf@=1.4.0":
   version "1.4.0"
@@ -5749,6 +5763,11 @@ default-gateway@^4.2.0:
   dependencies:
     execa "^1.0.0"
     ip-regex "^2.1.0"
+
+default-values@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/default-values/-/default-values-1.0.2.tgz#cf104c52185c0e60a691113ba0a3880ed4d4d2ed"
+  integrity sha512-OaZEvojjexigvv1IT6N0rKUD5Af7fG11a0jg87jySv5xzjc2+IEW9oWNvqxWLHGhShRRZ0QopCGzGjJv/aY+mw==
 
 defaults@^1.0.3:
   version "1.0.4"
@@ -10880,6 +10899,11 @@ react-native-tab-view@^4.0.10:
   integrity sha512-KU1ovavUURfKffqNn7F2jwgQ0tUSa2WosnHSztVYArCr22HP2nR7xHrd8DddFL4uenaT9KGXlNgx1IUPGUdZSw==
   dependencies:
     use-latest-callback "^0.2.1"
+
+react-native-timer-picker@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-timer-picker/-/react-native-timer-picker-2.1.1.tgz#fa83fd79ad345f93e6d6e1f4e967cf2531682ccc"
+  integrity sha512-iYx6f2+iEQX77SV9vLDPl70yN71BpPdLGx4/nf+W9dNuo2G9Cx3FDrDT1n6QGhbMsPd0KjY6eNR1PXQu4ixMaw==
 
 react-native-url-polyfill@^2.0.0:
   version "2.0.0"

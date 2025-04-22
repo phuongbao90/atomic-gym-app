@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Exercise, ExerciseWithSet } from "app";
+import { Exercise, ExerciseWithSet, ExerciseSet } from "app";
 import { ImagePickerAsset } from "expo-image-picker";
 import { DEFAULT_WORKOUT_PLAN_IMAGE } from "../../constants/constants";
-import { RootState, useAppSelector } from "../redux-store";
+import { RootState } from "../redux-store";
 
 const initialState = {
   workoutPlan: {
@@ -128,7 +128,7 @@ export const createWorkoutPlanSlice = createSlice({
       state,
       action: PayloadAction<{
         workoutIndex: number;
-        exercise: Exercise;
+        exercise: ExerciseWithSet;
         replaceExerciseId: number; // tobe replaced by exercise
       }>
     ) => {
@@ -170,6 +170,20 @@ export const createWorkoutPlanSlice = createSlice({
         exerciseIndex
       ].sets.splice(setIndex, 1);
     },
+    updateExerciseSet: (
+      state,
+      action: PayloadAction<{
+        workoutIndex: number;
+        exerciseIndex: number;
+        setIndex: number;
+        set: ExerciseSet;
+      }>
+    ) => {
+      const { workoutIndex, exerciseIndex, setIndex, set } = action.payload;
+      state.workoutPlan.workouts[workoutIndex].exercises[exerciseIndex].sets[
+        setIndex
+      ] = set;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -198,7 +212,7 @@ export const createWorkoutPlanSlice = createSlice({
             })),
         }));
         state.workoutPlan.workouts[workoutIndex].exercises.push(
-          ...exercisesWithDefaultSets
+          ...(exercisesWithDefaultSets as ExerciseWithSet[])
         );
       }
     );
@@ -239,6 +253,7 @@ export const {
   replaceExerciseInWorkout,
   duplicateWorkout,
   removeExerciseSet,
+  updateExerciseSet,
 } = createWorkoutPlanSlice.actions;
 
 export const createWorkoutPlanReducer = createWorkoutPlanSlice.reducer;

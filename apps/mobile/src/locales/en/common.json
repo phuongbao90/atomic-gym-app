@@ -94,5 +94,9 @@
   "edit_exercise": "Edit Exercise",
   "rest": "rest",
 
-  "edit_set": "Edit Set"
+  "edit_set": "Edit Set",
+  "warmup": "Warmup",
+  "drop_set": "Drop Set",
+  "until_failure": "Until Failure",
+  "rest_time": "Rest Time"
 }

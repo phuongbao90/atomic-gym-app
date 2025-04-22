@@ -1,5 +1,5 @@
 import { IsInt, IsDefined } from "class-validator";
-import { Workout, Exercise, Set } from "./";
+import { Workout, Exercise, ExerciseSet } from "./";
 
 export class WorkoutExercise {
     @IsDefined()
@@ -25,5 +25,5 @@ export class WorkoutExercise {
     order!: number;
 
     @IsDefined()
-    sets!: Set[];
+    sets!: ExerciseSet[];
 }

@@ -16,3 +16,22 @@ export const convertToHourMinuteSecond = (seconds: number) => {
   }
   return `${secondsLeft.toString().padStart(2, "0")}`;
 };
+
+export const convertToTimeObject = (seconds: number) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secondsLeft = seconds % 60;
+  return { hours, minutes, seconds: secondsLeft };
+};
+
+export const formatTimeObjectToSeconds = ({
+  hours,
+  minutes,
+  seconds,
+}: {
+  hours: number;
+  minutes: number;
+  seconds: number;
+}): number => {
+  return hours * 3600 + minutes * 60 + seconds;
+};

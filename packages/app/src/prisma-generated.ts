@@ -132,7 +132,7 @@ export interface WorkoutTranslation {
   workout?: Workout;
 }
 
-export interface Set {
+export interface ExerciseSet {
   id: number;
   restTime: number;
   isWarmup: boolean;
@@ -149,5 +149,5 @@ export interface WorkoutExercise {
   exercise?: Exercise;
   exerciseId: number;
   order: number;
-  sets?: Set[];
+  sets?: ExerciseSet[];
 }

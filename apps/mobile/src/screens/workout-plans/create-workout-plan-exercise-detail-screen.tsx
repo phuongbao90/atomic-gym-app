@@ -64,7 +64,11 @@ export function CreateWorkoutPlanExerciseDetailScreen() {
       (selectedIndex) => {
         if (selectedIndex === 0) {
           dispatch(
-            removeExerciseSet({ workoutIndex, exerciseIndex: index, setIndex })
+            removeExerciseSet({
+              workoutIndex: Number(workoutIndex),
+              exerciseIndex: Number(index),
+              setIndex,
+            })
           );
         }
       }
@@ -82,7 +86,13 @@ export function CreateWorkoutPlanExerciseDetailScreen() {
       <View className="gap-y-10 pl-6 pr-3">
         {exercise?.sets?.map((_, i) => (
           <Fragment key={i.toString()}>
-            <SetItem index={i} onPressMore={() => onPressMore(i)} />
+            <SetItem
+              index={i}
+              onPressMore={() => onPressMore(i)}
+              workoutIndex={Number(workoutIndex)}
+              exerciseIndex={Number(index)}
+              exerciseSet={_}
+            />
           </Fragment>
         ))}
       </View>

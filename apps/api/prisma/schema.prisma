@@ -192,7 +192,7 @@ model WorkoutTranslation {
 }
 
 // Set is related to exercise of workout , not exercise alone
-model Set {
+model ExerciseSet {
   id                Int             @id @default(autoincrement())
   restTime          Int
   isWarmup          Boolean         @default(false)
@@ -203,13 +203,13 @@ model Set {
 }
 
 model WorkoutExercise {
-  id         Int      @id @default(autoincrement())
-  workout    Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  id         Int           @id @default(autoincrement())
+  workout    Workout       @relation(fields: [workoutId], references: [id], onDelete: Cascade)
   workoutId  Int
-  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  exercise   Exercise      @relation(fields: [exerciseId], references: [id])
   exerciseId Int
   order      Int // Position in workout
-  sets       Set[]
+  sets       ExerciseSet[]
 
   @@unique([workoutId, exerciseId, order])
 }
