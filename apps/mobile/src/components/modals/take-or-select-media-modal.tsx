@@ -4,7 +4,7 @@ import { AppText } from "../ui/app-text";
 import { useTranslation } from "react-i18next";
 import * as ImagePicker from "expo-image-picker";
 import { useCameraPermissions } from "expo-camera";
-import { ExpoIcon } from "../ui/expo-icon";
+import { CameraIcon, MediaLibraryIcon } from "../ui/expo-icon";
 import { SCREEN_WIDTH } from "@gorhom/bottom-sheet";
 
 type Props = ModalProps<"TakeOrSelectMediaModal">;
@@ -35,7 +35,7 @@ export const TakeOrSelectMediaModal = ({
       }}
     >
       <View className="flex-row items-center gap-x-4">
-        <ExpoIcon library="feather" name="camera" size={24} />
+        <CameraIcon />
         {cameraPermission?.status !== "granted" ? (
           <PermissionRequest
             title={t("camera_permission_required_title")}
@@ -64,7 +64,7 @@ export const TakeOrSelectMediaModal = ({
       </View>
 
       <View className="flex-row items-center gap-x-4">
-        <ExpoIcon library="feather" name="image" size={24} />
+        <MediaLibraryIcon />
         {libraryPermission?.status !== "granted" ? (
           <PermissionRequest
             title={t("library_permission_required_title")}

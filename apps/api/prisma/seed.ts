@@ -59,33 +59,32 @@ async function main() {
           id: muscleGroup.id,
           image: faker.image.url(),
           parentId: muscleGroup.parentId,
-        },
-      });
-      await prisma.muscleGroupTranslation.create({
-        data: {
-          muscleGroupId: muscleGroup.id,
-          language: "vi",
-          name: muscleGroup.name_vn,
-          normalizedName: removeDiacritics(muscleGroup.name_vn),
-          slug: slugify(muscleGroup.name_vn),
-        },
-      });
-      await prisma.muscleGroupTranslation.create({
-        data: {
-          muscleGroupId: muscleGroup.id,
-          language: "en",
-          name: muscleGroup.name,
-          normalizedName: removeDiacritics(muscleGroup.name),
-          slug: slugify(muscleGroup.name),
+          translations: {
+            create: [
+              {
+                language: "vi",
+                name: muscleGroup.name_vn,
+                normalizedName: removeDiacritics(muscleGroup.name_vn),
+                slug: slugify(muscleGroup.name_vn),
+              },
+              {
+                language: "en",
+                name: muscleGroup.name,
+                normalizedName: removeDiacritics(muscleGroup.name),
+                slug: slugify(muscleGroup.name),
+              },
+            ],
+          },
         },
       });
     }
 
     // Create exercises with translations
     for (let index = 1; index <= exerciseCount; index++) {
+      const viName = fakerVI.lorem.sentence();
+      const enName = fakerEN_US.lorem.sentence();
       const exercise = await prisma.exercise.create({
         data: {
-          // id: index,
           notes: faker.lorem.paragraph(),
           category: faker.helpers.arrayElement([
             "WEIGHT",
@@ -101,39 +100,35 @@ async function main() {
           },
           createdById: randNumber({ min: 1, max: userCount }),
           images: [faker.image.url(), faker.image.url(), faker.image.url()],
-        },
-      });
-
-      const viName = fakerVI.lorem.sentence();
-      const enName = fakerEN_US.lorem.sentence();
-
-      await prisma.exerciseTranslation.create({
-        data: {
-          exerciseId: exercise.id,
-          language: "vi",
-          name: viName,
-          normalizedName: removeDiacritics(viName),
-          slug: slugify(viName),
-          description: fakerVI.lorem.paragraph(),
-        },
-      });
-      await prisma.exerciseTranslation.create({
-        data: {
-          exerciseId: exercise.id,
-          language: "en",
-          name: enName,
-          normalizedName: removeDiacritics(enName),
-          slug: slugify(enName),
-          description: fakerEN_US.lorem.paragraph(),
+          translations: {
+            create: [
+              {
+                language: "vi",
+                name: viName,
+                normalizedName: removeDiacritics(viName),
+                slug: slugify(viName),
+                description: fakerVI.lorem.paragraph(),
+              },
+              {
+                language: "en",
+                name: enName,
+                normalizedName: removeDiacritics(enName),
+                slug: slugify(enName),
+                description: fakerEN_US.lorem.paragraph(),
+              },
+            ],
+          },
         },
       });
     }
 
     // Create workout plans with translations
     for (let index = 1; index <= workoutPlanCount; index++) {
+      const viPlanName = fakerVI.lorem.sentence();
+      const enPlanName = fakerEN_US.lorem.sentence();
+
       const workoutPlan = await prisma.workoutPlan.create({
         data: {
-          // id: index,
           cover_image: faker.image.url(),
           level: faker.helpers.arrayElement([
             "BEGINNER",
@@ -152,69 +147,70 @@ async function main() {
             "FLEXIBILITY",
             "LOOSE_WEIGHT",
           ]),
-        },
-      });
-
-      const viName = fakerVI.lorem.sentence();
-      const enName = fakerEN_US.lorem.sentence();
-
-      await prisma.workoutPlanTranslation.create({
-        data: {
-          workoutPlanId: workoutPlan.id,
-          language: "vi",
-          name: viName,
-          normalizedName: removeDiacritics(viName),
-          slug: slugify(viName),
-          description: fakerVI.lorem.paragraph(),
-        },
-      });
-      await prisma.workoutPlanTranslation.create({
-        data: {
-          workoutPlanId: workoutPlan.id,
-          language: "en",
-          name: enName,
-          normalizedName: removeDiacritics(enName),
-          slug: slugify(enName),
-          description: fakerEN_US.lorem.paragraph(),
-        },
-      });
-    }
-
-    // Create workouts with translations
-    for (let index = 1; index <= workoutPlanCount; index++) {
-      const viName = fakerVI.lorem.sentence();
-      const enName = fakerEN_US.lorem.sentence();
-      const workout = await prisma.workout.create({
-        data: {
-          // id: index,
-          exercises: {
-            connect: Array(randNumber({ min: 3, max: 10 }))
-              .fill(null)
-              .map(() => ({
-                id: randNumber({ min: 1, max: exerciseCount }),
-              })),
+          translations: {
+            create: [
+              {
+                language: "vi",
+                name: viPlanName,
+                normalizedName: removeDiacritics(viPlanName),
+                slug: slugify(viPlanName),
+                description: fakerVI.lorem.paragraph(),
+              },
+              {
+                language: "en",
+                name: enPlanName,
+                normalizedName: removeDiacritics(enPlanName),
+                slug: slugify(enPlanName),
+                description: fakerEN_US.lorem.paragraph(),
+              },
+            ],
           },
-          workoutPlanId: randNumber({ min: 1, max: workoutPlanCount }),
-          order: index,
-        },
-      });
+          workouts: {
+            create: Array(randNumber({ min: 1, max: 12 }))
+              .fill(null)
+              .map((_, workoutIndex) => {
+                const viWorkoutName = fakerVI.lorem.sentence();
+                const enWorkoutName = fakerEN_US.lorem.sentence();
 
-      await prisma.workoutTranslation.create({
-        data: {
-          workoutId: workout.id,
-          language: "vi",
-          name: viName,
-          normalizedName: removeDiacritics(viName),
-          slug: slugify(viName),
-        },
-      });
-      await prisma.workoutTranslation.create({
-        data: {
-          workoutId: workout.id,
-          language: "en",
-          name: enName,
-          normalizedName: removeDiacritics(enName),
-          slug: slugify(enName),
+                return {
+                  order: workoutIndex,
+                  workoutExercises: {
+                    create: Array(randNumber({ min: 1, max: 6 }))
+                      .fill(undefined)
+                      .map((_, exerciseIndex) => ({
+                        exerciseId: randNumber({ min: 1, max: exerciseCount }),
+                        order: exerciseIndex,
+                        sets: {
+                          create: Array(randNumber({ min: 1, max: 4 }))
+                            .fill(null)
+                            .map((_, setIndex) => ({
+                              restTime: randNumber({ min: 1, max: 10 }),
+                              isWarmup: faker.datatype.boolean(),
+                              isDropSet: faker.datatype.boolean(),
+                              isUntilFailure: faker.datatype.boolean(),
+                            })),
+                        },
+                      })),
+                  },
+                  translations: {
+                    create: [
+                      {
+                        language: "vi",
+                        name: viWorkoutName,
+                        normalizedName: removeDiacritics(viWorkoutName),
+                        slug: slugify(viWorkoutName),
+                      },
+                      {
+                        language: "en",
+                        name: enWorkoutName,
+                        normalizedName: removeDiacritics(enWorkoutName),
+                        slug: slugify(enWorkoutName),
+                      },
+                    ],
+                  },
+                };
+              }),
+          },
         },
       });
     }

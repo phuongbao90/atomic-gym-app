@@ -7,7 +7,13 @@ import {
 } from "react-native";
 import { AppScreen } from "../../components/ui/app-screen";
 import { useTranslation } from "react-i18next";
-import { ExpoIcon } from "../../components/ui/expo-icon";
+import {
+  CameraIcon,
+  CategoryIcon,
+  ChangeImageIcon,
+  CheckIcon,
+  XIcon,
+} from "../../components/ui/expo-icon";
 import { AppText } from "../../components/ui/app-text";
 import { Controller, useForm, UseFormReturn } from "react-hook-form";
 import { ImageBackground } from "expo-image";
@@ -131,7 +137,7 @@ export const CreateExerciseForm = ({
                 onPress={() => handleOpenMediaModal()}
                 testID="change-image-button"
               >
-                <ExpoIcon library="materialIcons" name="cached" size={32} />
+                <ChangeImageIcon size={32} />
               </TouchableOpacity>
             </ImageBackground>
           ) : (
@@ -140,7 +146,7 @@ export const CreateExerciseForm = ({
               onPress={() => handleOpenMediaModal()}
               className="w-full aspect-video rounded-md border border-slate-700 dark:border-slate-500 justify-center items-center"
             >
-              <ExpoIcon library="feather" name="camera" size={24} />
+              <CameraIcon />
             </TouchableOpacity>
           );
         }}
@@ -217,18 +223,7 @@ export const CreateExerciseForm = ({
                     // setCategoryValue(item.value);
                     setIsFocus(false);
                   }}
-                  renderLeftIcon={() => (
-                    <ExpoIcon
-                      color={
-                        theme === "light"
-                          ? colors.text.light.inactive
-                          : colors.text.dark.inactive
-                      }
-                      library="materialIcons"
-                      name="category"
-                      size={20}
-                    />
-                  )}
+                  renderLeftIcon={() => <CategoryIcon size={20} />}
                   // styles
                   itemTextStyle={{
                     color:
@@ -332,7 +327,7 @@ const Header = ({
         }
         testID="back-button"
       >
-        <ExpoIcon library="feather" name="x" size={30} />
+        <XIcon size={30} />
       </TouchableOpacity>
       <AppText className="text-2xl font-bold">{t("create_exercise")}</AppText>
       <TouchableOpacity
@@ -344,7 +339,7 @@ const Header = ({
         }}
         className="ml-auto"
       >
-        <ExpoIcon library="feather" name="check" size={30} />
+        <CheckIcon size={30} />
       </TouchableOpacity>
     </View>
   );

@@ -69,5 +69,27 @@
   "required_exercise_category": "Loại bài tập là bắt buộc",
   "required_exercise_primary_muscle": "Nhóm cơ chính là bắt buộc",
   "required_exercise_description": "Mô tả bài tập là bắt buộc",
-  "required_exercise_images": "Ảnh bài tập là bắt buộc"
+  "required_exercise_images": "Ảnh bài tập là bắt buộc",
+
+  "create_workout_plan": "Tạo giáo án luyện tập",
+  "my_workout_plans": "Giáo án luyện tập của tôi",
+  "workout_plan_name": "Tên giáo án",
+  "add_exercise": "Thêm bài tập",
+  "workout_name": "Tên buổi tập",
+  "workout_name_count": "Buổi tập {{count}}",
+  "sets_count": "{{count}} hiệp",
+  "replace": "Thay thế",
+  "delete": "Xóa",
+  "cancel": "Hủy",
+  "confirm": "Xác nhận",
+  "reorder": "Sắp xếp lại",
+  "duplicate": "Nhân đôi",
+
+  "delete_workout_plan_message": "Xóa buổi tập này?",
+
+  "errors": {
+    "stringMin": "{{field}} phải chứa ít nhất {{count}} ký tự"
+  },
+
+  "edit_exercise": "Chỉnh sửa bài tập"
 }

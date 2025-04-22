@@ -12,10 +12,7 @@ languageListener.startListening({
   effect: async (_action, listenerApi) => {
     const state = listenerApi.getState() as RootState;
 
-    console.log(" state.app.language ", state.app.language);
-
-    i18n.changeLanguage(state.app.language, () => {});
-
+    i18n.changeLanguage(state.app.language);
     createOfetchInstance({
       "Accept-Language": state.app.language,
     });

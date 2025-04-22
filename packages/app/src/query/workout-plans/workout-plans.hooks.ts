@@ -1,12 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  createWorkoutPlan,
   getWorkoutPlan,
   getWorkoutPlans,
   getWorkoutPlansInGroups,
 } from "./workout-plans.requests";
 import { useAppInfiniteQuery } from "../helpers";
-import { WorkoutPlanQuery } from "./workout-plans.types";
+import {
+  CreateWorkoutPlanSchema,
+  WorkoutPlanQuery,
+} from "./workout-plans.types";
 import { workoutPlanKeys } from "./workout-plans.keys";
+import { z } from "zod";
 
 export const useGetWorkoutPlans = (query: WorkoutPlanQuery) => {
   return useAppInfiniteQuery({
@@ -30,5 +35,12 @@ export const useGetWorkoutPlansInGroups = () => {
     queryKey: workoutPlanKeys.inGroups(),
     queryFn: () => getWorkoutPlansInGroups(),
     select: (data) => data?.data,
+  });
+};
+
+export const useCreateWorkoutPlan = () => {
+  return useMutation({
+    mutationFn: (data: z.infer<typeof CreateWorkoutPlanSchema>) =>
+      createWorkoutPlan(data),
   });
 };

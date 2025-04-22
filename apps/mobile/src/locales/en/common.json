@@ -69,5 +69,27 @@
   "required_exercise_category": "Exercise category is required",
   "required_exercise_primary_muscle": "Exercise primary muscle is required",
   "required_exercise_description": "Exercise description is required",
-  "required_exercise_images": "Exercise images are required"
+  "required_exercise_images": "Exercise images are required",
+
+  "create_workout_plan": "Create Workout Plan",
+  "my_workout_plans": "My Workout Plans",
+  "workout_plan_name": "Workout Plan Name",
+  "add_exercise": "Add Exercise",
+  "workout_name": "Workout Name",
+  "workout_name_count": "Workout {{count}}",
+  "sets_count": "{{count}} sets",
+  "replace": "Replace",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "reorder": "Reorder",
+  "duplicate": "Duplicate",
+
+  "delete_workout_plan_message": "Delete this workout?",
+
+  "errors": {
+    "stringMin": "{{field}} must contain at least {{count}} character(s)"
+  },
+
+  "edit_exercise": "Edit Exercise"
 }

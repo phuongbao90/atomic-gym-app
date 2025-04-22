@@ -47,4 +47,13 @@ export class CreateWorkoutPlanDto {
   @IsArray()
   @IsOptional()
   workoutIds?: number[];
+
+  @IsArray()
+  @IsOptional()
+  workouts?: {
+    name: string;
+    description?: string;
+    exercises: number[];
+    order: number;
+  }[];
 }

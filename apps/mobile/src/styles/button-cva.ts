@@ -10,6 +10,7 @@ export const buttonCva = cva("group flex-1 items-center justify-center", {
       xl: "py-1 px-5 h-14",
     },
     radius: {
+      none: "rounded-none",
       sm: "rounded-sm",
       md: "rounded-md",
       lg: "rounded-lg",

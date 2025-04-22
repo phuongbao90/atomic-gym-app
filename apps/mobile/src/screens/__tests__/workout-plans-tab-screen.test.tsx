@@ -766,7 +766,7 @@ describe("WorkoutPlansTabScreen", () => {
     expect(getByText(/^bài tập$/i)).toBeTruthy();
 
     fireEvent.press(getByTestId("view-all-exercises-button"));
-    expect(useRouter().push).toHaveBeenCalledWith(appRoutes.exercises.list());
+    expect(useRouter().push).toHaveBeenCalledWith(appRoutes.exercises.list({}));
 
     fireEvent.press(getByTestId("build-plan-button"));
     expect(useRouter().navigate).toHaveBeenCalledWith(

@@ -8,9 +8,11 @@ import { usePreventRepeatPress } from "../hooks/use-prevent-repeat-press";
 export const ExerciseItem = ({
   item,
   index,
+  right,
 }: {
   item: Exercise;
   index: number;
+  right?: React.ReactNode | null;
 }) => {
   const router = useRouter();
   const debouncedPress = usePreventRepeatPress();
@@ -41,6 +43,8 @@ export const ExerciseItem = ({
           />
         ) : null
       }
+      // Right={children}
+      Right={right}
     />
   );
 };

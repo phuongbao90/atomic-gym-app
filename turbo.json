@@ -7,9 +7,6 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
-    "check-types": {
-      "dependsOn": ["^check-types"]
-    },
     "test": {},
     "test:watch": {
       "cache": false,

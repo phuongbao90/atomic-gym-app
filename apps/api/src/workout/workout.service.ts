@@ -42,8 +42,11 @@ export class WorkoutService {
     try {
       const workout = await this.prisma.workout.create({
         data: {
-          exercises: {
-            connect: body.exerciseIds.map((exerciseId) => ({ id: exerciseId })),
+          workoutExercises: {
+            create: body.exerciseIds.map((exerciseId) => ({
+              exerciseId,
+              order: 0,
+            })),
           },
           workoutPlanId,
           order,
@@ -75,7 +78,7 @@ export class WorkoutService {
     const workouts = await this.prisma.workout.findMany({
       where: { workoutPlanId: id },
       include: {
-        _count: { select: { exercises: true } },
+        _count: { select: { workoutExercises: true } },
         translations: {
           where: {
             language,
@@ -97,11 +100,15 @@ export class WorkoutService {
         id,
       },
       include: {
-        exercises: {
+        workoutExercises: {
           include: {
-            translations: {
-              where: {
-                language,
+            exercise: {
+              include: {
+                translations: {
+                  where: {
+                    language,
+                  },
+                },
               },
             },
           },

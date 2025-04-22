@@ -1,16 +1,10 @@
-import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
-import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
-import { USFlag } from "../../constants/app-assets";
-import { VNFlag } from "../../constants/app-assets";
-import { switchLanguage, switchTheme } from "../../stores/slices/app-slice";
+import { Pressable, StyleSheet, View } from "react-native";
 import { cn } from "../../utils/cn";
 import { AppText } from "./app-text";
 import { Divider } from "./divider";
-import { ExpoIcon } from "./expo-icon";
+import { ChevronLeftIcon } from "./expo-icon";
 import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
-import { useAppDispatch } from "../../stores/redux-store";
 
 export const AppHeader = ({
   title,
@@ -18,20 +12,15 @@ export const AppHeader = ({
   withBottomBorder = true,
   Right,
   className,
-  theme,
-  language,
 }: {
   title?: string;
   withBackButton?: boolean;
   withBottomBorder?: boolean;
   Right?: React.ReactNode;
   className?: string;
-  theme: "light" | "dark";
-  language: "vi" | "en";
 }) => {
   const router = useRouter();
   const debouncedPress = usePreventRepeatPress();
-  const dispatch = useAppDispatch();
 
   return (
     <>
@@ -48,12 +37,7 @@ export const AppHeader = ({
             }
             testID="back-button"
           >
-            <ExpoIcon
-              library="feather"
-              name="chevron-left"
-              size={26}
-              className="pl-4"
-            />
+            <ChevronLeftIcon size={26} />
           </Pressable>
         )}
         {!!title && (
@@ -64,7 +48,7 @@ export const AppHeader = ({
 
         {!!Right && <View style={styles.right}>{Right}</View>}
 
-        <View style={styles.right}>
+        {/* <View style={styles.right}>
           <View className="flex-row gap-8">
             <TouchableOpacity
               onPress={() => {
@@ -120,7 +104,7 @@ export const AppHeader = ({
               />
             </TouchableOpacity>
           </View>
-        </View>
+        </View> */}
       </View>
       {withBottomBorder && <Divider />}
     </>

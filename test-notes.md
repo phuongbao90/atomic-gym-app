@@ -1,5 +1,15 @@
 
 ## Text
+### regex
+```js
+pager-dot-1
+pager-dot-2
+pager-dot-3
+
+// regex to get all
+getAllByTestId(/^pager-dot-/)
+```
+
 
 ## List
 ### mocking flatlist - onRefresh 

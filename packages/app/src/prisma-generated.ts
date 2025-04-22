@@ -59,9 +59,8 @@ export interface Exercise {
   createdAt: string;
   updatedAt: string;
   ExerciseLog?: ExerciseLog[];
-  Workout?: Workout | null;
-  workoutId: number | null;
   translations?: ExerciseTranslation[];
+  workoutExercises?: WorkoutExercise[];
 }
 
 export interface ExerciseTranslation {
@@ -94,7 +93,7 @@ export interface WorkoutPlan {
   isPremium: boolean | null;
   isFeatured: boolean | null;
   isSingle: boolean | null;
-  category: WorkoutPlanCategory;
+  category: WorkoutPlanCategory | null;
   workouts?: Workout[];
   createdBy?: User;
   createdById: number;
@@ -108,20 +107,20 @@ export interface WorkoutPlanTranslation {
   language: Language;
   name: string;
   normalizedName: string | null;
-  description: string;
+  description: string | null;
   slug: string;
   workoutPlan?: WorkoutPlan;
 }
 
 export interface Workout {
   id: number;
-  exercises?: Exercise[];
   order: number | null;
   createdAt: string;
   updatedAt: string;
   WorkoutPlan?: WorkoutPlan;
   workoutPlanId: number;
   translations?: WorkoutTranslation[];
+  workoutExercises?: WorkoutExercise[];
 }
 
 export interface WorkoutTranslation {
@@ -131,4 +130,24 @@ export interface WorkoutTranslation {
   normalizedName: string | null;
   slug: string;
   workout?: Workout;
+}
+
+export interface Set {
+  id: number;
+  restTime: number;
+  isWarmup: boolean;
+  isDropSet: boolean;
+  isUntilFailure: boolean;
+  WorkoutExercise?: WorkoutExercise;
+  workoutExerciseId: number;
+}
+
+export interface WorkoutExercise {
+  id: number;
+  workout?: Workout;
+  workoutId: number;
+  exercise?: Exercise;
+  exerciseId: number;
+  order: number;
+  sets?: Set[];
 }

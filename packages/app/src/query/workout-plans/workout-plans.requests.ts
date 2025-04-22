@@ -1,8 +1,13 @@
-import { API_ROUTES } from "../../configs/api-routes"
-import { request } from "../../libs/request"
-import { WorkoutPlan } from "../../prisma-generated"
-import { ApiReponseWithMeta, ApiResponse } from "../../types/meta"
-import { WorkoutPlanInGroups, WorkoutPlanQuery } from "./workout-plans.types"
+import { API_ROUTES } from "../../configs/api-routes";
+import { request } from "../../libs/request";
+import { WorkoutPlan } from "../../prisma-generated";
+import { ApiReponseWithMeta, ApiResponse } from "../../types/meta";
+import {
+  CreateWorkoutPlanSchema,
+  WorkoutPlanInGroups,
+  WorkoutPlanQuery,
+} from "./workout-plans.types";
+import { z } from "zod";
 
 export const getWorkoutPlans = (query: WorkoutPlanQuery) => {
   return request<ApiReponseWithMeta<WorkoutPlan[]>>(
@@ -10,8 +15,8 @@ export const getWorkoutPlans = (query: WorkoutPlanQuery) => {
     {
       method: "GET",
     }
-  )
-}
+  );
+};
 
 export const getWorkoutPlan = (id: number) => {
   return request<ApiResponse<WorkoutPlan & { _count: { exercises: number } }>>(
@@ -19,11 +24,20 @@ export const getWorkoutPlan = (id: number) => {
     {
       method: "GET",
     }
-  )
-}
+  );
+};
 
 export const getWorkoutPlansInGroups = () => {
   return request<ApiResponse<WorkoutPlanInGroups>>(API_ROUTES.plans.inGroups, {
     method: "GET",
-  })
-}
+  });
+};
+
+export const createWorkoutPlan = (
+  data: z.infer<typeof CreateWorkoutPlanSchema>
+) => {
+  return request<ApiResponse<WorkoutPlan>>(API_ROUTES.plans.base, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+};

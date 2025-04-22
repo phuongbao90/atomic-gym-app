@@ -183,7 +183,13 @@ export class ExerciseService {
 
   async findByWorkout(id: number, language: Language) {
     return this.prisma.exercise.findMany({
-      where: { workoutId: id },
+      where: {
+        workoutExercises: {
+          some: {
+            workoutId: id,
+          },
+        },
+      },
       include: {
         translations: {
           where: { language },

@@ -4,7 +4,7 @@ import {
   UseMutationResult,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { render, renderHook } from "@testing-library/react-native";
+import { act, render, renderHook } from "@testing-library/react-native";
 import { DefaultMockWrapper } from "./test-wrappers";
 import { ApiReponseWithMeta } from "app";
 
@@ -59,3 +59,10 @@ export const customRenderMutationHook = <T>(
 ) => {
   return renderHook(hook, { wrapper });
 };
+
+export function selectActionSheetOption(actionSheet: jest.Mock, index: number) {
+  const callback = actionSheet.mock.calls.at(-1)?.[1]; // get latest call
+  if (callback) {
+    act(() => callback(index));
+  }
+}

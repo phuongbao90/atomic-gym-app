@@ -34,7 +34,18 @@ export class WorkoutPlanService {
           isPremium: body.isPremium,
           isFeatured: body.isFeatured,
           category: body.category,
-          workouts: {},
+          workouts: {
+            create: body.workouts.map((workout) => ({
+              translations: {
+                create: {
+                  language,
+                  name: workout.name,
+                  slug: slugify(workout.name),
+                  description: workout.description,
+                },
+              },
+            })),
+          },
         },
       });
       const translation = await this.prisma.workoutPlanTranslation.create({
@@ -175,7 +186,7 @@ export class WorkoutPlanService {
         },
         workouts: {
           include: {
-            _count: { select: { exercises: true } },
+            _count: { select: { workoutExercises: true } },
             translations: {
               where: {
                 language,

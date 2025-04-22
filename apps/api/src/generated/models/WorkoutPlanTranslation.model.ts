@@ -20,9 +20,9 @@ export class WorkoutPlanTranslation {
     @IsString()
     normalizedName?: string;
 
-    @IsDefined()
+    @IsOptional()
     @IsString()
-    description!: string;
+    description?: string;
 
     @IsDefined()
     @IsString()

@@ -3,6 +3,7 @@ import "react-native-reanimated";
 import "react-native-url-polyfill/auto";
 import "../global.css";
 
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { PortalProvider } from "@gorhom/portal";
 import { useFonts } from "expo-font";
@@ -63,23 +64,16 @@ export default function RootLayout() {
               <ModalProvider stack={modalStack}>
                 <BottomSheetModalProvider>
                   <PortalProvider>
-                    {/* <StatusBar
-                // backgroundColor={
-                //   theme === "dark" ? primaryColors[300] : primaryColors[600]
-                // }
-                // translucent={theme === "dark"}
-                translucent={true}
-                animated
-                // style="dark"
-              /> */}
-                    <SafeAreaView
-                      className="flex-1"
-                      style={{ top: insets.top }}
-                    >
-                      <App />
-                      <Toaster position="top-center" duration={2000} />
-                      {__DEV__ && <DevFloatingButtons />}
-                    </SafeAreaView>
+                    <ActionSheetProvider>
+                      <SafeAreaView
+                        className="flex-1"
+                        style={{ top: insets.top }}
+                      >
+                        <App />
+                        <Toaster position="top-center" duration={2000} />
+                        {__DEV__ && <DevFloatingButtons />}
+                      </SafeAreaView>
+                    </ActionSheetProvider>
                   </PortalProvider>
                 </BottomSheetModalProvider>
               </ModalProvider>

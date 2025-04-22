@@ -1,3 +1,5 @@
+import QueryString from "qs";
+
 export const appRoutes = {
   login: "/(auth)",
   register: "/(auth)/register",
@@ -16,7 +18,20 @@ export const appRoutes = {
   // exercise: (id: string) => `/exercises/${id}`,
   exercises: {
     base: "/exercises" as const,
-    list: () => `${appRoutes.exercises.base}` as const,
+    list: ({
+      allowSelect = false,
+      activeWorkoutIndex = 0,
+      replaceExerciseId,
+    }: {
+      allowSelect?: boolean;
+      activeWorkoutIndex?: number;
+      replaceExerciseId?: number;
+    }) =>
+      `${appRoutes.exercises.base}?${QueryString.stringify({
+        allowSelect,
+        activeWorkoutIndex,
+        replaceExerciseId,
+      })}` as const,
     detail: (id: string) => `${appRoutes.exercises.base}/${id}` as const,
     create: () => `${appRoutes.exercises.base}/create` as const,
   } as const,
@@ -26,6 +41,13 @@ export const appRoutes = {
     create: () => `${appRoutes.workoutPlans.base}/create` as const,
     edit: (id: string) => `${appRoutes.workoutPlans.base}/${id}/edit` as const,
     detail: (id: string) => `${appRoutes.workoutPlans.base}/${id}` as const,
+    exerciseDetail: (params: {
+      workoutIndex: number;
+      index: number;
+    }) =>
+      `${appRoutes.workoutPlans.base}/exercise-detail?${QueryString.stringify(
+        params
+      )}` as const,
   },
 
   workouts: {

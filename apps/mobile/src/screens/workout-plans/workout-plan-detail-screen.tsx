@@ -11,7 +11,6 @@ import { cn } from "../../utils/cn";
 import { PlanInfo } from "./components/workout-plan-info";
 import { WorkoutPlanStatistics } from "./components/workout-plan-statistics";
 import { useTranslation } from "react-i18next";
-import { useAppSelector } from "../../stores/redux-store";
 
 const routes = [
   { key: "first", title: "overview" },
@@ -51,8 +50,6 @@ const IMAGE_HEIGHT = 300;
 export const WorkoutPlanDetailScreen = () => {
   const { id } = useLocalSearchParams();
   const { data: workoutPlan } = useGetWorkoutPlan(Number(id));
-  const theme = useAppSelector((state) => state.app.theme);
-  const language = useAppSelector((state) => state.app.language);
   const { t } = useTranslation();
 
   const renderHeader = () => {
@@ -76,12 +73,7 @@ export const WorkoutPlanDetailScreen = () => {
 
   return (
     <AppScreen name="workout-plan-detail-screen">
-      <AppHeader
-        title={workoutPlan?.translations?.[0]?.name}
-        withBackButton
-        theme={theme}
-        language={language}
-      />
+      <AppHeader title={workoutPlan?.translations?.[0]?.name} withBackButton />
 
       <Tabs.Container
         renderHeader={renderHeader}
@@ -94,6 +86,7 @@ export const WorkoutPlanDetailScreen = () => {
             style={{ flex: 1 }}
             contentContainerStyle={{
               paddingHorizontal: 12,
+              paddingBottom: 80,
             }}
           >
             <PlanInfo item={workoutPlan} />
@@ -105,6 +98,7 @@ export const WorkoutPlanDetailScreen = () => {
             style={{ flex: 1 }}
             contentContainerStyle={{
               paddingHorizontal: 12,
+              paddingBottom: 80,
             }}
           >
             <WorkoutPlanStatistics item={workoutPlan} />

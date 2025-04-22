@@ -1,6 +1,6 @@
 import { Workout } from "app";
 import { Text, View } from "react-native";
-import { ExpoIcon } from "./ui/expo-icon";
+import { LockIcon } from "./ui/expo-icon";
 import { Link } from "expo-router";
 import { appRoutes } from "../configs/routes";
 import { useTranslation } from "react-i18next";
@@ -41,13 +41,7 @@ export const WorkoutItem = ({
           )}
         </View>
         {isPremiumPlan && (
-          <ExpoIcon
-            name="lock"
-            size={18}
-            color="gray"
-            library="entypo"
-            className="ml-auto"
-          />
+          <LockIcon size={18} color="gray" className="ml-auto" />
         )}
       </View>
     </Link>

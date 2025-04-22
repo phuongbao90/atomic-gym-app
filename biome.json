@@ -47,7 +47,9 @@
         }
       },
       "suspicious": {
-        "noExplicitAny": "info"
+        "noExplicitAny": "info",
+        "noConsoleLog": "warn",
+        "noConsole": "warn"
       }
     }
   },

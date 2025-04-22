@@ -103,6 +103,61 @@ jest.mock("@gorhom/bottom-sheet", () => ({
   ...require("@gorhom/bottom-sheet/mock"),
 }));
 
+// jest.mock("@expo/react-native-action-sheet", () => ({
+//   ...jest.requireActual("@expo/react-native-action-sheet"),
+//   ActionSheetProvider: ({ children }) => children,
+//   useActionSheet: () => ({
+//     showActionSheetWithOptions: jest.fn((options, callback) => {
+//       // You can optionally trigger a specific option index right away for testing
+//       // For example, to simulate selecting the first option:
+//       // callback(0);
+//     }),
+//   }),
+// }));
+
+jest.mock("react-native-pager-view", () => {
+  const RealComponent = jest.requireActual("react-native-pager-view");
+  const React = require("react");
+
+  return class PagerView extends React.Component {
+    index = 0;
+
+    setPage = (page) => {
+      this.index = Math.max(
+        0,
+        Math.min(page, React.Children.count(this.props.children))
+      );
+
+      this.props.onPageSelected({
+        nativeEvent: { position: page },
+      });
+    };
+
+    onPageSelected = (e) => {
+      this.props.onPageSelected({
+        nativeEvent: { position: e.nativeEvent.position },
+      });
+    };
+
+    render() {
+      return (
+        <RealComponent.default
+          {...this.props}
+          onPageSelected={this.onPageSelected}
+        >
+          {this.props.children}
+        </RealComponent.default>
+      );
+    }
+  };
+});
+
+// import { NativeModules } from "react-native";
+
+// NativeModules.ActionSheetManager = NativeModules.ActionSheetManager || {
+//   showActionSheetWithOptions: jest.fn(),
+// };
+
 global.beforeAll(() => {
   nock.disableNetConnect();
   // jest.useFakeTimers();

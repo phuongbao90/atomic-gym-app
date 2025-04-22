@@ -85,19 +85,18 @@ model MuscleGroupTranslation {
 }
 
 model Exercise {
-  id            Int                   @id @default(autoincrement())
-  notes         String? // Reference to Text.key
-  category      ExerciseCategory
-  primaryMuscle MuscleGroup[]
-  createdBy     User                  @relation(fields: [createdById], references: [id])
-  createdById   Int
-  images        String[]
-  createdAt     DateTime              @default(now()) @db.Timestamptz(6)
-  updatedAt     DateTime              @updatedAt @db.Timestamptz(6)
-  ExerciseLog   ExerciseLog[]
-  Workout       Workout?              @relation(fields: [workoutId], references: [id])
-  workoutId     Int?
-  translations  ExerciseTranslation[]
+  id               Int                   @id @default(autoincrement())
+  notes            String?
+  category         ExerciseCategory
+  primaryMuscle    MuscleGroup[]
+  createdBy        User                  @relation(fields: [createdById], references: [id])
+  createdById      Int
+  images           String[]
+  createdAt        DateTime              @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime              @updatedAt @db.Timestamptz(6)
+  ExerciseLog      ExerciseLog[]
+  translations     ExerciseTranslation[]
+  workoutExercises WorkoutExercise[]
 }
 
 model ExerciseTranslation {
@@ -147,7 +146,7 @@ model WorkoutPlan {
   isPremium    Boolean?                 @default(false)
   isFeatured   Boolean?                 @default(false)
   isSingle     Boolean?                 @default(false)
-  category     WorkoutPlanCategory
+  category     WorkoutPlanCategory?
   workouts     Workout[]
   createdBy    User                     @relation(fields: [createdById], references: [id])
   createdById  Int
@@ -161,7 +160,7 @@ model WorkoutPlanTranslation {
   language       Language // language code (e.g., 'vi', 'en')
   name           String // localized name
   normalizedName String? // localized name
-  description    String // localized description
+  description    String? // localized description
   slug           String // localized description
   workoutPlan    WorkoutPlan @relation(fields: [workoutPlanId], references: [id], onDelete: Cascade)
 
@@ -170,14 +169,14 @@ model WorkoutPlanTranslation {
 }
 
 model Workout {
-  id            Int                  @id @default(autoincrement())
-  exercises     Exercise[]
-  order         Int?
-  createdAt     DateTime             @default(now()) @db.Timestamptz(6)
-  updatedAt     DateTime             @updatedAt @db.Timestamptz(6)
-  WorkoutPlan   WorkoutPlan          @relation(fields: [workoutPlanId], references: [id])
-  workoutPlanId Int
-  translations  WorkoutTranslation[]
+  id               Int                  @id @default(autoincrement())
+  order            Int?
+  createdAt        DateTime             @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime             @updatedAt @db.Timestamptz(6)
+  WorkoutPlan      WorkoutPlan          @relation(fields: [workoutPlanId], references: [id])
+  workoutPlanId    Int
+  translations     WorkoutTranslation[]
+  workoutExercises WorkoutExercise[]
 }
 
 model WorkoutTranslation {
@@ -190,4 +189,27 @@ model WorkoutTranslation {
 
   @@id([workoutId, language]) // composite primary key for uniqueness
   @@index([language])
+}
+
+// Set is related to exercise of workout , not exercise alone
+model Set {
+  id                Int             @id @default(autoincrement())
+  restTime          Int
+  isWarmup          Boolean         @default(false)
+  isDropSet         Boolean         @default(false)
+  isUntilFailure    Boolean         @default(false)
+  WorkoutExercise   WorkoutExercise @relation(fields: [workoutExerciseId], references: [id], onDelete: Cascade)
+  workoutExerciseId Int
+}
+
+model WorkoutExercise {
+  id         Int      @id @default(autoincrement())
+  workout    Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  workoutId  Int
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId Int
+  order      Int // Position in workout
+  sets       Set[]
+
+  @@unique([workoutId, exerciseId, order])
 }

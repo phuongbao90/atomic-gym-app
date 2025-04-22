@@ -16,6 +16,7 @@ import {
 } from "redux-persist";
 import { combineReducers } from "@reduxjs/toolkit";
 import { MMKV } from "react-native-mmkv";
+import { createWorkoutPlanReducer } from "./slices/create-workout-plan-slice";
 export const storage = new MMKV();
 
 //TO BE USED IN REDUX PERSIST
@@ -39,11 +40,13 @@ const persistConfig = {
   version: 1,
   storage: reduxPersistStorage,
   whitelist: ["auth", "app"],
+  blacklist: ["createWorkoutPlan"],
 };
 
 const reducer = combineReducers({
   auth: authReducer,
   app: appReducer,
+  createWorkoutPlan: createWorkoutPlanReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

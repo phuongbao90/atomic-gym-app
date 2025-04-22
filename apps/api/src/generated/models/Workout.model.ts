@@ -1,13 +1,10 @@
 import { IsInt, IsDefined, IsOptional, IsDate } from "class-validator";
-import { Exercise, WorkoutPlan, WorkoutTranslation } from "./";
+import { WorkoutPlan, WorkoutTranslation, WorkoutExercise } from "./";
 
 export class Workout {
     @IsDefined()
     @IsInt()
     id!: number;
-
-    @IsDefined()
-    exercises!: Exercise[];
 
     @IsOptional()
     @IsInt()
@@ -30,4 +27,7 @@ export class Workout {
 
     @IsDefined()
     translations!: WorkoutTranslation[];
+
+    @IsDefined()
+    workoutExercises!: WorkoutExercise[];
 }

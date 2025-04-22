@@ -5,7 +5,11 @@ import { Fragment } from "react";
 import { View } from "react-native";
 import { AppText } from "../../../components/ui/app-text";
 import { Divider } from "../../../components/ui/divider";
-import { ExpoIcon } from "../../../components/ui/expo-icon";
+import {
+  CalendarIcon,
+  ChartIcon,
+  CrosshairsIcon,
+} from "../../../components/ui/expo-icon";
 import { ListItem } from "../../../components/ui/list-item";
 import { WorkoutItem } from "../../../components/workout-item";
 import { useTranslation } from "react-i18next";
@@ -30,32 +34,42 @@ export const PlanInfo = ({
   const { t } = useTranslation();
 
   if (!item) return null;
+
+  const description = item?.translations?.[0]?.description;
+
   return (
     <View className="mt-4">
-      <AppText>{item?.translations?.[0]?.description}</AppText>
+      {description && (
+        <Fragment>
+          <AppText>{item?.translations?.[0]?.description}</AppText>
+          <Divider className="my-2" />
+        </Fragment>
+      )}
 
-      <Divider className="my-2" />
+      {item?.category && (
+        <Fragment>
+          <ListItem
+            Left={<CrosshairsIcon size={22} />}
+            label={t(mapCategory({ category: item?.category }))}
+          />
+          <Divider className="my-2" />
+        </Fragment>
+      )}
 
-      <ListItem
-        Left={<ExpoIcon library="fontAwesome6" name="crosshairs" size={22} />}
-        label={t(mapCategory({ category: item?.category }))}
-      />
-      <Divider className="my-2" />
-      <ListItem
-        Left={<ExpoIcon library="materialIcons" name="show-chart" size={24} />}
-        label={`${item.level ? capitalizeString(t(item.level)) : ""}`}
-      />
-      <Divider className="my-2" />
+      {item?.level && (
+        <Fragment>
+          <ListItem
+            Left={<ChartIcon />}
+            label={`${item.level ? capitalizeString(t(item.level)) : ""}`}
+          />
+          <Divider className="my-2" />
+        </Fragment>
+      )}
+
       {!!item.workouts?.length && (
         <>
           <ListItem
-            Left={
-              <ExpoIcon
-                library="materialIcons"
-                name="calendar-month"
-                size={24}
-              />
-            }
+            Left={<CalendarIcon />}
             label={`${t(
               item.workouts?.length > 1 ? "days_per_week" : "day_per_week",
               {

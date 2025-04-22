@@ -32,9 +32,9 @@ export class WorkoutPlan {
     @IsBoolean()
     isSingle?: boolean;
 
-    @IsDefined()
+    @IsOptional()
     @IsIn(getEnumValues(WorkoutPlanCategory))
-    category!: WorkoutPlanCategory;
+    category?: WorkoutPlanCategory;
 
     @IsDefined()
     workouts!: Workout[];

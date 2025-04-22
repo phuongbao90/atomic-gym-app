@@ -34,6 +34,7 @@
     "@tanstack/query-sync-storage-persister": "*",
     "@tanstack/react-query": "*",
     "@tanstack/react-query-persist-client": "*",
-    "expo-secure-store": "*"
+    "expo-secure-store": "*",
+    "zod": "*"
   }
 }

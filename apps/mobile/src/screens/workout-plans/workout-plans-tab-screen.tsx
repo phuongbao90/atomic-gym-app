@@ -20,7 +20,6 @@ import { AppText } from "../../components/ui/app-text";
 export function WorkoutPlansTabScreen() {
   const router = useRouter();
   const theme = useAppSelector((state) => state.app.theme);
-  const language = useAppSelector((state) => state.app.language);
   const { t } = useTranslation();
 
   const { data } = useGetWorkoutPlansInGroups();
@@ -78,7 +77,7 @@ export function WorkoutPlansTabScreen() {
 
   return (
     <AppScreen name="workout-plans-tab-screen">
-      <AppHeader title={t("workout_plans")} theme={theme} language={language} />
+      <AppHeader title={t("workout_plans")} />
       <SectionList
         sections={sections}
         renderSectionHeader={renderSectionHeader}
@@ -90,7 +89,7 @@ export function WorkoutPlansTabScreen() {
             <SectionTitle title={capitalize(t("exercises"))} />
             <Pressable
               onPress={() => {
-                router.push(appRoutes.exercises.list());
+                router.push(appRoutes.exercises.list({}));
               }}
               testID="view-all-exercises-button"
             >
@@ -122,6 +121,7 @@ export function WorkoutPlansTabScreen() {
             router.navigate(appRoutes.workoutPlans.create());
           }}
           color="primary"
+          containerClassName="flex-1"
         />
       </View>
     </AppScreen>
