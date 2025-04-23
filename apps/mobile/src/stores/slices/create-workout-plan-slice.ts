@@ -201,26 +201,6 @@ export const createWorkoutPlanSlice = createSlice({
       }
     },
 
-    updateWorkoutOrder: (
-      state,
-      action: PayloadAction<{
-        from: number;
-        to: number;
-      }>
-    ) => {
-      const { from, to } = action.payload;
-
-      const workout = state.workoutPlan.workouts[from];
-      workout.order = to;
-      state.workoutPlan.workouts[from] = workout;
-      state.workoutPlan.workouts.forEach((workout, index) => {
-        if (index !== from) {
-          workout.order = index;
-          state.workoutPlan.workouts[index] = workout;
-        }
-      });
-    },
-
     overrideWorkoutExercises: (
       state,
       action: PayloadAction<{
@@ -240,6 +220,18 @@ export const createWorkoutPlanSlice = createSlice({
           })
         );
       }
+    },
+    overrideWorkoutOrders: (
+      state,
+      action: PayloadAction<{
+        workouts: CreateWorkoutPlanSliceType["workouts"];
+      }>
+    ) => {
+      const { workouts } = action.payload;
+      state.workoutPlan.workouts = workouts.map((workout, index) => ({
+        ...workout,
+        order: index,
+      }));
     },
   },
   extraReducers: (builder) => {
@@ -389,7 +381,7 @@ export const {
   duplicateWorkout,
   removeExerciseSet,
   updateExerciseSet,
-
+  overrideWorkoutOrders,
   overrideWorkoutExercises,
 } = createWorkoutPlanSlice.actions;
 

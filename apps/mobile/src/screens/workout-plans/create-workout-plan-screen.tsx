@@ -1,7 +1,5 @@
 import {
-  FlatList,
   Pressable,
-  ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -25,7 +23,7 @@ import {
 import { AppText } from "../../components/ui/app-text";
 import { Image } from "expo-image";
 import PagerView from "react-native-pager-view";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { cn } from "../../utils/cn";
 import { usePagerView } from "../../hooks/use-pager-view";
 import { delay } from "lodash";
@@ -46,12 +44,7 @@ import {
   updateWorkoutPlanName,
 } from "../../stores/slices/create-workout-plan-slice";
 import { appRoutes } from "../../configs/routes";
-import {
-  CreateWorkoutPlanSchema,
-  Exercise,
-  tryCatch,
-  useCreateWorkoutPlan,
-} from "app";
+import { CreateWorkoutPlanSchema, tryCatch, useCreateWorkoutPlan } from "app";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { colors } from "../../styles/themes";
@@ -61,6 +54,7 @@ import DraggableFlatList, {
   ScaleDecorator,
 } from "react-native-draggable-flatlist";
 import { GestureEvent } from "react-native-gesture-handler";
+import { useDispatch } from "react-redux";
 // import ReorderableList, {
 //   ReorderableListReorderEvent,
 //   reorderItems,
@@ -87,9 +81,6 @@ export const CreateWorkoutPlanScreen = () => {
   const activeWorkoutIndex = useAppSelector(
     (state) => state.createWorkoutPlan.workoutPlan.activeWorkoutIndex
   );
-
-  console.log("workouts  ", workouts);
-  console.log("sortedWorkouts  ", sortedWorkouts);
 
   const [isFocused, setIsFocused] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -317,7 +308,12 @@ export const CreateWorkoutPlanScreen = () => {
                   {t("day", { count: workoutIndex + 1 })}
                 </AppText>
                 <View className="ml-4">
-                  <TextInput
+                  <WorkoutNameInput
+                    workout={workout}
+                    workoutIndex={workoutIndex}
+                  />
+                  {/* <TextInput
+                    testID={`workout-name-input-${workoutIndex}`}
                     placeholder={t("workout_name")}
                     className="text-xl text-white"
                     placeholderTextColor={"white"}
@@ -327,7 +323,7 @@ export const CreateWorkoutPlanScreen = () => {
                         updateWorkoutName({ workoutId: workout.id, name: text })
                       )
                     }
-                  />
+                  /> */}
                 </View>
                 <TouchableOpacity
                   className="ml-auto"
@@ -393,6 +389,51 @@ const PagerDots = ({
     </View>
   );
 };
+
+function WorkoutNameInput({
+  workout,
+  workoutIndex,
+}: {
+  workout: CreateWorkoutPlanSliceType["workouts"][number];
+  workoutIndex: number;
+}) {
+  // Use local state to track input value
+  const [localName, setLocalName] = useState(workout.name);
+  const dispatch = useDispatch();
+  const { t } = useTranslation();
+
+  // Only update Redux on blur (when user finishes typing)
+  const handleBlur = () => {
+    if (localName !== workout.name) {
+      dispatch(
+        updateWorkoutName({
+          workoutId: workout.id,
+          name: localName,
+        })
+      );
+    }
+  };
+
+  return (
+    <TextInput
+      value={localName}
+      onChangeText={setLocalName}
+      onBlur={handleBlur}
+      // Add these props to improve keyboard behavior
+      submitBehavior="submit"
+      testID={`workout-name-input-${workoutIndex}`}
+      placeholder={t("workout_name")}
+      className="text-xl text-white"
+      placeholderTextColor={"white"}
+      // value={workout?.name || ""}
+      // onChangeText={(text) =>
+      //   dispatch(
+      //     updateWorkoutName({ workoutId: workout.id, name: text })
+      //   )
+      // }
+    />
+  );
+}
 
 const ExerciseItem = ({
   item,

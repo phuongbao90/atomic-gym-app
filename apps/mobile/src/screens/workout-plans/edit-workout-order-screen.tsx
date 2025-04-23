@@ -9,20 +9,27 @@ import DraggableFlatList, {
 import { View } from "react-native";
 import { AppText } from "../../components/ui/app-text";
 import { DragIcon } from "../../components/ui/expo-icon";
-import { Workout } from "app";
-import { CreateWorkoutPlanSliceType } from "../../stores/slices/create-workout-plan-slice";
+import {
+  CreateWorkoutPlanSliceType,
+  overrideWorkoutOrders,
+} from "../../stores/slices/create-workout-plan-slice";
+import { useMemo } from "react";
 
 export const EditWorkoutOrderScreen = () => {
   const { t } = useTranslation();
   const workouts = useAppSelector(
     (state) => state.createWorkoutPlan.workoutPlan?.workouts
   );
+  const sortedWorkouts = useMemo(() => {
+    return [...workouts].sort((a, b) => a.order - b.order);
+  }, [workouts]);
 
   const dispatch = useAppDispatch();
 
   const renderItem = ({
     getIndex,
     drag,
+    item,
   }: RenderItemParams<CreateWorkoutPlanSliceType["workouts"][number]>) => {
     return (
       <ScaleDecorator>
@@ -35,9 +42,14 @@ export const EditWorkoutOrderScreen = () => {
             }}
           />
 
-          <AppText className="text-xl">
-            {t("day", { count: (getIndex() as number) + 1 })}
-          </AppText>
+          <View className="flex-1 gap-y-1">
+            <AppText className="text-2xl">
+              {t("day", { count: (getIndex() as number) + 1 })}
+            </AppText>
+            <AppText className="text-xl text-slate-600 dark:text-slate-400">
+              {item.name}
+            </AppText>
+          </View>
         </View>
       </ScaleDecorator>
     );
@@ -48,14 +60,12 @@ export const EditWorkoutOrderScreen = () => {
       <AppHeader title={t("reorder_workouts")} withBackButton />
       <DraggableFlatList
         keyExtractor={(item) => item.id.toString()}
-        data={workouts}
+        data={sortedWorkouts}
         renderItem={renderItem}
         pagingEnabled={true}
-        onDragEnd={({ from, to }) => {
-          //   setIsDragging(false);
-          //   dispatch(updateExerciseOrder({ from, to }));
+        onDragEnd={({ data }) => {
+          dispatch(overrideWorkoutOrders({ workouts: data }));
         }}
-        // activationDistance={isDragging ? 1 : 20}
         style={{ flex: 1 }}
         containerStyle={{ flexGrow: 1 }}
         contentContainerStyle={{
