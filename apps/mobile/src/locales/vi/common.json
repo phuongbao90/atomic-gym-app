@@ -98,5 +98,6 @@
   "warmup": "khởi động",
   "drop_set": "drop set",
   "until_failure": "đến khi thất bại",
-  "rest_time": "thời gian nghỉ"
+  "rest_time": "thời gian nghỉ",
+  "reorder_workouts": "Sắp xếp lại buổi tập"
 }

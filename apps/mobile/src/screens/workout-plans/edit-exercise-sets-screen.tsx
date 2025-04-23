@@ -13,10 +13,10 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { DeleteIcon } from "../../components/ui/expo-icon";
 import { removeExerciseSet } from "../../stores/slices/create-workout-plan-slice";
 
-export function CreateWorkoutPlanExerciseDetailScreen() {
-  const { workoutIndex, index } = useLocalSearchParams<{
-    workoutIndex: string;
-    index: string;
+export function EditExerciseSetsScreen() {
+  const { workoutId, workoutExerciseId } = useLocalSearchParams<{
+    workoutId: string;
+    workoutExerciseId: string;
   }>();
   const { t } = useTranslation();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -26,14 +26,15 @@ export function CreateWorkoutPlanExerciseDetailScreen() {
     (s) => s.createWorkoutPlan.workoutPlan?.workouts
   );
 
-  //   const workouts = useAppSelector(
-  //     (s) => s.createWorkoutPlan?.workoutPlan?.workouts
-  //   );
-  //   const defaultSets = useAppSelector((s) => s.app.defaultSets);
+  const workoutExercise = useMemo(() => {
+    return workouts
+      ?.find((workout) => workout.id === workoutId)
+      ?.workoutExercises?.find(
+        (workoutExercise) => workoutExercise.id === workoutExerciseId
+      );
+  }, [workouts, workoutId, workoutExerciseId]);
 
-  const exercise = useMemo(() => {
-    return workouts?.[Number(workoutIndex)]?.exercises?.[Number(index)];
-  }, [workouts, workoutIndex, index]);
+  console.log("workoutExercise ", workoutExercise);
 
   function onPressMore(setIndex: number) {
     const options = [t("delete"), t("cancel")];
@@ -65,8 +66,8 @@ export function CreateWorkoutPlanExerciseDetailScreen() {
         if (selectedIndex === 0) {
           dispatch(
             removeExerciseSet({
-              workoutIndex: Number(workoutIndex),
-              exerciseIndex: Number(index),
+              workoutId,
+              workoutExerciseId,
               setIndex,
             })
           );
@@ -76,22 +77,22 @@ export function CreateWorkoutPlanExerciseDetailScreen() {
   }
 
   return (
-    <AppScreen name="create-workout-plan-exercise-detail-screen">
+    <AppScreen name="edit-exercise-sets-screen">
       <AppHeader title={t("edit_exercise")} withBackButton />
 
       <AppText className="text-4xl font-bold p-6">
-        {exercise?.translations?.[0]?.name}
+        {workoutExercise?.exercise?.translations?.[0]?.name}
       </AppText>
 
       <View className="gap-y-10 pl-6 pr-3">
-        {exercise?.sets?.map((_, i) => (
+        {workoutExercise?.sets?.map((set, i) => (
           <Fragment key={i.toString()}>
             <SetItem
               index={i}
               onPressMore={() => onPressMore(i)}
-              workoutIndex={Number(workoutIndex)}
-              exerciseIndex={Number(index)}
-              exerciseSet={_}
+              workoutId={workoutId}
+              workoutExerciseId={workoutExerciseId}
+              exerciseSet={set}
             />
           </Fragment>
         ))}

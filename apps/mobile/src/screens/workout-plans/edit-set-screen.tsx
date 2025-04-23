@@ -4,7 +4,7 @@ import { AppScreen } from "../../components/ui/app-screen";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useAppDispatch, useAppSelector } from "../../stores/redux-store";
 import { useEffect, useMemo, useState } from "react";
-import { Text, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { capitalize } from "lodash";
 import { ListItem } from "../../components/ui/list-item";
 import { Radio } from "../../components/ui/radio";
@@ -21,17 +21,14 @@ import { updateExerciseSet } from "../../stores/slices/create-workout-plan-slice
 export const EditSetScreen = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { workoutIndex, exerciseIndex, setIndex } = useLocalSearchParams<{
-    workoutIndex: string;
-    exerciseIndex: string;
+  const { workoutId, workoutExerciseId, setIndex } = useLocalSearchParams<{
+    workoutId: string;
+    workoutExerciseId: string;
     setIndex: string;
   }>();
   const [showPicker, setShowPicker] = useState(false);
   const theme = useAppSelector((s) => s.app.theme);
 
-  const workoutIndexNumber = Number(workoutIndex);
-  const exerciseIndexNumber = Number(exerciseIndex);
-  const setIndexNumber = Number(setIndex);
   const dispatch = useAppDispatch();
   const [{ restTime, isWarmup, isDropSet, isUntilFailure }, setData] = useState(
     {
@@ -47,10 +44,13 @@ export const EditSetScreen = () => {
   );
 
   const editingSet = useMemo(() => {
-    return workoutPlan?.workouts?.[workoutIndexNumber]?.exercises?.[
-      exerciseIndexNumber
-    ]?.sets?.[setIndexNumber];
-  }, [workoutPlan, workoutIndexNumber, exerciseIndexNumber, setIndexNumber]);
+    return workoutPlan?.workouts
+      ?.find((workout) => workout.id === workoutId)
+      ?.workoutExercises?.find(
+        (workoutExercise) => workoutExercise.id === workoutExerciseId
+      )
+      ?.sets?.find((_, i) => i === Number(setIndex));
+  }, [workoutPlan, workoutId, workoutExerciseId, setIndex]);
 
   useEffect(() => {
     if (!editingSet) return;
@@ -65,9 +65,9 @@ export const EditSetScreen = () => {
   function handleUpdate() {
     dispatch(
       updateExerciseSet({
-        workoutIndex: workoutIndexNumber,
-        exerciseIndex: exerciseIndexNumber,
-        setIndex: setIndexNumber,
+        workoutId,
+        workoutExerciseId,
+        setIndex: Number(setIndex),
         set: {
           restTime,
           isWarmup,
@@ -95,9 +95,9 @@ export const EditSetScreen = () => {
           </TouchableOpacity>
         }
       />
-      <Text className="text-2xl font-bold p-6">
-        {capitalize(t("set"))} {setIndexNumber + 1}
-      </Text>
+      <AppText className="text-2xl font-bold p-6">
+        {capitalize(t("set"))} {Number(setIndex) + 1}
+      </AppText>
 
       <ListItem
         label={capitalize(t("warmup"))}

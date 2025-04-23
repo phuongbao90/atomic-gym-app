@@ -98,5 +98,6 @@
   "warmup": "Warmup",
   "drop_set": "Drop Set",
   "until_failure": "Until Failure",
-  "rest_time": "Rest Time"
+  "rest_time": "Rest Time",
+  "reorder_workouts": "Reorder Workouts"
 }

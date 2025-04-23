@@ -5,21 +5,21 @@ import { convertToHourMinuteSecond } from "../../../utils/convert-to-hour-minute
 import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
 import { appRoutes } from "../../../configs/routes";
-import { ExerciseSet } from "app";
 import { capitalize } from "lodash";
+import { CreateWorkoutPlanSliceType } from "../../../stores/slices/create-workout-plan-slice";
 
 export const SetItem = ({
   index,
-  workoutIndex,
-  exerciseIndex,
+  workoutId,
+  workoutExerciseId,
   onPressMore,
   exerciseSet,
 }: {
-  workoutIndex: number;
-  exerciseIndex: number;
+  workoutId: string;
+  workoutExerciseId: string;
   index: number;
   onPressMore: () => void;
-  exerciseSet: ExerciseSet;
+  exerciseSet: CreateWorkoutPlanSliceType["workouts"][number]["workoutExercises"][number]["sets"][number];
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -30,8 +30,8 @@ export const SetItem = ({
       onPress={() => {
         router.navigate(
           appRoutes.workoutPlans.editSet({
-            workoutIndex: workoutIndex,
-            exerciseIndex: exerciseIndex,
+            workoutId,
+            workoutExerciseId,
             setIndex: index,
           })
         );

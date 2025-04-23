@@ -28,35 +28,24 @@ import { colors, PRIMARY_COLOR } from "../../styles/themes";
 import { useDebounce } from "../../hooks/use-debounce";
 import { SelectMuscleGroupSheet } from "../../components/bottom-sheets/select-muscle-group";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { appRoutes } from "../../configs/routes";
+import { appRoutes, ExercisesScreenParams } from "../../configs/routes";
 import { router, useLocalSearchParams } from "expo-router";
 import { Env } from "../../configs/env";
 import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
 import { useAppDispatch, useAppSelector } from "../../stores/redux-store";
 import { Radio } from "../../components/ui/radio";
 import {
-  addExercisesToWorkout,
+  addWorkoutExercises,
   replaceExerciseInWorkout,
 } from "../../stores/slices/create-workout-plan-slice";
 
 export const ExercisesScreen = () => {
   const {
     allowSelect: _allowSelect,
-    activeWorkoutIndex: _activeWorkoutIndex,
-    replaceExerciseId: _replaceExerciseId,
-  } = useLocalSearchParams<{
-    allowSelect?: string;
-    activeWorkoutIndex?: string;
-    replaceExerciseId?: string;
-  }>();
+    workoutId,
+    replaceWorkoutExerciseId,
+  } = useLocalSearchParams<ExercisesScreenParams>();
   const allowSelect = _allowSelect === "true";
-  const activeWorkoutIndex = _activeWorkoutIndex
-    ? Number.parseInt(_activeWorkoutIndex)
-    : 0;
-
-  const replaceExerciseId = _replaceExerciseId
-    ? Number.parseInt(_replaceExerciseId)
-    : undefined;
 
   const dispatch = useAppDispatch();
 
@@ -101,13 +90,14 @@ export const ExercisesScreen = () => {
                     prev.filter((e) => e.id !== item.id)
                   );
                 } else {
-                  if (replaceExerciseId) {
+                  if (replaceWorkoutExerciseId) {
                     setSelectedExercises([item]);
                     dispatch(
                       replaceExerciseInWorkout({
-                        workoutIndex: activeWorkoutIndex,
-                        exerciseIndex: index,
+                        workoutId: workoutId as string,
+                        workoutExerciseId: replaceWorkoutExerciseId,
                         exercise: item,
+                        exerciseIndex: index,
                       })
                     );
                     delay(() => router.back(), 200);
@@ -134,8 +124,8 @@ export const ExercisesScreen = () => {
               onPress={() =>
                 debouncedPress(() => {
                   dispatch(
-                    addExercisesToWorkout({
-                      workoutIndex: activeWorkoutIndex,
+                    addWorkoutExercises({
+                      workoutId: workoutId as string,
                       exercises: selectedExercises,
                     })
                   );

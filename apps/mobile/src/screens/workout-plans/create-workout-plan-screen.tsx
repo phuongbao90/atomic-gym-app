@@ -34,12 +34,13 @@ import { AppButton } from "../../components/ui/app-button";
 import { useAppDispatch, useAppSelector } from "../../stores/redux-store";
 import {
   addWorkout,
+  CreateWorkoutPlanSliceType,
   duplicateWorkout,
-  removeExerciseFromWorkout,
+  overrideWorkoutExercises,
   removeWorkout,
+  removeWorkoutExercise,
   resetCreateWorkoutPlan,
   updateActiveWorkoutIndex,
-  updateExerciseOrder,
   updateWorkoutName,
   updateWorkoutPlanImage,
   updateWorkoutPlanName,
@@ -48,7 +49,6 @@ import { appRoutes } from "../../configs/routes";
 import {
   CreateWorkoutPlanSchema,
   Exercise,
-  ExerciseWithSet,
   tryCatch,
   useCreateWorkoutPlan,
 } from "app";
@@ -73,7 +73,7 @@ export const CreateWorkoutPlanScreen = () => {
   const { showActionSheetWithOptions } = useActionSheet();
   const theme = useAppSelector((state) => state.app.theme);
   const image = useAppSelector(
-    (state) => state.createWorkoutPlan.workoutPlan.image
+    (state) => state.createWorkoutPlan.workoutPlan.cover_image
   );
   const name = useAppSelector(
     (state) => state.createWorkoutPlan.workoutPlan.name
@@ -81,9 +81,15 @@ export const CreateWorkoutPlanScreen = () => {
   const workouts = useAppSelector(
     (state) => state.createWorkoutPlan.workoutPlan.workouts
   );
+  const sortedWorkouts = useMemo(() => {
+    return [...workouts].sort((a, b) => a.order - b.order);
+  }, [workouts]);
   const activeWorkoutIndex = useAppSelector(
     (state) => state.createWorkoutPlan.workoutPlan.activeWorkoutIndex
   );
+
+  console.log("workouts  ", workouts);
+  console.log("sortedWorkouts  ", sortedWorkouts);
 
   const [isFocused, setIsFocused] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -99,7 +105,7 @@ export const CreateWorkoutPlanScreen = () => {
   //   };
   // }, [dispatch]);
 
-  function onPressMore() {
+  function onPressMore(workoutId: string) {
     const options = [t("reorder"), t("duplicate"), t("delete"), t("cancel")];
 
     showActionSheetWithOptions(
@@ -108,6 +114,7 @@ export const CreateWorkoutPlanScreen = () => {
         cancelButtonIndex: options.length - 1,
         showSeparators: true,
         destructiveButtonIndex: 2,
+        disabledButtonIndices: [Number(workouts?.length) === 1 ? 0 : -1],
         icons: [
           <ReorderIcon key="reorder" size={20} />,
           <DuplicateIcon key="duplicate" size={20} />,
@@ -130,10 +137,13 @@ export const CreateWorkoutPlanScreen = () => {
       (selectedIndex) => {
         if (selectedIndex === 0) {
           // reorder
+          router.push(appRoutes.workoutPlans.editWorkoutOrder());
         }
         if (selectedIndex === 1) {
           // duplicate
-          dispatch(duplicateWorkout({ workoutIndex: activeWorkoutIndex }));
+          dispatch(
+            duplicateWorkout({ workoutId: workouts[activeWorkoutIndex].id })
+          );
           delay(() => setPage(workouts.length), 100);
         }
         if (selectedIndex === 2) {
@@ -141,7 +151,7 @@ export const CreateWorkoutPlanScreen = () => {
           openModal("ConfirmModal", {
             message: t("delete_workout_plan_message"),
             onConfirm: () => {
-              dispatch(removeWorkout({ workoutIndex: activeWorkoutIndex }));
+              dispatch(removeWorkout({ workoutId }));
             },
           });
         }
@@ -162,7 +172,7 @@ export const CreateWorkoutPlanScreen = () => {
       category: undefined,
       workouts: workouts.map((workout, index) => ({
         name: workout.name,
-        exercises: workout.exercises.map((exercise) => exercise.id),
+        workoutExercises: workout.workoutExercises,
         order: index,
       })),
     };
@@ -171,12 +181,12 @@ export const CreateWorkoutPlanScreen = () => {
       const errorMsgs = (result.error as ZodError).issues.map(
         (issue) => issue.message
       );
-      console.log(result.error);
+
       toast.error(errorMsgs.join("\n"));
       return;
     }
 
-    createWorkoutPlanMutation.mutate(body);
+    // createWorkoutPlanMutation.mutate(body);
   }
 
   return (
@@ -192,7 +202,7 @@ export const CreateWorkoutPlanScreen = () => {
             openModal("TakeOrSelectMediaModal", {
               onComplete: (media) => {
                 if (media) {
-                  dispatch(updateWorkoutPlanImage({ image: media }));
+                  dispatch(updateWorkoutPlanImage({ cover_image: media }));
                 }
               },
             });
@@ -231,9 +241,7 @@ export const CreateWorkoutPlanScreen = () => {
             onPress={() => {
               dispatch(
                 addWorkout({
-                  name: t("workout_name_count", {
-                    count: workouts?.length + 1,
-                  }),
+                  name: t("workout_name"),
                 })
               );
               delay(() => setPage(workouts.length), 100);
@@ -259,18 +267,21 @@ export const CreateWorkoutPlanScreen = () => {
           );
         }}
       >
-        {workouts.map((workout, workoutIndex) => (
+        {sortedWorkouts.map((workout, workoutIndex) => (
           <DraggableFlatList
-            key={workout.id}
-            keyExtractor={(item) => item.id.toString()}
-            data={workout.exercises || []}
-            renderItem={({ item, getIndex, drag }) => {
+            // key={workout.id}
+            key={workoutIndex.toString()}
+            keyExtractor={(item) => item.id?.toString()}
+            // data={workout.workoutExercises}
+            data={[...workout.workoutExercises].sort(
+              (a, b) => a.order - b.order
+            )}
+            renderItem={({ item, drag }) => {
               return (
                 <ScaleDecorator>
                   <ExerciseItem
                     item={item}
-                    index={getIndex() as number}
-                    workoutIndex={workoutIndex}
+                    workoutId={workout.id}
                     drag={drag}
                   />
                 </ScaleDecorator>
@@ -280,9 +291,14 @@ export const CreateWorkoutPlanScreen = () => {
             onDragBegin={() => {
               setIsDragging(true);
             }}
-            onDragEnd={({ from, to }) => {
+            onDragEnd={({ data }) => {
               setIsDragging(false);
-              dispatch(updateExerciseOrder({ from, to }));
+              dispatch(
+                overrideWorkoutExercises({
+                  workoutId: workout.id,
+                  workoutExercises: data,
+                })
+              );
             }}
             activationDistance={isDragging ? 1 : 20}
             style={{ flex: 1 }}
@@ -307,14 +323,16 @@ export const CreateWorkoutPlanScreen = () => {
                     placeholderTextColor={"white"}
                     value={workout?.name || ""}
                     onChangeText={(text) =>
-                      dispatch(updateWorkoutName({ workoutIndex, name: text }))
+                      dispatch(
+                        updateWorkoutName({ workoutId: workout.id, name: text })
+                      )
                     }
                   />
                 </View>
                 <TouchableOpacity
                   className="ml-auto"
                   hitSlop={10}
-                  onPress={onPressMore}
+                  onPress={() => onPressMore(workout.id)}
                   testID={`workout-item-more-button-${workoutIndex}`}
                 >
                   <VerticalDotsIcon color="white" />
@@ -336,8 +354,8 @@ export const CreateWorkoutPlanScreen = () => {
                     debouncedPress(() => {
                       router.push(
                         appRoutes.exercises.list({
-                          allowSelect: true,
-                          activeWorkoutIndex: workoutIndex,
+                          allowSelect: "true",
+                          workoutId: workout.id,
                         })
                       );
                     });
@@ -378,13 +396,11 @@ const PagerDots = ({
 
 const ExerciseItem = ({
   item,
-  index,
-  workoutIndex,
+  workoutId,
   drag,
 }: {
-  item: ExerciseWithSet;
-  index: number;
-  workoutIndex: number;
+  item: CreateWorkoutPlanSliceType["workouts"][number]["workoutExercises"][number];
+  workoutId: string;
   drag: (gesture?: GestureEvent<any>) => void;
 }) => {
   const { t } = useTranslation();
@@ -430,18 +446,18 @@ const ExerciseItem = ({
           // replace
           router.push(
             appRoutes.exercises.list({
-              allowSelect: true,
-              activeWorkoutIndex: workoutIndex,
-              replaceExerciseId: item.id,
+              allowSelect: "true",
+              workoutId,
+              replaceWorkoutExerciseId: item.id,
             })
           );
         }
         if (selectedIndex === 1) {
           // delete
           dispatch(
-            removeExerciseFromWorkout({
-              workoutIndex: workoutIndex,
-              exerciseId: item.id,
+            removeWorkoutExercise({
+              workoutId: workoutId,
+              workoutExerciseId: item.id,
             })
           );
         }
@@ -452,12 +468,12 @@ const ExerciseItem = ({
   return (
     <Pressable
       className="flex-row items-center gap-x-2 py-4 pl-1 pr-2 border-b border-gray-500"
-      testID={`exercise-item-${workoutIndex}-${index}`}
+      testID={`exercise-item-${workoutId}-${item.id}`}
       onPress={() => {
         router.push(
-          appRoutes.workoutPlans.exerciseDetail({
-            workoutIndex,
-            index,
+          appRoutes.workoutPlans.editExerciseSets({
+            workoutId,
+            workoutExerciseId: item.id,
           })
         );
       }}
@@ -471,7 +487,7 @@ const ExerciseItem = ({
       />
       <View className="flex-1 gap-y-1">
         <AppText className="text-white text-lg font-semibold">
-          {item.translations?.[0]?.name}
+          {item.exercise.translations?.[0]?.name}
         </AppText>
         <AppText className="text-gray-300">
           {t("sets_count", { count: item.sets.length })}
@@ -485,7 +501,7 @@ const ExerciseItem = ({
           })
         }
         hitSlop={10}
-        testID={`exercise-item-more-button-${workoutIndex}-${index}`}
+        testID={`exercise-item-more-button-${workoutId}-${item.id}`}
       >
         <VerticalDotsIcon color="white" />
       </TouchableOpacity>

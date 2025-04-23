@@ -169,7 +169,7 @@ model WorkoutPlanTranslation {
 }
 
 model Workout {
-  id               Int                  @id @default(autoincrement())
+  id               String               @id @default(uuid())
   order            Int?
   createdAt        DateTime             @default(now()) @db.Timestamptz(6)
   updatedAt        DateTime             @updatedAt @db.Timestamptz(6)
@@ -180,7 +180,7 @@ model Workout {
 }
 
 model WorkoutTranslation {
-  workoutId      Int // foreign key to Workout
+  workoutId      String // foreign key to Workout
   language       Language // language code (e.g., 'vi', 'en')
   name           String // localized name
   normalizedName String? // localized name
@@ -193,19 +193,19 @@ model WorkoutTranslation {
 
 // Set is related to exercise of workout , not exercise alone
 model ExerciseSet {
-  id                Int             @id @default(autoincrement())
+  id                String          @id @default(uuid())
   restTime          Int
   isWarmup          Boolean         @default(false)
   isDropSet         Boolean         @default(false)
   isUntilFailure    Boolean         @default(false)
   WorkoutExercise   WorkoutExercise @relation(fields: [workoutExerciseId], references: [id], onDelete: Cascade)
-  workoutExerciseId Int
+  workoutExerciseId String
 }
 
 model WorkoutExercise {
-  id         Int           @id @default(autoincrement())
+  id         String        @id @default(uuid())
   workout    Workout       @relation(fields: [workoutId], references: [id], onDelete: Cascade)
-  workoutId  Int
+  workoutId  String
   exercise   Exercise      @relation(fields: [exerciseId], references: [id])
   exerciseId Int
   order      Int // Position in workout
