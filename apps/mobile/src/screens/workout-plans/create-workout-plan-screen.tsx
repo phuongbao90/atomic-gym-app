@@ -1,4 +1,5 @@
 import {
+  FlatList,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -38,6 +39,7 @@ import {
   removeWorkout,
   resetCreateWorkoutPlan,
   updateActiveWorkoutIndex,
+  updateExerciseOrder,
   updateWorkoutName,
   updateWorkoutPlanImage,
   updateWorkoutPlanName,
@@ -55,6 +57,15 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { colors } from "../../styles/themes";
 import { ZodError } from "zod";
 import { toast } from "sonner-native";
+import DraggableFlatList, {
+  ScaleDecorator,
+} from "react-native-draggable-flatlist";
+import { GestureEvent } from "react-native-gesture-handler";
+// import ReorderableList, {
+//   ReorderableListReorderEvent,
+//   reorderItems,
+//   useReorderableDrag,
+// } from "react-native-reorderable-list";
 
 export const CreateWorkoutPlanScreen = () => {
   const { t } = useTranslation();
@@ -75,6 +86,7 @@ export const CreateWorkoutPlanScreen = () => {
   );
 
   const [isFocused, setIsFocused] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const { ref, setPage } = usePagerView(1);
   const { openModal } = useModal();
   const router = useRouter();
@@ -180,7 +192,7 @@ export const CreateWorkoutPlanScreen = () => {
             openModal("TakeOrSelectMediaModal", {
               onComplete: (media) => {
                 if (media) {
-                  dispatch(updateWorkoutPlanImage(media));
+                  dispatch(updateWorkoutPlanImage({ image: media }));
                 }
               },
             });
@@ -200,13 +212,16 @@ export const CreateWorkoutPlanScreen = () => {
           </AppText>
           <TextInput
             placeholder={t("workout_plan_name")}
-            className={cn("text-xl text-dark dark:text-white", {
+            className={cn("text-xl text-white dark:text-white", {
               "border-b-2 border-primary": isFocused,
             })}
+            placeholderTextColor={theme === "dark" ? "white" : "black"}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             value={name}
-            onChangeText={(text) => dispatch(updateWorkoutPlanName(text))}
+            onChangeText={(text) =>
+              dispatch(updateWorkoutPlanName({ name: text }))
+            }
           />
         </View>
       </View>
@@ -226,7 +241,7 @@ export const CreateWorkoutPlanScreen = () => {
             className="px-4 bg-primary w-16 h-16 rounded-md items-center justify-center z-50"
             testID="add-workout-button"
           >
-            <PlusIcon size={30} />
+            <PlusIcon size={30} color="black" />
           </TouchableOpacity>
         </View>
       </View>
@@ -239,88 +254,99 @@ export const CreateWorkoutPlanScreen = () => {
         style={styles.pagerView}
         initialPage={0}
         onPageSelected={(e) => {
-          dispatch(updateActiveWorkoutIndex(e.nativeEvent.position));
+          dispatch(
+            updateActiveWorkoutIndex({ workoutIndex: e.nativeEvent.position })
+          );
         }}
       >
-        {/*  biome-ignore lint/correctness/useExhaustiveDependencies(dispatch): */}
-        {/*  biome-ignore lint/correctness/useExhaustiveDependencies(router.push): */}
-        {/*  biome-ignore lint/correctness/useExhaustiveDependencies(onPressMore): */}
-        {useMemo(
-          () =>
-            workouts.map((workout, index) => {
+        {workouts.map((workout, workoutIndex) => (
+          <DraggableFlatList
+            key={workout.id}
+            keyExtractor={(item) => item.id.toString()}
+            data={workout.exercises || []}
+            renderItem={({ item, getIndex, drag }) => {
               return (
-                <ScrollView
-                  testID={`pager-view-content-${index}`}
-                  key={(index + 1).toString()}
-                  style={{
-                    flex: 1,
-                    backgroundColor:
-                      theme === "dark"
-                        ? colors.pageBackground.dark
-                        : colors.pageBackground.light,
-                    padding: 8,
-                  }}
-                  contentContainerStyle={{
-                    flexGrow: 1,
-                  }}
-                >
-                  <View className="flex-1 bg-slate-600 rounded-xl overflow-hidden">
-                    <View className="flex-row px-2 py-6 items-center bg-slate-500">
-                      <AppText className="bg-primary text-black dark:text-black rounded-2xl px-3 py-2">
-                        {t("day", { count: index + 1 })}
-                      </AppText>
-                      <View className="ml-4">
-                        <TextInput
-                          placeholder={t("workout_name")}
-                          className="text-xl text-white"
-                          placeholderTextColor={"white"}
-                          value={workout?.name || ""}
-                          onChangeText={(text) =>
-                            dispatch(updateWorkoutName({ index, name: text }))
-                          }
-                        />
-                      </View>
-                      <TouchableOpacity
-                        className="ml-auto"
-                        hitSlop={10}
-                        onPress={onPressMore}
-                        testID={`workout-item-more-button-${index}`}
-                      >
-                        <VerticalDotsIcon color="white" />
-                      </TouchableOpacity>
-                    </View>
-                    {workout?.exercises?.map((exercise, exerciseIndex) => (
-                      <ExerciseItem
-                        key={exercise.id}
-                        item={exercise}
-                        index={exerciseIndex}
-                        workoutIndex={index}
-                      />
-                    ))}
-                    <AppButton
-                      testID={`add-exercise-button-${index}`}
-                      title={t("add_exercise")}
-                      containerClassName="mt-auto"
-                      radius="none"
-                      color="primary"
-                      size="lg"
-                      onPress={() => {
-                        debouncedPress(() => {
-                          router.push(
-                            appRoutes.exercises.list({
-                              allowSelect: true,
-                              activeWorkoutIndex: index,
-                            })
-                          );
-                        });
-                      }}
-                    />
-                  </View>
-                </ScrollView>
+                <ScaleDecorator>
+                  <ExerciseItem
+                    item={item}
+                    index={getIndex() as number}
+                    workoutIndex={workoutIndex}
+                    drag={drag}
+                  />
+                </ScaleDecorator>
               );
-            }),
-          [workouts, theme, t]
-        )}
+            }}
+            pagingEnabled={true}
+            onDragBegin={() => {
+              setIsDragging(true);
+            }}
+            onDragEnd={({ from, to }) => {
+              setIsDragging(false);
+              dispatch(updateExerciseOrder({ from, to }));
+            }}
+            activationDistance={isDragging ? 1 : 20}
+            style={{ flex: 1 }}
+            containerStyle={{ flexGrow: 1 }}
+            contentContainerStyle={{
+              flexGrow: 1,
+              padding: 8,
+              backgroundColor:
+                theme === "dark"
+                  ? colors.pageBackground.dark
+                  : colors.pageBackground.light,
+            }}
+            ListHeaderComponent={() => (
+              <View className="flex-row px-2 py-6 items-center bg-slate-500">
+                <AppText className="bg-primary text-black dark:text-black rounded-2xl px-3 py-2">
+                  {t("day", { count: workoutIndex + 1 })}
+                </AppText>
+                <View className="ml-4">
+                  <TextInput
+                    placeholder={t("workout_name")}
+                    className="text-xl text-white"
+                    placeholderTextColor={"white"}
+                    value={workout?.name || ""}
+                    onChangeText={(text) =>
+                      dispatch(updateWorkoutName({ workoutIndex, name: text }))
+                    }
+                  />
+                </View>
+                <TouchableOpacity
+                  className="ml-auto"
+                  hitSlop={10}
+                  onPress={onPressMore}
+                  testID={`workout-item-more-button-${workoutIndex}`}
+                >
+                  <VerticalDotsIcon color="white" />
+                </TouchableOpacity>
+              </View>
+            )}
+            ListFooterComponentStyle={{
+              flexGrow: 1,
+            }}
+            ListFooterComponent={() => (
+              <View className="flex-1 justify-end">
+                <AppButton
+                  testID={`add-exercise-button-${workoutIndex}`}
+                  title={t("add_exercise")}
+                  radius="none"
+                  color="primary"
+                  size="lg"
+                  onPress={() => {
+                    debouncedPress(() => {
+                      router.push(
+                        appRoutes.exercises.list({
+                          allowSelect: true,
+                          activeWorkoutIndex: workoutIndex,
+                        })
+                      );
+                    });
+                  }}
+                />
+              </View>
+            )}
+          />
+        ))}
       </PagerView>
     </AppScreen>
   );
@@ -354,10 +380,12 @@ const ExerciseItem = ({
   item,
   index,
   workoutIndex,
+  drag,
 }: {
   item: ExerciseWithSet;
   index: number;
   workoutIndex: number;
+  drag: (gesture?: GestureEvent<any>) => void;
 }) => {
   const { t } = useTranslation();
   const debouncedPress = usePreventRepeatPress();
@@ -420,6 +448,7 @@ const ExerciseItem = ({
       }
     );
   }
+
   return (
     <Pressable
       className="flex-row items-center gap-x-2 py-4 pl-1 pr-2 border-b border-gray-500"
@@ -433,7 +462,13 @@ const ExerciseItem = ({
         );
       }}
     >
-      <DragIcon size={28} color="white" />
+      <DragIcon
+        size={28}
+        color="white"
+        onLongPress={() => {
+          drag();
+        }}
+      />
       <View className="flex-1 gap-y-1">
         <AppText className="text-white text-lg font-semibold">
           {item.translations?.[0]?.name}

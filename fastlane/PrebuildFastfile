@@ -1,0 +1,35 @@
+default_platform(:ios)
+
+platform :ios do
+  lane :prebuild do |options|
+    prebuild_app(options)
+  end
+end
+
+platform :android do
+  lane :prebuild do |options|
+    prebuild_app(options)
+  end
+end
+
+desc "Prebuild the app for specified platform"
+lane :prebuild do |options|
+  app_path = options[:app_path] || "../apps/mobile"
+  
+  # Prompt for platform selection
+  platform = UI.select("Select platform to prebuild:", ["android", "ios", "all"])
+  
+  case platform
+  when "android"
+    sh("cd #{app_path} && yarn prebuild --platform android")
+    UI.success("Android prebuild completed!")
+  when "ios"
+    sh("cd #{app_path} && yarn prebuild --platform ios")
+    UI.success("iOS prebuild completed!")
+  when "all"
+    sh("cd #{app_path} && yarn prebuild")
+    UI.success("Android and iOS prebuilds completed!")
+  else
+    UI.error("Invalid platform selected")
+  end
+end

@@ -9,14 +9,14 @@
     "ignoreUnknown": false,
     "ignore": [
       "node_modules",
-      "dist",
-      "build",
-      "ios",
-      "android",
-      ".turbo",
       ".expo",
+      ".turbo",
+      "android",
+      "ios",
+      "assets",
       "coverage",
-      "assets"
+      "dist",
+      "build"
     ]
   },
   "formatter": {

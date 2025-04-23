@@ -106,8 +106,8 @@ export const ExercisesScreen = () => {
                     dispatch(
                       replaceExerciseInWorkout({
                         workoutIndex: activeWorkoutIndex,
+                        exerciseIndex: index,
                         exercise: item,
-                        replaceExerciseId,
                       })
                     );
                     delay(() => router.back(), 200);

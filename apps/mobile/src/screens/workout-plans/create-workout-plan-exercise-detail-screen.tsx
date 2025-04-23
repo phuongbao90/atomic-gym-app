@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { AppHeader } from "../../components/ui/app-header";
 import { AppScreen } from "../../components/ui/app-screen";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useAppDispatch, useAppSelector } from "../../stores/redux-store";
 import { Fragment, useMemo } from "react";
 import { AppText } from "../../components/ui/app-text";

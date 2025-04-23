@@ -3,6 +3,7 @@ import { Exercise, ExerciseWithSet, ExerciseSet } from "app";
 import { ImagePickerAsset } from "expo-image-picker";
 import { DEFAULT_WORKOUT_PLAN_IMAGE } from "../../constants/constants";
 import { RootState } from "../redux-store";
+import uuid from "react-native-uuid";
 
 const initialState = {
   workoutPlan: {
@@ -13,6 +14,7 @@ const initialState = {
     activeWorkoutIndex: 0,
     workouts: [
       {
+        id: uuid.v4(),
         name: "Buổi tập 1",
         order: 0,
         exercises: [
@@ -61,6 +63,7 @@ const initialState = {
         ],
       },
     ] as {
+      id: string;
       name: string;
       order: number;
       exercises: ExerciseWithSet[];
@@ -72,73 +75,61 @@ export const createWorkoutPlanSlice = createSlice({
   name: "createWorkoutPlan",
   initialState: initialState,
   reducers: {
-    updateWorkoutPlanName: (state, action) => {
-      state.workoutPlan.name = action.payload;
+    updateWorkoutPlanName: (
+      state,
+      action: PayloadAction<{
+        name: string;
+      }>
+    ) => {
+      state.workoutPlan.name = action.payload.name;
     },
-    updateWorkoutPlanImage: (state, action) => {
-      state.workoutPlan.image = action.payload;
+    updateWorkoutPlanImage: (
+      state,
+      action: PayloadAction<{
+        image: ImagePickerAsset;
+      }>
+    ) => {
+      state.workoutPlan.image = action.payload.image;
     },
     addWorkout: (state, action: PayloadAction<{ name: string }>) => {
       state.workoutPlan.workouts.push({
+        id: uuid.v4(),
         name: action.payload.name,
         order: state.workoutPlan.workouts.length,
         exercises: [],
       });
     },
-    removeWorkout: (state, action) => {
+    removeWorkout: (
+      state,
+      action: PayloadAction<{
+        workoutIndex: number;
+      }>
+    ) => {
       const { workoutIndex } = action.payload;
       state.workoutPlan.workouts.splice(workoutIndex, 1);
     },
-    updateWorkoutName: (state, action) => {
-      const { index, name } = action.payload;
-      state.workoutPlan.workouts[index].name = name;
+    updateWorkoutName: (
+      state,
+      action: PayloadAction<{
+        workoutIndex: number;
+        name: string;
+      }>
+    ) => {
+      const { workoutIndex, name } = action.payload;
+      state.workoutPlan.workouts[workoutIndex].name = name;
     },
-    updateActiveWorkoutIndex: (state, action) => {
-      state.workoutPlan.activeWorkoutIndex = action.payload;
+    updateActiveWorkoutIndex: (
+      state,
+      action: PayloadAction<{
+        workoutIndex: number;
+      }>
+    ) => {
+      state.workoutPlan.activeWorkoutIndex = action.payload.workoutIndex;
     },
     resetCreateWorkoutPlan: (state) => {
       state.workoutPlan = initialState.workoutPlan;
     },
-    // addExercisesToWorkout: (
-    //   state,
-    //   action: PayloadAction<{
-    //     workoutIndex: number;
-    //     exercises: Exercise[];
-    //   }>
-    // ) => {
-    //   const { workoutIndex, exercises } = action.payload;
-    //   const defaultSets = useAppSelector((s) => s.app.defaultSets);
-    //   const exercisesWithDefaultSets = exercises.map((exercise) => ({
-    //     ...exercise,
-    //     sets: Array(defaultSets)
-    //       .fill(null)
-    //       .map((_, i) => ({
-    //         id: i,
-    //         restTime: 0,
-    //         isWarmup: false,
-    //         isDropSet: false,
-    //         isUntilFailure: false,
-    //       })),
-    //   }));
-    //   state.workoutPlan.workouts[workoutIndex].exercises.push(
-    //     ...exercisesWithDefaultSets
-    //   );
-    // },
-    replaceExerciseInWorkout: (
-      state,
-      action: PayloadAction<{
-        workoutIndex: number;
-        exercise: ExerciseWithSet;
-        replaceExerciseId: number; // tobe replaced by exercise
-      }>
-    ) => {
-      const { workoutIndex, exercise, replaceExerciseId } = action.payload;
 
-      state.workoutPlan.workouts[workoutIndex].exercises =
-        state.workoutPlan.workouts[workoutIndex].exercises.map((e) =>
-          e.id === replaceExerciseId ? exercise : e
-        );
-    },
     removeExerciseFromWorkout: (
       state,
       action: PayloadAction<{
@@ -152,7 +143,12 @@ export const createWorkoutPlanSlice = createSlice({
           (exercise) => exercise.id !== exerciseId
         );
     },
-    duplicateWorkout: (state, action) => {
+    duplicateWorkout: (
+      state,
+      action: PayloadAction<{
+        workoutIndex: number;
+      }>
+    ) => {
       const { workoutIndex } = action.payload;
       const workout = state.workoutPlan.workouts[workoutIndex];
       state.workoutPlan.workouts.push(workout);
@@ -184,8 +180,50 @@ export const createWorkoutPlanSlice = createSlice({
         setIndex
       ] = set;
     },
+    updateExerciseOrder: (
+      state,
+      action: PayloadAction<{
+        from: number;
+        to: number;
+      }>
+    ) => {
+      const { from, to } = action.payload;
+      const workoutIndex = state.workoutPlan.activeWorkoutIndex;
+
+      const movedExercise =
+        state.workoutPlan.workouts[workoutIndex].exercises[from];
+      state.workoutPlan.workouts[workoutIndex].exercises.splice(from, 1);
+      state.workoutPlan.workouts[workoutIndex].exercises.splice(
+        to,
+        0,
+        movedExercise
+      );
+    },
   },
   extraReducers: (builder) => {
+    builder.addCase(replaceExerciseInWorkout.fulfilled, (state, action) => {
+      const {
+        workoutIndex,
+        exercise,
+        defaultRestTime,
+        defaultSets,
+        exerciseIndex,
+      } = action.payload;
+      const exerciseWithSets = {
+        ...exercise,
+        sets: Array(defaultSets)
+          .fill(null)
+          .map((_, i) => ({
+            id: i,
+            restTime: defaultRestTime,
+            isWarmup: false,
+            isDropSet: false,
+            isUntilFailure: false,
+          })),
+      } as ExerciseWithSet;
+      state.workoutPlan.workouts[workoutIndex].exercises[exerciseIndex] =
+        exerciseWithSets;
+    });
     builder.addCase(
       addExercisesToWorkout.fulfilled,
       (
@@ -241,6 +279,30 @@ export const addExercisesToWorkout = createAsyncThunk(
   }
 );
 
+export const replaceExerciseInWorkout = createAsyncThunk(
+  "createWorkoutPlan/replaceExerciseInWorkout",
+  async (
+    payload: {
+      workoutIndex: number;
+      exercise: Exercise;
+      exerciseIndex: number;
+    },
+    { getState }
+  ) => {
+    const state = getState() as RootState;
+    const defaultSets = state.app.defaultSets;
+    const defaultRestTime = state.app.defaultRestTime;
+
+    return {
+      defaultSets,
+      defaultRestTime,
+      workoutIndex: payload.workoutIndex,
+      exercise: payload.exercise,
+      exerciseIndex: payload.exerciseIndex,
+    };
+  }
+);
+
 export const {
   addWorkout,
   removeWorkout,
@@ -250,10 +312,10 @@ export const {
   updateActiveWorkoutIndex,
   resetCreateWorkoutPlan,
   removeExerciseFromWorkout,
-  replaceExerciseInWorkout,
   duplicateWorkout,
   removeExerciseSet,
   updateExerciseSet,
+  updateExerciseOrder,
 } = createWorkoutPlanSlice.actions;
 
 export const createWorkoutPlanReducer = createWorkoutPlanSlice.reducer;

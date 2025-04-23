@@ -50,3 +50,9 @@ ios/
 
 # Web
 .nuxt/
+
+
+# Fastlane
+fastlane/report.xml
+fastlane/report.xml.zip
+fastlane/build

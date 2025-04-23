@@ -4717,7 +4717,7 @@ base-64@0.1.0:
   resolved "https://registry.yarnpkg.com/base-64/-/base-64-0.1.0.tgz#780a99c84e7d600260361511c4877613bf24f6bb"
   integrity sha512-Y5gU45svrR5tI2Vt/X9GPd3L0HNIKzGu202EjxrXMpuc2V2CiKgemAbUUsqYmZJvPtCXoUKjNZwBJzsNScUbXA==
 
-base64-js@^1.2.3, base64-js@^1.3.1, base64-js@^1.5.1:
+base64-js@^1.2.3, base64-js@^1.3.0, base64-js@^1.3.1, base64-js@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
@@ -6406,6 +6406,13 @@ expo-constants@~17.0.5, expo-constants@~17.0.8:
   dependencies:
     "@expo/config" "~10.0.11"
     "@expo/env" "~0.4.2"
+
+expo-crypto@^14.0.2:
+  version "14.0.2"
+  resolved "https://registry.yarnpkg.com/expo-crypto/-/expo-crypto-14.0.2.tgz#5f5d83c849164229f7a3e6a341887142756d517e"
+  integrity sha512-WRc9PBpJraJN29VD5Ef7nCecxJmZNyRKcGkNiDQC1nhY5agppzwhqh7zEzNFarE/GqDgSiaDHS8yd5EgFhP9AQ==
+  dependencies:
+    base64-js "^1.3.0"
 
 expo-dev-client@~5.0.20:
   version "5.0.20"
@@ -10865,6 +10872,11 @@ react-native-render-html@^6.3.4:
     ramda "^0.27.2"
     stringify-entities "^3.1.0"
     urijs "^1.19.6"
+
+react-native-reorderable-list@^0.13.1:
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/react-native-reorderable-list/-/react-native-reorderable-list-0.13.1.tgz#770e253403323e70b3cd49947ea4afb6422cbde7"
+  integrity sha512-7JtsopAOSUgAmCBHFpH+tvbAwKNoNgqYTf3n9q/6cXqm08JSoaYRxUTEjXq8AdUmtUiq6kX1weWAL+7WqxQKwQ==
 
 react-native-restart@^0.0.27:
   version "0.0.27"
