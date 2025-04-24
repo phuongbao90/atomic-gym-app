@@ -11,19 +11,22 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { WorkoutPlanService } from "./workout-plan.service";
-import { CreateWorkoutPlanDto } from "./dto/create-workout-plan.dto";
+import {
+  CreateWorkoutPlanDto,
+  UpdateWorkoutPlanDto,
+} from "./dto/create-workout-plan.dto";
 import { Request } from "express";
 import { WorkoutPlanQueryDto } from "./dto/workout-plan-query.dto";
 import { Language } from "@prisma/client";
 import { GetLanguage } from "../common/decorators/get-language.decorator";
-// import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
+import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
 
 @Controller("workout-plans")
 export class WorkoutPlanController {
   constructor(private readonly workoutPlanService: WorkoutPlanService) {}
 
   @Post()
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   create(
     @Body() createWorkoutPlanDto: CreateWorkoutPlanDto,
     @Req() request: Request,
@@ -51,15 +54,19 @@ export class WorkoutPlanController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string, @GetLanguage() language: Language) {
-    return this.workoutPlanService.getWorkoutPlanById(id, language);
+  findOne(
+    @Param("id") id: string,
+    @GetLanguage() language: Language,
+    @Req() request: Request
+  ) {
+    return this.workoutPlanService.getWorkoutPlanById(id, language, request);
   }
 
   @Put(":id")
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   update(
     @Param("id") id: string,
-    @Body() updateWorkoutPlanDto: Partial<CreateWorkoutPlanDto>,
+    @Body() updateWorkoutPlanDto: UpdateWorkoutPlanDto,
     @Req() request: Request,
     @GetLanguage() language: Language
   ) {
@@ -72,7 +79,7 @@ export class WorkoutPlanController {
   }
 
   @Delete(":id")
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   remove(@Param("id") id: string, @Req() request: Request) {
     return this.workoutPlanService.deleteWorkoutPlanById(id, request);
   }

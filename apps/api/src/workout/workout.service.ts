@@ -18,7 +18,7 @@ export class WorkoutService {
     request: Request,
     language: Language
   ) {
-    const user: JwtUser = request[REQUEST_USER_KEY];
+    const user = request[REQUEST_USER_KEY] as JwtUser | undefined;
 
     const workoutPlanId = body.workoutPlanId;
 
@@ -111,6 +111,8 @@ export class WorkoutService {
                 },
               },
             },
+
+            sets: true,
           },
         },
         translations: {

@@ -6,7 +6,7 @@ import {
 } from "react-native";
 import { useTranslation } from "react-i18next";
 import { AppScreen } from "../../components/ui/app-screen";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
 import { View } from "react-native";
 import {
@@ -34,6 +34,7 @@ import {
   addWorkout,
   CreateWorkoutPlanSliceType,
   duplicateWorkout,
+  initWorkoutPlan,
   overrideWorkoutExercises,
   removeWorkout,
   removeWorkoutExercise,
@@ -44,17 +45,28 @@ import {
   updateWorkoutPlanName,
 } from "../../stores/slices/create-workout-plan-slice";
 import { appRoutes } from "../../configs/routes";
-import { CreateWorkoutPlanSchema, tryCatch, useCreateWorkoutPlan } from "app";
+import {
+  CreateWorkoutPlanSchema,
+  Exercise,
+  queryClient,
+  tryCatch,
+  UpdateWorkoutPlanSchema,
+  useCreateWorkoutPlan,
+  useGetWorkoutPlan,
+  useUpdateWorkoutPlan,
+} from "app";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { colors } from "../../styles/themes";
-import { ZodError } from "zod";
+import { z, ZodError } from "zod";
 import { toast } from "sonner-native";
 import DraggableFlatList, {
   ScaleDecorator,
 } from "react-native-draggable-flatlist";
 import { GestureEvent } from "react-native-gesture-handler";
 import { useDispatch } from "react-redux";
+import { ImagePickerAsset } from "expo-image-picker";
+import { workoutPlanKeys } from "app/src/query/workout-plans/workout-plans.keys";
 // import ReorderableList, {
 //   ReorderableListReorderEvent,
 //   reorderItems,
@@ -62,6 +74,40 @@ import { useDispatch } from "react-redux";
 // } from "react-native-reorderable-list";
 
 export const CreateWorkoutPlanScreen = () => {
+  const { workoutPlanId } = useLocalSearchParams<{ workoutPlanId?: string }>();
+
+  const { data: editingWorkoutPlan } = useGetWorkoutPlan(workoutPlanId);
+
+  useEffect(() => {
+    if (!editingWorkoutPlan) return;
+    dispatch(
+      initWorkoutPlan({
+        workoutPlan: {
+          name: editingWorkoutPlan?.translations?.[0]?.name || "",
+          cover_image: {
+            uri: editingWorkoutPlan?.cover_image || "",
+          } as ImagePickerAsset,
+          activeWorkoutIndex: 0,
+
+          workouts:
+            editingWorkoutPlan.workouts?.map((workout) => ({
+              id: workout.id,
+              name: workout.translations?.[0]?.name || "",
+              order: workout.order || 0,
+
+              workoutExercises:
+                workout.workoutExercises?.map((workoutExercise) => ({
+                  id: workoutExercise.id,
+                  exercise: workoutExercise.exercise as Exercise,
+                  order: workoutExercise.order || 0,
+                  sets: workoutExercise.sets || [],
+                })) || [],
+            })) || [],
+        },
+      })
+    );
+  }, [editingWorkoutPlan]);
+
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -88,13 +134,14 @@ export const CreateWorkoutPlanScreen = () => {
   const { openModal } = useModal();
   const router = useRouter();
   const createWorkoutPlanMutation = useCreateWorkoutPlan();
+  const updateWorkoutPlanMutation = useUpdateWorkoutPlan();
   const debouncedPress = usePreventRepeatPress();
 
-  // useEffect(() => {
-  //   return () => {
-  //     dispatch(resetCreateWorkoutPlan());
-  //   };
-  // }, [dispatch]);
+  useEffect(() => {
+    return () => {
+      dispatch(resetCreateWorkoutPlan());
+    };
+  }, [dispatch]);
 
   function onPressMore(workoutId: string) {
     const options = [t("reorder"), t("duplicate"), t("delete"), t("cancel")];
@@ -151,6 +198,54 @@ export const CreateWorkoutPlanScreen = () => {
   }
 
   function handleSubmit() {
+    // const result = tryCatch(() => CreateWorkoutPlanSchema.parse(body));
+    // if (result.error) {
+    //   const errorMsgs = (result.error as ZodError).issues.map(
+    //     (issue) => issue.message
+    //   );
+
+    //   toast.error(errorMsgs.join("\n"));
+    //   return;
+    // }
+
+    if (editingWorkoutPlan) {
+      const updateBody = {
+        id: editingWorkoutPlan.id,
+        name,
+        cover_image: image?.uri || "",
+        description: undefined,
+        level: editingWorkoutPlan.level || undefined,
+        isPublic: editingWorkoutPlan.isPublic || false,
+        isPremium: editingWorkoutPlan.isPremium || false,
+        isFeatured: editingWorkoutPlan.isFeatured || false,
+        isSingle: editingWorkoutPlan.isSingle || false,
+        category: editingWorkoutPlan.category || undefined,
+        workouts: workouts.map((workout, index) => ({
+          id: workout.id,
+          name: workout.name,
+          workoutExercises: workout.workoutExercises.map((exercise) => ({
+            id: exercise.id,
+            exerciseId: exercise.exercise.id,
+            order: exercise.order,
+            sets: exercise.sets,
+          })),
+          order: index,
+        })),
+      };
+      updateWorkoutPlanMutation.mutate(updateBody, {
+        onError: (error) => {
+          console.error("submit error => ", error);
+        },
+        onSuccess: (data) => {
+          queryClient.invalidateQueries({
+            queryKey: workoutPlanKeys.detail(editingWorkoutPlan.id),
+          });
+          router.back();
+        },
+      });
+      return;
+    }
+
     const body = {
       name,
       description: undefined,
@@ -171,22 +266,13 @@ export const CreateWorkoutPlanScreen = () => {
         order: index,
       })),
     };
-    // const result = tryCatch(() => CreateWorkoutPlanSchema.parse(body));
-    // if (result.error) {
-    //   const errorMsgs = (result.error as ZodError).issues.map(
-    //     (issue) => issue.message
-    //   );
-
-    //   toast.error(errorMsgs.join("\n"));
-    //   return;
-    // }
 
     createWorkoutPlanMutation.mutate(body, {
       onError: (error) => {
         console.error("submit error => ", error);
       },
       onSuccess: (data) => {
-        console.log("submit success => ", data);
+        router.back();
       },
     });
   }
@@ -196,7 +282,7 @@ export const CreateWorkoutPlanScreen = () => {
       name="create-workout-plan-screen"
       isLoading={createWorkoutPlanMutation.isPending}
     >
-      <Header handleSubmit={handleSubmit} />
+      <Header handleSubmit={handleSubmit} isEditing={!!workoutPlanId} />
       <View className="flex-row gap-x-4 px-4">
         <TouchableOpacity
           testID="workout-plan-image-button"
@@ -562,8 +648,10 @@ const ExerciseItem = ({
 
 const Header = ({
   handleSubmit,
+  isEditing = false,
 }: {
   handleSubmit: () => void;
+  isEditing: boolean;
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -583,7 +671,7 @@ const Header = ({
         <XIcon size={30} />
       </TouchableOpacity>
       <AppText className="text-2xl font-bold">
-        {t("create_workout_plan")}
+        {isEditing ? t("edit_workout_plan") : t("create_workout_plan")}
       </AppText>
       <TouchableOpacity
         testID="save-button"

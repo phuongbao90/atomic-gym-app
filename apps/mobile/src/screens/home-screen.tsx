@@ -10,6 +10,8 @@ import i18n from "../configs/i18n";
 import { useAppDispatch } from "../stores/redux-store";
 import { logout } from "../stores/slices/auth-slice";
 import { appRoutes } from "../configs/routes";
+import * as SecureStore from "expo-secure-store";
+import { setToken } from "../lib/auth/session-store";
 
 export function HomeScreen() {
   return (
@@ -48,6 +50,8 @@ const DEV = () => {
         title="logout"
         onPress={() => {
           dispatch(logout());
+          SecureStore.deleteItemAsync("accessToken");
+          setToken("");
           queryClient.clear();
           router.replace(appRoutes.login);
         }}

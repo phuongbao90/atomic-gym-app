@@ -32,7 +32,8 @@ export const appRoutes = {
 
   workoutPlans: {
     base: "/workout-plans" as const,
-    create: () => `${appRoutes.workoutPlans.base}/create` as const,
+    create: (params: { workoutPlanId?: string }) =>
+      `${appRoutes.workoutPlans.base}/create?${QueryString.stringify(params)}` as const,
     edit: (id: string) => `${appRoutes.workoutPlans.base}/${id}/edit` as const,
     detail: (id: string) => `${appRoutes.workoutPlans.base}/${id}` as const,
     editWorkoutOrder: () =>

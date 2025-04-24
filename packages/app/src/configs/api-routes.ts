@@ -31,7 +31,7 @@ export const API_ROUTES = {
     base: "/workout-plans",
     query: (query?: WorkoutPlanQuery) =>
       `${API_ROUTES.plans.base}${query ? `?${stringify(query)}` : ""}`,
-    detail: (id: number) => `${API_ROUTES.plans.base}/${id}`,
+    detail: (id: string) => `${API_ROUTES.plans.base}/${id}`,
     inGroups: "/workout-plans/in-groups",
   },
 

@@ -166,3 +166,7 @@ export const CategoryIcon = (props: Omit<IconProps<string>, "name">) => {
 export const ChangeImageIcon = (props: Omit<IconProps<string>, "name">) => {
   return <ExpoIcon library="materialIcons" name="cached" {...props} />;
 };
+
+export const EditIcon = (props: Omit<IconProps<string>, "name">) => {
+  return <ExpoIcon library="materialIcons" name="edit" {...props} />;
+};

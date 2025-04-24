@@ -4,6 +4,7 @@ import { WorkoutPlan } from "../../prisma-generated";
 import { ApiReponseWithMeta, ApiResponse } from "../../types/meta";
 import {
   CreateWorkoutPlanSchema,
+  UpdateWorkoutPlanSchema,
   WorkoutPlanInGroups,
   WorkoutPlanQuery,
 } from "./workout-plans.types";
@@ -38,6 +39,15 @@ export const createWorkoutPlan = (
 ) => {
   return request<ApiResponse<WorkoutPlan>>(API_ROUTES.plans.base, {
     method: "POST",
+    body: JSON.stringify(data),
+  });
+};
+
+export const updateWorkoutPlan = (
+  data: z.infer<typeof UpdateWorkoutPlanSchema>
+) => {
+  return request<ApiResponse<WorkoutPlan>>(API_ROUTES.plans.detail(data.id), {
+    method: "PUT",
     body: JSON.stringify(data),
   });
 };

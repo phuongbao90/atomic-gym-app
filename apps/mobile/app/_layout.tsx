@@ -69,8 +69,8 @@ export default function RootLayout() {
                         className="flex-1"
                         style={{ top: insets.top }}
                       >
-                        <App />
                         <Toaster position="top-center" duration={2000} />
+                        <App />
                         {__DEV__ && <DevFloatingButtons />}
                       </SafeAreaView>
                     </ActionSheetProvider>

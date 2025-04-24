@@ -10,7 +10,7 @@ import {
   MinLength,
 } from "class-validator";
 
-export class CreateWorkoutPlanDto {
+class WorkoutPlanEditorDto {
   @IsString()
   @IsNotEmpty({ message: "Tên lịch tập không được để trống" })
   @MinLength(3, { message: "Tên lịch tập phải có ít nhất 3 ký tự" })
@@ -47,7 +47,9 @@ export class CreateWorkoutPlanDto {
   @IsArray({ message: "Danh sách lịch tập không hợp lệ" })
   @IsOptional()
   workoutIds?: string[];
+}
 
+export class CreateWorkoutPlanDto extends WorkoutPlanEditorDto {
   @IsArray({ message: "Danh sách workouts không hợp lệ" })
   @IsOptional()
   workouts?: {
@@ -57,6 +59,32 @@ export class CreateWorkoutPlanDto {
       exerciseId: number;
       order: number;
       sets: {
+        restTime: number;
+        isWarmup: boolean;
+        isDropSet: boolean;
+        isUntilFailure: boolean;
+      }[];
+    }[];
+    order: number;
+  }[];
+}
+
+export class UpdateWorkoutPlanDto extends WorkoutPlanEditorDto {
+  @IsString({ message: "ID lịch tập không hợp lệ" })
+  @IsNotEmpty({ message: "ID lịch tập không được để trống" })
+  id: string;
+
+  @IsArray({ message: "Danh sách workouts không hợp lệ" })
+  @IsOptional()
+  workouts?: {
+    id: string;
+    name: string;
+    workoutExercises: {
+      id: string;
+      exerciseId: number;
+      order: number;
+      sets: {
+        id: string;
         restTime: number;
         isWarmup: boolean;
         isDropSet: boolean;

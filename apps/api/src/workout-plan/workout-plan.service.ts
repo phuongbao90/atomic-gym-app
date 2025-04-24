@@ -4,7 +4,10 @@ import {
   HttpStatus,
   Injectable,
 } from "@nestjs/common";
-import { CreateWorkoutPlanDto } from "./dto/create-workout-plan.dto";
+import {
+  CreateWorkoutPlanDto,
+  UpdateWorkoutPlanDto,
+} from "./dto/create-workout-plan.dto";
 import { PrismaService } from "../prisma/prisma.service";
 import { Request } from "express";
 import { REQUEST_USER_KEY } from "../auth/constant/auth.constant";
@@ -23,11 +26,11 @@ export class WorkoutPlanService {
     request: Request,
     language: Language
   ) {
-    const user: JwtUser = request[REQUEST_USER_KEY];
+    const user = request[REQUEST_USER_KEY] as JwtUser | undefined;
     try {
       const plan = await this.prisma.workoutPlan.create({
         data: {
-          createdById: user.sub,
+          createdById: user?.sub,
           cover_image: body.cover_image,
           level: body.level,
           isPublic: body.isPublic,
@@ -87,7 +90,7 @@ export class WorkoutPlanService {
     query: WorkoutPlanQueryDto,
     language: Language
   ) {
-    const user: JwtUser = request[REQUEST_USER_KEY];
+    const user = request[REQUEST_USER_KEY] as JwtUser | undefined;
     const { isPublic, isPremium, me, category, isSingle, isFeatured } = query;
 
     const workoutPlanQuery: Prisma.WorkoutPlanFindManyArgs = {
@@ -190,8 +193,11 @@ export class WorkoutPlanService {
     };
   }
 
-  async getWorkoutPlanById(id: string, language: Language) {
-    return this.prisma.workoutPlan.findUnique({
+  async getWorkoutPlanById(id: string, language: Language, request: Request) {
+    // Safely get user from request if it exists
+    const user = request[REQUEST_USER_KEY] as JwtUser | undefined;
+
+    const workoutPlan = await this.prisma.workoutPlan.findUnique({
       where: { id },
       include: {
         translations: {
@@ -225,10 +231,19 @@ export class WorkoutPlanService {
         },
       },
     });
+
+    if (!workoutPlan) {
+      throw new HttpException("Workout plan not found", HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      ...workoutPlan,
+      is_owner: user ? user.sub === workoutPlan.createdById : false,
+    };
   }
 
   async deleteWorkoutPlanById(id: string, request: Request) {
-    const user: JwtUser = request[REQUEST_USER_KEY];
+    const user = request[REQUEST_USER_KEY] as JwtUser | undefined;
     const workoutPlan = await this.prisma.workoutPlan.findUnique({
       where: { id },
     });
@@ -244,47 +259,325 @@ export class WorkoutPlanService {
 
   async updateWorkoutPlanById(
     id: string,
-    body: Partial<CreateWorkoutPlanDto>,
+    body: UpdateWorkoutPlanDto,
     request: Request,
     language: Language
   ) {
-    const user: JwtUser = request[REQUEST_USER_KEY];
+    const user = request[REQUEST_USER_KEY] as JwtUser | undefined;
 
-    const workoutPlan = await this.prisma.workoutPlan.update({
-      where: {
-        id,
-        createdById: user.sub,
-        translations: {
-          some: {
-            language,
+    try {
+      return await this.prisma.$transaction(async (prisma) => {
+        // Check if workout plan exists and user has permission
+        const existingPlan = await prisma.workoutPlan.findUnique({
+          where: { id },
+          include: {
+            workouts: {
+              include: {
+                workoutExercises: {
+                  include: {
+                    sets: true,
+                  },
+                },
+              },
+            },
+            translations: {
+              where: { language },
+            },
           },
-        },
-      },
-      data: {
-        cover_image: body.cover_image,
-        level: body.level,
-        isPublic: body.isPublic,
-        isPremium: body.isPremium,
-        isFeatured: body.isFeatured,
-        category: body.category,
-        workouts: {
-          connect: body.workoutIds.map((workoutId) => ({ id: workoutId })),
-        },
-      },
-    });
-    const translation = await this.prisma.workoutPlanTranslation.update({
-      where: {
-        workoutPlanId_language: {
-          workoutPlanId: id,
-          language,
-        },
-      },
-      data: body,
-    });
+        });
 
-    return {
-      ...workoutPlan,
-      translation,
-    };
+        if (!existingPlan) {
+          throw new HttpException(
+            "Workout plan not found",
+            HttpStatus.NOT_FOUND
+          );
+        }
+
+        if (existingPlan.createdById !== user.sub) {
+          throw new ForbiddenException(
+            "You do not have permission to update this workout plan"
+          );
+        }
+
+        console.log("1");
+
+        // Update the base workout plan
+        const updatedPlan = await prisma.workoutPlan.update({
+          where: { id },
+          data: {
+            cover_image: body.cover_image,
+            level: body.level,
+            isPublic: body.isPublic,
+            isPremium: body.isPremium,
+            isFeatured: body.isFeatured,
+            category: body.category,
+          },
+        });
+
+        console.log("2");
+
+        // Update translation or create if it doesn't exist
+        const translation = await prisma.workoutPlanTranslation.upsert({
+          where: {
+            workoutPlanId_language: {
+              workoutPlanId: id,
+              language,
+            },
+          },
+          create: {
+            workoutPlanId: id,
+            language,
+            name: body.name,
+            slug: slugify(body.name),
+            description: body.description,
+          },
+          update: {
+            name: body.name,
+            slug: slugify(body.name),
+            description: body.description,
+          },
+        });
+
+        console.log("3");
+
+        // Delete existing workouts that are not in the updated list
+        const workoutIdsToKeep = body.workouts
+          .filter((w) => w.id)
+          .map((w) => w.id);
+
+        console.log("4");
+
+        const workoutsToDelete = existingPlan.workouts.filter(
+          (w) => !workoutIdsToKeep.includes(w.id)
+        );
+
+        console.log("5");
+
+        for (const workout of workoutsToDelete) {
+          await prisma.workout.delete({ where: { id: workout.id } });
+        }
+
+        console.log("6");
+
+        // Update or create workouts
+        for (const workoutData of body.workouts) {
+          let workout: any;
+
+          if (workoutData.id) {
+            // Check if workout with this ID actually exists in the database
+            const existingWorkout = await prisma.workout.findUnique({
+              where: { id: workoutData.id },
+            });
+
+            if (existingWorkout) {
+              // Update existing workout
+              workout = await prisma.workout.update({
+                where: { id: workoutData.id },
+                data: {
+                  order: workoutData.order,
+                },
+              });
+
+              // Update workout translation
+              await prisma.workoutTranslation.upsert({
+                where: {
+                  workoutId_language: {
+                    workoutId: workout.id,
+                    language,
+                  },
+                },
+                create: {
+                  workoutId: workout.id,
+                  language,
+                  name: workoutData.name,
+                  slug: slugify(workoutData.name),
+                },
+                update: {
+                  name: workoutData.name,
+                  slug: slugify(workoutData.name),
+                },
+              });
+            } else {
+              console.log(
+                "Client-side workout ID doesn't exist in DB, creating new"
+              );
+              // Client-side ID doesn't exist in DB, create new workout
+              workout = await prisma.workout.create({
+                data: {
+                  workoutPlanId: id,
+                  order: workoutData.order,
+                  translations: {
+                    create: {
+                      language,
+                      name: workoutData.name,
+                      slug: slugify(workoutData.name),
+                    },
+                  },
+                },
+              });
+            }
+          } else {
+            // Create new workout
+            console.log("15");
+            workout = await prisma.workout.create({
+              data: {
+                workoutPlanId: id,
+                order: workoutData.order,
+                translations: {
+                  create: {
+                    language,
+                    name: workoutData.name,
+                    slug: slugify(workoutData.name),
+                  },
+                },
+                workoutExercises: {
+                  create: workoutData.workoutExercises.map((exercise) => ({
+                    exerciseId: exercise.exerciseId,
+                    order: +exercise.order,
+                    sets: {
+                      create: exercise.sets.map((set) => ({
+                        restTime: set.restTime,
+                        isWarmup: set.isWarmup,
+                        isDropSet: set.isDropSet,
+                        isUntilFailure: set.isUntilFailure,
+                      })),
+                    },
+                  })),
+                },
+              },
+            });
+          }
+
+          // Handle workout exercises
+          if (workoutData.workoutExercises) {
+            // Delete existing exercises not in the updated list
+            const exerciseIdsToKeep = workoutData.workoutExercises
+              .filter((e) => e.id)
+              .map((e) => e.id);
+
+            const existingExercises = await prisma.workoutExercise.findMany({
+              where: { workoutId: workout.id },
+              include: { sets: true },
+            });
+
+            const exercisesToDelete = existingExercises.filter(
+              (e) => !exerciseIdsToKeep.includes(e.id)
+            );
+
+            for (const exercise of exercisesToDelete) {
+              await prisma.workoutExercise.delete({
+                where: { id: exercise.id },
+              });
+            }
+
+            console.log("9");
+
+            // Update or create exercises
+            for (const exerciseData of workoutData.workoutExercises) {
+              let exercise: any;
+
+              if (exerciseData.id) {
+                console.log("10");
+                // Check if exercise with this ID actually exists in the database
+                const existingExercise =
+                  await prisma.workoutExercise.findUnique({
+                    where: { id: exerciseData.id },
+                  });
+
+                if (existingExercise) {
+                  // Update existing exercise
+                  exercise = await prisma.workoutExercise.update({
+                    where: { id: exerciseData.id },
+                    data: {
+                      exerciseId: exerciseData.exerciseId,
+                      order: +exerciseData.order,
+                    },
+                  });
+                } else {
+                  console.log("10.5 - ID exists but not in DB, creating new");
+                  // Client-side ID doesn't exist in DB, create a new exercise
+                  exercise = await prisma.workoutExercise.create({
+                    data: {
+                      workoutId: workout.id,
+                      exerciseId: exerciseData.exerciseId,
+                      order: +exerciseData.order,
+                    },
+                  });
+                }
+              } else {
+                console.log("11");
+                // Create new exercise
+                exercise = await prisma.workoutExercise.create({
+                  data: {
+                    workoutId: workout.id,
+                    exerciseId: exerciseData.exerciseId,
+                    order: +exerciseData.order,
+                  },
+                });
+              }
+
+              console.log("12");
+
+              // Handle sets
+              if (exerciseData.sets) {
+                console.log("13");
+                // Delete existing sets
+                await prisma.exerciseSet.deleteMany({
+                  where: { workoutExerciseId: exercise.id },
+                });
+
+                console.log("14");
+
+                // Create new sets
+                await prisma.exerciseSet.createMany({
+                  data: exerciseData.sets.map((set) => ({
+                    workoutExerciseId: exercise.id,
+                    restTime: set.restTime,
+                    isWarmup: set.isWarmup,
+                    isDropSet: set.isDropSet,
+                    isUntilFailure: set.isUntilFailure,
+                  })),
+                });
+              }
+            }
+          }
+        }
+
+        // Return updated plan with all relations
+        return prisma.workoutPlan.findUnique({
+          where: { id },
+          include: {
+            translations: {
+              where: { language },
+            },
+            workouts: {
+              include: {
+                _count: { select: { workoutExercises: true } },
+                translations: {
+                  where: { language },
+                },
+                workoutExercises: {
+                  include: {
+                    sets: true,
+                    exercise: {
+                      include: {
+                        translations: {
+                          where: { language },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+      });
+    } catch (e) {
+      throw new HttpException(
+        e.message || "Failed to update workout plan",
+        e.status || HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 }

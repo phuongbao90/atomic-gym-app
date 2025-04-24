@@ -15,8 +15,6 @@ export function WorkoutDetailScreen() {
 
   const { data: workout, isLoading } = useGetWorkout(id);
 
-  console.log("workout => ", workout);
-
   if (isLoading) {
     return (
       <View
@@ -35,7 +33,11 @@ export function WorkoutDetailScreen() {
       <AppFlatList
         data={workout?.workoutExercises}
         renderItem={({ item, index }) => (
-          <ExerciseItem item={item} index={index} />
+          <ExerciseItem
+            item={item?.exercise}
+            index={index}
+            setCount={item?.sets?.length}
+          />
         )}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{

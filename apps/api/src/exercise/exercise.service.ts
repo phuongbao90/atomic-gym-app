@@ -14,7 +14,7 @@ export class ExerciseService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(body: CreateExerciseDto, request: Request, language: Language) {
-    const user: JwtUser = request[REQUEST_USER_KEY];
+    const user = request[REQUEST_USER_KEY] as JwtUser | undefined;
 
     const exercise = await this.prisma.exercise.create({
       data: {

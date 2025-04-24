@@ -1,41 +1,48 @@
-import { Exercise, WorkoutExercise } from "app";
+import { Exercise } from "app";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { appRoutes } from "../configs/routes";
 import { ListItem } from "./ui/list-item";
 import { usePreventRepeatPress } from "../hooks/use-prevent-repeat-press";
+import { useTranslation } from "react-i18next";
+import { upperCase } from "lodash";
 
 export const ExerciseItem = ({
   item,
   index,
   right,
+  setCount,
 }: {
-  item: WorkoutExercise;
+  item: Exercise | undefined;
   index: number;
   right?: React.ReactNode | null;
+  setCount: number | undefined;
 }) => {
   const router = useRouter();
   const debouncedPress = usePreventRepeatPress();
+  const { t } = useTranslation();
+
+  if (!item) {
+    return null;
+  }
 
   return (
     <ListItem
       testID={`exercise-item-${item.id}`}
-      label={`${item?.exercise?.translations?.[0]?.name}${__DEV__ ? ` - ${index + 1}` : ""}`}
+      label={`${item?.translations?.[0]?.name}${__DEV__ ? ` - ${index + 1}` : ""}`}
       labelClassName="text-lg font-bold"
       labelContainerClassName="ml-4"
-      subLabel={`${item.exercise?.primaryMuscle?.[0]?.translations?.[0]?.name}`}
-      subLabelClassName="text-sm"
+      subLabel={`${upperCase(t("sets"))}: ${setCount}`}
+      subLabelClassName="text-sm text-gray-600 dark:text-gray-400"
       onPress={() =>
         debouncedPress(() => {
-          router.push(
-            appRoutes.exercises.detail(item.exercise?.id.toString() ?? "")
-          );
+          router.push(appRoutes.exercises.detail(item.id.toString()));
         })
       }
       Left={
-        item.exercise?.images[0] ? (
+        item.images[0] ? (
           <Image
-            source={item.exercise?.images[0]}
+            source={item.images[0]}
             style={{
               width: 100,
               height: 100,

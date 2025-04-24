@@ -59,6 +59,14 @@ export const createWorkoutPlanSlice = createSlice({
   name: "createWorkoutPlan",
   initialState: initialState,
   reducers: {
+    initWorkoutPlan: (
+      state,
+      action: PayloadAction<{
+        workoutPlan: CreateWorkoutPlanSliceType;
+      }>
+    ) => {
+      state.workoutPlan = action.payload.workoutPlan;
+    },
     updateWorkoutPlanName: (
       state,
       action: PayloadAction<{
@@ -370,6 +378,7 @@ export const replaceExerciseInWorkout = createAsyncThunk(
 );
 
 export const {
+  initWorkoutPlan,
   addWorkout,
   removeWorkout,
   updateWorkoutName,

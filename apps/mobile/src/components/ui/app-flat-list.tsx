@@ -1,6 +1,6 @@
 import { FlatList, FlatListProps } from "react-native";
 
-export const AppFlatList = (props: FlatListProps<any>) => {
+export const AppFlatList = <T,>(props: FlatListProps<T>) => {
   return (
     <FlatList
       showsVerticalScrollIndicator={false}

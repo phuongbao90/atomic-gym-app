@@ -72,6 +72,7 @@
   "required_exercise_images": "Exercise images are required",
 
   "create_workout_plan": "Create Workout Plan",
+  "edit_workout_plan": "Edit Workout Plan",
   "my_workout_plans": "My Workout Plans",
   "workout_plan_name": "Workout Plan Name",
   "add_exercise": "Add Exercise",

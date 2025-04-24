@@ -59,7 +59,7 @@ export class UserService {
 
   async me(req: Request) {
     try {
-      const user: JwtUser = req[REQUEST_USER_KEY];
+      const user = req[REQUEST_USER_KEY] as JwtUser | undefined;
       console.log("user: ", user);
       if (!user) {
         throw new UnauthorizedException();
@@ -71,7 +71,7 @@ export class UserService {
   }
 
   async updateMe(data: Partial<CreateUserDto>, req: Request) {
-    const user: JwtUser = req[REQUEST_USER_KEY];
+    const user = req[REQUEST_USER_KEY] as JwtUser | undefined;
     console.log("user: ", user);
     return this.prisma.user.update({
       where: { id: user.sub },
