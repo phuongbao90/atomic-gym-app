@@ -51,3 +51,18 @@ export const updateWorkoutPlan = (
     body: JSON.stringify(data),
   });
 };
+
+export const getWorkoutPlansByMe = () => {
+  return request<ApiResponse<WorkoutPlan[]>>(API_ROUTES.plans.byMe, {
+    method: "GET",
+  });
+};
+
+export const getWorkoutPlansByUserId = (userId: string) => {
+  return request<ApiResponse<WorkoutPlan[]>>(
+    API_ROUTES.plans.byUserId(userId),
+    {
+      method: "GET",
+    }
+  );
+};

@@ -1,4 +1,4 @@
-import { queryClient } from "app";
+import { queryClient, useGetWorkoutPlansByMe } from "app";
 import { useRouter } from "expo-router";
 import { Button, Text, View } from "react-native";
 import { AppScrollView } from "../../src/components/ui/app-scrollview";
@@ -7,13 +7,20 @@ import { AppHeader } from "../components/ui/app-header";
 import { AppScreen } from "../components/ui/app-screen";
 import { Icon } from "../components/ui/icon";
 import i18n from "../configs/i18n";
-import { useAppDispatch } from "../stores/redux-store";
+import { useAppDispatch, useAppSelector } from "../stores/redux-store";
 import { logout } from "../stores/slices/auth-slice";
 import { appRoutes } from "../configs/routes";
 import * as SecureStore from "expo-secure-store";
 import { setToken } from "../lib/auth/session-store";
 
 export function HomeScreen() {
+  const isLoggedIn = useAppSelector((s) => s.auth.isLoggedIn);
+
+  const { data: myWorkoutPlans, isLoading } = useGetWorkoutPlansByMe({
+    enabled: isLoggedIn,
+  });
+  console.log("myWorkoutPlans:", myWorkoutPlans);
+
   return (
     <AppScreen name="home-screen">
       <AppHeader title="Home" />

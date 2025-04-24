@@ -1,8 +1,9 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import {
   createWorkoutPlan,
   getWorkoutPlan,
   getWorkoutPlans,
+  getWorkoutPlansByMe,
   getWorkoutPlansInGroups,
   updateWorkoutPlan,
 } from "./workout-plans.requests";
@@ -14,12 +15,28 @@ import {
 } from "./workout-plans.types";
 import { workoutPlanKeys } from "./workout-plans.keys";
 import { z } from "zod";
+import { WorkoutPlan } from "../../prisma-generated";
+import { ApiResponse } from "../..";
 
 export const useGetWorkoutPlans = (query: WorkoutPlanQuery) => {
   return useAppInfiniteQuery({
     queryKey: workoutPlanKeys.list(query),
     queryFn: ({ pageParam = 1 }) =>
       getWorkoutPlans({ ...query, page: pageParam as number }),
+  });
+};
+
+export const useGetWorkoutPlansByMe = (
+  options?: Pick<
+    UseQueryOptions<ApiResponse<WorkoutPlan[]>, Error, WorkoutPlan[]>,
+    "enabled"
+  >
+) => {
+  return useQuery({
+    queryKey: workoutPlanKeys.listByMe(),
+    queryFn: () => getWorkoutPlansByMe(),
+    select: (data) => data?.data,
+    ...options,
   });
 };
 

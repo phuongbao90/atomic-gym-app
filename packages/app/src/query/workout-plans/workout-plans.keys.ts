@@ -6,4 +6,10 @@ export const workoutPlanKeys = {
   list: (query: WorkoutPlanQuery) => [...workoutPlanKeys.lists(), query],
   detail: (id: string) => [...workoutPlanKeys.all, "detail", id],
   inGroups: () => [...workoutPlanKeys.lists(), "in-groups"],
+  listByUserId: (userId: string) => [
+    ...workoutPlanKeys.lists(),
+    "by-user",
+    userId,
+  ],
+  listByMe: () => [...workoutPlanKeys.lists(), "by-me"],
 };

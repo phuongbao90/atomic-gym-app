@@ -62,6 +62,21 @@ export class WorkoutPlanController {
     return this.workoutPlanService.getWorkoutPlanById(id, language, request);
   }
 
+  @Get("user/me")
+  @UseGuards(JwtAuthGuard)
+  findAllByMe(@GetLanguage() language: Language, @Req() request: Request) {
+    return this.workoutPlanService.getWorkoutPlansByMe(language, request);
+  }
+
+  @Get("user/:userId")
+  @UseGuards(JwtAuthGuard)
+  findAllByUserId(
+    @Param("userId") userId: string,
+    @GetLanguage() language: Language
+  ) {
+    return this.workoutPlanService.getWorkoutPlansByUserId(userId, language);
+  }
+
   @Put(":id")
   @UseGuards(JwtAuthGuard)
   update(

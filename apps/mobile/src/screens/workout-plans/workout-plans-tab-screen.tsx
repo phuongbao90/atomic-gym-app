@@ -1,5 +1,5 @@
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { useGetWorkoutPlansInGroups } from "app";
+import { useGetWorkoutPlansByMe, useGetWorkoutPlansInGroups } from "app";
 import { useRouter } from "expo-router";
 import { useMemo } from "react";
 import { FlatList, Pressable, SectionList, View } from "react-native";
@@ -22,10 +22,19 @@ export function WorkoutPlansTabScreen() {
   const theme = useAppSelector((state) => state.app.theme);
   const { t } = useTranslation();
 
+  const isLoggedIn = useAppSelector((s) => s.auth.isLoggedIn);
+  const { data: myWorkoutPlans } = useGetWorkoutPlansByMe({
+    enabled: isLoggedIn,
+  });
+
   const { data } = useGetWorkoutPlansInGroups();
   const sections = useMemo(() => {
     if (!data) return [];
     return [
+      {
+        title: "my_workout_plans",
+        data: [myWorkoutPlans],
+      },
       {
         title: "FEATURED",
         data: [data.isFeatured],
@@ -39,12 +48,14 @@ export function WorkoutPlansTabScreen() {
         data: [data.single],
       },
     ];
-  }, [data]);
+  }, [data, myWorkoutPlans]);
 
   function renderSectionHeader({
     section,
   }: { section: (typeof sections)[number] }) {
     const data = section.data.flat();
+
+    if (!section.title) return null;
 
     return (
       <>
@@ -118,7 +129,7 @@ export function WorkoutPlansTabScreen() {
           testID="build-plan-button"
           title={t("build_plan")}
           onPress={() => {
-            router.navigate(appRoutes.workoutPlans.create());
+            router.navigate(appRoutes.workoutPlans.create({}));
           }}
           color="primary"
           containerClassName="flex-1"
