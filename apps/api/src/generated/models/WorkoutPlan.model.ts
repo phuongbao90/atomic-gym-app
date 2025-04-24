@@ -1,12 +1,12 @@
-import { IsInt, IsDefined, IsString, IsOptional, IsIn, IsBoolean, IsDate } from "class-validator";
+import { IsString, IsDefined, IsOptional, IsIn, IsBoolean, IsInt, IsDate } from "class-validator";
 import { Workout, User, WorkoutPlanTranslation } from "./";
 import { getEnumValues } from "../helpers";
 import { WorkoutPlanLevel, WorkoutPlanCategory } from "../enums";
 
 export class WorkoutPlan {
     @IsDefined()
-    @IsInt()
-    id!: number;
+    @IsString()
+    id!: string;
 
     @IsOptional()
     @IsString()

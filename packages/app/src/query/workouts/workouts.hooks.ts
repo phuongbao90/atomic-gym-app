@@ -16,7 +16,7 @@ export const useGetWorkouts = (query: WorkoutQuery) => {
   });
 };
 
-export const useGetWorkout = (id: number) => {
+export const useGetWorkout = (id: string) => {
   return useQuery({
     enabled: !!id,
     queryKey: workoutKeys.detail(id),
@@ -25,7 +25,7 @@ export const useGetWorkout = (id: number) => {
   });
 };
 
-export const useGetWorkoutsByWorkoutPlanId = (planId: number) => {
+export const useGetWorkoutsByWorkoutPlanId = (planId: string) => {
   return useQuery({
     queryKey: workoutKeys.listByWorkoutPlanId(planId),
     queryFn: () => getWorkoutsByWorkoutPlanId(planId),

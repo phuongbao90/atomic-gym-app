@@ -163,21 +163,32 @@ export const CreateWorkoutPlanScreen = () => {
       category: undefined,
       workouts: workouts.map((workout, index) => ({
         name: workout.name,
-        workoutExercises: workout.workoutExercises,
+        workoutExercises: workout.workoutExercises.map((exercise) => ({
+          exerciseId: exercise.exercise.id,
+          order: exercise.order,
+          sets: exercise.sets,
+        })),
         order: index,
       })),
     };
-    const result = tryCatch(() => CreateWorkoutPlanSchema.parse(body));
-    if (result.error) {
-      const errorMsgs = (result.error as ZodError).issues.map(
-        (issue) => issue.message
-      );
+    // const result = tryCatch(() => CreateWorkoutPlanSchema.parse(body));
+    // if (result.error) {
+    //   const errorMsgs = (result.error as ZodError).issues.map(
+    //     (issue) => issue.message
+    //   );
 
-      toast.error(errorMsgs.join("\n"));
-      return;
-    }
+    //   toast.error(errorMsgs.join("\n"));
+    //   return;
+    // }
 
-    // createWorkoutPlanMutation.mutate(body);
+    createWorkoutPlanMutation.mutate(body, {
+      onError: (error) => {
+        console.error("submit error => ", error);
+      },
+      onSuccess: (data) => {
+        console.log("submit success => ", data);
+      },
+    });
   }
 
   return (
@@ -213,7 +224,7 @@ export const CreateWorkoutPlanScreen = () => {
           </AppText>
           <TextInput
             placeholder={t("workout_plan_name")}
-            className={cn("text-xl text-white dark:text-white", {
+            className={cn("text-xl text-black dark:text-white", {
               "border-b-2 border-primary": isFocused,
             })}
             placeholderTextColor={theme === "dark" ? "white" : "black"}
@@ -521,16 +532,15 @@ const ExerciseItem = ({
     >
       <DragIcon
         size={28}
-        color="white"
         onLongPress={() => {
           drag();
         }}
       />
       <View className="flex-1 gap-y-1">
-        <AppText className="text-white text-lg font-semibold">
+        <AppText className="text-lg font-semibold">
           {item.exercise.translations?.[0]?.name}
         </AppText>
-        <AppText className="text-gray-300">
+        <AppText className="dark:text-gray-300 text-gray-700">
           {t("sets_count", { count: item.sets.length })}
         </AppText>
       </View>

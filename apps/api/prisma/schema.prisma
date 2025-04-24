@@ -139,7 +139,7 @@ enum WorkoutPlanCategory {
 }
 
 model WorkoutPlan {
-  id           Int                      @id @default(autoincrement())
+  id           String                   @id @default(uuid())
   cover_image  String?
   level        WorkoutPlanLevel?
   isPublic     Boolean?                 @default(true)
@@ -156,7 +156,7 @@ model WorkoutPlan {
 }
 
 model WorkoutPlanTranslation {
-  workoutPlanId  Int // foreign key to WorkoutPlan
+  workoutPlanId  String // foreign key to WorkoutPlan
   language       Language // language code (e.g., 'vi', 'en')
   name           String // localized name
   normalizedName String? // localized name
@@ -174,7 +174,7 @@ model Workout {
   createdAt        DateTime             @default(now()) @db.Timestamptz(6)
   updatedAt        DateTime             @updatedAt @db.Timestamptz(6)
   WorkoutPlan      WorkoutPlan          @relation(fields: [workoutPlanId], references: [id])
-  workoutPlanId    Int
+  workoutPlanId    String
   translations     WorkoutTranslation[]
   workoutExercises WorkoutExercise[]
 }

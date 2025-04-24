@@ -4,6 +4,6 @@ export const workoutPlanKeys = {
   all: ["workout-plans"],
   lists: () => [...workoutPlanKeys.all, "list"],
   list: (query: WorkoutPlanQuery) => [...workoutPlanKeys.lists(), query],
-  detail: (id: number) => [...workoutPlanKeys.all, "detail", id],
+  detail: (id: string) => [...workoutPlanKeys.all, "detail", id],
   inGroups: () => [...workoutPlanKeys.lists(), "in-groups"],
 };

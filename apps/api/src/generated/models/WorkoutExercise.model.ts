@@ -1,17 +1,17 @@
-import { IsInt, IsDefined } from "class-validator";
+import { IsString, IsDefined, IsInt } from "class-validator";
 import { Workout, Exercise, ExerciseSet } from "./";
 
 export class WorkoutExercise {
     @IsDefined()
-    @IsInt()
-    id!: number;
+    @IsString()
+    id!: string;
 
     @IsDefined()
     workout!: Workout;
 
     @IsDefined()
-    @IsInt()
-    workoutId!: number;
+    @IsString()
+    workoutId!: string;
 
     @IsDefined()
     exercise!: Exercise;

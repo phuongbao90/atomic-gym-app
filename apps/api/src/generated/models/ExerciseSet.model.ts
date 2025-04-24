@@ -1,10 +1,10 @@
-import { IsInt, IsDefined, IsBoolean } from "class-validator";
+import { IsString, IsDefined, IsInt, IsBoolean } from "class-validator";
 import { WorkoutExercise } from "./";
 
 export class ExerciseSet {
     @IsDefined()
-    @IsInt()
-    id!: number;
+    @IsString()
+    id!: string;
 
     @IsDefined()
     @IsInt()
@@ -26,6 +26,6 @@ export class ExerciseSet {
     WorkoutExercise!: WorkoutExercise;
 
     @IsDefined()
-    @IsInt()
-    workoutExerciseId!: number;
+    @IsString()
+    workoutExerciseId!: string;
 }

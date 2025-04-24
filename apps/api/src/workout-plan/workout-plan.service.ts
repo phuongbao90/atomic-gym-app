@@ -36,6 +36,21 @@ export class WorkoutPlanService {
           category: body.category,
           workouts: {
             create: body.workouts.map((workout) => ({
+              order: workout.order,
+              workoutExercises: {
+                create: workout.workoutExercises.map((exercise) => ({
+                  exerciseId: exercise.exerciseId,
+                  order: +exercise.order,
+                  sets: {
+                    create: exercise.sets.map((set) => ({
+                      restTime: set.restTime,
+                      isWarmup: set.isWarmup,
+                      isDropSet: set.isDropSet,
+                      isUntilFailure: set.isUntilFailure,
+                    })),
+                  },
+                })),
+              },
               translations: {
                 create: {
                   language,
@@ -175,7 +190,7 @@ export class WorkoutPlanService {
     };
   }
 
-  async getWorkoutPlanById(id: number, language: Language) {
+  async getWorkoutPlanById(id: string, language: Language) {
     return this.prisma.workoutPlan.findUnique({
       where: { id },
       include: {
@@ -212,13 +227,13 @@ export class WorkoutPlanService {
     });
   }
 
-  async deleteWorkoutPlanById(id: number, request: Request) {
+  async deleteWorkoutPlanById(id: string, request: Request) {
     const user: JwtUser = request[REQUEST_USER_KEY];
     const workoutPlan = await this.prisma.workoutPlan.findUnique({
       where: { id },
     });
 
-    if (!user || user.sub !== workoutPlan.id) {
+    if (!user || user.sub !== workoutPlan.createdById) {
       throw new ForbiddenException();
     }
 
@@ -228,7 +243,7 @@ export class WorkoutPlanService {
   }
 
   async updateWorkoutPlanById(
-    id: number,
+    id: string,
     body: Partial<CreateWorkoutPlanDto>,
     request: Request,
     language: Language

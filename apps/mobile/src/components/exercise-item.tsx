@@ -1,4 +1,4 @@
-import { Exercise } from "app";
+import { Exercise, WorkoutExercise } from "app";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { appRoutes } from "../configs/routes";
@@ -10,7 +10,7 @@ export const ExerciseItem = ({
   index,
   right,
 }: {
-  item: Exercise;
+  item: WorkoutExercise;
   index: number;
   right?: React.ReactNode | null;
 }) => {
@@ -20,20 +20,22 @@ export const ExerciseItem = ({
   return (
     <ListItem
       testID={`exercise-item-${item.id}`}
-      label={`${item?.translations?.[0]?.name}${__DEV__ ? ` - ${index + 1}` : ""}`}
+      label={`${item?.exercise?.translations?.[0]?.name}${__DEV__ ? ` - ${index + 1}` : ""}`}
       labelClassName="text-lg font-bold"
       labelContainerClassName="ml-4"
-      subLabel={`${item.primaryMuscle?.[0]?.translations?.[0]?.name}`}
+      subLabel={`${item.exercise?.primaryMuscle?.[0]?.translations?.[0]?.name}`}
       subLabelClassName="text-sm"
       onPress={() =>
         debouncedPress(() => {
-          router.push(appRoutes.exercises.detail(item.id.toString()));
+          router.push(
+            appRoutes.exercises.detail(item.exercise?.id.toString() ?? "")
+          );
         })
       }
       Left={
-        item.images[0] ? (
+        item.exercise?.images[0] ? (
           <Image
-            source={item.images[0]}
+            source={item.exercise?.images[0]}
             style={{
               width: 100,
               height: 100,

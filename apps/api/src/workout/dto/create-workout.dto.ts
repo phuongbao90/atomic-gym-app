@@ -14,8 +14,8 @@ export class CreateWorkoutDto {
   @IsInt()
   order: number;
 
-  @IsInt()
-  workoutPlanId: number;
+  @IsString()
+  workoutPlanId: string;
 
   @IsArray()
   @IsOptional()

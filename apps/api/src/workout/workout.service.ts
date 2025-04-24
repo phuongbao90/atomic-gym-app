@@ -71,7 +71,7 @@ export class WorkoutService {
   }
 
   async getWorkoutsByWorkoutPlanId(
-    id: number,
+    id: string,
     query: CommonQueryParamsDto,
     language: Language
   ) {
@@ -94,7 +94,7 @@ export class WorkoutService {
     return paginateOutput(workouts, total, query);
   }
 
-  async getWorkoutById(id: number, language: Language) {
+  async getWorkoutById(id: string, language: Language) {
     return this.prisma.workout.findUnique({
       where: {
         id,

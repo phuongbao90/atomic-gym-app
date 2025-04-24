@@ -48,8 +48,9 @@ const TabBar = (props: TabBarProps<string>) => {
 const IMAGE_HEIGHT = 300;
 
 export const WorkoutPlanDetailScreen = () => {
-  const { id } = useLocalSearchParams();
-  const { data: workoutPlan } = useGetWorkoutPlan(Number(id));
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { data: workoutPlan } = useGetWorkoutPlan(id);
+
   const { t } = useTranslation();
 
   const renderHeader = () => {

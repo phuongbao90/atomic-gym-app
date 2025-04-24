@@ -12,7 +12,7 @@ import {
 
 export class CreateWorkoutPlanDto {
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: "Tên lịch tập không được để trống" })
   @MinLength(3, { message: "Tên lịch tập phải có ít nhất 3 ký tự" })
   name: string;
 
@@ -20,40 +20,49 @@ export class CreateWorkoutPlanDto {
   @IsOptional()
   cover_image?: string;
 
-  @IsString()
+  @IsString({ message: "Mô tả lịch tập không hợp lệ" })
   @IsOptional()
   description?: string;
 
-  @IsEnum(WorkoutPlanCategory)
+  @IsEnum(WorkoutPlanCategory, { message: "Loại lịch tập không hợp lệ" })
   @IsOptional()
   category?: WorkoutPlanCategory;
 
-  @IsEnum(WorkoutPlanLevel)
+  @IsEnum(WorkoutPlanLevel, { message: "Cấp độ lịch tập không hợp lệ" })
   @IsOptional()
   level?: WorkoutPlanLevel;
 
-  @IsBoolean()
+  @IsBoolean({ message: "Trạng thái công khai không hợp lệ" })
   @IsOptional()
   isPublic?: boolean;
 
-  @IsBoolean()
+  @IsBoolean({ message: "Trạng thái premium không hợp lệ" })
   @IsOptional()
   isPremium?: boolean;
 
-  @IsBoolean()
+  @IsBoolean({ message: "Trạng thái đặc biệt không hợp lệ" })
   @IsOptional()
   isFeatured?: boolean;
 
-  @IsArray()
+  @IsArray({ message: "Danh sách lịch tập không hợp lệ" })
   @IsOptional()
-  workoutIds?: number[];
+  workoutIds?: string[];
 
-  @IsArray()
+  @IsArray({ message: "Danh sách workouts không hợp lệ" })
   @IsOptional()
   workouts?: {
     name: string;
     description?: string;
-    exercises: number[];
+    workoutExercises: {
+      exerciseId: number;
+      order: number;
+      sets: {
+        restTime: number;
+        isWarmup: boolean;
+        isDropSet: boolean;
+        isUntilFailure: boolean;
+      }[];
+    }[];
     order: number;
   }[];
 }

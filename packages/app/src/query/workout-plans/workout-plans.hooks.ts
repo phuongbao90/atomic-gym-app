@@ -21,7 +21,7 @@ export const useGetWorkoutPlans = (query: WorkoutPlanQuery) => {
   });
 };
 
-export const useGetWorkoutPlan = (id: number) => {
+export const useGetWorkoutPlan = (id: string) => {
   return useQuery({
     queryKey: workoutPlanKeys.detail(id),
     queryFn: () => getWorkoutPlan(id),

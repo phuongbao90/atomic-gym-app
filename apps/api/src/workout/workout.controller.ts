@@ -22,7 +22,7 @@ export class WorkoutController {
 
   @Get("/plan/:id")
   async getWorkoutsByWorkoutPlanId(
-    @Param("id") id: number,
+    @Param("id") id: string,
     @PaginatedQuery() query: CommonQueryParamsDto,
     @GetLanguage() language: Language
   ) {
@@ -31,7 +31,7 @@ export class WorkoutController {
 
   @Get(":id")
   async getWorkoutById(
-    @Param("id") id: number,
+    @Param("id") id: string,
     @GetLanguage() language: Language
   ) {
     return this.workoutService.getWorkoutById(id, language);

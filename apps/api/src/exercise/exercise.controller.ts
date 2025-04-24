@@ -67,6 +67,6 @@ export class ExerciseController {
 
   @Get("workout/:id")
   findByWorkout(@Param("id") id: string, @GetLanguage() language: Language) {
-    return this.exerciseService.findByWorkout(+id, language);
+    return this.exerciseService.findByWorkout(id, language);
   }
 }

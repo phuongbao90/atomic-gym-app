@@ -52,7 +52,7 @@ export class WorkoutPlanController {
 
   @Get(":id")
   findOne(@Param("id") id: string, @GetLanguage() language: Language) {
-    return this.workoutPlanService.getWorkoutPlanById(+id, language);
+    return this.workoutPlanService.getWorkoutPlanById(id, language);
   }
 
   @Put(":id")
@@ -64,7 +64,7 @@ export class WorkoutPlanController {
     @GetLanguage() language: Language
   ) {
     return this.workoutPlanService.updateWorkoutPlanById(
-      +id,
+      id,
       updateWorkoutPlanDto,
       request,
       language
@@ -74,6 +74,6 @@ export class WorkoutPlanController {
   @Delete(":id")
   // @UseGuards(JwtAuthGuard)
   remove(@Param("id") id: string, @Req() request: Request) {
-    return this.workoutPlanService.deleteWorkoutPlanById(+id, request);
+    return this.workoutPlanService.deleteWorkoutPlanById(id, request);
   }
 }

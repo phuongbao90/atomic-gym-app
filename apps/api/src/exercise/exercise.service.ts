@@ -181,7 +181,7 @@ export class ExerciseService {
     return this.prisma.exercise.delete({ where: { id } });
   }
 
-  async findByWorkout(id: number, language: Language) {
+  async findByWorkout(id: string, language: Language) {
     return this.prisma.exercise.findMany({
       where: {
         workoutExercises: {

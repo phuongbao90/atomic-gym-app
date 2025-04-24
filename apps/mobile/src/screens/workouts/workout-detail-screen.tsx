@@ -8,15 +8,14 @@ import { AppFlatList } from "../../components/ui/app-flat-list";
 import { AppButton } from "../../components/ui/app-button";
 import { useTranslation } from "react-i18next";
 import { AppText } from "../../components/ui/app-text";
-import { useAppSelector } from "../../stores/redux-store";
 
 export function WorkoutDetailScreen() {
-  const theme = useAppSelector((state) => state.app.theme);
-  const language = useAppSelector((state) => state.app.language);
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation();
 
-  const { data: workout, isLoading } = useGetWorkout(Number(id));
+  const { data: workout, isLoading } = useGetWorkout(id);
+
+  console.log("workout => ", workout);
 
   if (isLoading) {
     return (
@@ -31,15 +30,10 @@ export function WorkoutDetailScreen() {
 
   return (
     <AppScreen name="workout-detail-screen">
-      <AppHeader
-        title={workout?.translations?.[0]?.name}
-        theme={theme}
-        language={language}
-        withBackButton
-      />
+      <AppHeader title={workout?.translations?.[0]?.name} withBackButton />
 
       <AppFlatList
-        data={workout?.exercises}
+        data={workout?.workoutExercises}
         renderItem={({ item, index }) => (
           <ExerciseItem item={item} index={index} />
         )}

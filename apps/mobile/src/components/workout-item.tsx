@@ -18,7 +18,7 @@ export const WorkoutItem = ({
   index,
   isPremiumPlan,
 }: {
-  workout: Workout & { _count: { exercises: number } };
+  workout: Workout & { _count: { workoutExercises: number } };
   index: number;
   isPremiumPlan: boolean;
 }) => {
@@ -34,9 +34,11 @@ export const WorkoutItem = ({
           <Text numberOfLines={1} style={{ flex: 1 }}>
             {workout?.translations?.[0]?.name}
           </Text>
-          {!!workout?._count?.exercises && (
+          {!!workout?._count?.workoutExercises && (
             <Text>
-              {t("exercises_count", { count: workout._count.exercises })}
+              {t("exercises_count", {
+                count: workout._count.workoutExercises,
+              })}
             </Text>
           )}
         </View>

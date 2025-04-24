@@ -39,8 +39,8 @@ export const API_ROUTES = {
     base: "/workouts",
     query: (query?: WorkoutQuery) =>
       `${API_ROUTES.workouts.base}${query ? `?${stringify(query)}` : ""}`,
-    detail: (id: number) => `${API_ROUTES.workouts.base}/${id}`,
-    byWorkoutPlanId: (planId: number) =>
+    detail: (id: string) => `${API_ROUTES.workouts.base}/${id}`,
+    byWorkoutPlanId: (planId: string) =>
       `${API_ROUTES.workouts.base}/plan/${planId}`,
   },
 

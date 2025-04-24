@@ -18,7 +18,7 @@ export const getWorkoutPlans = (query: WorkoutPlanQuery) => {
   );
 };
 
-export const getWorkoutPlan = (id: number) => {
+export const getWorkoutPlan = (id: string) => {
   return request<ApiResponse<WorkoutPlan & { _count: { exercises: number } }>>(
     API_ROUTES.plans.detail(id),
     {

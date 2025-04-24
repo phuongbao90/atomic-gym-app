@@ -86,7 +86,7 @@ export interface ExerciseLog {
 }
 
 export interface WorkoutPlan {
-  id: number;
+  id: string;
   cover_image: string | null;
   level: WorkoutPlanLevel | null;
   isPublic: boolean | null;
@@ -103,7 +103,7 @@ export interface WorkoutPlan {
 }
 
 export interface WorkoutPlanTranslation {
-  workoutPlanId: number;
+  workoutPlanId: string;
   language: Language;
   name: string;
   normalizedName: string | null;
@@ -113,18 +113,18 @@ export interface WorkoutPlanTranslation {
 }
 
 export interface Workout {
-  id: number;
+  id: string;
   order: number | null;
   createdAt: string;
   updatedAt: string;
   WorkoutPlan?: WorkoutPlan;
-  workoutPlanId: number;
+  workoutPlanId: string;
   translations?: WorkoutTranslation[];
   workoutExercises?: WorkoutExercise[];
 }
 
 export interface WorkoutTranslation {
-  workoutId: number;
+  workoutId: string;
   language: Language;
   name: string;
   normalizedName: string | null;
@@ -133,19 +133,19 @@ export interface WorkoutTranslation {
 }
 
 export interface ExerciseSet {
-  id: number;
+  id: string;
   restTime: number;
   isWarmup: boolean;
   isDropSet: boolean;
   isUntilFailure: boolean;
   WorkoutExercise?: WorkoutExercise;
-  workoutExerciseId: number;
+  workoutExerciseId: string;
 }
 
 export interface WorkoutExercise {
-  id: number;
+  id: string;
   workout?: Workout;
-  workoutId: number;
+  workoutId: string;
   exercise?: Exercise;
   exerciseId: number;
   order: number;
