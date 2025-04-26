@@ -31,6 +31,7 @@ import { persistor, store, useAppSelector } from "../src/stores/redux-store";
 import i18n from "../src/configs/i18n";
 import { createOfetchInstance } from "app";
 import { PersistGate } from "redux-persist/integration/react";
+import { colorScheme } from "nativewind";
 
 // This is the default configuration
 configureReanimatedLogger({
@@ -66,8 +67,11 @@ export default function RootLayout() {
                   <PortalProvider>
                     <ActionSheetProvider>
                       <SafeAreaView
-                        className="flex-1"
-                        style={{ top: insets.top }}
+                        style={{
+                          top: insets.top,
+                          bottom: insets.bottom,
+                          flex: 1,
+                        }}
                       >
                         <Toaster position="top-center" duration={2000} />
                         <App />
@@ -89,7 +93,9 @@ const App = () => {
   const [isOnboarded] = useMMKVBoolean(storageKeyNames.isOnboarded);
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
   const language = useAppSelector((state) => state.app.language);
+  const theme = useAppSelector((state) => state.app.theme);
   const runOnce = useRef(false);
+  const runOnceTheme = useRef(false);
 
   useEffect(() => {
     if (runOnce.current) return;
@@ -100,6 +106,12 @@ const App = () => {
       });
     });
   }, [language]);
+
+  useEffect(() => {
+    if (runOnceTheme.current) return;
+    runOnceTheme.current = true;
+    colorScheme.set(theme);
+  }, [theme]);
 
   if (!isOnboarded) {
     return <Onboarding />;

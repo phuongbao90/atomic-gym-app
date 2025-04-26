@@ -100,7 +100,11 @@ export function WorkoutPlansTabScreen() {
             <SectionTitle title={capitalize(t("exercises"))} />
             <Pressable
               onPress={() => {
-                router.push(appRoutes.exercises.list({}));
+                router.push(
+                  appRoutes.exercises.list({
+                    mode: "default",
+                  })
+                );
               }}
               testID="view-all-exercises-button"
             >

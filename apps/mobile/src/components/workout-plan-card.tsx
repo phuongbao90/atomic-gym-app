@@ -24,6 +24,8 @@ export const WorkoutPlanCard = ({
   const { t } = useTranslation();
   const debouncedPress = usePreventRepeatPress();
 
+  if (!item) return null;
+
   return (
     <Pressable
       onPress={() => {

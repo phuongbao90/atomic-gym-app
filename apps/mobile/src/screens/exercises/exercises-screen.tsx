@@ -8,7 +8,7 @@ import {
   LegendListRenderItemProps,
 } from "@legendapp/list";
 import { Exercise, MuscleGroup, useGetExercises } from "app";
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { AppText } from "../../components/ui/app-text";
 import {
   ActivityIndicator,
@@ -38,14 +38,30 @@ import {
   addWorkoutExercises,
   replaceExerciseInWorkout,
 } from "../../stores/slices/create-workout-plan-slice";
+import {
+  addWorkoutExercisesToActiveWorkoutSession,
+  replaceActiveWorkoutSessionExercise,
+} from "../../stores/slices/workout-session-slice";
 
 export const ExercisesScreen = () => {
-  const {
-    allowSelect: _allowSelect,
-    workoutId,
-    replaceWorkoutExerciseId,
-  } = useLocalSearchParams<ExercisesScreenParams>();
-  const allowSelect = _allowSelect === "true";
+  const params = useLocalSearchParams<ExercisesScreenParams>();
+
+  let workoutId: string | undefined;
+  let replaceWorkoutExerciseId: string | undefined;
+  let allowSelect: boolean | undefined;
+  if ("workoutId" in params) {
+    workoutId = params.workoutId;
+  }
+  if ("replaceWorkoutExerciseId" in params) {
+    replaceWorkoutExerciseId = params.replaceWorkoutExerciseId;
+  }
+  if ("allowSelect" in params) {
+    allowSelect = params.allowSelect === "true";
+  }
+
+  const mode = params.mode || "default";
+
+  // const allowSelect = _allowSelect === "true";
 
   const dispatch = useAppDispatch();
 
@@ -59,6 +75,8 @@ export const ExercisesScreen = () => {
     useState<MuscleGroup | null>(null);
 
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const defaultSets = useAppSelector((state) => state.app.defaultSets);
+  const defaultRestTime = useAppSelector((state) => state.app.defaultRestTime);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetExercises({
@@ -72,6 +90,81 @@ export const ExercisesScreen = () => {
 
   const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([]);
 
+  const onSelect = useCallback(
+    ({
+      item,
+      index,
+      isSelected,
+    }: { item: Exercise; index: number; isSelected: boolean }) => {
+      if (isSelected) {
+        setSelectedExercises((prev) => prev.filter((e) => e.id !== item.id));
+        return;
+      }
+
+      if (mode === "addToCreateWorkoutPlan") {
+        setSelectedExercises((prev) => [...prev, item]);
+        return;
+      }
+      if (mode === "replaceToCreateWorkoutPlan" && replaceWorkoutExerciseId) {
+        setSelectedExercises([item]);
+        dispatch(
+          replaceExerciseInWorkout({
+            workoutId: workoutId as string,
+            workoutExerciseId: replaceWorkoutExerciseId,
+            exercise: item,
+            exerciseIndex: index,
+          })
+        );
+        delay(() => router.back(), 200);
+        return;
+      }
+
+      if (
+        mode === "replaceToActiveWorkoutSession" &&
+        replaceWorkoutExerciseId
+      ) {
+        dispatch(
+          replaceActiveWorkoutSessionExercise({
+            replaceWorkoutExerciseId,
+            newExercise: item,
+          })
+        );
+        delay(() => router.back(), 200);
+        return;
+      }
+      setSelectedExercises((prev) => [...prev, item]);
+    },
+    [mode, dispatch, workoutId, replaceWorkoutExerciseId]
+  );
+
+  const onFinish = useCallback(() => {
+    if (mode === "addToCreateWorkoutPlan") {
+      dispatch(
+        addWorkoutExercises({
+          workoutId: workoutId as string,
+          exercises: selectedExercises,
+        })
+      );
+    }
+    if (mode === "addToActiveWorkoutSession") {
+      dispatch(
+        addWorkoutExercisesToActiveWorkoutSession({
+          exercises: selectedExercises,
+          defaultSets,
+          defaultRestTime,
+        })
+      );
+    }
+    router.back();
+  }, [
+    mode,
+    dispatch,
+    selectedExercises,
+    workoutId,
+    defaultSets,
+    defaultRestTime,
+  ]);
+
   const renderItem = ({ item, index }: LegendListRenderItemProps<Exercise>) => {
     const isSelected =
       selectedExercises.findIndex((e) => e.id === item.id) !== -1;
@@ -80,32 +173,12 @@ export const ExercisesScreen = () => {
       <ExerciseItem
         item={item}
         index={index}
+        setCount={undefined}
         right={
           allowSelect ? (
             <Radio
               selected={isSelected}
-              onPress={() => {
-                if (isSelected) {
-                  setSelectedExercises((prev) =>
-                    prev.filter((e) => e.id !== item.id)
-                  );
-                } else {
-                  if (replaceWorkoutExerciseId) {
-                    setSelectedExercises([item]);
-                    dispatch(
-                      replaceExerciseInWorkout({
-                        workoutId: workoutId as string,
-                        workoutExerciseId: replaceWorkoutExerciseId,
-                        exercise: item,
-                        exerciseIndex: index,
-                      })
-                    );
-                    delay(() => router.back(), 200);
-                  } else {
-                    setSelectedExercises((prev) => [...prev, item]);
-                  }
-                }
-              }}
+              onPress={() => onSelect({ item, index, isSelected })}
             />
           ) : null
         }
@@ -119,17 +192,13 @@ export const ExercisesScreen = () => {
         title={capitalize(t("exercises"))}
         withBackButton
         Right={
-          allowSelect ? (
+          allowSelect &&
+          (mode === "addToCreateWorkoutPlan" ||
+            mode === "addToActiveWorkoutSession") ? (
             <TouchableOpacity
               onPress={() =>
                 debouncedPress(() => {
-                  dispatch(
-                    addWorkoutExercises({
-                      workoutId: workoutId as string,
-                      exercises: selectedExercises,
-                    })
-                  );
-                  router.back();
+                  onFinish();
                 })
               }
             >

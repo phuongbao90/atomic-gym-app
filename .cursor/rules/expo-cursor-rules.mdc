@@ -80,7 +80,7 @@ alwaysApply: true
   - Use dynamic routes with expo-router for better navigation handling.
 
   State Management
-  - Use Legend state for managing global state.
+  - Use redux toolkit for managing state.
   - Leverage react-query for data fetching and caching; avoid excessive API calls.
   - Handle URL search parameters using libraries like expo-linking.
 

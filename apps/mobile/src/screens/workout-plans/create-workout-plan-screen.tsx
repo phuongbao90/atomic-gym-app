@@ -449,6 +449,7 @@ export const CreateWorkoutPlanScreen = () => {
                         appRoutes.exercises.list({
                           allowSelect: "true",
                           workoutId: workout.id,
+                          mode: "addToCreateWorkoutPlan",
                         })
                       );
                     });
@@ -587,6 +588,7 @@ const ExerciseItem = ({
               allowSelect: "true",
               workoutId,
               replaceWorkoutExerciseId: item.id,
+              mode: "replaceToCreateWorkoutPlan",
             })
           );
         }

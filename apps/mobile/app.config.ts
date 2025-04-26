@@ -25,7 +25,7 @@ export default (): ExpoConfig => ({
       UIBackgroundModes: ["fetch", "remote-notification"],
       NSAppTransportSecurity: { NSAllowsArbitraryLoads: true }, // ? enable HTTP requests
     },
-    // googleServicesFile: "./plugins/google-services/GoogleService-Info.plist",
+    googleServicesFile: "./scripts/GoogleService-Info.plist",
     privacyManifests: {
       NSPrivacyAccessedAPITypes: [
         {

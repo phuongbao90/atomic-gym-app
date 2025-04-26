@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Workout } from "app";
 
 const initialState = {
   theme: "light" as "light" | "dark",
@@ -9,6 +10,8 @@ const initialState = {
   weightUnit: "kg" as "kg" | "lb",
   distanceUnit: "km" as "km" | "mi",
   sizeUnit: "cm" as "cm" | "in",
+  activeWorkoutPlanId: undefined as string | undefined,
+  activeWorkout: undefined as Workout | undefined,
 };
 
 export const appStore = createSlice({
@@ -39,6 +42,15 @@ export const appStore = createSlice({
     setSizeUnit: (state, action: PayloadAction<"cm" | "in">) => {
       state.sizeUnit = action.payload;
     },
+    setActiveWorkoutPlanId: (
+      state,
+      action: PayloadAction<string | undefined>
+    ) => {
+      state.activeWorkoutPlanId = action.payload;
+    },
+    setActiveWorkout: (state, action: PayloadAction<Workout | undefined>) => {
+      state.activeWorkout = action.payload;
+    },
   },
 });
 
@@ -51,5 +63,7 @@ export const {
   setWeightUnit,
   setDistanceUnit,
   setSizeUnit,
+  setActiveWorkoutPlanId,
+  setActiveWorkout,
 } = appStore.actions;
 export const appReducer = appStore.reducer;

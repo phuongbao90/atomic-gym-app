@@ -1,0 +1,28 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+this is the general concepts of mobile app:
+
+this app allows user to use with or without login
+- if they are not login, certain functionality is forbided.
+
+initially, when user first got to the app, user will need to pick existing workout plan or create new workout plan.
+- with each workout plan, there maybe multiple workout sessions inside
+-  and within each workout, there can be multiple exercise, each exercise will also have one or multiple sets
+
+after picking workout plan, that plan will be activated throughout the useage of app.
+
+# logs
+one major part of this app is the ability to track progress per workout plan, workout, exercise
+
+for workout, it needs to track (all, within 1 week, 1 month)
+- total number of workout session,
+- total time
+- average workout duration
+- number of sets completed
+- number of workout per week
+
+for exercise, it needs to track:
+- reps, weight per workout session separated by set

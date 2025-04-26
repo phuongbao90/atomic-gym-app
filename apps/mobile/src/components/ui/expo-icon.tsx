@@ -14,9 +14,8 @@ const Mapping = {
   materialCommunityIcons: MaterialCommunityIcons.glyphMap,
 } as const;
 
-export const ExpoIcon = ({
+const ExpoIcon = ({
   name,
-
   library,
   ...props
 }: {
@@ -169,4 +168,28 @@ export const ChangeImageIcon = (props: Omit<IconProps<string>, "name">) => {
 
 export const EditIcon = (props: Omit<IconProps<string>, "name">) => {
   return <ExpoIcon library="materialIcons" name="edit" {...props} />;
+};
+
+export const SettingsIcon = (props: Omit<IconProps<string>, "name">) => {
+  return <ExpoIcon library="materialIcons" name="settings" {...props} />;
+};
+
+export const DumbbellIcon = (props: Omit<IconProps<string>, "name">) => {
+  return (
+    <ExpoIcon library="materialCommunityIcons" name="dumbbell" {...props} />
+  );
+};
+
+export const RunIcon = (props: Omit<IconProps<string>, "name">) => {
+  return <ExpoIcon library="materialCommunityIcons" name="run" {...props} />;
+};
+
+export const ReplaceIcon = (props: Omit<IconProps<string>, "name">) => {
+  return (
+    <ExpoIcon
+      library="materialCommunityIcons"
+      name="swap-horizontal"
+      {...props}
+    />
+  );
 };

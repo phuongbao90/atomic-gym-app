@@ -32,7 +32,7 @@ export const ExerciseItem = ({
       label={`${item?.translations?.[0]?.name}${__DEV__ ? ` - ${index + 1}` : ""}`}
       labelClassName="text-lg font-bold"
       labelContainerClassName="ml-4"
-      subLabel={`${upperCase(t("sets"))}: ${setCount}`}
+      subLabel={setCount ? `${upperCase(t("sets"))}: ${setCount}` : undefined}
       subLabelClassName="text-sm text-gray-600 dark:text-gray-400"
       onPress={() =>
         debouncedPress(() => {

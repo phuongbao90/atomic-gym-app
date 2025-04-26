@@ -1,4 +1,5 @@
 {
+  "app_name": "Sổ ghi chép luyện tập",
   "start_workout": "Bắt đầu luyện tập",
   "no_exercises": "Không có bài tập",
   "gain_strength": "Tăng cường sức mạnh",
@@ -18,6 +19,7 @@
   "exercises_count": "{{count}} bài tập",
   "exercises": "bài tập",
   "start_plan": "Tiến hành buổi tập",
+  "cancel_plan": "Hủy giáo án",
   "day": "Ngày {{count}}",
   "summary": "Tóm tắt",
   "history": "Lịch sử",
@@ -100,5 +102,23 @@
   "drop_set": "drop set",
   "until_failure": "đến khi thất bại",
   "rest_time": "thời gian nghỉ",
-  "reorder_workouts": "Sắp xếp lại buổi tập"
+  "reorder_workouts": "Sắp xếp lại buổi tập",
+
+  "mon": "T.2",
+  "tue": "T.3",
+  "wed": "T.4",
+  "thu": "T.5",
+  "fri": "T.6",
+  "sat": "T.7",
+  "sun": "CN",
+
+  "find_workout_plan": "Tìm kiếm giáo án luyện tập",
+  "find_workout_plan_description": "Tìm kiếm giáo án luyện tập phù hợp với nhu cầu của bạn",
+  "build_workout_plan": "Xây dựng giáo án luyện tập",
+  "build_workout_plan_description": "Tạo giáo án luyện tập phù hợp với nhu cầu của bạn",
+  "quick_start": "Bắt đầu nhanh",
+  "start_logging_workout": "Bắt đầu ghi chép luyện tập",
+  "start_logging_workout_description": "Ghi chép luyện tập của bạn để theo dõi tiến bộ của bạn",
+  "workout_in_progress": "Buổi tập đang diễn ra",
+  "finish": "Kết thúc"
 }

@@ -1,4 +1,5 @@
 {
+  "app_name": "Atomic Gym Logger",
   "start_workout": "Start Workout",
   "no_exercises": "No exercises",
   "gain_strength": "Gain strength",
@@ -18,6 +19,7 @@
   "exercises_count": "{{count}} exercises",
   "exercises": "exercises",
   "start_plan": "Start plan",
+  "cancel_plan": "Cancel plan",
   "day": "Day {{count}}",
   "summary": "Summary",
   "history": "History",
@@ -100,5 +102,23 @@
   "drop_set": "Drop Set",
   "until_failure": "Until Failure",
   "rest_time": "Rest Time",
-  "reorder_workouts": "Reorder Workouts"
+  "reorder_workouts": "Reorder Workouts",
+
+  "mon": "Mon",
+  "tue": "Tue",
+  "wed": "Wed",
+  "thu": "Thu",
+  "fri": "Fri",
+  "sat": "Sat",
+  "sun": "Sun",
+
+  "find_workout_plan": "Find a Workout Plan",
+  "find_workout_plan_description": "Search for a workout plan that suits your needs",
+  "build_workout_plan": "Build a Workout Plan",
+  "build_workout_plan_description": "Create a workout plan that suits your needs",
+  "quick_start": "Quick Start",
+  "start_logging_workout": "Start Logging Workout",
+  "start_logging_workout_description": "Start logging your workout to see your progress",
+  "workout_in_progress": "Workout in Progress",
+  "finish": "Finish"
 }

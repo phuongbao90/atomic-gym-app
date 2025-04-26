@@ -1,10 +1,25 @@
 import QueryString from "qs";
 
-export type ExercisesScreenParams = {
-  allowSelect?: string;
-  workoutId?: string;
-  replaceWorkoutExerciseId?: string;
-};
+export type ExercisesScreenParams =
+  | {
+      mode: "default";
+    }
+  | {
+      allowSelect: "true";
+      replaceWorkoutExerciseId: string;
+      mode: "replaceToActiveWorkoutSession";
+    }
+  | {
+      allowSelect: "true";
+      mode: "addToActiveWorkoutSession";
+    }
+  | ({ allowSelect: "true"; workoutId: string } & (
+      | {
+          replaceWorkoutExerciseId: string;
+          mode: "replaceToCreateWorkoutPlan";
+        }
+      | { mode: "addToCreateWorkoutPlan" }
+    ));
 
 export const appRoutes = {
   login: "/(auth)",
@@ -18,6 +33,14 @@ export const appRoutes = {
   coach: "/coach",
   history: "/history",
   statistics: "/statistics",
+
+  // tabs: {
+  //   home: () => "/(tabs)" as const,
+  //   plans: () => "/plans" as const,
+  //   coach: () => "/coach" as const,
+  //   history: () => "/history" as const,
+  //   statistics: () => "/statistics" as const,
+  // },
 
   // exercises: "/exercises",
   // createExercise: "/exercises/create",
@@ -59,6 +82,8 @@ export const appRoutes = {
   workouts: {
     base: "/workouts" as const,
     detail: (id: string) => `${appRoutes.workouts.base}/${id}` as const,
+    inProgress: (id: string) =>
+      `${appRoutes.workouts.base}/in-progress?workoutId=${id}` as const,
   } as const,
 
   settings: "/settings",

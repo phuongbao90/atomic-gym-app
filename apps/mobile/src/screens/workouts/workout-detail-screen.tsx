@@ -1,6 +1,6 @@
 import { AppHeader } from "../../components/ui/app-header";
 import { AppScreen } from "../../components/ui/app-screen";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useGetWorkout } from "app";
 import { ActivityIndicator, View } from "react-native";
 import { ExerciseItem } from "../../components/exercise-item";
@@ -8,11 +8,16 @@ import { AppFlatList } from "../../components/ui/app-flat-list";
 import { AppButton } from "../../components/ui/app-button";
 import { useTranslation } from "react-i18next";
 import { AppText } from "../../components/ui/app-text";
+import { useAppDispatch } from "../../stores/redux-store";
+import { setActiveWorkout } from "../../stores/slices/app-slice";
+import { appRoutes } from "../../configs/routes";
+import { startWorkout } from "../../stores/slices/workout-session-slice";
 
 export function WorkoutDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation();
-
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const { data: workout, isLoading } = useGetWorkout(id);
 
   if (isLoading) {
@@ -59,6 +64,12 @@ export function WorkoutDetailScreen() {
           containerClassName="px-4 pb-4"
           radius="xl"
           color="primary"
+          onPress={() => {
+            if (workout) {
+              dispatch(startWorkout(workout));
+              router.push(appRoutes.workouts.inProgress(id));
+            }
+          }}
         />
       </AppScreen.Footer>
     </AppScreen>

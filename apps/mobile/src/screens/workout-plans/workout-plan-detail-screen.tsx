@@ -14,6 +14,8 @@ import { WorkoutPlanStatistics } from "./components/workout-plan-statistics";
 import { useTranslation } from "react-i18next";
 import { EditIcon, VerticalDotsIcon } from "../../components/ui/expo-icon";
 import { appRoutes } from "../../configs/routes";
+import { useAppDispatch, useAppSelector } from "../../stores/redux-store";
+import { setActiveWorkoutPlanId } from "../../stores/slices/app-slice";
 
 const routes = [
   { key: "first", title: "overview" },
@@ -55,6 +57,10 @@ export const WorkoutPlanDetailScreen = () => {
   const { data: workoutPlan } = useGetWorkoutPlan(id);
   const { t } = useTranslation();
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const activeWorkoutPlanId = useAppSelector(
+    (state) => state.app.activeWorkoutPlanId
+  );
   const renderHeader = () => {
     return (
       <View>
@@ -137,7 +143,29 @@ export const WorkoutPlanDetailScreen = () => {
 
       <AppScreen.Footer>
         <AppScreen.FooterContainer className="px-4 py-2">
-          <AppButton title={t("start_plan")} fullWidth color="primary" />
+          {activeWorkoutPlanId === id ? (
+            <AppButton
+              title={t("cancel_plan")}
+              fullWidth
+              color="danger"
+              className="bg-transparent border border-danger"
+              textClassName="text-danger"
+              onPress={() => {
+                dispatch(setActiveWorkoutPlanId(undefined));
+                router.push(appRoutes.home);
+              }}
+            />
+          ) : (
+            <AppButton
+              title={t("start_plan")}
+              fullWidth
+              color="primary"
+              onPress={() => {
+                dispatch(setActiveWorkoutPlanId(id));
+                router.push(appRoutes.home);
+              }}
+            />
+          )}
         </AppScreen.FooterContainer>
       </AppScreen.Footer>
     </AppScreen>
