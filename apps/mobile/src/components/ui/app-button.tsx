@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import { buttonCva, buttonTextCva } from "../../styles/button-cva";
 import { cn } from "../../utils/cn";
 
@@ -27,7 +27,7 @@ import { cn } from "../../utils/cn";
 //   },
 // })
 
-type ButtonProps = React.ComponentPropsWithoutRef<typeof Pressable> & {
+type ButtonProps = React.ComponentPropsWithoutRef<typeof TouchableOpacity> & {
   title: string;
   size?: "sx" | "sm" | "md" | "lg" | "xl";
   color?: "default" | "primary" | "secondary" | "danger";
@@ -41,7 +41,7 @@ type ButtonProps = React.ComponentPropsWithoutRef<typeof Pressable> & {
 };
 
 export const AppButton = React.forwardRef<
-  React.ElementRef<typeof Pressable>,
+  React.ElementRef<typeof TouchableOpacity>,
   ButtonProps
 >(
   (
@@ -61,7 +61,7 @@ export const AppButton = React.forwardRef<
   ) => {
     return (
       <View className={cn("", containerClassName)} testID={testID}>
-        <Pressable
+        <TouchableOpacity
           className={cn(
             buttonCva({ size, color, disabled, fullWidth, radius, className })
           )}
@@ -83,7 +83,7 @@ export const AppButton = React.forwardRef<
               {props.title}
             </Text>
           </View>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     );
   }

@@ -119,6 +119,14 @@ export const PlusIcon = (props: Omit<IconProps<string>, "name">) => {
   return <ExpoIcon library="materialCommunityIcons" name="plus" {...props} />;
 };
 
+export const PlusCircleIcon = (props: Omit<IconProps<string>, "name">) => {
+  return <ExpoIcon library="feather" name="plus-circle" {...props} />;
+};
+
+export const MinusCircleIcon = (props: Omit<IconProps<string>, "name">) => {
+  return <ExpoIcon library="feather" name="minus-circle" {...props} />;
+};
+
 export const CheckIcon = (props: Omit<IconProps<string>, "name">) => {
   return <ExpoIcon library="materialCommunityIcons" name="check" {...props} />;
 };
@@ -192,4 +200,8 @@ export const ReplaceIcon = (props: Omit<IconProps<string>, "name">) => {
       {...props}
     />
   );
+};
+
+export const ClockIcon = (props: Omit<IconProps<string>, "name">) => {
+  return <ExpoIcon library="materialCommunityIcons" name="clock" {...props} />;
 };

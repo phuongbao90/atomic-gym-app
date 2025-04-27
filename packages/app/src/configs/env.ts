@@ -6,7 +6,7 @@ const _ENV =
 const url = "localhost";
 
 const _API_URL = {
-  development: "http://172.16.41.5:3000",
+  development: "http://192.168.31.63:3000",
   // development: `http://${url}:3000`,
   test: `http://${url}:3000`,
   production: `http://${url}:3000`,

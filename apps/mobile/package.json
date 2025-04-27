@@ -28,6 +28,8 @@
   },
   "dependencies": {
     "@config-plugins/react-native-blob-util": "^8.0.0",
+    "@dev-plugins/react-navigation": "~0.2.0",
+    "@dev-plugins/react-query": "~0.2.0",
     "@expo/react-native-action-sheet": "^4.1.1",
     "@expo/vector-icons": "^14.1.0",
     "@gorhom/bottom-sheet": "^5.1.2",
@@ -125,6 +127,7 @@
     "react-native-webview": "13.12.5",
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
+    "redux-devtools-expo-dev-plugin": "^1.0.0",
     "redux-persist": "^6.0.0",
     "sonner-native": "^0.19.0",
     "tailwind-config": "*",

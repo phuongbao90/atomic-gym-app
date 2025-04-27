@@ -7,10 +7,12 @@ import {
 
 export const useWorkoutTimer = () => {
   const dispatch = useAppDispatch();
-  const { elapsedTime, isActive, startTime, pausedAt } = useAppSelector(
+  const { elapsedTime, startTime } = useAppSelector(
     (state) => state.workoutSession
   );
   const [displayTime, setDisplayTime] = useState(0);
+  // Determine if workout is active based on startTime
+  const isActive = !!startTime;
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;

@@ -25,6 +25,7 @@ import { Divider } from "../components/ui/divider";
 import { t } from "i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { WorkoutPlanCard } from "../components/workout-plan-card";
+import { usePreventRepeatPress } from "../hooks/use-prevent-repeat-press";
 
 export function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -93,11 +94,14 @@ export function HomeScreen() {
 
 const ActiveWorkout = ({ item }: { item: Workout }) => {
   const router = useRouter();
+  const debouncedPress = usePreventRepeatPress();
   return (
     <Pressable
       className="flex-row items-start px-4 py-4 bg-slate-200 dark:bg-slate-700 rounded-lg gap-x-4"
       onPress={() => {
-        router.push(appRoutes.workouts.inProgress(item.id.toString()));
+        debouncedPress(() => {
+          router.push(appRoutes.inProgress.workout(item.id.toString()));
+        });
       }}
     >
       <View className="bg-yellow-500 dark:bg-yellow-600 rounded-full items-center justify-center w-12 h-12">

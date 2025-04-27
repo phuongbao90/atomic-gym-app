@@ -7,7 +7,7 @@ import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { PortalProvider } from "@gorhom/portal";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
+import { SplashScreen, Stack, useNavigationContainerRef } from "expo-router";
 import { useEffect, useRef } from "react";
 import { SafeAreaView } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -32,6 +32,7 @@ import i18n from "../src/configs/i18n";
 import { createOfetchInstance } from "app";
 import { PersistGate } from "redux-persist/integration/react";
 import { colorScheme } from "nativewind";
+import { useReactNavigationDevTools } from "@dev-plugins/react-navigation";
 
 // This is the default configuration
 configureReanimatedLogger({
@@ -47,6 +48,10 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
+
+  const navigationRef = useNavigationContainerRef();
+
+  useReactNavigationDevTools(navigationRef);
 
   useEffect(() => {
     if (loaded) SplashScreen.hideAsync();

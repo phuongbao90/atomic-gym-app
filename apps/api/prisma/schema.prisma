@@ -200,6 +200,12 @@ model ExerciseSet {
   isUntilFailure    Boolean         @default(false)
   WorkoutExercise   WorkoutExercise @relation(fields: [workoutExerciseId], references: [id], onDelete: Cascade)
   workoutExerciseId String
+  isCompleted       Boolean         @default(false)
+  completedAt       DateTime?
+  weight            Float?
+  repetitions       Int?
+  distance          Float?
+  duration          Int?
 }
 
 model WorkoutExercise {

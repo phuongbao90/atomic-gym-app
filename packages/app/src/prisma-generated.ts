@@ -140,6 +140,12 @@ export interface ExerciseSet {
   isUntilFailure: boolean;
   WorkoutExercise?: WorkoutExercise;
   workoutExerciseId: string;
+  isCompleted: boolean;
+  completedAt: string | null;
+  weight: number | null;
+  repetitions: number | null;
+  distance: number | null;
+  duration: number | null;
 }
 
 export interface WorkoutExercise {

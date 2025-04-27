@@ -120,5 +120,9 @@
   "start_logging_workout": "Bắt đầu ghi chép luyện tập",
   "start_logging_workout_description": "Ghi chép luyện tập của bạn để theo dõi tiến bộ của bạn",
   "workout_in_progress": "Buổi tập đang diễn ra",
-  "finish": "Kết thúc"
+  "finish": "Kết thúc",
+  "weight": "Cân nặng",
+  "reps": "Lần",
+  "complete_set": "Hoàn thành hiệp",
+  "edit": "chỉnh sửa"
 }

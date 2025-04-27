@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, createDraftSafeSelector } from "@reduxjs/toolkit";
 import { authReducer } from "./slices/auth-slice";
 import { appReducer } from "./slices/app-slice";
 import { themeListener } from "./middlewares/theme-middleware";
@@ -18,6 +18,8 @@ import { combineReducers } from "@reduxjs/toolkit";
 import { MMKV } from "react-native-mmkv";
 import { createWorkoutPlanReducer } from "./slices/create-workout-plan-slice";
 import { workoutSessionReducer } from "./slices/workout-session-slice";
+import devToolsEnhancer from "redux-devtools-expo-dev-plugin";
+
 export const storage = new MMKV();
 
 //TO BE USED IN REDUX PERSIST
@@ -61,6 +63,10 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }).prepend(themeListener.middleware, languageListener.middleware),
+
+  devTools: false,
+  enhancers: (getDefaultEnhancers) =>
+    getDefaultEnhancers().concat(devToolsEnhancer()),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

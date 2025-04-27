@@ -21,6 +21,11 @@ export type ExercisesScreenParams =
       | { mode: "addToCreateWorkoutPlan" }
     ));
 
+export type InProgressWorkoutExercisesScreenParams = {
+  workoutId: string;
+  page: string;
+};
+
 export const appRoutes = {
   login: "/(auth)",
   register: "/(auth)/register",
@@ -85,6 +90,16 @@ export const appRoutes = {
     inProgress: (id: string) =>
       `${appRoutes.workouts.base}/in-progress?workoutId=${id}` as const,
   } as const,
+
+  inProgress: {
+    base: "/in-progress" as const,
+    workout: (id: string) =>
+      `${appRoutes.inProgress.base}/workout?workoutId=${id}` as const,
+    workoutExercises: (params: InProgressWorkoutExercisesScreenParams) =>
+      `${appRoutes.inProgress.base}/workout-exercises?${QueryString.stringify(
+        params
+      )}` as const,
+  },
 
   settings: "/settings",
   profile: "/profile",

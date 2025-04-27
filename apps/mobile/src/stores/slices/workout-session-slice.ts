@@ -1,6 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Exercise, Workout, WorkoutExercise } from "app";
 import uuid from "react-native-uuid";
+import { RootState } from "../redux-store";
+
 interface WorkoutSessionState {
   startTime: number | null;
   elapsedTime: number; // in milliseconds
@@ -121,10 +123,170 @@ export const workoutSessionSlice = createSlice({
                 isUntilFailure: false,
                 restTime: action.payload.defaultRestTime,
                 workoutExerciseId: sampleWorkoutExerciseId,
+                isCompleted: false,
+                completedAt: null,
+                weight: null,
+                repetitions: null,
+                distance: null,
+                duration: null,
               })),
             };
           })
         );
+      }
+    },
+
+    deleteActiveWorkoutSessionExerciseSet: (
+      state,
+      action: PayloadAction<{
+        workoutExerciseId: string;
+        exerciseSetId: string;
+      }>
+    ) => {
+      if (state.activeWorkout?.workoutExercises) {
+        const workoutExercise = state.activeWorkout.workoutExercises.find(
+          (we) => we.id === action.payload.workoutExerciseId
+        );
+        if (workoutExercise) {
+          const exerciseSetIndex = workoutExercise.sets?.findIndex(
+            (set) => set.id === action.payload.exerciseSetId
+          );
+          if (typeof exerciseSetIndex === "number" && exerciseSetIndex !== -1) {
+            workoutExercise.sets?.splice(exerciseSetIndex, 1);
+          }
+        }
+      }
+    },
+
+    completeActiveWorkoutSessionExerciseSet: (
+      state,
+      action: PayloadAction<{
+        workoutExerciseId: string;
+        exerciseSetId: string;
+        // weight: number;
+        // reps: number;
+      }>
+    ) => {
+      if (state.activeWorkout?.workoutExercises) {
+        const workoutExercise = state.activeWorkout.workoutExercises.find(
+          (we) => we.id === action.payload.workoutExerciseId
+        );
+
+        if (workoutExercise) {
+          const exerciseSet = workoutExercise.sets?.find(
+            (set) => set.id === action.payload.exerciseSetId
+          );
+
+          if (exerciseSet) {
+            exerciseSet.isCompleted = true;
+            exerciseSet.completedAt = new Date().toISOString();
+            // exerciseSet.weight = action.payload.weight;
+            // exerciseSet.repetitions = action.payload.reps;
+          }
+        }
+      }
+    },
+
+    undoCompleteActiveWorkoutSessionExerciseSet: (
+      state,
+      action: PayloadAction<{
+        workoutExerciseId: string;
+        exerciseSetId: string;
+      }>
+    ) => {
+      if (state.activeWorkout?.workoutExercises) {
+        const workoutExercise = state.activeWorkout.workoutExercises.find(
+          (we) => we.id === action.payload.workoutExerciseId
+        );
+        if (workoutExercise) {
+          const exerciseSet = workoutExercise.sets?.find(
+            (set) => set.id === action.payload.exerciseSetId
+          );
+          if (exerciseSet) {
+            exerciseSet.isCompleted = false;
+            exerciseSet.completedAt = null;
+          }
+        }
+      }
+    },
+
+    increaseExerciseSetValue: (
+      state,
+      action: PayloadAction<{
+        workoutExerciseId: string;
+        exerciseSetId: string;
+        type: "weight" | "repetitions" | "distance" | "duration";
+        value: number;
+      }>
+    ) => {
+      if (state.activeWorkout?.workoutExercises) {
+        const workoutExercise = state.activeWorkout.workoutExercises.find(
+          (we) => we.id === action.payload.workoutExerciseId
+        );
+        if (workoutExercise) {
+          const exerciseSet = workoutExercise.sets?.find(
+            (set) => set.id === action.payload.exerciseSetId
+          );
+          if (exerciseSet) {
+            if (action.payload.type === "weight") {
+              exerciseSet.weight =
+                (exerciseSet.weight || 0) + action.payload.value;
+            } else if (action.payload.type === "repetitions") {
+              exerciseSet.repetitions =
+                (exerciseSet.repetitions || 0) + action.payload.value;
+            } else if (action.payload.type === "distance") {
+              exerciseSet.distance =
+                (exerciseSet.distance || 0) + action.payload.value;
+            } else if (action.payload.type === "duration") {
+              exerciseSet.duration =
+                (exerciseSet.duration || 0) + action.payload.value;
+            }
+          }
+        }
+      }
+    },
+
+    decreaseExerciseSetValue: (
+      state,
+      action: PayloadAction<{
+        workoutExerciseId: string;
+        exerciseSetId: string;
+        type: "weight" | "repetitions" | "distance" | "duration";
+        value: number;
+      }>
+    ) => {
+      if (state.activeWorkout?.workoutExercises) {
+        const workoutExercise = state.activeWorkout.workoutExercises.find(
+          (we) => we.id === action.payload.workoutExerciseId
+        );
+        if (workoutExercise) {
+          const exerciseSet = workoutExercise.sets?.find(
+            (set) => set.id === action.payload.exerciseSetId
+          );
+          if (exerciseSet) {
+            if (action.payload.type === "weight") {
+              exerciseSet.weight = Math.max(
+                Number(exerciseSet.weight) - action.payload.value,
+                0
+              );
+            } else if (action.payload.type === "repetitions") {
+              exerciseSet.repetitions = Math.max(
+                Number(exerciseSet.repetitions) - action.payload.value,
+                0
+              );
+            } else if (action.payload.type === "distance") {
+              exerciseSet.distance = Math.max(
+                Number(exerciseSet.distance) - action.payload.value,
+                0
+              );
+            } else if (action.payload.type === "duration") {
+              exerciseSet.duration = Math.max(
+                Number(exerciseSet.duration) - action.payload.value,
+                0
+              );
+            }
+          }
+        }
       }
     },
   },
@@ -139,6 +301,11 @@ export const {
   replaceActiveWorkoutSessionExercise,
   removeActiveWorkoutSessionExercise,
   addWorkoutExercisesToActiveWorkoutSession,
+  completeActiveWorkoutSessionExerciseSet,
+  deleteActiveWorkoutSessionExerciseSet,
+  undoCompleteActiveWorkoutSessionExerciseSet,
+  increaseExerciseSetValue,
+  decreaseExerciseSetValue,
 } = workoutSessionSlice.actions;
 
 export const workoutSessionReducer = workoutSessionSlice.reducer;

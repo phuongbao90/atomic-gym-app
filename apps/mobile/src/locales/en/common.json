@@ -120,5 +120,9 @@
   "start_logging_workout": "Start Logging Workout",
   "start_logging_workout_description": "Start logging your workout to see your progress",
   "workout_in_progress": "Workout in Progress",
-  "finish": "Finish"
+  "finish": "Finish",
+  "weight": "Weight",
+  "reps": "Reps",
+  "complete_set": "Complete Set",
+  "edit": "edit"
 }

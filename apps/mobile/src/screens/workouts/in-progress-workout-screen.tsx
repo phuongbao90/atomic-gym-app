@@ -27,12 +27,13 @@ import { colors } from "../../styles/themes";
 import { appRoutes } from "../../configs/routes";
 import { AppButton } from "../../components/ui/app-button";
 import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
+import workout from "../../../app/(app)/in-progress/workout";
 
 export const InProgressWorkoutScreen = () => {
   const { t } = useTranslation();
   const workout = useAppSelector((s) => s.workoutSession.activeWorkout);
   const dispatch = useAppDispatch();
-  const { formattedTime } = useWorkoutTimer();
+  // const { formattedTime } = useWorkoutTimer();
   const debouncedPress = usePreventRepeatPress();
   const router = useRouter();
   const { showActionSheetWithOptions } = useActionSheet();
@@ -102,21 +103,7 @@ export const InProgressWorkoutScreen = () => {
 
   return (
     <AppScreen name="in-progress-workout-screen">
-      <View className="py-4 mx-4 flex-row items-center justify-center relative">
-        <TouchableOpacity
-          onPress={() => router.back()}
-          hitSlop={10}
-          className="absolute left-0"
-        >
-          <ChevronLeftIcon size={26} />
-        </TouchableOpacity>
-        <AppText className="text-lg font-bold self-center">
-          {formattedTime}
-        </AppText>
-        <TouchableOpacity hitSlop={10} className="absolute right-0">
-          <AppText>{t("finish")}</AppText>
-        </TouchableOpacity>
-      </View>
+      <Header />
       <Divider />
 
       <DraggableFlatList
@@ -160,6 +147,35 @@ export const InProgressWorkoutScreen = () => {
   );
 };
 
+const Header = () => {
+  const router = useRouter();
+  const { t } = useTranslation();
+
+  return (
+    <View className="py-4 mx-4 flex-row items-center justify-center relative">
+      <TouchableOpacity
+        onPress={() => router.back()}
+        hitSlop={10}
+        className="absolute left-0"
+      >
+        <ChevronLeftIcon size={26} />
+      </TouchableOpacity>
+
+      <CountDown />
+      <TouchableOpacity hitSlop={10} className="absolute right-0">
+        <AppText>{t("finish")}</AppText>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const CountDown = () => {
+  const { formattedTime } = useWorkoutTimer();
+  return (
+    <AppText className="text-lg font-bold self-center">{formattedTime}</AppText>
+  );
+};
+
 const ExerciseItem = ({
   item,
   drag,
@@ -168,8 +184,22 @@ const ExerciseItem = ({
 }: RenderItemParams<WorkoutExercise> & {
   onPressMore: (item: WorkoutExercise) => void;
 }) => {
+  const router = useRouter();
+  const debouncedPress = usePreventRepeatPress();
   return (
-    <TouchableOpacity onLongPress={drag}>
+    <TouchableOpacity
+      onLongPress={drag}
+      onPress={() => {
+        debouncedPress(() => {
+          router.push(
+            appRoutes.inProgress.workoutExercises({
+              workoutId: item.workoutId || "",
+              page: getIndex()!.toString(),
+            })
+          );
+        });
+      }}
+    >
       <View className="flex-row items-center gap-x-4 py-4 pl-2 pr-2 border-b border-gray-500">
         <View className="w-10 h-10 bg-gray-500 rounded-full items-center justify-center">
           <AppText>{getIndex()! + 1}</AppText>
@@ -181,7 +211,11 @@ const ExerciseItem = ({
         <TouchableOpacity
           className="ml-auto"
           hitSlop={16}
-          onPress={() => onPressMore(item)}
+          onPress={() =>
+            debouncedPress(() => {
+              onPressMore(item);
+            })
+          }
         >
           <VerticalDotsIcon />
         </TouchableOpacity>
