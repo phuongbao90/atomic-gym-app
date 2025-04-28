@@ -1,7 +1,6 @@
 import { TouchableOpacity, View } from "react-native";
 import { AppScreen } from "../../components/ui/app-screen";
 import { useRouter } from "expo-router";
-import { WorkoutExercise } from "app";
 import { useWorkoutTimer } from "../../hooks/use-workout-timer";
 import { AppText } from "../../components/ui/app-text";
 import { useTranslation } from "react-i18next";
@@ -27,19 +26,27 @@ import { colors } from "../../styles/themes";
 import { appRoutes } from "../../configs/routes";
 import { AppButton } from "../../components/ui/app-button";
 import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
-import workout from "../../../app/(app)/in-progress/workout";
+import React, { useMemo } from "react";
+import { shallowEqual } from "react-redux";
+import deepEqual from "deep-equal";
 
 export const InProgressWorkoutScreen = () => {
   const { t } = useTranslation();
-  const workout = useAppSelector((s) => s.workoutSession.activeWorkout);
   const dispatch = useAppDispatch();
-  // const { formattedTime } = useWorkoutTimer();
   const debouncedPress = usePreventRepeatPress();
   const router = useRouter();
   const { showActionSheetWithOptions } = useActionSheet();
   const theme = useAppSelector((s) => s.app.theme);
+  const workoutExercises = useAppSelector(
+    (s) =>
+      s.workoutSession.activeWorkout?.workoutExercises?.map((e) => ({
+        id: e.id,
+        order: e.order,
+      })),
+    deepEqual
+  );
 
-  function onPressMore(item: WorkoutExercise) {
+  function onPressMore(workoutExerciseId: string) {
     const options = [t("replace"), t("delete"), t("cancel")];
 
     showActionSheetWithOptions(
@@ -72,7 +79,7 @@ export const InProgressWorkoutScreen = () => {
           // replace
           router.push(
             appRoutes.exercises.list({
-              replaceWorkoutExerciseId: item.id,
+              replaceWorkoutExerciseId: workoutExerciseId,
               allowSelect: "true",
               mode: "replaceToActiveWorkoutSession",
             })
@@ -83,7 +90,7 @@ export const InProgressWorkoutScreen = () => {
           // delete
           dispatch(
             removeActiveWorkoutSessionExercise({
-              workoutExerciseId: item.id,
+              workoutExerciseId: workoutExerciseId,
             })
           );
         }
@@ -91,15 +98,19 @@ export const InProgressWorkoutScreen = () => {
     );
   }
 
-  const renderItem = (params: RenderItemParams<WorkoutExercise>) => {
+  const renderItem = (
+    params: RenderItemParams<{ id: string; order: number }>
+  ) => {
     return (
       <ScaleDecorator>
-        <ExerciseItem {...params} onPressMore={onPressMore} />
+        <ExerciseItem
+          {...params}
+          onPressMore={onPressMore}
+          item={params.item.id}
+        />
       </ScaleDecorator>
     );
   };
-
-  if (!workout || !workout.workoutExercises) return null;
 
   return (
     <AppScreen name="in-progress-workout-screen">
@@ -108,7 +119,7 @@ export const InProgressWorkoutScreen = () => {
 
       <DraggableFlatList
         keyExtractor={(item) => item.id}
-        data={[...workout.workoutExercises].sort((a, b) => a.order - b.order)}
+        data={[...(workoutExercises || [])].sort((a, b) => a.order - b.order)}
         renderItem={renderItem}
         style={{ flex: 1 }}
         containerStyle={{ flexGrow: 1 }}
@@ -116,7 +127,14 @@ export const InProgressWorkoutScreen = () => {
           flexGrow: 1,
         }}
         onDragEnd={({ data }) => {
-          dispatch(reorderActiveWorkoutSessionExercises(data));
+          dispatch(
+            reorderActiveWorkoutSessionExercises(
+              data.map((e, i) => ({
+                id: e.id,
+                order: i,
+              }))
+            )
+          );
         }}
         ListFooterComponentStyle={{
           flexGrow: 1,
@@ -147,7 +165,7 @@ export const InProgressWorkoutScreen = () => {
   );
 };
 
-const Header = () => {
+const Header = React.memo(() => {
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -167,23 +185,33 @@ const Header = () => {
       </TouchableOpacity>
     </View>
   );
-};
+});
 
-const CountDown = () => {
+const CountDown = React.memo(() => {
   const { formattedTime } = useWorkoutTimer();
   return (
     <AppText className="text-lg font-bold self-center">{formattedTime}</AppText>
   );
-};
+});
 
 const ExerciseItem = ({
   item,
   drag,
   getIndex,
   onPressMore,
-}: RenderItemParams<WorkoutExercise> & {
-  onPressMore: (item: WorkoutExercise) => void;
+}: RenderItemParams<string> & {
+  onPressMore: (item: string) => void;
 }) => {
+  const workoutExercise = useAppSelector(
+    (s) =>
+      s.workoutSession.activeWorkout?.workoutExercises?.find(
+        (e) => e.id === item
+      ),
+    shallowEqual
+  );
+  const completedSetsCount = useMemo(() => {
+    return workoutExercise?.sets?.filter((s) => s.isCompleted).length;
+  }, [workoutExercise]);
   const router = useRouter();
   const debouncedPress = usePreventRepeatPress();
   return (
@@ -193,7 +221,7 @@ const ExerciseItem = ({
         debouncedPress(() => {
           router.push(
             appRoutes.inProgress.workoutExercises({
-              workoutId: item.workoutId || "",
+              workoutId: workoutExercise?.workoutId || "",
               page: getIndex()!.toString(),
             })
           );
@@ -205,8 +233,10 @@ const ExerciseItem = ({
           <AppText>{getIndex()! + 1}</AppText>
         </View>
         <View>
-          <AppText>{item.exercise?.translations?.[0]?.name}</AppText>
-          <AppText>{`0/${item.sets?.length} sets completed`}</AppText>
+          <AppText>
+            {workoutExercise?.exercise?.translations?.[0]?.name}
+          </AppText>
+          <AppText>{`${completedSetsCount}/${workoutExercise?.sets?.length} sets completed`}</AppText>
         </View>
         <TouchableOpacity
           className="ml-auto"

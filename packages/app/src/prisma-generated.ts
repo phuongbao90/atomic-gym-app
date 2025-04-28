@@ -156,4 +156,5 @@ export interface WorkoutExercise {
   exerciseId: number;
   order: number;
   sets?: ExerciseSet[];
+  notes: string | null;
 }

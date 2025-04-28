@@ -124,5 +124,7 @@
   "weight": "Cân nặng",
   "reps": "Lần",
   "complete_set": "Hoàn thành hiệp",
-  "edit": "chỉnh sửa"
+  "edit": "chỉnh sửa",
+  "add_notes": "Thêm ghi chú",
+  "please_fill_all_fields": "Vui lòng điền đầy đủ các trường"
 }

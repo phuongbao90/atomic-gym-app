@@ -1,4 +1,4 @@
-import { FlatList, View } from "react-native";
+import { FlatList, Touchable, View } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { AppScreen } from "../../components/ui/app-screen";
 import {
@@ -9,6 +9,7 @@ import {
   MinusCircleIcon,
   PlusCircleIcon,
   VerticalDotsIcon,
+  XIcon,
 } from "../../components/ui/expo-icon";
 import { router, useLocalSearchParams, useRouter } from "expo-router";
 import { AppText } from "../../components/ui/app-text";
@@ -19,15 +20,15 @@ import { useWorkoutTimer } from "../../hooks/use-workout-timer";
 import PagerView from "react-native-pager-view";
 import { useAppDispatch, useAppSelector } from "../../stores/redux-store";
 import { InProgressWorkoutExercisesScreenParams } from "../../configs/routes";
-import { Fragment, useState } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import { ExerciseSet, WorkoutExercise } from "app";
 import { Image } from "expo-image";
 import {
   completeActiveWorkoutSessionExerciseSet,
+  countDownRestTime,
   decreaseExerciseSetValue,
   deleteActiveWorkoutSessionExerciseSet,
   increaseExerciseSetValue,
-  removeActiveWorkoutSessionExercise,
   undoCompleteActiveWorkoutSessionExerciseSet,
 } from "../../stores/slices/workout-session-slice";
 import { capitalize } from "lodash";
@@ -35,38 +36,38 @@ import { AppButton } from "../../components/ui/app-button";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { colors } from "../../styles/themes";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { toast } from "sonner-native";
+import { convertToHourMinuteSecond } from "../../utils/convert-to-hour-minute-second";
+import { useCountDownRestTime } from "../../hooks/use-count-down-rest-time";
+import { shallowEqual } from "react-redux";
 
 export const InProgressWorkoutExercisesScreen = () => {
   const router = useRouter();
-  const { page, workoutId } =
+  const { page } =
     useLocalSearchParams<InProgressWorkoutExercisesScreenParams>();
-  const debouncedPress = usePreventRepeatPress();
+
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const workoutExercises = useAppSelector(
-    (s) => s.workoutSession.activeWorkout?.workoutExercises
+
+  const workoutExerciseIds = useAppSelector(
+    (s) =>
+      s.workoutSession?.activeWorkout?.workoutExercises
+        ?.slice()
+        ?.sort((a, b) => a.order - b.order)
+        ?.map((we) => we.id),
+    shallowEqual
   );
+
   const [activePage, setActivePage] = useState(Number(page));
 
   return (
     <AppScreen name="in-progress-workout-exercises-screen">
-      <View className="py-4 mx-4 flex-row items-center justify-center relative">
-        <TouchableOpacity
-          onPress={() => router.back()}
-          hitSlop={10}
-          className="absolute left-0"
-        >
-          <ChevronLeftIcon size={26} />
-        </TouchableOpacity>
-        <CountDown />
-        <TouchableOpacity hitSlop={10} className="absolute right-0">
-          <AppText>{t("finish")}</AppText>
-        </TouchableOpacity>
-      </View>
+      <Header />
       <View className="mb-3">
         <PagerDots
           activePage={activePage}
-          pages={workoutExercises?.length || 0}
+          pages={workoutExerciseIds?.length || 0}
         />
       </View>
       <Divider />
@@ -78,95 +79,172 @@ export const InProgressWorkoutExercisesScreen = () => {
           setActivePage(e.nativeEvent.position);
         }}
       >
-        {workoutExercises?.map((weItem, index) => (
-          <View key={index.toString()} className="flex-1">
-            <FlatList
-              data={weItem.sets}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item, index }) => (
-                <ExerciseSetItem
-                  exerciseSet={item}
-                  index={index}
-                  workoutExerciseId={weItem.id}
-                />
-              )}
-              contentContainerStyle={{
-                paddingHorizontal: 10,
-                paddingTop: 10,
-                paddingBottom: insets.bottom + 60,
-              }}
-              style={{ flex: 1 }}
-              ListHeaderComponent={
-                <Fragment>
-                  <ExerciseHeader item={weItem} />
-                  <View className="my-2">
-                    <HistoryAndNotes />
-                  </View>
-                </Fragment>
-              }
-              ItemSeparatorComponent={() => <View className="my-2" />}
-            />
-          </View>
+        {workoutExerciseIds?.map((workoutExerciseId, index) => (
+          <WorkoutExercisePage
+            key={index.toString()}
+            index={index}
+            workoutExerciseId={workoutExerciseId}
+          />
         ))}
       </PagerView>
+      {/* {countdownRestTime > 0 && (
+        <RestTimeCountDown restTime={countdownRestTime} />
+      )} */}
     </AppScreen>
   );
 };
 
-const PagerDots = ({
-  activePage,
-  pages,
-}: {
-  activePage: number;
-  pages: number;
-}) => {
-  return (
-    <View className="flex-row items-center justify-center gap-x-2">
-      {Array.from({ length: pages }).map((_, index) => (
-        <View
-          key={index.toString()}
-          className={`w-2 h-2 rounded-full ${
-            index === activePage ? "bg-primary" : "bg-gray-500"
-          }`}
+const WorkoutExercisePage = React.memo(
+  ({
+    index,
+    workoutExerciseId,
+  }: {
+    index: number;
+    workoutExerciseId: string;
+  }) => {
+    const insets = useSafeAreaInsets();
+    const modalRef = useRef<BottomSheetModal>(null);
+    const historyRef = useRef<BottomSheetModal>(null);
+    // const workoutExercise = useAppSelector((s) =>
+    //   s.workoutSession?.activeWorkout?.workoutExercises?.find(
+    //     (we) => we.id === workoutExerciseId
+    //   )
+    // );
+    // const workoutExercise = useAppSelector(
+    //   makeSelectWorkoutExerciseById(workoutExerciseId)
+    // );
+    const exerciseSetIds = useAppSelector(
+      (s) =>
+        s.workoutSession?.activeWorkout?.workoutExercises
+          ?.find((we) => we.id === workoutExerciseId)
+          ?.sets?.map((es) => es.id),
+      shallowEqual
+    );
+    if (!exerciseSetIds) return null;
+    return (
+      <View key={index.toString()} className="flex-1">
+        <FlatList
+          keyExtractor={(item) => item}
+          data={exerciseSetIds}
+          renderItem={({ item, index }) => (
+            <ExerciseSetItem
+              exerciseSetId={item}
+              index={index}
+              workoutExerciseId={workoutExerciseId}
+            />
+          )}
+          contentContainerStyle={{
+            paddingHorizontal: 10,
+            paddingTop: 10,
+            paddingBottom: insets.bottom + 60,
+          }}
+          style={{ flex: 1 }}
+          ListHeaderComponent={
+            <Fragment>
+              <ExerciseHeader workoutExerciseId={workoutExerciseId} />
+              <View className="my-2">
+                <HistoryAndNotes
+                  noteRef={modalRef}
+                  historyRef={historyRef}
+                  workoutExerciseId={workoutExerciseId}
+                />
+              </View>
+            </Fragment>
+          }
+          ItemSeparatorComponent={() => <View className="my-2" />}
         />
-      ))}
-    </View>
-  );
-};
+        {/* <AddNotesToWorkoutExerciseSheet
+          modalRef={modalRef}
+          workoutExercise={workoutExercise}
+        /> */}
+      </View>
+    );
+  }
+);
+
+const PagerDots = React.memo(
+  ({
+    activePage,
+    pages,
+  }: {
+    activePage: number;
+    pages: number;
+  }) => {
+    console.log("re-render pager dots");
+    return (
+      <View className="flex-row items-center justify-center gap-x-2">
+        {Array.from({ length: pages }).map((_, index) => (
+          <View
+            key={index.toString()}
+            className={`w-2 h-2 rounded-full ${
+              index === activePage ? "bg-primary" : "bg-gray-500"
+            }`}
+          />
+        ))}
+      </View>
+    );
+  }
+);
 
 const ExerciseHeader = ({
-  item,
+  workoutExerciseId,
 }: {
-  item: WorkoutExercise;
+  workoutExerciseId: string;
 }) => {
+  const name = useAppSelector(
+    (s) =>
+      s.workoutSession?.activeWorkout?.workoutExercises?.find(
+        (we) => we.id === workoutExerciseId
+      )?.exercise?.translations?.[0]?.name
+  );
+  const image = useAppSelector(
+    (s) =>
+      s.workoutSession?.activeWorkout?.workoutExercises?.find(
+        (we) => we.id === workoutExerciseId
+      )?.exercise?.images?.[0]
+  );
   return (
     <View className="flex-row items-center gap-4">
       <View>
         <Image
-          source={item.exercise?.images?.[0]}
+          source={image}
           style={{ width: 80, height: 80, borderRadius: 10 }}
         />
       </View>
       <View>
-        <AppText className="text-xl">
-          {item.exercise?.translations?.[0]?.name}
-        </AppText>
+        <AppText className="text-xl">{name}</AppText>
       </View>
     </View>
   );
 };
 
-const HistoryAndNotes = () => {
+const HistoryAndNotes = ({
+  noteRef,
+  historyRef,
+  workoutExerciseId,
+}: {
+  noteRef: React.RefObject<BottomSheetModal>;
+  historyRef: React.RefObject<BottomSheetModal>;
+  workoutExerciseId: string;
+}) => {
   const { t } = useTranslation();
-  const router = useRouter();
   const debouncedPress = usePreventRepeatPress();
+  const notes = useAppSelector(
+    (s) =>
+      s.workoutSession?.activeWorkout?.workoutExercises?.find(
+        (we) => we.id === workoutExerciseId
+      )?.notes
+  );
+
   return (
     <View className="flex-row items-center gap-x-4">
       <TouchableOpacity
         className="flex-1 border border-gray-500 rounded-3xl p-2"
         hitSlop={10}
         onPress={() => {
-          debouncedPress(() => {});
+          debouncedPress(() => {
+            historyRef.current?.present();
+          });
         }}
       >
         <AppText className="text-center">{t("history")}</AppText>
@@ -175,24 +253,39 @@ const HistoryAndNotes = () => {
         className="flex-1 border border-gray-500 rounded-3xl p-2"
         hitSlop={10}
         onPress={() => {
-          debouncedPress(() => {});
+          debouncedPress(() => {
+            noteRef.current?.present();
+          });
         }}
       >
-        <AppText className="text-center">{t("notes")}</AppText>
+        <View className="flex-row items-center gap-x-2 justify-center">
+          {!!notes && <View className="w-2 h-2 rounded-full bg-primary" />}
+          <AppText className="text-center">{t("notes")}</AppText>
+        </View>
       </TouchableOpacity>
     </View>
   );
 };
 
 const ExerciseSetItem = ({
-  exerciseSet,
+  exerciseSetId,
   index,
   workoutExerciseId,
 }: {
-  exerciseSet: ExerciseSet;
+  exerciseSetId: string;
   index: number;
   workoutExerciseId: string;
 }) => {
+  const exerciseSet = useAppSelector(
+    (s) =>
+      s.workoutSession?.activeWorkout?.workoutExercises
+        ?.find((we) => we.id === workoutExerciseId)
+        ?.sets?.find((es) => es.id === exerciseSetId),
+    shallowEqual
+  );
+
+  if (!exerciseSet) return null;
+
   if (exerciseSet?.isCompleted) {
     return (
       <CompletedSetItem
@@ -391,7 +484,8 @@ const UncompletedSetItem = ({
     <View className="rounded-xl overflow-hidden bg-slate-700">
       <View className="flex-row items-center justify-center py-4 bg-slate-600">
         <AppText>
-          {capitalize(t("set"))} {index + 1}
+          {capitalize(t("set"))} {index + 1} - {t("rest_time")}:{" "}
+          {convertToHourMinuteSecond(exerciseSet?.restTime || 0)}
         </AppText>
         <TouchableOpacity
           hitSlop={10}
@@ -476,14 +570,20 @@ const UncompletedSetItem = ({
         title={t("complete_set")}
         onPress={() => {
           debouncedPress(() => {
+            if (!exerciseSet.weight || !exerciseSet.repetitions) {
+              toast.error(t("please_fill_all_fields"), {
+                position: "bottom-center",
+              });
+              return;
+            }
+
             dispatch(
               completeActiveWorkoutSessionExerciseSet({
                 workoutExerciseId,
                 exerciseSetId: exerciseSet.id,
-                // weight,
-                // reps,
               })
             );
+            dispatch(countDownRestTime(exerciseSet?.restTime || 0));
           });
         }}
       />
@@ -497,3 +597,48 @@ const CountDown = () => {
     <AppText className="text-lg font-bold self-center">{formattedTime}</AppText>
   );
 };
+
+const RestTimeCountDown = ({ restTime }: { restTime: number }) => {
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const countdown = useCountDownRestTime(restTime, () => {
+    dispatch(countDownRestTime(0));
+  });
+  return (
+    <View className="h-16 bg-slate-600 dark:bg-slate-700 flex-row items-center gap-x-4 px-4">
+      <TouchableOpacity
+        hitSlop={10}
+        onPress={() => {
+          dispatch(countDownRestTime(0));
+        }}
+      >
+        <XIcon />
+      </TouchableOpacity>
+      <AppText className="text-lg font-bold self-center">
+        {t("rest_time")}: {convertToHourMinuteSecond(countdown)}
+      </AppText>
+    </View>
+  );
+};
+
+const Header = React.memo(() => {
+  const { t } = useTranslation();
+  const router = useRouter();
+
+  console.log("re-render header");
+  return (
+    <View className="py-4 mx-4 flex-row items-center justify-center relative">
+      <TouchableOpacity
+        onPress={() => router.back()}
+        hitSlop={10}
+        className="absolute left-0"
+      >
+        <ChevronLeftIcon size={26} />
+      </TouchableOpacity>
+      <CountDown />
+      <TouchableOpacity hitSlop={10} className="absolute right-0">
+        <AppText>{t("finish")}</AppText>
+      </TouchableOpacity>
+    </View>
+  );
+});

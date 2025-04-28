@@ -1,6 +1,7 @@
 export const PRIMARY_COLOR = "#bcf352";
 export const SECONDARY_COLOR = "#8a69fb";
 export const DESTRUCTIVE_COLOR = "#ff0000";
+import _twColors from "tailwindcss/colors";
 
 export const colors = {
   pageBackground: {
@@ -18,3 +19,5 @@ export const colors = {
     },
   },
 } as const;
+
+export const twColors = _twColors;

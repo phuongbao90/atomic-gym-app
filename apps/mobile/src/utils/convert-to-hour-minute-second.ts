@@ -14,7 +14,7 @@ export const convertToHourMinuteSecond = (seconds: number) => {
   if (minutes > 0) {
     return `${minutes}:${secondsLeft.toString().padStart(2, "0")}`;
   }
-  return `${secondsLeft.toString().padStart(2, "0")}`;
+  return `0:${secondsLeft.toString().padStart(2, "0")}`;
 };
 
 export const convertToTimeObject = (seconds: number) => {

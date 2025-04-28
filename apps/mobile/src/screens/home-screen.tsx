@@ -31,7 +31,9 @@ export function HomeScreen() {
   const insets = useSafeAreaInsets();
   const isLoggedIn = useAppSelector((s) => s.auth.isLoggedIn);
   const activeWorkoutPlanId = useAppSelector((s) => s.app.activeWorkoutPlanId);
-  const activeWorkout = useAppSelector((s) => s.workoutSession.activeWorkout);
+  const activeWorkoutId = useAppSelector(
+    (s) => s.workoutSession.activeWorkout?.id
+  );
 
   const { data: activeWorkoutPlan } = useGetWorkoutPlan(activeWorkoutPlanId);
 
@@ -60,9 +62,9 @@ export function HomeScreen() {
         <Divider className="my-4" />
 
         <View className="px-4">
-          {activeWorkout ? (
+          {activeWorkoutId ? (
             <View className="mb-4">
-              <ActiveWorkout item={activeWorkout} />
+              <ActiveWorkout />
             </View>
           ) : null}
         </View>
@@ -92,15 +94,23 @@ export function HomeScreen() {
   );
 }
 
-const ActiveWorkout = ({ item }: { item: Workout }) => {
+const ActiveWorkout = () => {
   const router = useRouter();
   const debouncedPress = usePreventRepeatPress();
+  const activeWorkoutId = useAppSelector(
+    (s) => s.workoutSession.activeWorkout?.id
+  );
+  const activeWorkoutName = useAppSelector(
+    (s) => s.workoutSession.activeWorkout?.translations?.[0]?.name
+  );
   return (
     <Pressable
       className="flex-row items-start px-4 py-4 bg-slate-200 dark:bg-slate-700 rounded-lg gap-x-4"
       onPress={() => {
         debouncedPress(() => {
-          router.push(appRoutes.inProgress.workout(item.id.toString()));
+          router.push(
+            appRoutes.inProgress.workout(activeWorkoutId?.toString() ?? "")
+          );
         });
       }}
     >
@@ -109,7 +119,7 @@ const ActiveWorkout = ({ item }: { item: Workout }) => {
       </View>
       <View className="gap-y-1 flex-1">
         <AppText className="text-xl">{t("workout_in_progress")}</AppText>
-        <AppText className="text-lg">{item.translations?.[0]?.name}</AppText>
+        <AppText className="text-lg">{activeWorkoutName}</AppText>
       </View>
     </Pressable>
   );

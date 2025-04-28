@@ -1,4 +1,4 @@
-import { IsString, IsDefined, IsInt } from "class-validator";
+import { IsString, IsDefined, IsInt, IsOptional } from "class-validator";
 import { Workout, Exercise, ExerciseSet } from "./";
 
 export class WorkoutExercise {
@@ -26,4 +26,8 @@ export class WorkoutExercise {
 
     @IsDefined()
     sets!: ExerciseSet[];
+
+    @IsOptional()
+    @IsString()
+    notes?: string;
 }

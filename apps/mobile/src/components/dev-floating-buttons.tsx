@@ -12,6 +12,7 @@ import { USFlag } from "../constants/app-assets";
 import { VNFlag } from "../constants/app-assets";
 import { useAppDispatch, useAppSelector } from "../stores/redux-store";
 import { switchLanguage, switchTheme } from "../stores/slices/app-slice";
+import { increaseExerciseSetValue } from "../stores/slices/workout-session-slice";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -40,7 +41,7 @@ export const DevFloatingButtons = () => {
 
   return (
     <View
-      style={{ position: "absolute", bottom: 100, right: 10, zIndex: 1000 }}
+      style={{ position: "absolute", bottom: 100, right: 10, zIndex: 1000000 }}
     >
       <View style={styles.buttonContainer}>
         <AnimatedPressable
@@ -51,6 +52,7 @@ export const DevFloatingButtons = () => {
             +
           </Animated.Text>
         </AnimatedPressable>
+
         <FloatingActionButton
           isExpanded={isExpanded}
           index={1}
@@ -82,6 +84,22 @@ export const DevFloatingButtons = () => {
             />
           )}
         </FloatingActionButton>
+        <FloatingActionButton
+          isExpanded={isExpanded}
+          index={3}
+          buttonLetter={"X"}
+          onPress={() => {
+            dispatch(
+              increaseExerciseSetValue({
+                workoutExerciseId: "19428957-ce2e-436b-b0ba-a829db55acb4",
+                exerciseSetId: "f5250f1c-6b57-45b7-83ae-f97a8ac15485",
+                type: "weight",
+                value: 1,
+              })
+            );
+            handlePress();
+          }}
+        />
       </View>
     </View>
   );
@@ -107,11 +125,12 @@ const mainButtonStyles = StyleSheet.create({
 const styles = StyleSheet.create({
   buttonContainer: {
     position: "relative",
-    height: 260,
+    // height: 260,
     width: "100%",
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "center",
+    zIndex: 1000000,
   },
   shadow: {
     shadowColor: "#171717",

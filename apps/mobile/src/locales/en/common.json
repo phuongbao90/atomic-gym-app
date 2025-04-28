@@ -124,5 +124,7 @@
   "weight": "Weight",
   "reps": "Reps",
   "complete_set": "Complete Set",
-  "edit": "edit"
+  "edit": "edit",
+  "add_notes": "Add Notes",
+  "please_fill_all_fields": "Please fill all fields"
 }

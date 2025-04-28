@@ -9,7 +9,6 @@ import { AppButton } from "../../components/ui/app-button";
 import { useTranslation } from "react-i18next";
 import { AppText } from "../../components/ui/app-text";
 import { useAppDispatch } from "../../stores/redux-store";
-import { setActiveWorkout } from "../../stores/slices/app-slice";
 import { appRoutes } from "../../configs/routes";
 import { startWorkout } from "../../stores/slices/workout-session-slice";
 
@@ -67,7 +66,7 @@ export function WorkoutDetailScreen() {
           onPress={() => {
             if (workout) {
               dispatch(startWorkout(workout));
-              router.push(appRoutes.workouts.inProgress(id));
+              router.push(appRoutes.inProgress.workout(id));
             }
           }}
         />

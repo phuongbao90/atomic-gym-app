@@ -78,9 +78,8 @@ export default function RootLayout() {
                           flex: 1,
                         }}
                       >
-                        <Toaster position="top-center" duration={2000} />
                         <App />
-                        {__DEV__ && <DevFloatingButtons />}
+                        <Toaster position="top-center" duration={2000} />
                       </SafeAreaView>
                     </ActionSheetProvider>
                   </PortalProvider>

@@ -3,6 +3,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { cn } from "../../utils/cn";
 import { AppText } from "./app-text";
 import { useAppSelector } from "../../stores/redux-store";
+import { DevFloatingButtons } from "../dev-floating-buttons";
 
 export const AppScreen = ({
   children,
@@ -26,6 +27,7 @@ export const AppScreen = ({
         paddingBottom: insets.bottom,
       }}
     >
+      {__DEV__ && <DevFloatingButtons />}
       {isLoading && (
         <View className="flex-1 items-center justify-center absolute top-0 left-0 right-0 bottom-0 z-50 bg-black/60">
           <ActivityIndicator size="large" />

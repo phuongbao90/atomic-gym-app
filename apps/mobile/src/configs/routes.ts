@@ -87,8 +87,6 @@ export const appRoutes = {
   workouts: {
     base: "/workouts" as const,
     detail: (id: string) => `${appRoutes.workouts.base}/${id}` as const,
-    inProgress: (id: string) =>
-      `${appRoutes.workouts.base}/in-progress?workoutId=${id}` as const,
   } as const,
 
   inProgress: {

@@ -216,6 +216,7 @@ model WorkoutExercise {
   exerciseId Int
   order      Int // Position in workout
   sets       ExerciseSet[]
+  notes      String?
 
   @@unique([workoutId, exerciseId, order])
 }

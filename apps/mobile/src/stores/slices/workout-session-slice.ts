@@ -7,12 +7,14 @@ interface WorkoutSessionState {
   startTime: number | null;
   elapsedTime: number; // in milliseconds
   activeWorkout: Workout | null;
+  countdownRestTime: number;
 }
 
 const initialState: WorkoutSessionState = {
   startTime: null,
   elapsedTime: 0,
   activeWorkout: null,
+  countdownRestTime: 0,
 };
 
 export const workoutSessionSlice = createSlice({
@@ -85,15 +87,16 @@ export const workoutSessionSlice = createSlice({
 
     reorderActiveWorkoutSessionExercises: (
       state,
-      action: PayloadAction<WorkoutExercise[]>
+      action: PayloadAction<{ id: string; order: number }[]>
     ) => {
-      if (state.activeWorkout) {
-        state.activeWorkout.workoutExercises = action.payload.map(
-          (exercise, index) => ({
-            ...exercise,
-            order: index,
-          })
+      for (const workoutExercise of state.activeWorkout?.workoutExercises ||
+        []) {
+        const newWorkoutExercise = action.payload.find(
+          (e) => e.id === workoutExercise.id
         );
+        if (newWorkoutExercise) {
+          workoutExercise.order = newWorkoutExercise.order;
+        }
       }
     },
 
@@ -111,6 +114,7 @@ export const workoutSessionSlice = createSlice({
             const sampleWorkoutExerciseId = uuid.v4();
             return {
               exercise,
+              notes: null,
               id: sampleWorkoutExerciseId,
               order:
                 state.activeWorkout?.workoutExercises?.length || 0 + index + 1,
@@ -289,6 +293,27 @@ export const workoutSessionSlice = createSlice({
         }
       }
     },
+
+    addNotesToWorkoutExercise: (
+      state,
+      action: PayloadAction<{
+        workoutExerciseId: string;
+        notes: string;
+      }>
+    ) => {
+      if (state.activeWorkout?.workoutExercises) {
+        const workoutExercise = state.activeWorkout.workoutExercises.find(
+          (we) => we.id === action.payload.workoutExerciseId
+        );
+        if (workoutExercise) {
+          workoutExercise.notes = action.payload.notes;
+        }
+      }
+    },
+
+    countDownRestTime: (state, action: PayloadAction<number>) => {
+      state.countdownRestTime = action.payload;
+    },
   },
 });
 
@@ -306,6 +331,8 @@ export const {
   undoCompleteActiveWorkoutSessionExerciseSet,
   increaseExerciseSetValue,
   decreaseExerciseSetValue,
+  addNotesToWorkoutExercise,
+  countDownRestTime,
 } = workoutSessionSlice.actions;
 
 export const workoutSessionReducer = workoutSessionSlice.reducer;
