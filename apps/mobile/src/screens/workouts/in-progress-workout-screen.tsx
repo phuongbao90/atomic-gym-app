@@ -18,6 +18,7 @@ import DraggableFlatList, {
   ScaleDecorator,
 } from "react-native-draggable-flatlist";
 import {
+  finishWorkoutSession,
   removeActiveWorkoutSessionExercise,
   reorderActiveWorkoutSessionExercises,
 } from "../../stores/slices/workout-session-slice";
@@ -29,6 +30,7 @@ import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
 import React, { useMemo } from "react";
 import { shallowEqual } from "react-redux";
 import deepEqual from "deep-equal";
+import { useWorkoutSessionNotification } from "../../hooks/use-workout-session-notification";
 
 export const InProgressWorkoutScreen = () => {
   const { t } = useTranslation();
@@ -168,7 +170,9 @@ export const InProgressWorkoutScreen = () => {
 const Header = React.memo(() => {
   const router = useRouter();
   const { t } = useTranslation();
-
+  const debouncedPress = usePreventRepeatPress();
+  const dispatch = useAppDispatch();
+  const { cancelRestTimeNotification } = useWorkoutSessionNotification();
   return (
     <View className="py-4 mx-4 flex-row items-center justify-center relative">
       <TouchableOpacity
@@ -180,7 +184,17 @@ const Header = React.memo(() => {
       </TouchableOpacity>
 
       <CountDown />
-      <TouchableOpacity hitSlop={10} className="absolute right-0">
+      <TouchableOpacity
+        hitSlop={10}
+        className="absolute right-0"
+        onPress={() =>
+          debouncedPress(() => {
+            cancelRestTimeNotification();
+            dispatch(finishWorkoutSession());
+            router.back();
+          })
+        }
+      >
         <AppText>{t("finish")}</AppText>
       </TouchableOpacity>
     </View>

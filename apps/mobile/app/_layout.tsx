@@ -25,7 +25,6 @@ import {
 } from "react-native-reanimated";
 import { ModalProvider } from "react-native-modalfy";
 import { modalStack } from "../src/lib/modal/modal-stack";
-import { DevFloatingButtons } from "../src/components/dev-floating-buttons";
 import { Provider } from "react-redux";
 import { persistor, store, useAppSelector } from "../src/stores/redux-store";
 import i18n from "../src/configs/i18n";
@@ -33,6 +32,22 @@ import { createOfetchInstance } from "app";
 import { PersistGate } from "redux-persist/integration/react";
 import { colorScheme } from "nativewind";
 import { useReactNavigationDevTools } from "@dev-plugins/react-navigation";
+import notifee from "@notifee/react-native";
+import { Audio } from "expo-av";
+import restTimeEndSound from "../assets/sounds/rest-time-end.mp3";
+// This runs even if your app UI is backgrounded/killed
+
+notifee.registerForegroundService(async (task) => {
+  // if (task.id === "activate-workout-session") {
+  // }
+  if (task.id === "rest-time" && task.data?.restTime) {
+    setTimeout(async () => {
+      await notifee.stopForegroundService();
+
+      await Audio.Sound.createAsync(restTimeEndSound, { shouldPlay: true });
+    }, Number(task.data?.restTime) * 1000);
+  }
+});
 
 // This is the default configuration
 configureReanimatedLogger({

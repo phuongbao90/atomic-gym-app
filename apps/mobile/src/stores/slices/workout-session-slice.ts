@@ -28,6 +28,12 @@ export const workoutSessionSlice = createSlice({
         state.activeWorkout = action.payload;
       }
     },
+    finishWorkoutSession: (state) => {
+      state.startTime = null;
+      state.activeWorkout = null;
+      state.countdownRestTimeEndTime = null;
+      state.elapsedTime = 0;
+    },
 
     updateElapsedTime: (state) => {
       if (state.startTime) {
@@ -39,10 +45,6 @@ export const workoutSessionSlice = createSlice({
     },
     setElapsedTime: (state, action: PayloadAction<number>) => {
       state.elapsedTime = action.payload;
-    },
-    finishWorkout: (state) => {
-      state.startTime = null;
-      state.activeWorkout = null;
     },
 
     replaceActiveWorkoutSessionExercise: (
@@ -167,8 +169,6 @@ export const workoutSessionSlice = createSlice({
       action: PayloadAction<{
         workoutExerciseId: string;
         exerciseSetId: string;
-        // weight: number;
-        // reps: number;
       }>
     ) => {
       if (state.activeWorkout?.workoutExercises) {
@@ -184,8 +184,6 @@ export const workoutSessionSlice = createSlice({
           if (exerciseSet) {
             exerciseSet.isCompleted = true;
             exerciseSet.completedAt = new Date().toISOString();
-            // exerciseSet.weight = action.payload.weight;
-            // exerciseSet.repetitions = action.payload.reps;
           }
         }
       }
@@ -331,7 +329,7 @@ export const {
   startWorkout,
   updateElapsedTime,
   setElapsedTime,
-  finishWorkout,
+  finishWorkoutSession,
   reorderActiveWorkoutSessionExercises,
   replaceActiveWorkoutSessionExercise,
   removeActiveWorkoutSessionExercise,

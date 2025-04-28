@@ -11,6 +11,7 @@ import { AppText } from "../../components/ui/app-text";
 import { useAppDispatch } from "../../stores/redux-store";
 import { appRoutes } from "../../configs/routes";
 import { startWorkout } from "../../stores/slices/workout-session-slice";
+// import { useWorkoutSessionNotification } from "../../hooks/use-workout-session-notification";
 
 export function WorkoutDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -18,6 +19,7 @@ export function WorkoutDetailScreen() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { data: workout, isLoading } = useGetWorkout(id);
+  // const { notifyWorkoutSessionStart } = useWorkoutSessionNotification();
 
   if (isLoading) {
     return (

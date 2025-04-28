@@ -42,6 +42,7 @@ import { convertToHourMinuteSecond } from "../../utils/convert-to-hour-minute-se
 import { useCountDownRestTime } from "../../hooks/use-count-down-rest-time";
 import { shallowEqual } from "react-redux";
 import { AddNotesToWorkoutExerciseSheet } from "../../components/bottom-sheets/add-notes-to-workout-exercise-sheet";
+import { useWorkoutSessionNotification } from "../../hooks/use-workout-session-notification";
 
 export const InProgressWorkoutExercisesScreen = () => {
   const router = useRouter();
@@ -412,6 +413,7 @@ const UncompletedSetItem = ({
   const dispatch = useAppDispatch();
   const { showActionSheetWithOptions } = useActionSheet();
   const theme = useAppSelector((s) => s.app.theme);
+  const { notifyRestTime } = useWorkoutSessionNotification();
   // const [weight, setWeight] = useState(0);
   // const [reps, setReps] = useState(0);
   // const weight = useAppSelector((s) => s.workoutSession.activeWorkout?.weight);
@@ -568,7 +570,7 @@ const UncompletedSetItem = ({
         color="primary"
         title={t("complete_set")}
         onPress={() => {
-          debouncedPress(() => {
+          debouncedPress(async () => {
             if (!exerciseSet.weight || !exerciseSet.repetitions) {
               toast.error(t("please_fill_all_fields"), {
                 position: "bottom-center",
@@ -588,6 +590,8 @@ const UncompletedSetItem = ({
                 restTime: exerciseSet?.restTime || 0,
               })
             );
+
+            notifyRestTime(exerciseSet?.restTime || 0);
           });
         }}
       />
@@ -614,6 +618,7 @@ const RestTimeCountDown = () => {
       dispatch(setCountDownRestTimeEndTime({ restTime: 0 }));
     },
   });
+  const { cancelRestTimeNotification } = useWorkoutSessionNotification();
 
   if (!countdownRestTimeEndTime || !countdown) return null;
 
@@ -623,6 +628,7 @@ const RestTimeCountDown = () => {
         hitSlop={10}
         onPress={() => {
           dispatch(setCountDownRestTimeEndTime({ restTime: 0 }));
+          cancelRestTimeNotification();
         }}
       >
         <XIcon />
