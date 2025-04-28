@@ -1,27 +1,53 @@
 import {
-  BottomSheetBackdrop,
   BottomSheetBackdropProps,
   BottomSheetModal,
   BottomSheetModalProps,
+  useBottomSheet,
 } from "@gorhom/bottom-sheet";
-import { AppBottomSheetView } from "./app-bottom-sheet-view";
 import { colors } from "../../styles/themes";
-import { StyleSheet, View } from "react-native";
+import { Animated, Pressable, View } from "react-native";
 import { useAppSelector } from "../../stores/redux-store";
+import { Extrapolation, useAnimatedStyle } from "react-native-reanimated";
+import { interpolate } from "react-native-reanimated";
+import { useMemo } from "react";
 
-const CustomBackdrop = (props: BottomSheetBackdropProps) => {
+const _CustomBackdrop = ({
+  animatedIndex,
+  style,
+}: BottomSheetBackdropProps) => {
+  // animated variables
+  const containerAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      animatedIndex.value,
+      [0, 1],
+      [0, 1],
+      Extrapolation.CLAMP
+    ),
+  }));
+  const { close } = useBottomSheet();
+
+  // styles
+  const containerStyle = useMemo(
+    () => [
+      style,
+      {
+        backgroundColor: "rgba(0, 0, 0, 1)",
+        opacity: 0.5,
+      },
+      containerAnimatedStyle,
+    ],
+    [style, containerAnimatedStyle]
+  );
+
   return (
-    <BottomSheetBackdrop
-      {...props}
-      appearsOnIndex={1}
-      opacity={0.5}
-      pressBehavior="close"
-      enableTouchThrough={true}
-      style={[
-        { backgroundColor: "rgba(0, 0, 0, 1)" },
-        StyleSheet.absoluteFillObject,
-      ]}
-    />
+    <Animated.View style={containerStyle}>
+      <Pressable
+        onPress={() => {
+          close?.();
+        }}
+        style={{ flex: 1 }}
+      />
+    </Animated.View>
   );
 };
 
@@ -37,8 +63,8 @@ export const AppBottomSheetModal = (
     <View testID={props.testID}>
       <BottomSheetModal
         ref={props.modalRef}
-        keyboardBehavior="fillParent"
-        keyboardBlurBehavior="restore"
+        // keyboardBehavior="fillParent"
+        // keyboardBlurBehavior="restore"
         android_keyboardInputMode="adjustResize"
         handleStyle={{
           backgroundColor:
@@ -52,10 +78,10 @@ export const AppBottomSheetModal = (
               ? colors.pageBackground.dark
               : colors.pageBackground.light,
         }}
-        backdropComponent={CustomBackdrop}
+        backdropComponent={_CustomBackdrop}
         {...props}
       >
-        <AppBottomSheetView>{props.children}</AppBottomSheetView>
+        {props.children}
       </BottomSheetModal>
     </View>
   );

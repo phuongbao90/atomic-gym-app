@@ -11,7 +11,7 @@ import {
   VerticalDotsIcon,
   XIcon,
 } from "../../components/ui/expo-icon";
-import { router, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { AppText } from "../../components/ui/app-text";
 import { Divider } from "../../components/ui/divider";
 import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
@@ -21,7 +21,7 @@ import PagerView from "react-native-pager-view";
 import { useAppDispatch, useAppSelector } from "../../stores/redux-store";
 import { InProgressWorkoutExercisesScreenParams } from "../../configs/routes";
 import React, { Fragment, useRef, useState } from "react";
-import { ExerciseSet, WorkoutExercise } from "app";
+import { ExerciseSet } from "app";
 import { Image } from "expo-image";
 import {
   completeActiveWorkoutSessionExerciseSet,
@@ -41,6 +41,7 @@ import { toast } from "sonner-native";
 import { convertToHourMinuteSecond } from "../../utils/convert-to-hour-minute-second";
 import { useCountDownRestTime } from "../../hooks/use-count-down-rest-time";
 import { shallowEqual } from "react-redux";
+import { AddNotesToWorkoutExerciseSheet } from "../../components/bottom-sheets/add-notes-to-workout-exercise-sheet";
 
 export const InProgressWorkoutExercisesScreen = () => {
   const router = useRouter();
@@ -152,10 +153,10 @@ const WorkoutExercisePage = React.memo(
           }
           ItemSeparatorComponent={() => <View className="my-2" />}
         />
-        {/* <AddNotesToWorkoutExerciseSheet
+        <AddNotesToWorkoutExerciseSheet
           modalRef={modalRef}
-          workoutExercise={workoutExercise}
-        /> */}
+          workoutExerciseId={workoutExerciseId}
+        />
       </View>
     );
   }
