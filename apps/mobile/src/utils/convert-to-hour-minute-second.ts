@@ -4,17 +4,19 @@
 // if hours and minutes are 0, return seconds
 // should pad to 00 if less than 10 but to second only
 
+// seconnds should be ceiling
+
 export const convertToHourMinuteSecond = (seconds: number) => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const secondsLeft = seconds % 60;
   if (hours > 0) {
-    return `${hours}:${minutes}:${secondsLeft.toString().padStart(2, "0")}`;
+    return `${hours}:${minutes}:${Math.ceil(secondsLeft).toString().padStart(2, "0")}`;
   }
   if (minutes > 0) {
-    return `${minutes}:${secondsLeft.toString().padStart(2, "0")}`;
+    return `${minutes}:${Math.ceil(secondsLeft).toString().padStart(2, "0")}`;
   }
-  return `0:${secondsLeft.toString().padStart(2, "0")}`;
+  return `0:${Math.ceil(secondsLeft).toString().padStart(2, "0")}`;
 };
 
 export const convertToTimeObject = (seconds: number) => {

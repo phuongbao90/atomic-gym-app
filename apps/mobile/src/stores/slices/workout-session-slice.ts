@@ -7,14 +7,14 @@ interface WorkoutSessionState {
   startTime: number | null;
   elapsedTime: number; // in milliseconds
   activeWorkout: Workout | null;
-  countdownRestTime: number;
+  countdownRestTimeEndTime: number | null; // in milliseconds
 }
 
 const initialState: WorkoutSessionState = {
   startTime: null,
   elapsedTime: 0,
   activeWorkout: null,
-  countdownRestTime: 0,
+  countdownRestTimeEndTime: null,
 };
 
 export const workoutSessionSlice = createSlice({
@@ -311,8 +311,18 @@ export const workoutSessionSlice = createSlice({
       }
     },
 
-    countDownRestTime: (state, action: PayloadAction<number>) => {
-      state.countdownRestTime = action.payload;
+    setCountDownRestTimeEndTime: (
+      state,
+      action: PayloadAction<{ restTime: number }> // restTime in seconds
+    ) => {
+      if (action.payload.restTime === 0) {
+        state.countdownRestTimeEndTime = null;
+        return;
+      }
+      const now = new Date();
+      const value = now.getTime() + action.payload.restTime * 1000;
+
+      state.countdownRestTimeEndTime = value;
     },
   },
 });
@@ -332,7 +342,7 @@ export const {
   increaseExerciseSetValue,
   decreaseExerciseSetValue,
   addNotesToWorkoutExercise,
-  countDownRestTime,
+  setCountDownRestTimeEndTime,
 } = workoutSessionSlice.actions;
 
 export const workoutSessionReducer = workoutSessionSlice.reducer;

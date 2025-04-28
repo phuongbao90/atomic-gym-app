@@ -25,10 +25,10 @@ import { ExerciseSet, WorkoutExercise } from "app";
 import { Image } from "expo-image";
 import {
   completeActiveWorkoutSessionExerciseSet,
-  countDownRestTime,
   decreaseExerciseSetValue,
   deleteActiveWorkoutSessionExerciseSet,
   increaseExerciseSetValue,
+  setCountDownRestTimeEndTime,
   undoCompleteActiveWorkoutSessionExerciseSet,
 } from "../../stores/slices/workout-session-slice";
 import { capitalize } from "lodash";
@@ -87,9 +87,8 @@ export const InProgressWorkoutExercisesScreen = () => {
           />
         ))}
       </PagerView>
-      {/* {countdownRestTime > 0 && (
-        <RestTimeCountDown restTime={countdownRestTime} />
-      )} */}
+
+      <RestTimeCountDown />
     </AppScreen>
   );
 };
@@ -170,7 +169,6 @@ const PagerDots = React.memo(
     activePage: number;
     pages: number;
   }) => {
-    console.log("re-render pager dots");
     return (
       <View className="flex-row items-center justify-center gap-x-2">
         {Array.from({ length: pages }).map((_, index) => (
@@ -583,7 +581,12 @@ const UncompletedSetItem = ({
                 exerciseSetId: exerciseSet.id,
               })
             );
-            dispatch(countDownRestTime(exerciseSet?.restTime || 0));
+
+            dispatch(
+              setCountDownRestTimeEndTime({
+                restTime: exerciseSet?.restTime || 0,
+              })
+            );
           });
         }}
       />
@@ -598,18 +601,27 @@ const CountDown = () => {
   );
 };
 
-const RestTimeCountDown = ({ restTime }: { restTime: number }) => {
+const RestTimeCountDown = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const countdown = useCountDownRestTime(restTime, () => {
-    dispatch(countDownRestTime(0));
+  const countdownRestTimeEndTime = useAppSelector(
+    (s) => s.workoutSession.countdownRestTimeEndTime
+  );
+  const countdown = useCountDownRestTime({
+    to: countdownRestTimeEndTime,
+    onComplete: () => {
+      dispatch(setCountDownRestTimeEndTime({ restTime: 0 }));
+    },
   });
+
+  if (!countdownRestTimeEndTime || !countdown) return null;
+
   return (
     <View className="h-16 bg-slate-600 dark:bg-slate-700 flex-row items-center gap-x-4 px-4">
       <TouchableOpacity
         hitSlop={10}
         onPress={() => {
-          dispatch(countDownRestTime(0));
+          dispatch(setCountDownRestTimeEndTime({ restTime: 0 }));
         }}
       >
         <XIcon />
@@ -625,7 +637,6 @@ const Header = React.memo(() => {
   const { t } = useTranslation();
   const router = useRouter();
 
-  console.log("re-render header");
   return (
     <View className="py-4 mx-4 flex-row items-center justify-center relative">
       <TouchableOpacity
