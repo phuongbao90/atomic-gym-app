@@ -18,12 +18,11 @@ import { switchTheme } from "../stores/slices/app-slice";
 
 export function LoginScreen() {
   const { t } = useTranslation("login-screen");
-  const [email, setEmail] = useState("bao5@gmail.com");
+  const [email, setEmail] = useState("bao1@gmail.com");
   const [password, setPassword] = useState("123456#@Nn");
   const loginMutation = useLogin();
   const router = useRouter();
-  const theme = useAppSelector((state) => state.app.theme);
-  const language = useAppSelector((state) => state.app.language);
+
   const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
 
   const dispatch = useAppDispatch();
@@ -48,7 +47,7 @@ export function LoginScreen() {
 
   return (
     <AppScreen name="login-screen">
-      <AppHeader title={t("login-title")} theme={theme} language={language} />
+      <AppHeader title={t("login-title")} />
       <AppScrollView>
         <View className="gap-4 m-4 flex-1">
           <Text className="text-2xl font-bold">{t("login-title")}</Text>

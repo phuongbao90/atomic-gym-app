@@ -1,6 +1,7 @@
 import { API_ROUTES } from "../../configs/api-routes";
 import { request } from "../../libs/request";
 import { WorkoutPlan } from "../../prisma-generated";
+import { WorkoutPlanWithStats } from "../../types/extend-types";
 import { ApiReponseWithMeta, ApiResponse } from "../../types/meta";
 import {
   CreateWorkoutPlanSchema,
@@ -20,12 +21,11 @@ export const getWorkoutPlans = (query: WorkoutPlanQuery) => {
 };
 
 export const getWorkoutPlan = (id: string) => {
-  return request<ApiResponse<WorkoutPlan & { _count: { exercises: number } }>>(
-    API_ROUTES.plans.detail(id),
-    {
-      method: "GET",
-    }
-  );
+  return request<
+    ApiResponse<WorkoutPlanWithStats & { _count: { exercises: number } }>
+  >(API_ROUTES.plans.detail(id), {
+    method: "GET",
+  });
 };
 
 export const getWorkoutPlansInGroups = () => {

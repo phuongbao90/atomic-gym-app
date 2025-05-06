@@ -1,0 +1,2 @@
+GET {{BASE_URL}}/logs
+Authorization: Bearer {{$global.accessToken}}

@@ -30,11 +30,14 @@ export function WorkoutPlansTabScreen() {
   const { data } = useGetWorkoutPlansInGroups();
   const sections = useMemo(() => {
     if (!data) return [];
-    return [
-      {
-        title: "my_workout_plans",
-        data: [myWorkoutPlans],
-      },
+
+    const sections = [
+      myWorkoutPlans && myWorkoutPlans.length > 0
+        ? {
+            title: "my_workout_plans",
+            data: [myWorkoutPlans],
+          }
+        : null,
       {
         title: "FEATURED",
         data: [data.isFeatured],
@@ -48,14 +51,18 @@ export function WorkoutPlansTabScreen() {
         data: [data.single],
       },
     ];
+
+    return sections.filter((item) => item?.data && item?.data.length > 0);
   }, [data, myWorkoutPlans]);
 
   function renderSectionHeader({
     section,
   }: { section: (typeof sections)[number] }) {
+    if (!section) return null;
+
     const data = section.data.flat();
 
-    if (!section.title) return null;
+    if (!section.title || !data || data.length === 0) return null;
 
     return (
       <>

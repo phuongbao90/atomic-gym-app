@@ -1,15 +1,13 @@
-import { TouchableOpacity } from "react-native";
+import {
+  Platform,
+  TouchableHighlight,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from "react-native";
 
-export const AppTouchable = ({
-  children,
-  onPress,
-}: {
-  children: React.ReactNode;
-  onPress: () => void;
-}) => {
-  return (
-    <TouchableOpacity onPress={onPress} hitSlop={20}>
-      {children}
-    </TouchableOpacity>
-  );
+export const AppTouchable = (props: TouchableOpacityProps) => {
+  const TouchableComponent =
+    Platform.OS === "android" ? TouchableOpacity : TouchableOpacity;
+
+  return <TouchableComponent hitSlop={10} {...props} />;
 };

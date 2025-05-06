@@ -1,8 +1,7 @@
 import { useGetWorkoutPlan } from "app";
-import { Image, ImageBackground } from "expo-image";
+import { ImageBackground } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, TouchableOpacity, View } from "react-native";
-import { Fragment } from "react";
 import { TabBarProps, Tabs } from "react-native-collapsible-tab-view";
 import { AppButton } from "../../components/ui/app-button";
 import { AppHeader } from "../../components/ui/app-header";
@@ -132,7 +131,7 @@ export const WorkoutPlanDetailScreen = () => {
             showsVerticalScrollIndicator={false}
             style={{ flex: 1 }}
             contentContainerStyle={{
-              paddingHorizontal: 12,
+              // paddingHorizontal: 12,
               paddingBottom: 80,
             }}
           >

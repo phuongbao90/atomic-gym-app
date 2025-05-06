@@ -207,30 +207,19 @@ export class WorkoutPlanService {
     const workoutPlan = await this.prisma.workoutPlan.findUnique({
       where: { id },
       include: {
-        translations: {
-          where: {
-            language,
-          },
+        translations: { where: { language } },
+        WorkoutSessionLog: {
+          include: { setLogs: true },
         },
         workouts: {
           include: {
             _count: { select: { workoutExercises: true } },
-            translations: {
-              where: {
-                language,
-              },
-            },
+            translations: { where: { language } },
             workoutExercises: {
               include: {
                 sets: true,
                 exercise: {
-                  include: {
-                    translations: {
-                      where: {
-                        language,
-                      },
-                    },
-                  },
+                  include: { translations: { where: { language } } },
                 },
               },
             },
@@ -243,9 +232,35 @@ export class WorkoutPlanService {
       throw new HttpException("Workout plan not found", HttpStatus.NOT_FOUND);
     }
 
+    // 2) aggregate your stats in parallel
+    const [sessionAgg, setAgg] = await this.prisma.$transaction([
+      // count sessions and sum durations
+      this.prisma.workoutSessionLog.aggregate({
+        where: { workoutPlanId: id },
+        _count: { _all: true },
+        _sum: { duration: true },
+      }),
+      // count all sets across those sessions
+      this.prisma.exerciseSetLog.aggregate({
+        where: { workoutSession: { workoutPlanId: id } },
+        _count: { _all: true },
+      }),
+    ]);
+
+    const sessionCount = sessionAgg._count._all;
+    const totalDuration = sessionAgg._sum.duration ?? 0;
+    const totalSetCount = setAgg._count._all;
+    const avgDurationPerSession = totalDuration / sessionCount;
+
     return {
       ...workoutPlan,
       is_owner: user ? user.sub === workoutPlan.createdById : false,
+      stats: {
+        sessionCount, // how many times this plan has been run
+        totalDuration, // sum of all `duration` fields
+        totalSetCount, // total number of ExerciseSetLog rows
+        avgDurationPerSession,
+      },
     };
   }
 
@@ -620,6 +635,7 @@ export class WorkoutPlanService {
             translations: {
               where: { language },
             },
+
             workoutExercises: {
               include: {
                 sets: true,
@@ -636,8 +652,6 @@ export class WorkoutPlanService {
         },
       },
     });
-
-    console.log("workoutPlans:", workoutPlans.length);
 
     return workoutPlans;
   }

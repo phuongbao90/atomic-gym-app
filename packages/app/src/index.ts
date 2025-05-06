@@ -1,10 +1,10 @@
 export * from "./query/client";
 export * from "./query/keys";
 
-export * from "./types/common";
 export * from "./types/pagination";
 export * from "./libs/request";
 export * from "./types/meta";
+export * from "./types/extend-types";
 // export everything from helpers
 export * from "./helpers/try-catch";
 

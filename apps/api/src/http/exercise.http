@@ -40,7 +40,7 @@ GET {{BASE_URL}}/exercises?limit=15&search=Voluntarius
 Authorization: Bearer {{$global.accessToken}}
 
 ### Get Exercise by Id
-GET {{BASE_URL}}/exercises/1
+GET {{BASE_URL}}/exercises/4
 Authorization: Bearer {{$global.accessToken}}
 
 ### Delete Exercise

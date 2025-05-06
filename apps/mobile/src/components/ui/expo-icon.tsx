@@ -140,6 +140,16 @@ export const ChevronLeftIcon = (props: Omit<IconProps<string>, "name">) => {
     <ExpoIcon library="materialCommunityIcons" name="chevron-left" {...props} />
   );
 };
+
+export const ChevronRightIcon = (props: Omit<IconProps<string>, "name">) => {
+  return (
+    <ExpoIcon
+      library="materialCommunityIcons"
+      name="chevron-right"
+      {...props}
+    />
+  );
+};
 export const ChevronDownIcon = (props: Omit<IconProps<string>, "name">) => {
   return (
     <ExpoIcon library="materialCommunityIcons" name="chevron-down" {...props} />

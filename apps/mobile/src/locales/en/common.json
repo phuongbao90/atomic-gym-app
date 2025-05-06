@@ -126,5 +126,16 @@
   "complete_set": "Complete Set",
   "edit": "edit",
   "add_notes": "Add Notes",
-  "please_fill_all_fields": "Please fill all fields"
+  "please_fill_all_fields": "Please fill all fields",
+
+  "workout_sessions": "Workout Sessions",
+  "total_time (hrs)": "Total Time (hrs)",
+  "avg.session_duration": "Avg. session duration",
+  "sets_completed": "Sets Completed",
+  "all": "All",
+  "week": "Week",
+  "month": "Month",
+  "year": "Year",
+  "duration": "Duration",
+  "hour": "hour(s)"
 }

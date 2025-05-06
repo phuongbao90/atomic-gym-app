@@ -122,9 +122,20 @@
   "workout_in_progress": "Buổi tập đang diễn ra",
   "finish": "Kết thúc",
   "weight": "Cân nặng",
-  "reps": "Lần",
+  "reps": "Lần tập",
   "complete_set": "Hoàn thành hiệp",
   "edit": "chỉnh sửa",
   "add_notes": "Thêm ghi chú",
-  "please_fill_all_fields": "Vui lòng điền đầy đủ các trường"
+  "please_fill_all_fields": "Vui lòng điền đầy đủ các trường",
+
+  "workout_sessions": "Số buổi tập",
+  "total_time (hrs)": "Tổng thời gian (giờ)",
+  "avg.session_duration": "Trung bình thời gian buổi tập",
+  "sets_completed": "Số hiệp đã hoàn thành",
+  "all": "Tất cả",
+  "week": "Tuần",
+  "month": "Tháng",
+  "year": "Năm",
+  "duration": "Thời gian",
+  "hour": "giờ"
 }

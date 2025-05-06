@@ -1,5 +1,5 @@
 import { IsString, IsDefined, IsOptional, IsIn, IsBoolean, IsInt, IsDate } from "class-validator";
-import { Workout, User, WorkoutPlanTranslation } from "./";
+import { Workout, User, WorkoutPlanTranslation, WorkoutSessionLog } from "./";
 import { getEnumValues } from "../helpers";
 import { WorkoutPlanLevel, WorkoutPlanCategory } from "../enums";
 
@@ -56,4 +56,7 @@ export class WorkoutPlan {
 
     @IsDefined()
     translations!: WorkoutPlanTranslation[];
+
+    @IsDefined()
+    WorkoutSessionLog!: WorkoutSessionLog[];
 }

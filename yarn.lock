@@ -5808,6 +5808,11 @@ data-urls@^3.0.2:
     whatwg-mimetype "^3.0.0"
     whatwg-url "^11.0.0"
 
+dayjs@^1.11.13:
+  version "1.11.13"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.13.tgz#92430b0139055c3ebb60150aa13e860a4b5a366c"
+  integrity sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==
+
 debug@2.6.9, debug@^2.2.0, debug@^2.6.9:
   version "2.6.9"
   resolved "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz"
@@ -7448,6 +7453,11 @@ getenv@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/getenv/-/getenv-1.0.0.tgz"
   integrity sha512-7yetJWqbS9sbn0vIfliPsFgoXMKn/YMF+Wuiog97x+urnSRRRZ7xB+uVkwGKzRgq9CDFfMQnE9ruL5DHv9c6Xg==
+
+gifted-charts-core@0.1.63:
+  version "0.1.63"
+  resolved "https://registry.yarnpkg.com/gifted-charts-core/-/gifted-charts-core-0.1.63.tgz#c552bd6f5a007c6b7559a96e2f16b3f3251e87c5"
+  integrity sha512-e5sJwI2RIcdnJ4p4ozUHfpbVUXyHn2CJj2h8BpmeugjgF7k7KvL0QI22M4pVQIIIRei3exjEhv8HwXaFtAx/dA==
 
 glob-parent@^5.1.2, glob-parent@~5.1.2:
   version "5.1.2"
@@ -11065,6 +11075,13 @@ react-native-get-random-values@^1.11.0:
   integrity sha512-4BTbDbRmS7iPdhYLRcz3PGFIpFJBwNZg9g42iwa2P6FOv9vZj/xJc678RZXnLNZzd0qd7Q3CCF6Yd+CU2eoXKQ==
   dependencies:
     fast-base64-decode "^1.0.0"
+
+react-native-gifted-charts@^1.4.61:
+  version "1.4.61"
+  resolved "https://registry.yarnpkg.com/react-native-gifted-charts/-/react-native-gifted-charts-1.4.61.tgz#ada268c336e273fd40ca9c60ac5757bb2d25835e"
+  integrity sha512-UCNZDntpvqJV0x8iBhx9fMTjFLUb3PI3V77Wni10HFJgMwM6SA3Xg/VpkRmIGT4r4PRWGcsFTInyR3eu8XYuTQ==
+  dependencies:
+    gifted-charts-core "0.1.63"
 
 react-native-helmet-async@2.0.4:
   version "2.0.4"

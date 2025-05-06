@@ -18,6 +18,7 @@ import { ExerciseModule } from "./exercise/exercise.module";
 import { MuscleGroupModule } from "./muscle-group/muscle-group.module";
 import { WorkoutPlanModule } from "./workout-plan/workout-plan.module";
 import { WorkoutModule } from "./workout/workout.module";
+import { LogModule } from "./log/log.module";
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -39,6 +40,7 @@ const NODE_ENV = process.env.NODE_ENV;
     WorkoutPlanModule,
     WorkoutModule,
     JwtModule.registerAsync(jwtConfig.asProvider()),
+    LogModule,
   ],
 
   controllers: [AppController],

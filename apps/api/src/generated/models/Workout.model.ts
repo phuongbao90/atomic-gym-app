@@ -1,5 +1,5 @@
 import { IsString, IsDefined, IsInt, IsOptional, IsDate } from "class-validator";
-import { WorkoutPlan, WorkoutTranslation, WorkoutExercise } from "./";
+import { WorkoutPlan, WorkoutTranslation, WorkoutExercise, WorkoutSessionLog } from "./";
 
 export class Workout {
     @IsDefined()
@@ -30,4 +30,7 @@ export class Workout {
 
     @IsDefined()
     workoutExercises!: WorkoutExercise[];
+
+    @IsDefined()
+    WorkoutSessionLog!: WorkoutSessionLog[];
 }

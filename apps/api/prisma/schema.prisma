@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   // output   = "./generated/prisma"
@@ -33,27 +27,18 @@ enum Language {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  email       String        @unique
-  name        String
-  gender      String?
-  age         Int?
-  password    String
-  createdAt   DateTime      @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime      @updatedAt @db.Timestamptz(6)
-  // deletedAt DateTime?
-  Exercise    Exercise[]
-  ExerciseLog ExerciseLog[]
-  WorkoutPlan WorkoutPlan[]
-  avatar      String?
-}
-
-model Post {
-  id         Int      @id @default(autoincrement())
-  titleKey   String // Reference to Text.key
-  contentKey String? // Reference to Text.key
-  published  Boolean? @default(false)
-  authorId   Int?
+  id                Int                 @id @default(autoincrement())
+  email             String              @unique
+  name              String
+  gender            String?
+  age               Int?
+  password          String
+  createdAt         DateTime            @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime            @updatedAt @db.Timestamptz(6)
+  Exercise          Exercise[]
+  WorkoutPlan       WorkoutPlan[]
+  avatar            String?
+  WorkoutSessionLog WorkoutSessionLog[]
 }
 
 enum ExerciseCategory {
@@ -94,9 +79,9 @@ model Exercise {
   images           String[]
   createdAt        DateTime              @default(now()) @db.Timestamptz(6)
   updatedAt        DateTime              @updatedAt @db.Timestamptz(6)
-  ExerciseLog      ExerciseLog[]
   translations     ExerciseTranslation[]
   workoutExercises WorkoutExercise[]
+  ExerciseSetLog   ExerciseSetLog[]
 }
 
 model ExerciseTranslation {
@@ -110,18 +95,6 @@ model ExerciseTranslation {
 
   @@id([exerciseId, language]) // composite primary key for uniqueness
   @@index([language])
-}
-
-model ExerciseLog {
-  id          Int      @id @default(autoincrement())
-  exercise    Exercise @relation(fields: [exerciseId], references: [id])
-  exerciseId  Int
-  user        User     @relation(fields: [userId], references: [id])
-  userId      Int
-  date        DateTime
-  repetitions Int
-  weight      Float?
-  notes       String?
 }
 
 enum WorkoutPlanLevel {
@@ -139,20 +112,21 @@ enum WorkoutPlanCategory {
 }
 
 model WorkoutPlan {
-  id           String                   @id @default(uuid())
-  cover_image  String?
-  level        WorkoutPlanLevel?
-  isPublic     Boolean?                 @default(true)
-  isPremium    Boolean?                 @default(false)
-  isFeatured   Boolean?                 @default(false)
-  isSingle     Boolean?                 @default(false)
-  category     WorkoutPlanCategory?
-  workouts     Workout[]
-  createdBy    User                     @relation(fields: [createdById], references: [id])
-  createdById  Int
-  createdAt    DateTime                 @default(now()) @db.Timestamptz(6)
-  updatedAt    DateTime                 @updatedAt @db.Timestamptz(6)
-  translations WorkoutPlanTranslation[]
+  id                String                   @id @default(uuid())
+  cover_image       String?
+  level             WorkoutPlanLevel?
+  isPublic          Boolean?                 @default(true)
+  isPremium         Boolean?                 @default(false)
+  isFeatured        Boolean?                 @default(false)
+  isSingle          Boolean?                 @default(false)
+  category          WorkoutPlanCategory?
+  workouts          Workout[]
+  createdBy         User                     @relation(fields: [createdById], references: [id])
+  createdById       Int
+  createdAt         DateTime                 @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime                 @updatedAt @db.Timestamptz(6)
+  translations      WorkoutPlanTranslation[]
+  WorkoutSessionLog WorkoutSessionLog[]
 }
 
 model WorkoutPlanTranslation {
@@ -168,15 +142,19 @@ model WorkoutPlanTranslation {
   @@index([language])
 }
 
+// NO NEED TO HAVE USER / CREATEDBY FIELD AS IT IS RELATED TO WORKOUT-PLAN
+// AND WORKOUT-PLAN IS RELATED TO USER 
+// IF OTHER USER WANT TO USE PLAN => THEY MUST CLONE IT AND CREATE IT AS A NEW WORKOUT PLAN
 model Workout {
-  id               String               @id @default(uuid())
-  order            Int?
-  createdAt        DateTime             @default(now()) @db.Timestamptz(6)
-  updatedAt        DateTime             @updatedAt @db.Timestamptz(6)
-  WorkoutPlan      WorkoutPlan          @relation(fields: [workoutPlanId], references: [id])
-  workoutPlanId    String
-  translations     WorkoutTranslation[]
-  workoutExercises WorkoutExercise[]
+  id                String               @id @default(uuid())
+  order             Int?
+  createdAt         DateTime             @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime             @updatedAt @db.Timestamptz(6)
+  WorkoutPlan       WorkoutPlan          @relation(fields: [workoutPlanId], references: [id])
+  workoutPlanId     String
+  translations      WorkoutTranslation[]
+  workoutExercises  WorkoutExercise[]
+  WorkoutSessionLog WorkoutSessionLog[]
 }
 
 model WorkoutTranslation {
@@ -200,12 +178,6 @@ model ExerciseSet {
   isUntilFailure    Boolean         @default(false)
   WorkoutExercise   WorkoutExercise @relation(fields: [workoutExerciseId], references: [id], onDelete: Cascade)
   workoutExerciseId String
-  isCompleted       Boolean         @default(false)
-  completedAt       DateTime?
-  weight            Float?
-  repetitions       Int?
-  distance          Float?
-  duration          Int?
 }
 
 model WorkoutExercise {
@@ -219,4 +191,32 @@ model WorkoutExercise {
   notes      String?
 
   @@unique([workoutId, exerciseId, order])
+}
+
+model WorkoutSessionLog {
+  id            Int              @id @default(autoincrement())
+  user          User             @relation(fields: [userId], references: [id])
+  userId        Int
+  workoutPlan   WorkoutPlan      @relation(fields: [workoutPlanId], references: [id])
+  workoutPlanId String
+  workout       Workout          @relation(fields: [workoutId], references: [id])
+  workoutId     String
+  createdAt     DateTime?        @default(now()) @db.Timestamptz(6)
+  notes         String?
+  setLogs       ExerciseSetLog[]
+  duration      Int
+}
+
+model ExerciseSetLog {
+  id               Int               @id @default(autoincrement())
+  workoutSession   WorkoutSessionLog @relation(fields: [workoutSessionId], references: [id], onDelete: Cascade)
+  workoutSessionId Int
+  exercise         Exercise          @relation(fields: [exerciseId], references: [id])
+  exerciseId       Int
+  weight           Float?
+  repetitions      Int?
+  distance         Float?
+  duration         Int?
+  isIncomplete     Boolean?          @default(false)
+  createdAt        DateTime?         @default(now()) @db.Timestamptz(6)
 }

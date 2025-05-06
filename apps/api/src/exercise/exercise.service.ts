@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Request } from "express";
 import { paginateOutput } from "src/common/utils/pagination.utils";
 import { REQUEST_USER_KEY } from "../auth/constant/auth.constant";
@@ -128,27 +128,41 @@ export class ExerciseService {
   }
 
   async findOne(id: number, language: Language) {
-    return this.prisma.exercise.findUnique({
-      where: {
-        id,
-      },
+    const exercise = await this.prisma.exercise.findUnique({
+      where: { id },
       include: {
-        primaryMuscle: {
-          include: {
-            translations: {
-              where: {
-                language,
-              },
-            },
-          },
-        },
-        translations: {
-          where: {
-            language,
-          },
-        },
+        primaryMuscle: { include: { translations: { where: { language } } } },
+        translations: { where: { language } },
       },
     });
+
+    if (!exercise) {
+      throw new HttpException("Exercise not found", HttpStatus.NOT_FOUND);
+    }
+
+    const logs = await this.prisma.exerciseSetLog.findMany({
+      where: { exerciseId: id },
+      include: {
+        workoutSession: { select: { id: true, createdAt: true } },
+      },
+      orderBy: { workoutSession: { createdAt: "desc" } },
+    });
+
+    const logsBySession = logs.reduce<Record<number, typeof logs>>(
+      (acc, log) => {
+        const sid = log.workoutSessionId;
+        if (!acc[sid]) acc[sid] = [];
+        acc[sid].push(log);
+        return acc;
+      },
+      {}
+    );
+
+    return {
+      ...exercise,
+      // logsBySession,
+      logs: logsBySession,
+    };
   }
 
   async update(

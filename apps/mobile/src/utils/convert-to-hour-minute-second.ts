@@ -37,3 +37,8 @@ export const formatTimeObjectToSeconds = ({
 }): number => {
   return hours * 3600 + minutes * 60 + seconds;
 };
+
+export const convertSecondsToHours = (seconds: number | undefined) => {
+  if (!seconds) return 0;
+  return seconds / 3600;
+};

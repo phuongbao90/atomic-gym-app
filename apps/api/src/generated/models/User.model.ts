@@ -1,5 +1,5 @@
 import { IsInt, IsDefined, IsString, IsOptional, IsDate } from "class-validator";
-import { Exercise, ExerciseLog, WorkoutPlan } from "./";
+import { Exercise, WorkoutPlan, WorkoutSessionLog } from "./";
 
 export class User {
     @IsDefined()
@@ -38,12 +38,12 @@ export class User {
     Exercise!: Exercise[];
 
     @IsDefined()
-    ExerciseLog!: ExerciseLog[];
-
-    @IsDefined()
     WorkoutPlan!: WorkoutPlan[];
 
     @IsOptional()
     @IsString()
     avatar?: string;
+
+    @IsDefined()
+    WorkoutSessionLog!: WorkoutSessionLog[];
 }

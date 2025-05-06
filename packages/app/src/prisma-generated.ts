@@ -18,17 +18,9 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   Exercise?: Exercise[];
-  ExerciseLog?: ExerciseLog[];
   WorkoutPlan?: WorkoutPlan[];
   avatar: string | null;
-}
-
-export interface Post {
-  id: number;
-  titleKey: string;
-  contentKey: string | null;
-  published: boolean | null;
-  authorId: number | null;
+  WorkoutSessionLog?: WorkoutSessionLog[];
 }
 
 export interface MuscleGroup {
@@ -58,9 +50,9 @@ export interface Exercise {
   images: string[];
   createdAt: string;
   updatedAt: string;
-  ExerciseLog?: ExerciseLog[];
   translations?: ExerciseTranslation[];
   workoutExercises?: WorkoutExercise[];
+  ExerciseSetLog?: ExerciseSetLog[];
 }
 
 export interface ExerciseTranslation {
@@ -71,18 +63,6 @@ export interface ExerciseTranslation {
   description: string | null;
   slug: string;
   exercise?: Exercise;
-}
-
-export interface ExerciseLog {
-  id: number;
-  exercise?: Exercise;
-  exerciseId: number;
-  user?: User;
-  userId: number;
-  date: string;
-  repetitions: number;
-  weight: number | null;
-  notes: string | null;
 }
 
 export interface WorkoutPlan {
@@ -100,6 +80,7 @@ export interface WorkoutPlan {
   createdAt: string;
   updatedAt: string;
   translations?: WorkoutPlanTranslation[];
+  WorkoutSessionLog?: WorkoutSessionLog[];
 }
 
 export interface WorkoutPlanTranslation {
@@ -121,6 +102,7 @@ export interface Workout {
   workoutPlanId: string;
   translations?: WorkoutTranslation[];
   workoutExercises?: WorkoutExercise[];
+  WorkoutSessionLog?: WorkoutSessionLog[];
 }
 
 export interface WorkoutTranslation {
@@ -140,12 +122,6 @@ export interface ExerciseSet {
   isUntilFailure: boolean;
   WorkoutExercise?: WorkoutExercise;
   workoutExerciseId: string;
-  isCompleted: boolean;
-  completedAt: string | null;
-  weight: number | null;
-  repetitions: number | null;
-  distance: number | null;
-  duration: number | null;
 }
 
 export interface WorkoutExercise {
@@ -157,4 +133,32 @@ export interface WorkoutExercise {
   order: number;
   sets?: ExerciseSet[];
   notes: string | null;
+}
+
+export interface WorkoutSessionLog {
+  id: number;
+  user?: User;
+  userId: number;
+  workoutPlan?: WorkoutPlan;
+  workoutPlanId: string;
+  workout?: Workout;
+  workoutId: string;
+  createdAt: string | null;
+  notes: string | null;
+  setLogs?: ExerciseSetLog[];
+  duration: number;
+}
+
+export interface ExerciseSetLog {
+  id: number;
+  workoutSession?: WorkoutSessionLog;
+  workoutSessionId: number;
+  exercise?: Exercise;
+  exerciseId: number;
+  weight: number | null;
+  repetitions: number | null;
+  distance: number | null;
+  duration: number | null;
+  isIncomplete: boolean | null;
+  createdAt: string | null;
 }
