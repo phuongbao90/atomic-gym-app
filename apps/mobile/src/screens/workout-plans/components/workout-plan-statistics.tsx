@@ -51,26 +51,29 @@ function createIsoWeekTemplate(startYear: number) {
   return template;
 }
 
+// Unified helper to pick ISO-weeks for month or ISO-year
 const pickWeeks = (
   grouped: Record<string, WeekStats>,
   periodFilter: PeriodFilter,
   periodValue: string
 ) => {
   const year = dayjs(periodValue).year();
-  const month = dayjs(periodValue).month() + 1; // 1-12
+  if (periodFilter === "year") {
+    return Object.values(grouped)
+      .filter(({ weekStart }) => dayjs(weekStart).isoWeekYear() === year)
+      .sort(
+        (a, b) => dayjs(a.weekStart).valueOf() - dayjs(b.weekStart).valueOf()
+      );
+  }
 
+  // Month view …
+  const month = dayjs(periodValue).month() + 1;
+  const spanStart = dayjs(`${year}-${String(month).padStart(2, "0")}-01`);
+  const spanEnd = spanStart.endOf("month");
   return Object.values(grouped)
     .filter(({ weekStart }) => {
       const start = dayjs(weekStart);
       const end = start.add(6, "day");
-      const spanStart =
-        periodFilter === "month"
-          ? dayjs(`${year}-${String(month).padStart(2, "0")}-01`)
-          : dayjs(`${year}-01-01`);
-      const spanEnd =
-        periodFilter === "month"
-          ? spanStart.endOf("month")
-          : dayjs(`${year}-12-31`);
       return (
         end.isSameOrAfter(spanStart, "day") &&
         start.isSameOrBefore(spanEnd, "day")
@@ -107,20 +110,17 @@ const useBarData = (
     const buckets = createIsoWeekTemplate(year);
 
     // Accumulate
-    sessions.forEach(({ createdAt, setLogs }) => {
+    sessions.forEach(({ createdAt, setLogs, duration }) => {
       const key = dayjs(createdAt).startOf("isoWeek").format("YYYY-MM-DD");
       const bucket = buckets[key];
       if (!bucket) return;
       const weight = setLogs?.reduce((sum, s) => sum + (s.weight || 0), 0) || 0;
       const reps =
         setLogs?.reduce((sum, s) => sum + (s.repetitions || 0), 0) || 0;
-      const durationSec =
-        setLogs?.reduce((sum, s) => sum + (s.duration || 0), 0) || 0;
+
       bucket.totalWeight += weight;
       bucket.totalReps += reps;
-      bucket.totalDuration += Number(
-        convertSecondsToHours(durationSec).toFixed(1)
-      );
+      bucket.totalDuration += Number(convertSecondsToHours(duration));
     });
 
     // Filter relevant weeks
