@@ -161,6 +161,35 @@ export const WorkoutPlanStatistics = ({
   item: WorkoutPlanWithStats | undefined;
 }) => {
   const { t } = useTranslation();
+
+  return (
+    <View className=" mt-4 gap-y-4">
+      <View className="flex-row flex-wrap gap-4 pl-4">
+        <Pill label={t("workout_sessions")} value={item?.stats?.sessionCount} />
+        <Pill
+          label={t("total_time (hrs)")}
+          value={convertSecondsToHours(item?.stats?.totalDuration).toFixed(1)}
+        />
+        <Pill
+          label={t("avg.session_duration")}
+          value={convertToHourMinuteSecond(
+            item?.stats?.avgDurationPerSession || 0
+          )}
+        />
+        <Pill label={t("sets_completed")} value={item?.stats?.totalSetCount} />
+      </View>
+
+      <Chart item={item} />
+    </View>
+  );
+};
+
+const Chart = ({
+  item,
+}: {
+  item: WorkoutPlanWithStats | undefined;
+}) => {
+  const { t } = useTranslation();
   const [periodValue, setPeriodValue] = useState(dayjs().format("YYYY-MM-DD"));
   const [periodFilter, setPeriodFilter] = useState<PeriodFilter>("month");
   const [categoryFilter, setCategoryFilter] =
@@ -196,95 +225,77 @@ export const WorkoutPlanStatistics = ({
     },
     [periodFilter, periodValue]
   );
-
   return (
-    <View className=" mt-4 gap-y-4">
-      <View className="flex-row flex-wrap gap-4 pl-4">
-        <Pill label={t("workout_sessions")} value={item?.stats?.sessionCount} />
-        <Pill
-          label={t("total_time (hrs)")}
-          value={convertSecondsToHours(item?.stats?.totalDuration).toFixed(1)}
+    <View>
+      <View className="flex-row gap-3 my-4 pl-4">
+        <FilterButton
+          label={t("weight")}
+          onPress={() => setCategoryFilter("weight")}
+          isActive={categoryFilter === "weight"}
         />
-        <Pill
-          label={t("avg.session_duration")}
-          value={convertToHourMinuteSecond(
-            item?.stats?.avgDurationPerSession || 0
-          )}
+        <FilterButton
+          label={t("reps")}
+          onPress={() => setCategoryFilter("reps")}
+          isActive={categoryFilter === "reps"}
         />
-        <Pill label={t("sets_completed")} value={item?.stats?.totalSetCount} />
+        <FilterButton
+          label={t("duration")}
+          onPress={() => setCategoryFilter("time")}
+          isActive={categoryFilter === "time"}
+        />
+      </View>
+      <AppText className="text-2xl pl-4 font-semibold">{chartTitle}</AppText>
+      <BarChart
+        noOfSections={3}
+        frontColor="lightgray"
+        data={barData}
+        yAxisThickness={0}
+        xAxisThickness={0}
+        labelWidth={36}
+        xAxisLabelTextStyle={{ fontSize: 12 }}
+        yAxisTextStyle={{ fontSize: 12 }}
+        height={280}
+      />
+
+      <View className="flex-row my-4 pl-4">
+        <AppTouchable
+          onPress={() => {
+            changePeriod("prev");
+          }}
+        >
+          <ChevronLeftIcon />
+        </AppTouchable>
+        <AppText className="mx-auto">
+          {periodFilter === "year"
+            ? dayjs(periodValue).format("YYYY")
+            : dayjs(periodValue).format("MM/YYYY")}
+        </AppText>
+        <AppTouchable
+          onPress={() => {
+            changePeriod("next");
+          }}
+        >
+          <ChevronRightIcon />
+        </AppTouchable>
       </View>
 
-      <View>
-        <View className="flex-row gap-3 my-4 pl-4">
-          <FilterButton
-            label={t("weight")}
-            onPress={() => setCategoryFilter("weight")}
-            isActive={categoryFilter === "weight"}
-          />
-          <FilterButton
-            label={t("reps")}
-            onPress={() => setCategoryFilter("reps")}
-            isActive={categoryFilter === "reps"}
-          />
-          <FilterButton
-            label={t("duration")}
-            onPress={() => setCategoryFilter("time")}
-            isActive={categoryFilter === "time"}
-          />
-        </View>
-        <AppText className="text-2xl pl-4 font-semibold">{chartTitle}</AppText>
-        <BarChart
-          noOfSections={3}
-          frontColor="lightgray"
-          data={barData}
-          yAxisThickness={0}
-          xAxisThickness={0}
-          labelWidth={36}
-          xAxisLabelTextStyle={{ fontSize: 12 }}
-          yAxisTextStyle={{ fontSize: 12 }}
-          height={280}
+      <View className="flex-row gap-3 mt-4 pl-4">
+        <FilterButton
+          label={t("month")}
+          onPress={() => {
+            setPeriodValue(dayjs().format("YYYY-MM-DD"));
+            setPeriodFilter("month");
+          }}
+          isActive={periodFilter === "month"}
         />
-
-        <View className="flex-row my-4 pl-4">
-          <AppTouchable
-            onPress={() => {
-              changePeriod("prev");
-            }}
-          >
-            <ChevronLeftIcon />
-          </AppTouchable>
-          <AppText className="mx-auto">
-            {periodFilter === "year"
-              ? dayjs(periodValue).format("YYYY")
-              : dayjs(periodValue).format("MM/YYYY")}
-          </AppText>
-          <AppTouchable
-            onPress={() => {
-              changePeriod("next");
-            }}
-          >
-            <ChevronRightIcon />
-          </AppTouchable>
-        </View>
-
-        <View className="flex-row gap-3 mt-4 pl-4">
-          <FilterButton
-            label={t("month")}
-            onPress={() => {
-              setPeriodValue(dayjs().format("YYYY-MM-DD"));
-              setPeriodFilter("month");
-            }}
-            isActive={periodFilter === "month"}
-          />
-          <FilterButton
-            label={t("year")}
-            onPress={() => {
-              setPeriodValue(dayjs().startOf("year").format("YYYY-MM-DD"));
-              setPeriodFilter("year");
-            }}
-            isActive={periodFilter === "year"}
-          />
-        </View>
+        <FilterButton
+          label={t("year")}
+          onPress={() => {
+            setPeriodValue(dayjs().startOf("year").format("YYYY-MM-DD"));
+            setPeriodFilter("year");
+          }}
+          isActive={periodFilter === "year"}
+        />
       </View>
     </View>
   );

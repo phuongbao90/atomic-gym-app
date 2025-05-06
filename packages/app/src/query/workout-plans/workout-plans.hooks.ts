@@ -46,6 +46,7 @@ export const useGetWorkoutPlan = (id: string | undefined) => {
     queryFn: () => getWorkoutPlan(id!),
     select: (data) => data?.data,
     enabled: !!id,
+    staleTime: 1000 * 60 * 60,
   });
 };
 
