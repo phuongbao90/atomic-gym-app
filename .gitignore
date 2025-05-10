@@ -27,6 +27,7 @@ out/
 build
 dist
 
+secrets/
 
 # Debug
 npm-debug.log*
@@ -45,6 +46,7 @@ apps/api/prisma/migrations/
 .expo/
 android/
 ios/
+eas.json
 
 # Dashboard
 

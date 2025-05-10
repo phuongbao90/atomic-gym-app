@@ -25,7 +25,7 @@ export default (): ExpoConfig => ({
       UIBackgroundModes: ["fetch", "remote-notification"],
       NSAppTransportSecurity: { NSAllowsArbitraryLoads: true }, // ? enable HTTP requests
     },
-    googleServicesFile: "./scripts/GoogleService-Info.plist",
+    googleServicesFile: "../../secrets/GoogleService-Info.plist",
     privacyManifests: {
       NSPrivacyAccessedAPITypes: [
         {
@@ -48,7 +48,7 @@ export default (): ExpoConfig => ({
     softwareKeyboardLayoutMode: "pan",
     icon: "./assets/images/logo_256.png",
     package: appId,
-    googleServicesFile: "./scripts/google-services.json",
+    googleServicesFile: "../../secrets/google-services.json",
     // playStoreUrl:
     //   "https://play.google.com/store/apps/details?id=com.daivietuni&pcampaignid=web_share",
     config: {},
