@@ -4,6 +4,7 @@ import { Platform } from "react-native";
 import { colors } from "../../src/styles/themes";
 import { Tabs } from "expo-router";
 import { useAppSelector } from "../../src/stores/redux-store";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Icon = ({
   name,
@@ -25,8 +26,11 @@ const Icon = ({
   );
 };
 
+const TAB_HEIGHT = 56;
+
 export default function TabLayout() {
   // const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const insets = useSafeAreaInsets();
   const colorMode = useAppSelector((state) => state.app.theme);
 
   // if (!isLoggedIn) {
@@ -43,6 +47,8 @@ export default function TabLayout() {
           },
           default: {
             backgroundColor: colors.pageBackground[colorMode],
+            height: insets.bottom ? TAB_HEIGHT : TAB_HEIGHT + insets.bottom,
+            paddingBottom: 0,
           },
         }),
         tabBarActiveTintColor: colors.text[colorMode].main,

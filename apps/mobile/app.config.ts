@@ -58,6 +58,7 @@ export default (): ExpoConfig => ({
       "android.permission.READ_EXTERNAL_STORAGE",
       "android.permission.WRITE_EXTERNAL_STORAGE",
     ],
+    edgeToEdgeEnabled: true,
   },
   extra: {
     eas: {
@@ -153,7 +154,7 @@ export default (): ExpoConfig => ({
       {
         android: {
           usesCleartextTraffic: true, // ? enable HTTP requests
-          kotlinVersion: "1.9.25",
+          kotlinVersion: "2.0.21",
           compileSdkVersion: 35,
           targetSdkVersion: 35,
           minSdkVersion: 24,
@@ -170,18 +171,11 @@ export default (): ExpoConfig => ({
         },
       },
     ],
-
-    // [
-    //   "expo-notifications",
-    //   {
-    //     icon: "./assets/images/ic_notification.png",
-    //   },
-    // ],
     "@react-native-firebase/app",
-    "@react-native-firebase/messaging",
+    "@react-native-firebase/auth",
     "@config-plugins/react-native-blob-util",
-    "./scripts/fix-rn-firebase-plugin",
-    "./scripts/inject-android-config",
+    // "./scripts/fix-rn-firebase-plugin",
+    // "./scripts/inject-android-config",
   ],
 });
 

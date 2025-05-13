@@ -24,5 +24,22 @@ config.resolver.nodeModulesPaths = [
 config.resolver.disableHierarchicalLookup = true;
 
 config.resolver.sourceExts.push("mjs");
+config.resolver.unstable_enablePackageExports = false;
+
+config.resolver.resolveRequest = (context, moduleImport, platform) => {
+  // Always import the ESM version of all `@firebase/*` packages
+  if (moduleImport.startsWith("@firebase/")) {
+    return context.resolveRequest(
+      {
+        ...context,
+        isESMImport: true, // Mark the import method as ESM
+      },
+      moduleImport,
+      platform
+    );
+  }
+
+  return context.resolveRequest(context, moduleImport, platform);
+};
 
 module.exports = withNativeWind(config, { input: "./global.css" });

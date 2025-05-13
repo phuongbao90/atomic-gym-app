@@ -9,7 +9,7 @@ import { PortalProvider } from "@gorhom/portal";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useNavigationContainerRef } from "expo-router";
 import { useEffect, useRef } from "react";
-import { SafeAreaView } from "react-native";
+import { StatusBar, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { useMMKVBoolean } from "react-native-mmkv";
@@ -84,20 +84,25 @@ export default function RootLayout() {
             <GestureHandlerRootView style={{ flex: 1 }}>
               <ModalProvider stack={modalStack}>
                 <BottomSheetModalProvider>
-                  <PortalProvider>
-                    <ActionSheetProvider>
-                      <SafeAreaView
+                  <ActionSheetProvider>
+                    <PortalProvider>
+                      <StatusBar
+                        translucent
+                        backgroundColor="black"
+                        networkActivityIndicatorVisible
+                      />
+                      <View
                         style={{
-                          top: insets.top,
-                          bottom: insets.bottom,
                           flex: 1,
+                          paddingBottom: insets.bottom,
+                          paddingTop: insets.top,
                         }}
                       >
                         <App />
                         <Toaster position="top-center" duration={2000} />
-                      </SafeAreaView>
-                    </ActionSheetProvider>
-                  </PortalProvider>
+                      </View>
+                    </PortalProvider>
+                  </ActionSheetProvider>
                 </BottomSheetModalProvider>
               </ModalProvider>
             </GestureHandlerRootView>
