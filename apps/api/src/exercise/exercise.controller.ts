@@ -7,22 +7,22 @@ import {
   Patch,
   Post,
   Req,
+  UseGuards,
 } from "@nestjs/common";
 import { Request } from "express";
 import { PaginatedQuery } from "src/common/decorator/paginated-query.decorator";
-import { Auth } from "../auth/decorator/auth.decorator";
-import { AuthType } from "../auth/type/auth-type";
 import { CreateExerciseDto } from "./dto/create-exercise.dto";
 import { ExerciseService } from "./exercise.service";
 import { ExerciseQueryParamsDto } from "./dto/exercise-query-params.dto";
 import { Language } from "@prisma/client";
 import { GetLanguage } from "../common/decorators/get-language.decorator";
+import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
 
 @Controller("exercises")
-@Auth(AuthType.Bearer)
 export class ExerciseController {
   constructor(private readonly exerciseService: ExerciseService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   create(
     @Body() body: CreateExerciseDto,
@@ -45,6 +45,7 @@ export class ExerciseController {
     return this.exerciseService.findOne(+id, language);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(":id")
   update(
     @Param("id") id: string,
@@ -60,6 +61,7 @@ export class ExerciseController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(":id")
   delete(@Param("id") id: string) {
     return this.exerciseService.delete(+id);

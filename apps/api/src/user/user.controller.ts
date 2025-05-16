@@ -7,12 +7,12 @@ import {
   Post,
   Put,
   Req,
+  UseGuards,
 } from "@nestjs/common";
 import { Request } from "express";
-import { Auth } from "src/auth/decorator/auth.decorator";
-import { AuthType } from "src/auth/type/auth-type";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UserService } from "./user.service";
+import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
 
 @Controller("user")
 export class UserController {
@@ -24,7 +24,7 @@ export class UserController {
   }
 
   @Get("me")
-  @Auth(AuthType.Bearer)
+  @UseGuards(JwtAuthGuard)
   async getMe(@Req() req: Request) {
     return this.userService.me(req);
   }
@@ -35,7 +35,7 @@ export class UserController {
   }
 
   @Get("email/:email")
-  @Auth(AuthType.None)
+  @UseGuards(JwtAuthGuard)
   async getUserByUsername(@Param("email") email: string) {
     return this.userService.getUserByUsername(email);
   }

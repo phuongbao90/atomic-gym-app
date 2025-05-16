@@ -1,5 +1,5 @@
 import { forwardRef, Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigType, getConfigToken } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import jwtConfig from "../config/jwt.config";
@@ -9,6 +9,7 @@ import { AuthService } from "./auth.service";
 import { BcryptProvider } from "./provider/bcrypt.provider";
 import { HashingProvider } from "./provider/hashing.provider";
 import { JwtStrategy } from "./provider/jwt.strategy";
+import { LocalStrategy } from "./provider/local.strategy";
 
 @Module({
   controllers: [AuthController],
@@ -16,13 +17,26 @@ import { JwtStrategy } from "./provider/jwt.strategy";
     AuthService,
     { provide: HashingProvider, useClass: BcryptProvider },
     JwtStrategy,
+    LocalStrategy,
   ],
   exports: [AuthService, HashingProvider],
   imports: [
-    forwardRef(() => UserModule),
     ConfigModule.forFeature(jwtConfig),
-    PassportModule.register({ defaultStrategy: "jwt" }),
-    JwtModule.registerAsync(jwtConfig.asProvider()),
+    forwardRef(() => UserModule),
+    // PassportModule.register({ defaultStrategy: "jwt" }),
+    PassportModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [getConfigToken("jwt")],
+      useFactory: async (config: ConfigType<typeof jwtConfig>) => ({
+        secret: config.secret,
+        signOptions: {
+          expiresIn: Number(config.accessTokenTtl),
+          audience: config.audience,
+          issuer: config.issuer,
+        },
+      }),
+    }),
   ],
 })
 export class AuthModule {}

@@ -1,9 +1,7 @@
-import { Controller, Get, Req, UseGuards } from "@nestjs/common";
+import { Controller, Get, Req } from "@nestjs/common";
 import { LogService } from "./log.service";
-import { AccessTokenGuard } from "../auth/guard/access-token/access-token.guard";
 
 @Controller("logs")
-@UseGuards(AccessTokenGuard)
 export class LogController {
   constructor(private logService: LogService) {}
 

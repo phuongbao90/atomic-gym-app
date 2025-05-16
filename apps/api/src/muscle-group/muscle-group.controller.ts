@@ -1,17 +1,16 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
-import { Auth } from "../auth/decorator/auth.decorator";
-import { AuthType } from "../auth/type/auth-type";
+import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { MuscleGroupService } from "./muscle-group.service";
 import { CreateMuscleGroupDto } from "./dto/create-muscle-group.dto";
 import { Language } from "@prisma/client";
 import { GetLanguage } from "../common/decorators/get-language.decorator";
+import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
 
 @Controller("muscle-groups")
-@Auth(AuthType.Bearer)
 export class MuscleGroupController {
   constructor(private readonly muscleGroupService: MuscleGroupService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   create(
     @Body() body: CreateMuscleGroupDto,
     @GetLanguage() language: Language

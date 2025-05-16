@@ -36,6 +36,8 @@ import notifee from "@notifee/react-native";
 import { Audio } from "expo-av";
 import restTimeEndSound from "../assets/sounds/rest-time-end.mp3";
 // This runs even if your app UI is backgrounded/killed
+import { enableScreens } from "react-native-screens";
+enableScreens();
 
 notifee.registerForegroundService(async (task) => {
   // if (task.id === "activate-workout-session") {

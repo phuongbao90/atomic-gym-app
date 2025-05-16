@@ -12,7 +12,6 @@ import { Request } from "express";
 import jwtConfig from "../config/jwt.config";
 import { UserService } from "../user/user.service";
 import { REQUEST_USER_KEY } from "./constant/auth.constant";
-import { LoginDto } from "./dto/login.dto";
 import { SignupDto } from "./dto/signup.dto";
 import { HashingProvider } from "./provider/hashing.provider";
 
@@ -26,24 +25,34 @@ export class AuthService {
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>
   ) {}
 
-  async login(body: LoginDto) {
-    try {
-      const existingUser = await this.userService.getUserByUsername(body.email);
-      if (!existingUser) {
-        throw new UnauthorizedException();
-      }
-      const isPasswordMatch = await this.hashingProvider.comparePassword(
-        body.password,
-        existingUser.password
-      );
-      if (!isPasswordMatch) {
-        throw new UnauthorizedException();
-      }
-      return this.generateTokens(existingUser);
-    } catch (error) {
-      console.log("error ====> ", error);
-      throw new Error(error);
+  async login(user: User) {
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+    };
+
+    return {
+      accessToken: this.jwtService.sign(payload),
+      expiresInSeconds: this.jwtConfiguration.accessTokenTtl,
+      refreshToken: this.jwtService.sign(payload),
+      refreshTokenExpiresInSeconds: this.jwtConfiguration.refreshTokenTtl,
+    };
+  }
+
+  async validateUser(email: string, password: string) {
+    const user = await this.userService.getUserByUsername(email);
+    if (!user) {
+      return null;
     }
+    const isPasswordMatch = await this.hashingProvider.comparePassword(
+      password,
+      user.password
+    );
+    if (!isPasswordMatch) {
+      return null;
+    }
+    return user;
   }
 
   async signup(body: SignupDto) {
@@ -98,7 +107,7 @@ export class AuthService {
   }
 
   async session(req: Request) {
-    const accessToken = req.headers["authorization"];
+    const accessToken = req.headers.authorization;
     const user = req[REQUEST_USER_KEY];
 
     if (!user) {

@@ -45,5 +45,5 @@ Authorization: Bearer {{$global.accessToken}}
 
 ### Delete Exercise
 
-DELETE {{BASE_URL}}/exercises/6
+DELETE {{BASE_URL}}/exercises/20
 Authorization: Bearer {{$global.accessToken}}

@@ -4,39 +4,66 @@ import {
   Get,
   Post,
   Req,
+  UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import { Request } from "express";
 import { LoggingInterceptor } from "src/common/interceptor/logging.interceptor/logging.interceptor";
 import { AuthService } from "./auth.service";
-import { Auth } from "./decorator/auth.decorator";
-import { LoginDto } from "./dto/login.dto";
 import { SignupDto } from "./dto/signup.dto";
-import { AuthType } from "./type/auth-type";
+import { LocalAuthGuard } from "./guard/local-auth.guard";
+import { Request } from "express";
+import { User } from "@prisma/client";
+import { JwtAuthGuard } from "./guard/jwt-auth.guard";
 
 @UseInterceptors(LoggingInterceptor)
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @UseGuards(LocalAuthGuard)
   @Post("login")
-  @Auth(AuthType.None)
-  login(@Body() body: LoginDto) {
-    // console.log("login", body);
-    return this.authService.login(body);
+  async login(@Req() req: Request & { user: User }) {
+    // return req.user;
+    return this.authService.login(req.user);
   }
 
   @Post("signup")
-  @Auth(AuthType.None)
   signup(@Body() body: SignupDto) {
     // console.log("signup", body);
     return this.authService.signup(body);
   }
 
   @Get("session")
-  @Auth(AuthType.Bearer)
+  @UseGuards(JwtAuthGuard)
   session(@Req() req: Request) {
     // console.log("session", req.);
-    return this.authService.session(req);
+    // return this.authService.session(req);
+    return req.user;
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get("profile")
+  getProfile(@Req() req: Request) {
+    return req.user;
+  }
+
+  //* does not work on JWT strategy
+  // @UseGuards(LocalAuthGuard)
+  // @Post("logout")
+  // async logout(@Req() req: Request) {
+  //   return req.logout((err) => {
+  //     console.log("err", err);
+  //     if (err) {
+  //       throw new InternalServerErrorException(
+  //         `Logout failed: ${err?.message}`,
+  //         {
+  //           cause: err,
+  //         }
+  //       );
+  //     }
+  //     return {
+  //       message: "Logout successful.",
+  //     };
+  //   });
+  // }
 }
