@@ -2,63 +2,57 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { match as matchLocale } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
-import { i18n } from "./i18n-config";
+import { auth } from "./auth";
+import pages from "next/dist/build/templates/pages";
+export { auth } from "./auth";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
 
-function getLocale(request: NextRequest): string | undefined {
-  // Negotiator expects plain object so we need to transform headers
-  const negotiatorHeaders: Record<string, string> = {};
-  request.headers.forEach((value, key) => {
-    negotiatorHeaders[key] = value;
-  });
+const locales = ["en", "es"];
+const protectedPages = ["/dashboard/*"];
+const authPages = ["/auth/signin", "/auth/signup"];
 
-  // @ts-ignore locales are readonly
-  const locales: string[] = i18n.locales;
+const testPagesRegex = (pages: string[], pathname: string) => {
+  const regex = `^(/(${locales.join("|")}))?(${pages
+    .map((p) => p.replace("/*", ".*"))
+    .join("|")})/?$`;
+  return new RegExp(regex, "i").test(pathname);
+};
 
-  // Use negotiator and intl-localematcher to get best locale
-  const languages = new Negotiator({ headers: negotiatorHeaders }).languages(
-    locales
-  );
+// const handleAuth = async (
+//   req: NextRequest,
+//   isAuthPage: boolean,
+//   isProtectedPage: boolean
+// ) => {
+//   const session = await auth();
+//   const isAuth = !!session?.user;
 
-  const locale = matchLocale(languages, locales, i18n.defaultLocale);
+//   if (!isAuth && isProtectedPage) {
+//     let from = req.nextUrl.pathname;
+//     if (req.nextUrl.search) {
+//       from += req.nextUrl.search;
+//     }
 
-  return locale;
-}
+//     return NextResponse.redirect(
+//       new URL(
+//         `${pages.auth.signin()}?from=${encodeURIComponent(from)}`,
+//         req.url
+//       )
+//     );
+//   }
 
-export function middleware(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
+//   if (isAuth && isAuthPage) {
+//     return NextResponse.redirect(new URL(pages.dashboard.root, req.nextUrl));
+//   }
 
-  // // `/_next/` and `/api/` are ignored by the watcher, but we need to ignore files in `public` manually.
-  // // If you have one
-  // if (
-  //   [
-  //     '/manifest.json',
-  //     '/favicon.ico',
-  //     // Your other files in `public`
-  //   ].includes(pathname)
-  // )
-  //   return
+//   return intlMiddleware(req);
+// };
 
-  // Check if there is any supported locale in the pathname
-  const pathnameIsMissingLocale = i18n.locales.every(
-    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
-  );
-
-  // Redirect if there is no locale
-  if (pathnameIsMissingLocale) {
-    const locale = getLocale(request);
-
-    // e.g. incoming request is /products
-    // The new URL is now /en-US/products
-    return NextResponse.redirect(
-      new URL(
-        `/${locale}${pathname.startsWith("/") ? "" : "/"}${pathname}`,
-        request.url
-      )
-    );
-  }
-}
+export default createMiddleware(routing);
 
 export const config = {
-  // Matcher ignoring `/_next/` and `/api/`
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  // Match all pathnames except for
+  // - … if they start with `/api`, `/trpc`, `/_next` or `/_vercel`
+  // - … the ones containing a dot (e.g. `favicon.ico`)
+  matcher: "/((?!api|trpc|_next|_vercel|.*\\..*).*)",
 };

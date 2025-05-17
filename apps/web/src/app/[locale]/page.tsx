@@ -7,17 +7,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import LocaleSwitcher from "../../components/locale-switcher";
-import { getDictionary } from "../../utils/get-dictionary";
-import { Locale } from "../../i18n-config";
 
-export default async function HomePage({
-  params,
-}: {
-  params: Promise<{ lang: Locale }>;
-}) {
-  const { lang } = await params;
-  const dictionary = await getDictionary(lang);
+export default async function HomePage() {
+  // const t = useTranslations("HomePage");
+  const t = await getTranslations("HomePage");
 
   return (
     <main className="min-h-screen">
@@ -50,8 +46,8 @@ export default async function HomePage({
         </div>
       </section>
 
+      <p>This text is rendered on the server: {t("title")}</p>
       <LocaleSwitcher />
-      <p>This text is rendered on the server: {dictionary.common.hello}</p>
 
       {/* Features Section */}
       <section id="features" className="py-24 bg-white dark:bg-gray-950">

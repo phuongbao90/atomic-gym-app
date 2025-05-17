@@ -1,31 +1,18 @@
-"use client";
-
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import { Locale } from "../i18n-config";
-import { i18n } from "../i18n-config";
+import { useLocale, useTranslations } from "next-intl";
+import { routing } from "@/i18n/routing";
+import LocaleSwitcherSelect from "./locale-switcher-select";
 
 export default function LocaleSwitcher() {
-  const pathname = usePathname();
-  const redirectedPathname = (locale: Locale) => {
-    if (!pathname) return "/";
-    const segments = pathname.split("/");
-    segments[1] = locale;
-    return segments.join("/");
-  };
+  const t = useTranslations("LocaleSwitcher");
+  const locale = useLocale();
 
   return (
-    <div>
-      <p>Locale switcher:</p>
-      <ul>
-        {i18n.locales.map((locale) => {
-          return (
-            <li key={locale}>
-              <Link href={redirectedPathname(locale)}>{locale}</Link>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    <LocaleSwitcherSelect defaultValue={locale} label={t("label")}>
+      {routing.locales.map((cur) => (
+        <option key={cur} value={cur}>
+          {t("locale", { locale: cur })}
+        </option>
+      ))}
+    </LocaleSwitcherSelect>
   );
 }

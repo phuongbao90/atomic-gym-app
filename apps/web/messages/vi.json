@@ -1,0 +1,30 @@
+{
+  "common": {
+    "hello": "Xin chào"
+  },
+  "Manifest": {
+    "name": "Hệ thống quản lý phòng gym"
+  },
+  "HomePage": {
+    "title": "Biến đổi kinh doanh của bạn với quản lý thông minh",
+    "description": "Nền tảng tổng thể cho chủ các phòng gym quản lý thành viên, theo dõi tiến trình, và tăng doanh thu thông qua các dịch vụ và sản phẩm được tích hợp."
+  },
+  "LocaleLayout": {
+    "title": "Hệ thống quản lý phòng gym"
+  },
+  "LocaleSwitcher": {
+    "label": "Thay đổi ngôn ngữ",
+    "locale": "{locale, select, de {🇩🇪 Deutsch} en {🇺🇸 English} vi {🇻🇳 Tiếng Việt} other {Unknown}}"
+  },
+  "NotFoundPage": {
+    "title": "Trang không tồn tại",
+    "description": "Trang bạn đang tìm kiếm không tồn tại."
+  },
+  "Error": {
+    "title": "Đã xảy ra lỗi",
+    "description": "Vui lòng thử lại sau."
+  },
+  "PageLayout": {
+    "title": "Hệ thống quản lý phòng gym"
+  }
+}

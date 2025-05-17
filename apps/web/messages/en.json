@@ -1,0 +1,30 @@
+{
+  "common": {
+    "hello": "Hello"
+  },
+  "Manifest": {
+    "name": "Gym Management System"
+  },
+  "HomePage": {
+    "title": "Transform Your Gym Business with Smart Management",
+    "description": "All-in-one platform for gym owners to manage members, track progress, and boost revenue through integrated services and products."
+  },
+  "LocaleLayout": {
+    "title": "Gym Management System"
+  },
+  "LocaleSwitcher": {
+    "label": "Change language",
+    "locale": "{locale, select, de {🇩🇪 Deutsch} en {🇺🇸 English} vi {🇻🇳 Vietnamese} other {Unknown}}"
+  },
+  "NotFoundPage": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist."
+  },
+  "Error": {
+    "title": "An error occurred",
+    "description": "Please try again later."
+  },
+  "PageLayout": {
+    "title": "Gym Management System"
+  }
+}
