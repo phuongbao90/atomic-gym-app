@@ -2,6 +2,7 @@ import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
+import helmet from "helmet";
 
 // const whitelist = [
 //   "http://localhost:3005",
@@ -39,6 +40,8 @@ async function bootstrap() {
       },
     })
   );
+
+  app.use(helmet());
 
   // Swagger setup
   const config = new DocumentBuilder()

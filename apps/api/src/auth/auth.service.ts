@@ -14,6 +14,8 @@ import { UserService } from "../user/user.service";
 import { REQUEST_USER_KEY } from "./constant/auth.constant";
 import { SignupDto } from "./dto/signup.dto";
 import { HashingProvider } from "./provider/hashing.provider";
+import { ForgotPasswordDto } from "./dto/forgot-password.dto";
+import { MailService } from "../mail/mail.service";
 
 @Injectable()
 export class AuthService {
@@ -22,7 +24,8 @@ export class AuthService {
     private readonly hashingProvider: HashingProvider,
     private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY)
-    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>
+    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
+    private readonly mailService: MailService
   ) {}
 
   async login(user: User) {
@@ -104,6 +107,28 @@ export class AuthService {
     );
 
     return token;
+  }
+
+  async forgotPassword(body: ForgotPasswordDto) {
+    const user = await this.userService.getUserByUsername(body.email);
+    if (!user) {
+      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+    }
+
+    const token = await this.signToken(
+      user.id,
+      +this.jwtConfiguration.accessTokenTtl
+    );
+
+    await this.mailService.sendPasswordReset(
+      user.email,
+      `${process.env.WEB_URL}/reset-password?token=${token}`
+    );
+
+    return {
+      resetPasswordToken: token,
+      expiresInSeconds: this.jwtConfiguration.accessTokenTtl,
+    };
   }
 
   async session(req: Request) {

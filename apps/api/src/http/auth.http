@@ -28,3 +28,9 @@ Authorization: Bearer {{$global.accessToken}}
 
 GET {{BASE_URL}}/auth/profile
 Authorization: Bearer {{$global.accessToken}}
+
+POST {{BASE_URL}}/auth/forgot-password
+{
+  "email": "bao3@gmail.com"
+}
+

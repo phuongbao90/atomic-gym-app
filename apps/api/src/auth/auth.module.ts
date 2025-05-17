@@ -10,6 +10,7 @@ import { BcryptProvider } from "./provider/bcrypt.provider";
 import { HashingProvider } from "./provider/hashing.provider";
 import { JwtStrategy } from "./provider/jwt.strategy";
 import { LocalStrategy } from "./provider/local.strategy";
+import { MailModule } from "../mail/mail.module";
 
 @Module({
   controllers: [AuthController],
@@ -23,6 +24,7 @@ import { LocalStrategy } from "./provider/local.strategy";
   imports: [
     ConfigModule.forFeature(jwtConfig),
     forwardRef(() => UserModule),
+    MailModule,
     // PassportModule.register({ defaultStrategy: "jwt" }),
     PassportModule,
     JwtModule.registerAsync({

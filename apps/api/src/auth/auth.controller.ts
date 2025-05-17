@@ -14,6 +14,7 @@ import { LocalAuthGuard } from "./guard/local-auth.guard";
 import { Request } from "express";
 import { User } from "@prisma/client";
 import { JwtAuthGuard } from "./guard/jwt-auth.guard";
+import { ForgotPasswordDto } from "./dto/forgot-password.dto";
 
 @UseInterceptors(LoggingInterceptor)
 @Controller("auth")
@@ -45,6 +46,11 @@ export class AuthController {
   @Get("profile")
   getProfile(@Req() req: Request) {
     return req.user;
+  }
+
+  @Post("forgot-password")
+  forgotPassword(@Body() body: ForgotPasswordDto) {
+    return this.authService.forgotPassword(body);
   }
 
   //* does not work on JWT strategy
