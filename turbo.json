@@ -48,6 +48,11 @@
     },
     "build_config": {
       "outputs": ["build/**"]
+    },
+    "dev": {
+      "outputs": ["build/**"],
+      "persistent": true,
+      "dependsOn": ["^app-config#debug_config", "^app#debug_app"]
     }
   }
 }
