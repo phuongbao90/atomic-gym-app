@@ -1,58 +1,42 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { match as matchLocale } from "@formatjs/intl-localematcher";
-import Negotiator from "negotiator";
-import { auth } from "./auth";
-import pages from "next/dist/build/templates/pages";
-export { auth } from "./auth";
-import createMiddleware from "next-intl/middleware";
-import { routing } from "./i18n/routing";
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
+import createIntlMiddleware from "next-intl/middleware";
 
-const locales = ["en", "es"];
-const protectedPages = ["/dashboard/*"];
-const authPages = ["/auth/signin", "/auth/signup"];
+const publicPages = ["/", "/auth/login", "/auth/register"];
 
-const testPagesRegex = (pages: string[], pathname: string) => {
-  const regex = `^(/(${locales.join("|")}))?(${pages
-    .map((p) => p.replace("/*", ".*"))
-    .join("|")})/?$`;
-  return new RegExp(regex, "i").test(pathname);
-};
+const intlMiddleware = createIntlMiddleware({
+  locales: ["en", "vi"],
+  localePrefix: "as-needed",
+  defaultLocale: "en",
+});
 
-// const handleAuth = async (
-//   req: NextRequest,
-//   isAuthPage: boolean,
-//   isProtectedPage: boolean
-// ) => {
-//   const session = await auth();
-//   const isAuth = !!session?.user;
+export default async function middleware(req: NextRequest) {
+  const session = await auth();
 
-//   if (!isAuth && isProtectedPage) {
-//     let from = req.nextUrl.pathname;
-//     if (req.nextUrl.search) {
-//       from += req.nextUrl.search;
-//     }
+  // Get the pathname without the locale prefix
+  const pathname = req.nextUrl.pathname;
+  const pathnameWithoutLocale = pathname.replace(/^\/[a-z]{2}(?=\/|$)/, "");
 
-//     return NextResponse.redirect(
-//       new URL(
-//         `${pages.auth.signin()}?from=${encodeURIComponent(from)}`,
-//         req.url
-//       )
-//     );
-//   }
+  // Check if the current page is a public page
+  if (publicPages.includes(pathnameWithoutLocale)) {
+    return intlMiddleware(req);
+  }
 
-//   if (isAuth && isAuthPage) {
-//     return NextResponse.redirect(new URL(pages.dashboard.root, req.nextUrl));
-//   }
+  // For protected pages, check if the user is authenticated
+  if (!session) {
+    // If not authenticated, redirect to the sign-in page
+    const callbackUrl = encodeURIComponent(pathname);
+    return NextResponse.redirect(
+      new URL(`/auth/login?callbackUrl=${callbackUrl}`, req.url)
+    );
+  }
 
-//   return intlMiddleware(req);
-// };
-
-export default createMiddleware(routing);
+  // If authenticated, run i18n middleware
+  return intlMiddleware(req);
+}
 
 export const config = {
-  // Match all pathnames except for
-  // - … if they start with `/api`, `/trpc`, `/_next` or `/_vercel`
-  // - … the ones containing a dot (e.g. `favicon.ico`)
-  matcher: "/((?!api|trpc|_next|_vercel|.*\\..*).*)",
+  matcher: [
+    "/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|manifest.json|fonts).*)",
+  ],
 };
