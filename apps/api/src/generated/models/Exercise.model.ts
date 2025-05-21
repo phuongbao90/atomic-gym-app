@@ -23,8 +23,8 @@ export class Exercise {
     createdBy!: User;
 
     @IsDefined()
-    @IsInt()
-    createdById!: number;
+    @IsString()
+    createdById!: string;
 
     @IsDefined()
     @IsString()

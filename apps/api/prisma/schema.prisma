@@ -17,8 +17,8 @@ generator class_validator {
 
 datasource db {
   provider = "postgresql"
-  // url      = env("DATABASE_URL")
   url      = "postgresql://bao:3246@localhost:5432/gymapp"
+  // url      = env("DATABASE_URL")
 }
 
 enum Language {
@@ -27,18 +27,24 @@ enum Language {
 }
 
 model User {
-  id                Int                 @id @default(autoincrement())
-  email             String              @unique
-  name              String
+  id                String              @id
+  name              String              @db.Text
+  email             String
+  emailVerified     Boolean
+  image             String?             @db.Text
+  createdAt         DateTime
+  updatedAt         DateTime
+  sessions          Session[]
+  accounts          Account[]
   gender            String?
   age               Int?
-  password          String
-  createdAt         DateTime            @default(now()) @db.Timestamptz(6)
-  updatedAt         DateTime            @updatedAt @db.Timestamptz(6)
+  avatar            String?
   Exercise          Exercise[]
   WorkoutPlan       WorkoutPlan[]
-  avatar            String?
   WorkoutSessionLog WorkoutSessionLog[]
+
+  @@unique([email])
+  @@map("user")
 }
 
 enum ExerciseCategory {
@@ -65,7 +71,8 @@ model MuscleGroupTranslation {
   slug           String
   muscleGroup    MuscleGroup @relation(fields: [muscleGroupId], references: [id], onDelete: Cascade)
 
-  @@id([muscleGroupId, language]) // composite primary key for uniqueness
+  // composite primary key for uniqueness
+  @@id([muscleGroupId, language])
   @@index([language])
 }
 
@@ -75,7 +82,7 @@ model Exercise {
   category         ExerciseCategory
   primaryMuscle    MuscleGroup[]
   createdBy        User                  @relation(fields: [createdById], references: [id])
-  createdById      Int
+  createdById      String
   images           String[]
   createdAt        DateTime              @default(now()) @db.Timestamptz(6)
   updatedAt        DateTime              @updatedAt @db.Timestamptz(6)
@@ -93,7 +100,8 @@ model ExerciseTranslation {
   slug           String // localized description
   exercise       Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
 
-  @@id([exerciseId, language]) // composite primary key for uniqueness
+  // composite primary key for uniqueness
+  @@id([exerciseId, language])
   @@index([language])
 }
 
@@ -122,7 +130,7 @@ model WorkoutPlan {
   category          WorkoutPlanCategory?
   workouts          Workout[]
   createdBy         User                     @relation(fields: [createdById], references: [id])
-  createdById       Int
+  createdById       String
   createdAt         DateTime                 @default(now()) @db.Timestamptz(6)
   updatedAt         DateTime                 @updatedAt @db.Timestamptz(6)
   translations      WorkoutPlanTranslation[]
@@ -138,13 +146,15 @@ model WorkoutPlanTranslation {
   slug           String // localized description
   workoutPlan    WorkoutPlan @relation(fields: [workoutPlanId], references: [id], onDelete: Cascade)
 
-  @@id([workoutPlanId, language]) // composite primary key for uniqueness
+  // composite primary key for uniqueness
+  @@id([workoutPlanId, language])
   @@index([language])
 }
 
 // NO NEED TO HAVE USER / CREATEDBY FIELD AS IT IS RELATED TO WORKOUT-PLAN
 // AND WORKOUT-PLAN IS RELATED TO USER 
 // IF OTHER USER WANT TO USE PLAN => THEY MUST CLONE IT AND CREATE IT AS A NEW WORKOUT PLAN
+
 model Workout {
   id                String               @id @default(uuid())
   order             Int?
@@ -165,11 +175,13 @@ model WorkoutTranslation {
   slug           String // localized name
   workout        Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
 
-  @@id([workoutId, language]) // composite primary key for uniqueness
+  // composite primary key for uniqueness
+  @@id([workoutId, language])
   @@index([language])
 }
 
 // Set is related to exercise of workout , not exercise alone
+
 model ExerciseSet {
   id                String          @id @default(uuid())
   restTime          Int
@@ -196,7 +208,7 @@ model WorkoutExercise {
 model WorkoutSessionLog {
   id            Int              @id @default(autoincrement())
   user          User             @relation(fields: [userId], references: [id])
-  userId        Int
+  userId        String
   workoutPlan   WorkoutPlan      @relation(fields: [workoutPlanId], references: [id])
   workoutPlanId String
   workout       Workout          @relation(fields: [workoutId], references: [id])
@@ -219,4 +231,49 @@ model ExerciseSetLog {
   duration         Int?
   isIncomplete     Boolean?          @default(false)
   createdAt        DateTime?         @default(now()) @db.Timestamptz(6)
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
 }

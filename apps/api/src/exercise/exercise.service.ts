@@ -185,7 +185,7 @@ export class ExerciseService {
       data: {
         ...body,
         primaryMuscle: {
-          connect: body.primaryMuscleIds?.map((id) => ({ id })),
+          connect: body.primaryMuscleIds?.map((id) => ({ id: +id })),
         },
       },
     });

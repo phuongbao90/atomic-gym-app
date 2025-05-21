@@ -1,30 +1,26 @@
-import { IsInt, IsDefined, IsString, IsOptional, IsDate } from "class-validator";
-import { Exercise, WorkoutPlan, WorkoutSessionLog } from "./";
+import { IsString, IsDefined, IsBoolean, IsOptional, IsDate, IsInt } from "class-validator";
+import { Session, Account, Exercise, WorkoutPlan, WorkoutSessionLog } from "./";
 
 export class User {
     @IsDefined()
-    @IsInt()
-    id!: number;
+    @IsString()
+    id!: string;
+
+    @IsDefined()
+    @IsString()
+    name!: string;
 
     @IsDefined()
     @IsString()
     email!: string;
 
     @IsDefined()
-    @IsString()
-    name!: string;
+    @IsBoolean()
+    emailVerified!: boolean;
 
     @IsOptional()
     @IsString()
-    gender?: string;
-
-    @IsOptional()
-    @IsInt()
-    age?: number;
-
-    @IsDefined()
-    @IsString()
-    password!: string;
+    image?: string;
 
     @IsDefined()
     @IsDate()
@@ -35,14 +31,28 @@ export class User {
     updatedAt!: Date;
 
     @IsDefined()
-    Exercise!: Exercise[];
+    sessions!: Session[];
 
     @IsDefined()
-    WorkoutPlan!: WorkoutPlan[];
+    accounts!: Account[];
+
+    @IsOptional()
+    @IsString()
+    gender?: string;
+
+    @IsOptional()
+    @IsInt()
+    age?: number;
 
     @IsOptional()
     @IsString()
     avatar?: string;
+
+    @IsDefined()
+    Exercise!: Exercise[];
+
+    @IsDefined()
+    WorkoutPlan!: WorkoutPlan[];
 
     @IsDefined()
     WorkoutSessionLog!: WorkoutSessionLog[];

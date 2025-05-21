@@ -1,14 +1,16 @@
 import { Prisma } from "@prisma/client";
 import {
+  IsBoolean,
   IsEmail,
   IsOptional,
   IsString,
   IsUrl,
+  IsUUID,
   Matches,
   MinLength,
 } from "class-validator";
 
-export class CreateUserDto implements Prisma.UserCreateInput {
+export class CreateUserDto {
   @IsString()
   @IsEmail({}, { message: "Email không hợp lệ" })
   email: string;
@@ -29,4 +31,12 @@ export class CreateUserDto implements Prisma.UserCreateInput {
   @IsOptional()
   @IsUrl()
   avatar?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  emailVerified?: boolean;
+
+  @IsOptional()
+  @IsString()
+  image?: string;
 }

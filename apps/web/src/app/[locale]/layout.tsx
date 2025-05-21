@@ -5,6 +5,7 @@ import { MainProvider } from "../../lib/providers/main-provider";
 import { routing } from "../../i18n/routing";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +30,7 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
+
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
@@ -39,7 +41,10 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextIntlClientProvider>
-          <MainProvider>{children}</MainProvider>
+          <MainProvider>
+            <Toaster />
+            {children}
+          </MainProvider>
         </NextIntlClientProvider>
       </body>
     </html>

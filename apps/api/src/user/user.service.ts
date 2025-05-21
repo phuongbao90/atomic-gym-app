@@ -9,22 +9,22 @@ import {
 import { Request } from "express";
 import { REQUEST_USER_KEY } from "src/auth/constant/auth.constant";
 import { JwtUser } from "src/auth/type/jwt-user-type";
-import { HashingProvider } from "../auth/provider/hashing.provider";
+// import { HashingProvider } from "../auth/provider/hashing.provider";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 
 @Injectable()
 export class UserService {
   constructor(
-    private readonly prisma: PrismaService,
-    @Inject(forwardRef(() => HashingProvider))
-    private readonly hashingProvider: HashingProvider
+    private readonly prisma: PrismaService
+    // @Inject(forwardRef(() => HashingProvider))
+    // private readonly hashingProvider: HashingProvider
   ) {}
   async getUsers() {
     return this.prisma.user.findMany();
   }
 
-  async getUser(id: number) {
+  async getUser(id: string) {
     try {
       return this.prisma.user.findUnique({ where: { id } });
     } catch (e) {
@@ -41,19 +41,17 @@ export class UserService {
 
   async createUser(data: CreateUserDto) {
     // console.log('data: ', data);
-    const hashedPassword = await this.hashingProvider.hashPassword(
-      data.password
-    );
+    // const hashedPassword = await this.hashingProvider.hashPassword(
+    //   data.password
+    // );
     try {
-      return this.prisma.user.create({
-        data: { ...data, password: hashedPassword },
-      });
+      return null;
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  async deleteUser(id: number) {
+  async deleteUser(id: string) {
     return this.prisma.user.delete({ where: { id } });
   }
 
@@ -72,7 +70,7 @@ export class UserService {
 
   async updateMe(data: Partial<CreateUserDto>, req: Request) {
     const user = req[REQUEST_USER_KEY] as JwtUser | undefined;
-    console.log("user: ", user);
+
     return this.prisma.user.update({
       where: { id: user.sub },
       data: data,

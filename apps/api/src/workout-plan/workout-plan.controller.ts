@@ -20,6 +20,7 @@ import { WorkoutPlanQueryDto } from "./dto/workout-plan-query.dto";
 import { Language } from "@prisma/client";
 import { GetLanguage } from "../common/decorators/get-language.decorator";
 import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
+import { PublicRoute } from "../common/decorator/public-route.decorator";
 
 @Controller("workout-plans")
 export class WorkoutPlanController {
@@ -53,6 +54,7 @@ export class WorkoutPlanController {
     return this.workoutPlanService.getWorkoutPlansInGroups(language);
   }
 
+  @PublicRoute()
   @Get(":id")
   findOne(
     @Param("id") id: string,

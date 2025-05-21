@@ -1,10 +1,13 @@
+export { Account } from "./Account.model";
 export { Exercise } from "./Exercise.model";
 export { ExerciseSet } from "./ExerciseSet.model";
 export { ExerciseSetLog } from "./ExerciseSetLog.model";
 export { ExerciseTranslation } from "./ExerciseTranslation.model";
 export { MuscleGroup } from "./MuscleGroup.model";
 export { MuscleGroupTranslation } from "./MuscleGroupTranslation.model";
+export { Session } from "./Session.model";
 export { User } from "./User.model";
+export { Verification } from "./Verification.model";
 export { Workout } from "./Workout.model";
 export { WorkoutExercise } from "./WorkoutExercise.model";
 export { WorkoutPlan } from "./WorkoutPlan.model";

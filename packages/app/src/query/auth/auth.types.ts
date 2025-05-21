@@ -1,24 +1,40 @@
 export type LoginInput = {
   email: string;
   password: string;
+  rememberMe?: boolean;
+  callbackUrl?: string;
 };
 
 export type LoginResponse = {
-  accessToken: string;
-  refreshToken: string;
-  expiresInSeconds: number;
-  refreshTokenExpiresInSeconds: number;
+  redirect: boolean;
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    image: string;
+    emailVerified: boolean;
+    createdAt: string;
+    updatedAt: string;
+  };
 };
 
 export type RegisterInput = {
+  name: string;
   email: string;
   password: string;
-  name: string;
+  callbackUrl?: string;
 };
 
 export type RegisterResponse = {
-  accessToken: string;
-  refreshToken: string;
-  expiresInSeconds: number;
-  refreshTokenExpiresInSeconds: number;
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    image: string;
+    emailVerified: boolean;
+    createdAt: string;
+    updatedAt: string;
+  };
 };

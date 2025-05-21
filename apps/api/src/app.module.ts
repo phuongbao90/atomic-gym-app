@@ -1,18 +1,12 @@
-import { Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { APP_INTERCEPTOR } from "@nestjs/core";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
+import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
 import { AuthModule } from "./auth/auth.module";
 import { CommonModule } from "./common/common.module";
-import { TransformResponseInterceptor } from "./common/interceptor/transform-response/transform-response.interceptor";
 import envConfig from "./config/env.config";
 import { envValidationSchema } from "./config/env.validation";
 import jwtConfig from "./config/jwt.config";
-import { MailerModule } from "@nestjs-modules/mailer";
-import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 import { UserModule } from "./user/user.module";
-import { JwtModule } from "@nestjs/jwt";
 import { ExerciseModule } from "./exercise/exercise.module";
 import { MuscleGroupModule } from "./muscle-group/muscle-group.module";
 import { WorkoutPlanModule } from "./workout-plan/workout-plan.module";
@@ -20,6 +14,9 @@ import { WorkoutModule } from "./workout/workout.module";
 import { LogModule } from "./log/log.module";
 import { MailModule } from "./mail/mail.module";
 import mailConfig from "./config/mail.config";
+import { RawBodyMiddleware } from "./common/middlewares/raw-body";
+import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
+import { TransformResponseInterceptor } from "./common/interceptor/transform-response/transform-response.interceptor";
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -28,11 +25,16 @@ const NODE_ENV = process.env.NODE_ENV;
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `.env.${NODE_ENV}`,
       isGlobal: true, // => available in all modules
+      envFilePath: `.env.${NODE_ENV}`,
       load: [envConfig, jwtConfig, mailConfig],
       validationSchema: envValidationSchema,
     }),
+    ThrottlerModule.forRoot([
+      { name: "short", ttl: 1000, limit: 3 },
+      { name: "medium", ttl: 10000, limit: 20 },
+      { name: "long", ttl: 60000, limit: 100 },
+    ]),
     UserModule,
     AuthModule,
     CommonModule,
@@ -40,39 +42,20 @@ const NODE_ENV = process.env.NODE_ENV;
     ExerciseModule,
     WorkoutPlanModule,
     WorkoutModule,
-    JwtModule.registerAsync(jwtConfig.asProvider()),
     LogModule,
-    // MailerModule.forRoot({
-    //   transport: {
-    //     host: "smtp.example.com",
-    //     port: 587,
-    //     secure: false, // upgrade later with STARTTLS
-    //     auth: {
-    //       user: "username",
-    //       pass: "password",
-    //     },
-    //   },
-    //   defaults: {
-    //     from: '"nest-modules" <modules@nestjs.com>',
-    //   },
-    //   template: {
-    //     dir: `${process.cwd()}/src/templates/`,
-    //     adapter: new HandlebarsAdapter(), // or new PugAdapter()
-    //     options: {
-    //       strict: true,
-    //     },
-    //   },
-    // }),
     MailModule,
   ],
-
-  controllers: [AppController],
+  controllers: [],
   providers: [
-    AppService,
     {
       provide: APP_INTERCEPTOR,
       useClass: TransformResponseInterceptor,
     },
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RawBodyMiddleware).forRoutes("*");
+  }
+}

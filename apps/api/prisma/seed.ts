@@ -1,8 +1,10 @@
-import { faker, fakerVI, fakerEN_US, HelpersModule } from "@faker-js/faker";
+import { faker, fakerVI, fakerEN_US } from "@faker-js/faker";
 import { randNumber } from "@ngneat/falso";
 import { PrismaClient } from "@prisma/client";
-import * as bcrypt from "bcrypt";
 import { muscleGroups } from "./data/muscle-groups";
+import { betterAuth } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { auth } from "../src/lib/auth";
 
 /**
  * error with auto increment id:
@@ -15,6 +17,17 @@ console.log(
 );
 
 const prisma = new PrismaClient();
+
+// export const auth = betterAuth({
+//   baseURL: process.env.BASE_URL,
+//   database: prismaAdapter(prisma, {
+//     provider: "postgresql",
+//     debugLogs: true,
+//   }),
+//   secret: process.env.BETTER_AUTH_SECRET,
+//   appName: "Gym App",
+//   emailAndPassword: { enabled: true },
+// });
 
 async function main() {
   try {
@@ -32,19 +45,41 @@ async function main() {
     await prisma.exerciseSetLog.deleteMany();
     await prisma.exerciseSet.deleteMany();
     await prisma.workoutExercise.deleteMany();
+    await prisma.session.deleteMany();
+    await prisma.account.deleteMany();
+    await prisma.verification.deleteMany();
 
     const userCount = 3;
     const workoutPlanCount = 50;
     const exerciseCount = 100;
 
+    type User = {
+      id: string;
+      userId: string;
+    };
+
+    const users: User[] = [];
+
     // Create users
     for (let index = 1; index <= userCount; index++) {
-      await prisma.user.create({
-        data: {
+      // await prisma.user.create({
+      //   data: {
+      //     name: faker.person.fullName(),
+      //     email: `bao${index}@gmail.com`,
+      //     password: await bcrypt.hash("123456#@Nn", 10),
+      //     emailVerified: true,
+      //   },
+      // });
+      const user = await auth.api.signUpEmail({
+        body: {
           name: faker.person.fullName(),
           email: `bao${index}@gmail.com`,
-          password: await bcrypt.hash("123456#@Nn", 10),
+          password: "123456#@Nn",
         },
+      });
+      users.push({
+        id: user.user.id,
+        userId: user.user.id,
       });
     }
 
@@ -101,7 +136,9 @@ async function main() {
               },
             ],
           },
-          createdById: randNumber({ min: 1, max: userCount }),
+
+          createdById:
+            users[randNumber({ min: 0, max: users.length - 1 })].userId,
           images: [faker.image.url(), faker.image.url(), faker.image.url()],
           translations: {
             create: [
@@ -141,7 +178,8 @@ async function main() {
             "INTERMEDIATE",
             "ADVANCED",
           ]),
-          createdById: randNumber({ min: 1, max: userCount }),
+          createdById:
+            users[randNumber({ min: 0, max: users.length - 1 })].userId,
           isPublic: faker.datatype.boolean(),
           isPremium: faker.datatype.boolean(),
           isFeatured: faker.datatype.boolean(),
@@ -234,7 +272,8 @@ async function main() {
           await prisma.workoutSessionLog.create({
             data: {
               workoutPlanId: workoutPlan.id,
-              userId: randNumber({ min: 1, max: userCount }),
+              userId:
+                users[randNumber({ min: 0, max: users.length - 1 })].userId,
               workoutId:
                 workouts[randNumber({ min: 0, max: workouts.length - 1 })].id,
               duration: randNumber({ min: 1 * 60 * 30, max: 1 * 60 * 120 }),

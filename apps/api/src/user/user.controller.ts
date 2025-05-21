@@ -30,7 +30,7 @@ export class UserController {
   }
 
   @Get(":id")
-  async getUser(@Param("id") id: number) {
+  async getUser(@Param("id") id: string) {
     return this.userService.getUser(id);
   }
 
@@ -46,7 +46,7 @@ export class UserController {
   }
 
   @Delete(":id")
-  async deleteUser(@Param("id") id: number) {
+  async deleteUser(@Param("id") id: string) {
     return this.userService.deleteUser(id);
   }
 

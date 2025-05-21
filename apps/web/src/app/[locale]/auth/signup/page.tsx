@@ -10,6 +10,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { useState } from "react";
+import { signUp } from "../../../../lib/auth-client";
+import SignUpForm from "@/components/signup-form";
 
 export default function SignUpPage() {
   return (
@@ -23,34 +26,7 @@ export default function SignUpPage() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
-          <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input id="name" type="text" placeholder="John Doe" required />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" required />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="confirm-password">Confirm Password</Label>
-              <Input id="confirm-password" type="password" required />
-            </div>
-            <Button type="submit" className="w-full">
-              Create Account
-            </Button>
-          </div>
-        </form>
+        <SignUpForm />
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
         <div className="text-sm text-muted-foreground text-center">

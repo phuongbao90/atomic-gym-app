@@ -1,26 +1,29 @@
-POST {{BASE_URL}}/auth/login
+// make sure better auth server is running
+GET {{BASE_URL}}/api/auth/ok
+
+POST {{BASE_URL}}/api/auth/sign-in/email
 
 {
   "email": "bao1@gmail.com",
-  "password": "123456#@Nn"
+  "password": "123456#@Nn",
+  "rememberMe": false,
+  "callbackURL": ""
 }
 
 {{
-  $global.accessToken=response.parsedBody.data.accessToken;
-  $global.refreshToken=response.parsedBody.data.refreshToken;
+  $global.accessToken=response.parsedBody.data.token;
 }}
 
-POST {{BASE_URL}}/auth/signup
-
+POST {{BASE_URL}}/api/auth/sign-up/email
 {
-  "name": "Bao bao",
-  "email": "bao100@gmail.com",
-  "password": "123456#@Nn"
+  "name": "ttt",
+  "email": "phuongbao2@gmail.com",
+  "password": "123456789",
+  "callbackURL": ""
 }
 
 {{
-  $global.accessToken=response.parsedBody.data.accessToken;
-  $global.refreshToken=response.parsedBody.data.refreshToken;
+  $global.accessToken=response.parsedBody.data.token;
 }}
 
 GET {{BASE_URL}}/auth/session
@@ -33,4 +36,3 @@ POST {{BASE_URL}}/auth/forgot-password
 {
   "email": "bao3@gmail.com"
 }
-

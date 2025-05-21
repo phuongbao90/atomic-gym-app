@@ -12,15 +12,15 @@ type Result<T, E = Error> = Success<T> | Failure<E>;
  */
 export function tryCatch<T>(
   fn: () => T,
-  operationName?: string,
+  operationName?: string
 ): Result<T, Error>;
 export function tryCatch<T>(
   fn: () => Promise<T>,
-  operationName?: string,
+  operationName?: string
 ): Promise<Result<T, Error>>;
 export function tryCatch<T>(
   fn: () => T | Promise<T>,
-  operationName?: string,
+  operationName?: string
 ): Result<T, Error> | Promise<Result<T, Error>> {
   try {
     const result = fn();
@@ -72,7 +72,7 @@ function performDivision(numerator: number, denominator: number): void {
 
 async function delayedGreeting(
   name: string,
-  shouldFail: boolean,
+  shouldFail: boolean
 ): Promise<void> {
   const greetingResult = await tryCatch<string>(
     () =>
@@ -85,7 +85,7 @@ async function delayedGreeting(
           }
         }, 500);
       }),
-    "Greeting Task", // Operation Name for context
+    "Greeting Task" // Operation Name for context
   );
 
   if (greetingResult.error) {
@@ -105,7 +105,7 @@ async function parseJsonString(jsonString: string): Promise<void> {
   console.log("--- JSON Parsing Example (Type-Safe) ---");
   const parsingResult = tryCatch<Person>(
     () => JSON.parse(jsonString) as Person,
-    "JSON Parsing",
+    "JSON Parsing"
   );
 
   if (parsingResult.error) {
@@ -116,7 +116,7 @@ async function parseJsonString(jsonString: string): Promise<void> {
 
     if (parsingResult.data) {
       console.log(
-        `Name: ${parsingResult.data.name}, Age: ${parsingResult.data.age}`,
+        `Name: ${parsingResult.data.name}, Age: ${parsingResult.data.age}`
       );
     }
   }
@@ -133,7 +133,7 @@ async function fetchUserData(userId: number): Promise<void> {
   console.log("\n--- API Fetch Example (Type-Safe) ---");
   const fetchResult = await tryCatch<User>(async () => {
     const response = await fetch(
-      `https://jsonplaceholder.typicode.com/users/${userId}`,
+      `https://jsonplaceholder.typicode.com/users/${userId}`
     );
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -149,7 +149,7 @@ async function fetchUserData(userId: number): Promise<void> {
 
     if (fetchResult.data) {
       console.log(
-        `User ID: ${fetchResult.data.id}, Name: ${fetchResult.data.name}, Email: ${fetchResult.data.email}`,
+        `User ID: ${fetchResult.data.id}, Name: ${fetchResult.data.name}, Email: ${fetchResult.data.email}`
       );
     }
   }

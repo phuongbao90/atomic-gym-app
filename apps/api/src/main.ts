@@ -1,49 +1,40 @@
-import { ValidationPipe } from "@nestjs/common";
+import { Logger, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import { AppModule } from "./app.module";
+import { NestExpressApplication } from "@nestjs/platform-express";
+import * as compression from "compression";
+import * as cookieParser from "cookie-parser";
 import helmet from "helmet";
-
-// const whitelist = [
-//   "http://localhost:3005",
-//   "http://localhost:3007",
-//   "http://localhost:8086",
-//   "http://127.0.0.1:8086",
-// ];
+import { AppModule } from "./app.module";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 async function bootstrap() {
-  const ssl = false;
-  let httpsOptions = null;
-  if (ssl) {
-    httpsOptions = {
-      // key: fs.readFileSync("./src/cert/key.pem"),
-      // cert: fs.readFileSync("./src/cert/cert.pem"),
-    };
-  }
-
-  const app = await NestFactory.create(AppModule, {
-    cors: {
-      methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-      // origin: whitelist,
-      origin: false,
-    },
-    httpsOptions,
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bodyParser: false,
   });
-
+  // Starts listening for shutdown hooks
+  app.enableShutdownHooks();
+  app.set("trust proxy", "loopback"); // Trust requests from the loopback address
+  // Enable security headers
+  app.use(helmet({ contentSecurityPolicy: false }));
+  // Enable cookie parser
+  app.use(cookieParser());
+  // Enable CORS
+  app.enableCors({
+    origin: process.env.ORIGIN?.split(",") || "*",
+    credentials: true,
+  });
+  // Enable compression
+  app.use(compression());
+  // enable global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({
-      // whitelist: true, // ignore unknown properties
-      // forbidNonWhitelisted: true, // throw an error if unknown properties are found
-      transform: true, // transform the payload to the DTO type
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
+      whitelist: true,
+      transform: true,
+      stopAtFirstError: true,
+      transformOptions: { enableImplicitConversion: true },
     })
   );
 
-  app.use(helmet());
-
-  // Swagger setup
   const config = new DocumentBuilder()
     .setTitle("API")
     .setDescription("API description")
@@ -54,13 +45,14 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api", app, document);
 
-  await app.listen(3000, () => {});
-
-  process.on("unhandledRejection", (reason: string) => {
-    return {
-      status: 500,
-      message: "Internal server error",
-    };
-  });
+  await app.listen(process.env.PORT as string);
+  Logger.log(
+    `Server running on http://localhost:${process.env.PORT}`,
+    "Bootstrap"
+  );
+  Logger.log(
+    `Better Auth documentation running on http://localhost:${process.env.PORT}/api/auth/docs`,
+    "Bootstrap"
+  );
 }
 bootstrap();

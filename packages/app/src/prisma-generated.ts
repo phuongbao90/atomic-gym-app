@@ -9,17 +9,20 @@ export type WorkoutPlanLevel = "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
 export type WorkoutPlanCategory = "STRENGTH" | "ENDURANCE" | "BALANCE" | "FLEXIBILITY" | "LOOSE_WEIGHT";
 
 export interface User {
-  id: number;
-  email: string;
+  id: string;
   name: string;
-  gender: string | null;
-  age: number | null;
-  password: string;
+  email: string;
+  emailVerified: boolean;
+  image: string | null;
   createdAt: string;
   updatedAt: string;
+  sessions?: Session[];
+  accounts?: Account[];
+  gender: string | null;
+  age: number | null;
+  avatar: string | null;
   Exercise?: Exercise[];
   WorkoutPlan?: WorkoutPlan[];
-  avatar: string | null;
   WorkoutSessionLog?: WorkoutSessionLog[];
 }
 
@@ -46,7 +49,7 @@ export interface Exercise {
   category: ExerciseCategory;
   primaryMuscle?: MuscleGroup[];
   createdBy?: User;
-  createdById: number;
+  createdById: string;
   images: string[];
   createdAt: string;
   updatedAt: string;
@@ -76,7 +79,7 @@ export interface WorkoutPlan {
   category: WorkoutPlanCategory | null;
   workouts?: Workout[];
   createdBy?: User;
-  createdById: number;
+  createdById: string;
   createdAt: string;
   updatedAt: string;
   translations?: WorkoutPlanTranslation[];
@@ -138,7 +141,7 @@ export interface WorkoutExercise {
 export interface WorkoutSessionLog {
   id: number;
   user?: User;
-  userId: number;
+  userId: string;
   workoutPlan?: WorkoutPlan;
   workoutPlanId: string;
   workout?: Workout;
@@ -161,4 +164,42 @@ export interface ExerciseSetLog {
   duration: number | null;
   isIncomplete: boolean | null;
   createdAt: string | null;
+}
+
+export interface Session {
+  id: string;
+  expiresAt: string;
+  token: string;
+  createdAt: string;
+  updatedAt: string;
+  ipAddress: string | null;
+  userAgent: string | null;
+  userId: string;
+  user?: User;
+}
+
+export interface Account {
+  id: string;
+  accountId: string;
+  providerId: string;
+  userId: string;
+  user?: User;
+  accessToken: string | null;
+  refreshToken: string | null;
+  idToken: string | null;
+  accessTokenExpiresAt: string | null;
+  refreshTokenExpiresAt: string | null;
+  scope: string | null;
+  password: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Verification {
+  id: string;
+  identifier: string;
+  value: string;
+  expiresAt: string;
+  createdAt: string | null;
+  updatedAt: string | null;
 }

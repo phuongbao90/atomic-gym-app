@@ -13,6 +13,13 @@ export class TransformResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((data) => {
+        if (!data) {
+          return {
+            data: null,
+            meta: null,
+            version: this.configService.get("env.API_VERSION"),
+          };
+        }
         if (data.meta) {
           return {
             data: data.data,

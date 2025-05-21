@@ -30,7 +30,7 @@ export class CreateExerciseDto {
 
   @IsNumber()
   @IsOptional()
-  createdById: number;
+  createdById: string;
 
   @IsArray()
   @IsOptional()

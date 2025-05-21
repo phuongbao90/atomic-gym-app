@@ -10,8 +10,8 @@ export class WorkoutSessionLog {
     user!: User;
 
     @IsDefined()
-    @IsInt()
-    userId!: number;
+    @IsString()
+    userId!: string;
 
     @IsDefined()
     workoutPlan!: WorkoutPlan;

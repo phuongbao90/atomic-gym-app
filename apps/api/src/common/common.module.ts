@@ -1,11 +1,9 @@
-import { Global, Module } from '@nestjs/common';
-import { PrismaModule } from '../prisma/prisma.module';
-import { JwtModule } from '@nestjs/jwt';
-import jwtConfig from '../config/jwt.config';
+import { Global, Module } from "@nestjs/common";
+import { PrismaModule } from "../prisma/prisma.module";
 
 @Global()
 @Module({
-  imports: [PrismaModule, JwtModule.registerAsync(jwtConfig.asProvider())],
-  exports: [PrismaModule, JwtModule.registerAsync(jwtConfig.asProvider())],
+  imports: [PrismaModule],
+  exports: [PrismaModule],
 })
 export class CommonModule {}

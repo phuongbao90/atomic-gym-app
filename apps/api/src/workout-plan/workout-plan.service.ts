@@ -583,7 +583,7 @@ export class WorkoutPlanService {
 
   async getWorkoutPlansByUserId(userId: string, language: Language) {
     const workoutPlans = await this.prisma.workoutPlan.findMany({
-      where: { createdById: +userId },
+      where: { createdById: userId },
       take: 10,
       orderBy: {
         createdAt: "desc",

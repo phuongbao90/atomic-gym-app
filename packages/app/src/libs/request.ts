@@ -1,6 +1,5 @@
 import { ofetch } from "ofetch";
 import { ENV } from "../configs/env";
-import * as SecureStore from "expo-secure-store";
 
 let ofetchInstance: ReturnType<typeof ofetch.create> | null = null;
 
@@ -17,8 +16,6 @@ export function createOfetchInstance(headers?: Record<string, string>) {
 }
 
 export const request = async <T>(endpoint: string, options: RequestInit) => {
-  const token = await SecureStore.getItemAsync("accessToken");
-
   if (!ofetchInstance) {
     createOfetchInstance();
   }
@@ -26,9 +23,6 @@ export const request = async <T>(endpoint: string, options: RequestInit) => {
     ...options,
     headers: {
       ...options.headers,
-      ...(token && {
-        Authorization: `Bearer ${token}`,
-      }),
     },
     onResponseError: (error) => {
       // console.log("onResponseError ====>", error);
