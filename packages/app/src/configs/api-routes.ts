@@ -21,12 +21,6 @@ export const API_ROUTES = {
     signup: "/auth/signup",
     session: "/auth/session",
   },
-  user: {
-    me: "/user/me",
-    id: (id: number) => `/user/${id}`,
-  },
-  getUser: (id: number) => `/user/${id}`,
-
   plans: {
     base: "/workout-plans",
     query: (query?: WorkoutPlanQuery) =>

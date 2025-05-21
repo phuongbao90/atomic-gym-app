@@ -5,7 +5,7 @@ import { AuthModule } from "./auth/auth.module";
 import { CommonModule } from "./common/common.module";
 import envConfig from "./config/env.config";
 import { envValidationSchema } from "./config/env.validation";
-import jwtConfig from "./config/jwt.config";
+
 import { UserModule } from "./user/user.module";
 import { ExerciseModule } from "./exercise/exercise.module";
 import { MuscleGroupModule } from "./muscle-group/muscle-group.module";
@@ -27,7 +27,7 @@ const NODE_ENV = process.env.NODE_ENV;
     ConfigModule.forRoot({
       isGlobal: true, // => available in all modules
       envFilePath: `.env.${NODE_ENV}`,
-      load: [envConfig, jwtConfig, mailConfig],
+      load: [envConfig, mailConfig],
       validationSchema: envValidationSchema,
     }),
     ThrottlerModule.forRoot([

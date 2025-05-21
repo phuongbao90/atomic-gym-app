@@ -30,15 +30,13 @@
     "@faker-js/faker": "^9.8.0",
     "@nestjs-modules/mailer": "^2.0.2",
 
-    "@nestjs/jwt": "^11.0.0",
     "@nestjs/mapped-types": "^2.1.0",
-    "@nestjs/passport": "^11.0.5",
 
     "@ngneat/falso": "^7.3.0",
 
     "@types/handlebars": "^4.1.0",
     "@types/nodemailer": "^6.4.17",
-    "@types/passport-jwt": "^4.0.1",
+
     "app-config": "*",
 
     "dayjs": "^1.11.13",
@@ -52,9 +50,7 @@
     "nestjs-minio": "^2.6.2",
     "nestjs-minio-client": "^2.2.0",
     "nodemailer": "^7.0.3",
-    "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1",
-    "passport-local": "^1.0.0",
+
     "pg": "^8.16.0",
     "prisma-class-validator-generator": "^5.0.0",
 

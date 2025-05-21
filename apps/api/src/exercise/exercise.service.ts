@@ -1,27 +1,27 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { Request } from "express";
 import { paginateOutput } from "src/common/utils/pagination.utils";
-import { REQUEST_USER_KEY } from "../auth/constant/auth.constant";
-import { JwtUser } from "../auth/type/jwt-user-type";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateExerciseDto } from "./dto/create-exercise.dto";
 import { ExerciseQueryParamsDto } from "./dto/exercise-query-params.dto";
 import { Language, Prisma } from "@prisma/client";
 import { slugify, convert_vi_to_en } from "src/helpers/slugify";
+import { auth } from "../lib/auth";
 
 @Injectable()
 export class ExerciseService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(body: CreateExerciseDto, request: Request, language: Language) {
-    const user = request[REQUEST_USER_KEY] as JwtUser | undefined;
-
+  async create(
+    body: CreateExerciseDto,
+    user: typeof auth.$Infer.Session.user,
+    language: Language
+  ) {
     const exercise = await this.prisma.exercise.create({
       data: {
         ...(body?.id && { id: body.id }),
         notes: body.notes,
         category: body.category,
-        createdById: user.sub,
+        createdById: user.id,
         images: body.images,
         primaryMuscle: {
           connect: body.primaryMuscleIds.map((muscleId) => ({ id: muscleId })),

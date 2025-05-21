@@ -13,12 +13,6 @@ export const envValidationSchema = Joi.object({
   POSTGRES_PASSWORD: Joi.string().required(),
   DATABASE_URL: Joi.string().required(),
 
-  JWT_SECRET: Joi.string().required(),
-  JWT_ACCESS_TOKEN_TTL: Joi.number().required(),
-  JWT_TOKEN_AUDIENCE: Joi.string().required(),
-  JWT_TOKEN_ISSUER: Joi.string().required(),
-  JWT_REFRESH_TOKEN_TTL: Joi.number().required(),
-
   SMTP_HOST: Joi.string().required(),
   SMTP_PORT: Joi.number().required(),
   SMTP_USER: Joi.string().required(),

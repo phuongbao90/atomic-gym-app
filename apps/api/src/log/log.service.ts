@@ -1,18 +1,15 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { REQUEST_USER_KEY } from "../auth/constant/auth.constant";
-import { JwtUser } from "../auth/type/jwt-user-type";
+import { auth } from "../lib/auth";
 
 @Injectable()
 export class LogService {
   constructor(private prisma: PrismaService) {}
 
-  async getOveralStats(request: Request) {
-    const user = request[REQUEST_USER_KEY] as JwtUser;
-
+  async getOveralStats(user: typeof auth.$Infer.Session.user) {
     const logs = await this.prisma.workoutSessionLog.findMany({
       where: {
-        userId: user.sub,
+        userId: user.id,
       },
       include: {
         setLogs: true,

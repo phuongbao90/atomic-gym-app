@@ -5,31 +5,8 @@ import { HandlebarsAdapter } from "@nestjs-modules/mailer/dist/adapters/handleba
 import { MailService } from "./mail.service";
 import { join } from "node:path";
 
-console.log('join(__dirname, "templates" ', join(__dirname, "templates"));
-
 @Module({
   imports: [
-    // MailerModule.forRoot({
-    //   transport: {
-    //     host: "smtp.example.com",
-    //     port: 587,
-    //     secure: false, // upgrade later with STARTTLS
-    //     auth: {
-    //       user: "username",
-    //       pass: "password",
-    //     },
-    //   },
-    //   defaults: {
-    //     from: '"nest-modules" <modules@nestjs.com>',
-    //   },
-    //   template: {
-    //     dir: `${process.cwd()}/src/templates/`,
-    //     adapter: new HandlebarsAdapter(), // or new PugAdapter()
-    //     options: {
-    //       strict: true,
-    //     },
-    //   },
-    // }),
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

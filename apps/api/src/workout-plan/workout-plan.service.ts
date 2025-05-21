@@ -10,13 +10,11 @@ import {
   UpdateWorkoutPlanDto,
 } from "./dto/create-workout-plan.dto";
 import { PrismaService } from "../prisma/prisma.service";
-import { Request } from "express";
-import { REQUEST_USER_KEY } from "../auth/constant/auth.constant";
-import { JwtUser } from "../auth/type/jwt-user-type";
 import { WorkoutPlanQueryDto } from "./dto/workout-plan-query.dto";
 import { paginateOutput } from "src/common/utils/pagination.utils";
 import { Language, Prisma } from "@prisma/client";
 import { slugify } from "src/helpers/slugify";
+import { auth } from "../lib/auth";
 
 @Injectable()
 export class WorkoutPlanService {
@@ -24,14 +22,13 @@ export class WorkoutPlanService {
 
   async createWorkoutPlan(
     body: CreateWorkoutPlanDto,
-    request: Request,
+    user: typeof auth.$Infer.Session.user,
     language: Language
   ) {
-    const user = request[REQUEST_USER_KEY] as JwtUser | undefined;
     try {
       const plan = await this.prisma.workoutPlan.create({
         data: {
-          createdById: user?.sub,
+          createdById: user?.id,
           cover_image: body.cover_image,
           level: body.level,
           isPublic: body.isPublic,
@@ -87,11 +84,10 @@ export class WorkoutPlanService {
   }
 
   async getWorkoutPlans(
-    request: Request,
+    user: typeof auth.$Infer.Session.user,
     query: WorkoutPlanQueryDto,
     language: Language
   ) {
-    const user = request[REQUEST_USER_KEY] as JwtUser | undefined;
     const { isPublic, isPremium, me, category, isSingle, isFeatured } = query;
 
     const workoutPlanQuery: Prisma.WorkoutPlanFindManyArgs = {
@@ -101,7 +97,7 @@ export class WorkoutPlanService {
         category: category,
         isSingle: isSingle,
         isFeatured: isFeatured,
-        createdById: me ? user.sub : undefined,
+        createdById: me ? user.id : undefined,
       },
     };
 
@@ -200,9 +196,12 @@ export class WorkoutPlanService {
     };
   }
 
-  async getWorkoutPlanById(id: string, language: Language, request: Request) {
+  async getWorkoutPlanById(
+    id: string,
+    language: Language,
+    user: typeof auth.$Infer.Session.user
+  ) {
     // Safely get user from request if it exists
-    const user = request[REQUEST_USER_KEY] as JwtUser | undefined;
 
     const workoutPlan = await this.prisma.workoutPlan.findUnique({
       where: { id },
@@ -254,7 +253,7 @@ export class WorkoutPlanService {
 
     return {
       ...workoutPlan,
-      is_owner: user ? user.sub === workoutPlan.createdById : false,
+      is_owner: user ? user.id === workoutPlan.createdById : false,
       stats: {
         sessionCount, // how many times this plan has been run
         totalDuration, // sum of all `duration` fields
@@ -264,29 +263,29 @@ export class WorkoutPlanService {
     };
   }
 
-  async deleteWorkoutPlanById(id: string, request: Request) {
-    const user = request[REQUEST_USER_KEY] as JwtUser | undefined;
+  async deleteWorkoutPlanById(
+    id: string,
+    user: typeof auth.$Infer.Session.user
+  ) {
     const workoutPlan = await this.prisma.workoutPlan.findUnique({
       where: { id },
     });
 
-    if (!user || user.sub !== workoutPlan.createdById) {
+    if (!user || user.id !== workoutPlan.createdById) {
       throw new ForbiddenException();
     }
 
     return this.prisma.workoutPlan.delete({
-      where: { id, createdById: user.sub },
+      where: { id, createdById: user.id },
     });
   }
 
   async updateWorkoutPlanById(
     id: string,
     body: UpdateWorkoutPlanDto,
-    request: Request,
+    user: typeof auth.$Infer.Session.user,
     language: Language
   ) {
-    const user = request[REQUEST_USER_KEY] as JwtUser | undefined;
-
     try {
       return await this.prisma.$transaction(async (prisma) => {
         // Check if workout plan exists and user has permission
@@ -315,7 +314,7 @@ export class WorkoutPlanService {
           );
         }
 
-        if (existingPlan.createdById !== user.sub) {
+        if (existingPlan.createdById !== user.id) {
           throw new ForbiddenException(
             "You do not have permission to update this workout plan"
           );
@@ -615,13 +614,15 @@ export class WorkoutPlanService {
     });
     return workoutPlans;
   }
-  async getWorkoutPlansByMe(language: Language, request: Request) {
-    const user = request[REQUEST_USER_KEY] as JwtUser | undefined;
-    // if (!user) {
-    //   throw new UnauthorizedException();
-    // }
+  async getWorkoutPlansByMe(
+    language: Language,
+    user: typeof auth.$Infer.Session.user
+  ) {
+    if (!user) {
+      throw new UnauthorizedException();
+    }
     const workoutPlans = await this.prisma.workoutPlan.findMany({
-      where: { createdById: user.sub },
+      where: { createdById: user.id },
       take: 10,
       orderBy: {
         createdAt: "desc",

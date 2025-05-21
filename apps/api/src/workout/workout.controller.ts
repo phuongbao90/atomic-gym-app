@@ -6,6 +6,7 @@ import { CommonQueryParamsDto } from "src/common/dto/paginated-query.dto";
 import { PaginatedQuery } from "src/common/decorator/paginated-query.decorator";
 import { Language } from "@prisma/client";
 import { GetLanguage } from "../common/decorators/get-language.decorator";
+import { PublicRoute } from "../common/decorator/public-route.decorator";
 
 @Controller("workouts")
 export class WorkoutController {
@@ -20,6 +21,7 @@ export class WorkoutController {
     return this.workoutService.createWorkout(body, request, language);
   }
 
+  @PublicRoute()
   @Get("/plan/:id")
   async getWorkoutsByWorkoutPlanId(
     @Param("id") id: string,
@@ -29,6 +31,7 @@ export class WorkoutController {
     return this.workoutService.getWorkoutsByWorkoutPlanId(id, query, language);
   }
 
+  @PublicRoute()
   @Get(":id")
   async getWorkoutById(
     @Param("id") id: string,

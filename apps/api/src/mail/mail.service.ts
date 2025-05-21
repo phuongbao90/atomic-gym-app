@@ -30,4 +30,17 @@ export class MailService {
       },
     });
   }
+
+  async sendVerificationEmail(email: string, verificationUrl: string) {
+    await this.mailer.sendMail({
+      to: email,
+      subject: "Verify your email address",
+      template: "verify-email",
+      context: {
+        verificationUrl,
+        appName: "Gym App",
+        userName: email.split("@")[0], // Using email username as a fallback
+      },
+    });
+  }
 }

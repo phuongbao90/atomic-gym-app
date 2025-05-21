@@ -1,7 +1,5 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { REQUEST_USER_KEY } from "../auth/constant/auth.constant";
-import { JwtUser } from "../auth/type/jwt-user-type";
 import { CreateWorkoutDto } from "./dto/create-workout.dto";
 import { Request } from "express";
 import { CommonQueryParamsDto } from "src/common/dto/paginated-query.dto";
@@ -15,11 +13,9 @@ export class WorkoutService {
 
   async createWorkout(
     body: CreateWorkoutDto,
-    request: Request,
+    _request: Request,
     language: Language
   ) {
-    const user = request[REQUEST_USER_KEY] as JwtUser | undefined;
-
     const workoutPlanId = body.workoutPlanId;
 
     let order: number;

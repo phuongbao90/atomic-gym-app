@@ -24,6 +24,7 @@ export type RegisterInput = {
   email: string;
   password: string;
   callbackUrl?: string;
+  image?: string;
 };
 
 export type RegisterResponse = {
