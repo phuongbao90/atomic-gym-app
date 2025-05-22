@@ -1,15 +1,14 @@
 "use client";
 
-import { signUp } from "../lib/auth-client";
+import { signIn } from "../lib/auth-client";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
-import { SignupSchema } from "app";
+import { SigninSchema } from "app";
 import { useForm } from "react-hook-form";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,33 +20,32 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
 const defaultValues = {
-  name: "bao",
   email: "bao11@gmailccc.com",
   password: "12345678",
-  confirmPassword: "12345678",
+  rememberMe: false,
 } as const;
 
-export default function SignUpForm() {
+export default function SignInForm() {
   const router = useRouter();
-  const form = useForm<z.infer<typeof SignupSchema>>({
-    resolver: standardSchemaResolver(SignupSchema),
+  const form = useForm<z.infer<typeof SigninSchema>>({
+    resolver: standardSchemaResolver(SigninSchema),
     defaultValues,
   });
-  const t = useTranslations("SignupForm");
+  const t = useTranslations("SigninForm");
   const tAuth = useTranslations("auth");
 
-  async function onSubmit(formData: z.infer<typeof SignupSchema>) {
-    const { data, error } = await signUp.email({
-      name: formData.name,
+  async function onSubmit(formData: z.infer<typeof SigninSchema>) {
+    const { data, error } = await signIn.email({
       email: formData.email,
       password: formData.password,
+      rememberMe: formData.rememberMe,
     });
 
     if (error?.code) {
       toast.error(tAuth(error.code));
     }
     if (data) {
-      toast.success("Đăng ký thành công");
+      toast.success("Đăng nhập thành công");
       router.replace("/");
     }
   }
@@ -55,25 +53,6 @@ export default function SignUpForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor="name">{t("name")}</FormLabel>
-              <FormControl>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="John Doe"
-                  required
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="email"
@@ -108,37 +87,13 @@ export default function SignUpForm() {
                   {...field}
                 />
               </FormControl>
-              <FormDescription>
-                {t("passwordMustBeAtLeast8CharactersLong")}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor="confirmPassword">
-                {t("confirmPassword")}
-              </FormLabel>
-              <FormControl>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="12345678"
-                  required
-                  {...field}
-                />
-              </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
         <Button type="submit" className="w-full z-50">
-          {t("createAccountButton")}
+          {t("signInButton")}
         </Button>
       </form>
     </Form>

@@ -10,7 +10,7 @@
     "postinstall": "patch-package",
     "build": "fastlane start",
     "_": "------------------------------------------",
-    "dev:web": "      turbo watch dev --filter=api --filter=web --filter=app",
+    "dev:web": "      turbo watch dev --filter=api --filter=web --filter=app --filter=app-config",
     "dev:dashboard": "turbo watch dev --filter=api --filter=dashboard --filter=app",
     "dev:api": "      turbo watch start --filter=api",
     "dev": "   yarn prebuild &&       ts-node ./scripts/modify-env.cjs dev     ios     && turbo watch start --filter=mobile --filter=api",

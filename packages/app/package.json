@@ -12,7 +12,8 @@
     "build_app": "tsup --clean",
     "debug_app": "tsup --watch",
     "test": "jest",
-    "test:watch": "tsup --watch"
+    "test:watch": "tsup --watch",
+    "dev": "tsup --watch"
   },
   "files": ["build", "src"],
   "devDependencies": {
@@ -27,13 +28,13 @@
     "jest-environment-jsdom": "^29.7.0",
     "tsup": "^8.0.1",
     "typescript": "5.7.2",
-    "typescript-config": "*"
+    "typescript-config": "*",
+    "zod": "^3.25.20"
   },
   "peerDependencies": {
     "@tanstack/query-async-storage-persister": "*",
     "@tanstack/query-sync-storage-persister": "*",
     "@tanstack/react-query": "*",
-    "@tanstack/react-query-persist-client": "*",
-    "zod": "*"
+    "@tanstack/react-query-persist-client": "*"
   }
 }

@@ -2,6 +2,7 @@ import {
   ForbiddenException,
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
@@ -14,15 +15,22 @@ import { WorkoutPlanQueryDto } from "./dto/workout-plan-query.dto";
 import { paginateOutput } from "src/common/utils/pagination.utils";
 import { Language, Prisma } from "@prisma/client";
 import { slugify } from "src/helpers/slugify";
-import { auth } from "../lib/auth";
+import { Auth } from "better-auth";
+import { AUTH_INSTANCE_KEY } from "../auth/constant/auth.constants";
+import { fromNodeHeaders } from "better-auth/node";
 
 @Injectable()
 export class WorkoutPlanService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(AUTH_INSTANCE_KEY) private readonly auth: Auth
+
+    // private readonly authService: AuthService
+  ) {}
 
   async createWorkoutPlan(
     body: CreateWorkoutPlanDto,
-    user: typeof auth.$Infer.Session.user,
+    user: any,
     language: Language
   ) {
     try {
@@ -84,11 +92,13 @@ export class WorkoutPlanService {
   }
 
   async getWorkoutPlans(
-    user: typeof auth.$Infer.Session.user,
+    user: any,
     query: WorkoutPlanQueryDto,
     language: Language
   ) {
     const { isPublic, isPremium, me, category, isSingle, isFeatured } = query;
+
+    // console.log("auth instance ", this.authService);
 
     const workoutPlanQuery: Prisma.WorkoutPlanFindManyArgs = {
       where: {
@@ -196,11 +206,7 @@ export class WorkoutPlanService {
     };
   }
 
-  async getWorkoutPlanById(
-    id: string,
-    language: Language,
-    user: typeof auth.$Infer.Session.user
-  ) {
+  async getWorkoutPlanById(id: string, language: Language, user: any) {
     // Safely get user from request if it exists
 
     const workoutPlan = await this.prisma.workoutPlan.findUnique({
@@ -263,10 +269,7 @@ export class WorkoutPlanService {
     };
   }
 
-  async deleteWorkoutPlanById(
-    id: string,
-    user: typeof auth.$Infer.Session.user
-  ) {
+  async deleteWorkoutPlanById(id: string, user: any) {
     const workoutPlan = await this.prisma.workoutPlan.findUnique({
       where: { id },
     });
@@ -283,7 +286,7 @@ export class WorkoutPlanService {
   async updateWorkoutPlanById(
     id: string,
     body: UpdateWorkoutPlanDto,
-    user: typeof auth.$Infer.Session.user,
+    user: any,
     language: Language
   ) {
     try {
@@ -614,10 +617,7 @@ export class WorkoutPlanService {
     });
     return workoutPlans;
   }
-  async getWorkoutPlansByMe(
-    language: Language,
-    user: typeof auth.$Infer.Session.user
-  ) {
+  async getWorkoutPlansByMe(language: Language, user: any) {
     if (!user) {
       throw new UnauthorizedException();
     }

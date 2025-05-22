@@ -3,8 +3,7 @@ import { randNumber } from "@ngneat/falso";
 import { PrismaClient } from "@prisma/client";
 import { muscleGroups } from "./data/muscle-groups";
 import { betterAuth } from "better-auth";
-import { prismaAdapter } from "better-auth/adapters/prisma";
-import { auth } from "../src/lib/auth";
+import { createAuth } from "../src/lib/auth";
 
 /**
  * error with auto increment id:
@@ -28,6 +27,16 @@ const prisma = new PrismaClient();
 //   appName: "Gym App",
 //   emailAndPassword: { enabled: true },
 // });
+
+const config = createAuth(undefined, undefined, {
+  emailAndPassword: {
+    enabled: true,
+    requireEmailVerification: false,
+  },
+  emailVerification: undefined,
+});
+console.log("config ", config);
+const auth = betterAuth(config);
 
 async function main() {
   try {
@@ -70,6 +79,7 @@ async function main() {
       //     emailVerified: true,
       //   },
       // });
+
       const user = await auth.api.signUpEmail({
         body: {
           name: faker.person.fullName(),
@@ -77,6 +87,11 @@ async function main() {
           password: "123456#@Nn",
         },
       });
+      // console.log("user ", user);
+
+      // auth.api.verifyEmail({
+      //   body: {},
+      // });
       users.push({
         id: user.user.id,
         userId: user.user.id,

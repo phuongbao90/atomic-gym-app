@@ -17,13 +17,13 @@ POST {{BASE_URL}}/api/auth/sign-in/email
 POST {{BASE_URL}}/api/auth/sign-up/email
 {
   "name": "ttt",
-  "email": "phuongbao5@gmail.com",
+  "email": "phuongbao10@gmail.com",
   "password": "123456789",
   "callbackURL": ""
 }
 
 {{
-  $global.accessToken=response.parsedBody.data.token;
+  // $global.accessToken=response.parsedBody.data.token;
 }}
 
 POST {{BASE_URL}}/api/auth/sign-out

@@ -1,21 +1,19 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { paginateOutput } from "src/common/utils/pagination.utils";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateExerciseDto } from "./dto/create-exercise.dto";
 import { ExerciseQueryParamsDto } from "./dto/exercise-query-params.dto";
 import { Language, Prisma } from "@prisma/client";
 import { slugify, convert_vi_to_en } from "src/helpers/slugify";
-import { auth } from "../lib/auth";
+import { AuthService } from "../auth/auth.service";
+import { AUTH_INSTANCE_KEY } from "../auth/constant/auth.constants";
+import { Auth } from "better-auth";
 
 @Injectable()
 export class ExerciseService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(
-    body: CreateExerciseDto,
-    user: typeof auth.$Infer.Session.user,
-    language: Language
-  ) {
+  async create(body: CreateExerciseDto, user: any, language: Language) {
     const exercise = await this.prisma.exercise.create({
       data: {
         ...(body?.id && { id: body.id }),

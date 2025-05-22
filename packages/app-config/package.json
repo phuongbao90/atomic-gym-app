@@ -8,12 +8,10 @@
     "build_config": "tsup --clean",
     "debug_config": "tsup --watch",
     "test": "jest",
-    "test:watch": "tsup --watch"
+    "test:watch": "tsup --watch",
+    "dev": "tsup --watch"
   },
-  "files": [
-    "build",
-    "src"
-  ],
+  "files": ["build", "src"],
   "devDependencies": {
     "tsup": "^8.0.1",
     "typescript": "5.7.2",

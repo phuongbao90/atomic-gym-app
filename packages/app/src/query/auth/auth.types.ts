@@ -1,3 +1,5 @@
+import { z } from "zod/v4";
+
 export type LoginInput = {
   email: string;
   password: string;
@@ -39,3 +41,22 @@ export type RegisterResponse = {
     updatedAt: string;
   };
 };
+
+export const SignupSchema = z
+  .object({
+    name: z.string().min(1),
+    email: z.email(),
+    password: z.string().min(8),
+    confirmPassword: z.string().min(8),
+    // image: z.string().optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match",
+  });
+
+export const SigninSchema = z.object({
+  email: z.email(),
+  password: z.string().min(8),
+  rememberMe: z.boolean().optional(),
+});

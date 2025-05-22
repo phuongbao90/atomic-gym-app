@@ -5,7 +5,6 @@ import { AuthModule } from "./auth/auth.module";
 import { CommonModule } from "./common/common.module";
 import envConfig from "./config/env.config";
 import { envValidationSchema } from "./config/env.validation";
-
 import { UserModule } from "./user/user.module";
 import { ExerciseModule } from "./exercise/exercise.module";
 import { MuscleGroupModule } from "./muscle-group/muscle-group.module";
@@ -19,8 +18,6 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { TransformResponseInterceptor } from "./common/interceptor/transform-response/transform-response.interceptor";
 
 const NODE_ENV = process.env.NODE_ENV;
-
-// console.log('env ------', NODE_ENV);
 
 @Module({
   imports: [

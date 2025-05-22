@@ -15,7 +15,8 @@ import { Language } from "@prisma/client";
 import { GetLanguage } from "../common/decorators/get-language.decorator";
 import { PublicRoute } from "../common/decorator/public-route.decorator";
 import { CurrentUser } from "../common/decorator/current-user.decorator";
-import { auth } from "../lib/auth";
+import { type User } from "better-auth";
+// import { auth } from "../lib/auth";
 
 @Controller("exercises")
 export class ExerciseController {
@@ -24,7 +25,7 @@ export class ExerciseController {
   @Post()
   create(
     @Body() body: CreateExerciseDto,
-    @CurrentUser() user: typeof auth.$Infer.Session.user,
+    @CurrentUser() user: User,
     @GetLanguage() language: Language
   ) {
     return this.exerciseService.create(body, user, language);

@@ -7,13 +7,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
-import SignUpForm from "@/components/signup-form";
-import { getTranslations } from "next-intl/server";
+import SignInForm from "../../../../components/signin-form";
 import { getSession } from "../../../../lib/auth-client";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
-export default async function SignUpPage() {
-  const t = await getTranslations("SignupPage");
+export default async function LoginPage() {
+  const t = await getTranslations("SigninPage");
+
   const session = await getSession();
 
   if (session) {
@@ -29,13 +30,19 @@ export default async function SignUpPage() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <SignUpForm />
+        <SignInForm />
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
+        <Link
+          href="/auth/forgot-password"
+          className="text-sm text-primary hover:underline"
+        >
+          {t("forgotPassword")}
+        </Link>
         <div className="text-sm text-muted-foreground text-center">
-          {t("alreadyHaveAccount")}{" "}
-          <Link href="/auth/login" className="text-primary hover:underline">
-            {t("signIn")}
+          {t("dontHaveAccount")}{" "}
+          <Link href="/auth/signup" className="text-primary hover:underline">
+            {t("signUp")}
           </Link>
         </div>
       </CardFooter>

@@ -1,19 +1,7 @@
-import { isObject } from "lodash";
 import { ExerciseQuery } from "../query/exercises/exercises.types";
 import { WorkoutPlanQuery } from "../query/workout-plans/workout-plans.types";
 import { WorkoutQuery } from "../query/workouts/workouts.types";
-import { stringify as _stringify } from "qs";
-
-const stringify = (obj: any | undefined | null) => {
-  if (!obj || Object.keys(obj).length === 0 || !isObject(obj)) return "";
-
-  const query = Object.fromEntries(
-    Object.entries(obj).filter(
-      ([_, value]) => value !== undefined && value !== null && value !== ""
-    )
-  );
-  return _stringify(query, { skipNulls: true });
-};
+import { stringify } from "qs";
 
 export const API_ROUTES = {
   auth: {

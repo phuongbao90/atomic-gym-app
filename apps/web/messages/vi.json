@@ -1,4 +1,29 @@
 {
+  "auth": {
+    "USER_NOT_FOUND": "User không tồn tại",
+    "FAILED_TO_CREATE_USER": "Không thể tạo user",
+    "FAILED_TO_CREATE_SESSION": "Không thể tạo session",
+    "FAILED_TO_UPDATE_USER": "Không thể cập nhật user",
+    "FAILED_TO_GET_SESSION": "Không thể lấy session",
+    "INVALID_PASSWORD": "Mật khẩu không hợp lệ",
+    "INVALID_EMAIL": "Email không hợp lệ",
+    "INVALID_EMAIL_OR_PASSWORD": "Email hoặc mật khẩu không hợp lệ",
+    "SOCIAL_ACCOUNT_ALREADY_LINKED": "Tài khoản social đã liên kết",
+    "PROVIDER_NOT_FOUND": "Provider không tồn tại",
+    "INVALID_TOKEN": "Token không hợp lệ",
+    "ID_TOKEN_NOT_SUPPORTED": "Token không hợp lệ",
+    "FAILED_TO_GET_USER_INFO": "Không thể lấy thông tin user",
+    "USER_EMAIL_NOT_FOUND": "Email user không tồn tại",
+    "EMAIL_NOT_VERIFIED": "Email không được xác thực",
+    "PASSWORD_TOO_SHORT": "Mật khẩu quá ngắn",
+    "PASSWORD_TOO_LONG": "Mật khẩu quá dài",
+    "USER_ALREADY_EXISTS": "Tài khoản đã tồn tại",
+    "EMAIL_CAN_NOT_BE_UPDATED": "Email không thể cập nhật",
+    "CREDENTIAL_ACCOUNT_NOT_FOUND": "Credential account không tồn tại",
+    "SESSION_EXPIRED": "Session hết hạn",
+    "FAILED_TO_UNLINK_LAST_ACCOUNT": "Không thể hủy liên kết tài khoản cuối cùng",
+    "ACCOUNT_NOT_FOUND": "Account không tồn tại"
+  },
   "common": {
     "hello": "Xin chào"
   },
@@ -26,5 +51,35 @@
   },
   "PageLayout": {
     "title": "Hệ thống quản lý phòng gym"
+  },
+  "SignupPage": {
+    "title": "Tạo tài khoản",
+    "description": "Nhập thông tin để tạo tài khoản của bạn",
+    "alreadyHaveAccount": "Đã có tài khoản?",
+    "signIn": "Đăng nhập"
+  },
+  "SignupForm": {
+    "name": "Họ và tên",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "createAccount": "Tạo tài khoản",
+    "passwordMustBeAtLeast8CharactersLong": "Mật khẩu phải có ít nhất 8 ký tự.",
+    "passwordsDoNotMatch": "Mật khẩu không khớp",
+    "createAccountButton": "Tạo tài khoản"
+  },
+  "SigninPage": {
+    "title": "Đăng nhập",
+    "description": "Nhập email và mật khẩu để đăng nhập vào tài khoản của bạn",
+    "forgotPassword": "Quên mật khẩu?",
+    "signInButton": "Đăng nhập",
+    "dontHaveAccount": "Không có tài khoản?",
+    "signUp": "Đăng ký"
+  },
+  "SigninForm": {
+    "email": "Email",
+    "password": "Mật khẩu",
+    "rememberMe": "Ghi nhớ tôi",
+    "signInButton": "Đăng nhập"
   }
 }

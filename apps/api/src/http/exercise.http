@@ -32,7 +32,7 @@ Authorization: Bearer {{$global.accessToken}}
 
 
 ### Get All Exercises
-GET {{BASE_URL}}/exercises?muscleGroupId=5
+GET {{BASE_URL}}/exercises
 # Authorization: Bearer {{$global.accessToken}}
 
 ### Get All Exercises with search

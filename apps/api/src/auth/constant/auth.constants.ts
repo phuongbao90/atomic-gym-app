@@ -1,0 +1,1 @@
+export const AUTH_INSTANCE_KEY = "AUTH_INSTANCE_KEY";
