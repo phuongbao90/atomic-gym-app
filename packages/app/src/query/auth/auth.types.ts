@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 export type LoginInput = {
   email: string;
@@ -45,7 +45,7 @@ export type RegisterResponse = {
 export const SignupSchema = z
   .object({
     name: z.string().min(1),
-    email: z.email(),
+    email: z.string().email(),
     password: z.string().min(8),
     confirmPassword: z.string().min(8),
     // image: z.string().optional(),
@@ -56,7 +56,7 @@ export const SignupSchema = z
   });
 
 export const SigninSchema = z.object({
-  email: z.email(),
+  email: z.string().email(),
   password: z.string().min(8),
   rememberMe: z.boolean().optional(),
 });

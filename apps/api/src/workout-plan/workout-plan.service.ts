@@ -15,9 +15,8 @@ import { WorkoutPlanQueryDto } from "./dto/workout-plan-query.dto";
 import { paginateOutput } from "src/common/utils/pagination.utils";
 import { Language, Prisma } from "@prisma/client";
 import { slugify } from "src/helpers/slugify";
-import { Auth } from "better-auth";
+import { Auth, User } from "better-auth";
 import { AUTH_INSTANCE_KEY } from "../auth/constant/auth.constants";
-import { fromNodeHeaders } from "better-auth/node";
 
 @Injectable()
 export class WorkoutPlanService {
@@ -30,7 +29,7 @@ export class WorkoutPlanService {
 
   async createWorkoutPlan(
     body: CreateWorkoutPlanDto,
-    user: any,
+    user: User,
     language: Language
   ) {
     try {
@@ -92,7 +91,7 @@ export class WorkoutPlanService {
   }
 
   async getWorkoutPlans(
-    user: any,
+    user: User,
     query: WorkoutPlanQueryDto,
     language: Language
   ) {
@@ -206,7 +205,7 @@ export class WorkoutPlanService {
     };
   }
 
-  async getWorkoutPlanById(id: string, language: Language, user: any) {
+  async getWorkoutPlanById(id: string, language: Language, user: User) {
     // Safely get user from request if it exists
 
     const workoutPlan = await this.prisma.workoutPlan.findUnique({
@@ -269,7 +268,7 @@ export class WorkoutPlanService {
     };
   }
 
-  async deleteWorkoutPlanById(id: string, user: any) {
+  async deleteWorkoutPlanById(id: string, user: User) {
     const workoutPlan = await this.prisma.workoutPlan.findUnique({
       where: { id },
     });
@@ -286,7 +285,7 @@ export class WorkoutPlanService {
   async updateWorkoutPlanById(
     id: string,
     body: UpdateWorkoutPlanDto,
-    user: any,
+    user: User,
     language: Language
   ) {
     try {
@@ -617,7 +616,7 @@ export class WorkoutPlanService {
     });
     return workoutPlans;
   }
-  async getWorkoutPlansByMe(language: Language, user: any) {
+  async getWorkoutPlansByMe(language: Language, user: User) {
     if (!user) {
       throw new UnauthorizedException();
     }

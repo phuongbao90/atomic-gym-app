@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSignup } from "app";
+import { setRequestCookie, SignupSchema } from "app";
 import { Controller, useForm } from "react-hook-form";
 import { Button, View } from "react-native";
 import { z } from "zod";
@@ -7,57 +7,42 @@ import { AppHeader } from "../../src/components/ui/app-header";
 import { AppInput } from "../../src/components/ui/app-input";
 import { AppScreen } from "../../src/components/ui/app-screen";
 import { AppScrollView } from "../../src/components/ui/app-scrollview";
-import { useAppDispatch, useAppSelector } from "../../src/stores/redux-store";
-import { login } from "../../src/stores/slices/auth-slice";
-
-const registerSchema = z
-  .object({
-    email: z.string().email(),
-    name: z.string(),
-    password: z.string(),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+import { getCookie, signUp } from "../../src/lib/auth-client";
 
 const initialValues = {
   email: "bao1112@gmail.com",
   name: "Bao1112",
   password: "123456#@Nn",
-  confirmPassword: "123456#@Nn",
+  confijrmPassword: "123456#@Nn",
 };
 
 export default function Register() {
-  const theme = useAppSelector((state) => state.app.theme);
-  const language = useAppSelector((state) => state.app.language);
-  const dispatch = useAppDispatch();
-
-  const { control, handleSubmit } = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
+  const { control, handleSubmit } = useForm<z.infer<typeof SignupSchema>>({
+    resolver: zodResolver(SignupSchema),
     defaultValues: initialValues,
   });
 
-  const signupMutation = useSignup();
-
-  function onSubmit(values: z.infer<typeof registerSchema>) {
-    signupMutation.mutate(values, {
-      onSuccess: (result) => {
-        console.log("register success ", result);
-        dispatch(login());
-      },
+  async function onSubmit(values: z.infer<typeof SignupSchema>) {
+    const { error, data } = await signUp.email({
+      email: values.email,
+      password: values.password,
+      name: values.name,
     });
+
+    if (error) {
+    }
+
+    if (data) {
+      const cookie = getCookie();
+      if (cookie) {
+        setRequestCookie(cookie);
+      }
+    }
   }
 
   return (
     <AppScreen name="register-screen">
-      <AppHeader
-        title="Register"
-        withBackButton
-        theme={theme}
-        language={language}
-      />
+      <AppHeader title="Register" withBackButton />
       <AppScrollView>
         <View style={{ gap: 32 }}>
           <Controller

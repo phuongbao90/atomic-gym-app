@@ -42,6 +42,7 @@ import {
   addWorkoutExercisesToActiveWorkoutSession,
   replaceActiveWorkoutSessionExercise,
 } from "../../stores/slices/workout-session-slice";
+import { useSession } from "../../lib/auth-client";
 
 export const ExercisesScreen = () => {
   const params = useLocalSearchParams<ExercisesScreenParams>();
@@ -74,7 +75,7 @@ export const ExercisesScreen = () => {
   const [selectedMuscleGroup, setSelectedMuscleGroup] =
     useState<MuscleGroup | null>(null);
 
-  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const { data: session } = useSession();
   const defaultSets = useAppSelector((state) => state.app.defaultSets);
   const defaultRestTime = useAppSelector((state) => state.app.defaultRestTime);
 
@@ -286,7 +287,7 @@ export const ExercisesScreen = () => {
         className="absolute bottom-8 right-4 bg-primary-500 rounded-full p-4 dark:bg-primary bg-primaryDarken"
         onPress={() =>
           debouncedPress(() => {
-            if (!isLoggedIn) {
+            if (!session?.session) {
               Alert.alert(t("login_required"), t("login_required_description"));
               return;
             }

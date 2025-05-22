@@ -1,5 +1,4 @@
 import { configureStore, createDraftSafeSelector } from "@reduxjs/toolkit";
-import { authReducer } from "./slices/auth-slice";
 import { appReducer } from "./slices/app-slice";
 import { themeListener } from "./middlewares/theme-middleware";
 import { languageListener } from "./middlewares/language-middleware";
@@ -47,7 +46,6 @@ const persistConfig = {
 };
 
 const reducer = combineReducers({
-  auth: authReducer,
   app: appReducer,
   createWorkoutPlan: createWorkoutPlanReducer,
   workoutSession: workoutSessionReducer,

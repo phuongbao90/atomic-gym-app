@@ -6,7 +6,7 @@
     "*": "------------------------------------------",
     "clean": "turbo run clean && rm -rf node_modules && rm -rf yarn.lock && yarn install && cd apps/api && yarn reset-db",
     "clear-daemon": "npx turbo daemon clean",
-    "validate-package": "npx sherif@latest -i react -i react-dom -i @types/react",
+    "validate-package": "npx sherif@latest -i react -i react-dom -i @types/react -i tailwindcss -i tailwind-merge -i typescript",
     "postinstall": "patch-package",
     "build": "fastlane start",
     "_": "------------------------------------------",

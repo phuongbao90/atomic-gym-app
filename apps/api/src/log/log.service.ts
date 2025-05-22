@@ -1,11 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
+import { User } from "better-auth";
 
 @Injectable()
 export class LogService {
   constructor(private prisma: PrismaService) {}
 
-  async getOveralStats(user: any) {
+  async getOveralStats(user: User) {
     const logs = await this.prisma.workoutSessionLog.findMany({
       where: {
         userId: user.id,

@@ -8,7 +8,6 @@ export * from "./types/extend-types";
 // export everything from helpers
 export * from "./helpers/try-catch";
 
-export * from "./query/auth/auth.hooks";
 export * from "./query/auth/auth.requests";
 export * from "./query/auth/auth.types";
 

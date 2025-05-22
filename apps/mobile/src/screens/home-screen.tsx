@@ -1,15 +1,12 @@
-import { queryClient, useGetWorkoutPlan, Workout } from "app";
+import { clearRequestCookie, queryClient, useGetWorkoutPlan } from "app";
 import { useRouter } from "expo-router";
-import { Button, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Button, Pressable, TouchableOpacity, View } from "react-native";
 import { AppScrollView } from "../../src/components/ui/app-scrollview";
 import { AppStorage } from "../../src/lib/storage/app-storage";
 import { AppHeader } from "../components/ui/app-header";
 import { AppScreen } from "../components/ui/app-screen";
 import { useAppDispatch, useAppSelector } from "../stores/redux-store";
-import { logout } from "../stores/slices/auth-slice";
 import { appRoutes } from "../configs/routes";
-import * as SecureStore from "expo-secure-store";
-import { setToken } from "../lib/auth/session-store";
 import { useTranslation } from "react-i18next";
 import {
   CalendarIcon,
@@ -23,13 +20,11 @@ import { AppText } from "../components/ui/app-text";
 import { cn } from "../utils/cn";
 import { Divider } from "../components/ui/divider";
 import { t } from "i18next";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { WorkoutPlanCard } from "../components/workout-plan-card";
 import { usePreventRepeatPress } from "../hooks/use-prevent-repeat-press";
+import { signOut, useSession } from "../lib/auth-client";
 
 export function HomeScreen() {
-  const insets = useSafeAreaInsets();
-  const isLoggedIn = useAppSelector((s) => s.auth.isLoggedIn);
   const activeWorkoutPlanId = useAppSelector((s) => s.app.activeWorkoutPlanId);
   const activeWorkoutId = useAppSelector(
     (s) => s.workoutSession.activeWorkout?.id
@@ -259,6 +254,7 @@ const WeeklyTrack = () => {
 const DEV = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { data } = useSession();
 
   return (
     <View className="flex-row items-center justify-center gap-4 mt-auto">
@@ -276,16 +272,25 @@ const DEV = () => {
         }}
       />
 
-      <Button
-        title="logout"
-        onPress={() => {
-          dispatch(logout());
-          SecureStore.deleteItemAsync("accessToken");
-          setToken("");
-          queryClient.clear();
-          router.replace(appRoutes.login);
-        }}
-      />
+      {data?.session ? (
+        <Button
+          title="logout"
+          onPress={async () => {
+            await signOut();
+
+            clearRequestCookie();
+            queryClient.clear();
+            router.replace(appRoutes.login);
+          }}
+        />
+      ) : (
+        <Button
+          title="login"
+          onPress={async () => {
+            router.push(appRoutes.login);
+          }}
+        />
+      )}
     </View>
   );
 };

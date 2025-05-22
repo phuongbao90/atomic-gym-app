@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { SigninSchema } from "app";
 import { useForm } from "react-hook-form";
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
@@ -28,7 +28,7 @@ const defaultValues = {
 export default function SignInForm() {
   const router = useRouter();
   const form = useForm<z.infer<typeof SigninSchema>>({
-    resolver: standardSchemaResolver(SigninSchema),
+    resolver: zodResolver(SigninSchema),
     defaultValues,
   });
   const t = useTranslations("SigninForm");

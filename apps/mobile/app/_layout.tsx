@@ -28,7 +28,7 @@ import { modalStack } from "../src/lib/modal/modal-stack";
 import { Provider } from "react-redux";
 import { persistor, store, useAppSelector } from "../src/stores/redux-store";
 import i18n from "../src/configs/i18n";
-import { createOfetchInstance } from "app";
+// import { createOfetchInstance } from "app";
 import { PersistGate } from "redux-persist/integration/react";
 import { colorScheme } from "nativewind";
 import { useReactNavigationDevTools } from "@dev-plugins/react-navigation";
@@ -37,6 +37,8 @@ import { Audio } from "expo-av";
 import restTimeEndSound from "../assets/sounds/rest-time-end.mp3";
 // This runs even if your app UI is backgrounded/killed
 import { enableScreens } from "react-native-screens";
+import { getCookie, useSession } from "../src/lib/auth-client";
+import { setRequestCookie, setRequestLanguage } from "app";
 enableScreens();
 
 notifee.registerForegroundService(async (task) => {
@@ -117,19 +119,24 @@ export default function RootLayout() {
 
 const App = () => {
   const [isOnboarded] = useMMKVBoolean(storageKeyNames.isOnboarded);
-  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const { data } = useSession();
   const language = useAppSelector((state) => state.app.language);
   const theme = useAppSelector((state) => state.app.theme);
   const runOnce = useRef(false);
   const runOnceTheme = useRef(false);
+  const cookie = getCookie();
+
+  useEffect(() => {
+    if (cookie) {
+      setRequestCookie(cookie);
+    }
+  }, [cookie]);
 
   useEffect(() => {
     if (runOnce.current) return;
     runOnce.current = true;
     i18n.changeLanguage(language, () => {
-      createOfetchInstance({
-        "Accept-Language": language,
-      });
+      setRequestLanguage(language);
     });
   }, [language]);
 
@@ -143,7 +150,7 @@ const App = () => {
     return <Onboarding />;
   }
 
-  if (!isLoggedIn) {
+  if (!data?.session) {
     return (
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />

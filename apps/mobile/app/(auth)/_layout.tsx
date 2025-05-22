@@ -1,10 +1,10 @@
 import { Redirect, Stack } from "expo-router";
 import { appRoutes } from "../../src/configs/routes";
-import { useAppSelector } from "../../src/stores/redux-store";
+import { useSession } from "../../src/lib/auth-client";
 
 export default function AuthLayout() {
-  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
-  if (isLoggedIn) {
+  const { data } = useSession();
+  if (data?.session) {
     return <Redirect href={appRoutes.home} />;
   }
 

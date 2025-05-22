@@ -16,15 +16,16 @@ import { useAppSelector } from "../../stores/redux-store";
 import { useTranslation } from "react-i18next";
 import { capitalize } from "lodash";
 import { AppText } from "../../components/ui/app-text";
+import { useSession } from "../../lib/auth-client";
 
 export function WorkoutPlansTabScreen() {
   const router = useRouter();
   const theme = useAppSelector((state) => state.app.theme);
   const { t } = useTranslation();
 
-  const isLoggedIn = useAppSelector((s) => s.auth.isLoggedIn);
+  const { data: session } = useSession();
   const { data: myWorkoutPlans } = useGetWorkoutPlansByMe({
-    enabled: isLoggedIn,
+    enabled: !!session?.session,
   });
 
   const { data } = useGetWorkoutPlansInGroups();

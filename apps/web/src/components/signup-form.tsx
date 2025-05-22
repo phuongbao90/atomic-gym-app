@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 

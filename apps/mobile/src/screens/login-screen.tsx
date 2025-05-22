@@ -1,48 +1,39 @@
-import { useLogin } from "app";
+import { setRequestCookie } from "app";
 import { useRouter } from "expo-router";
-import * as SecureStore from "expo-secure-store";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Text } from "react-native";
-import { Button, StyleSheet, TextInput, View } from "react-native";
+import { Button, StyleSheet, TextInput, View, Text } from "react-native";
 import { AppScreen } from "../../src/components/ui/app-screen";
 import { AppScrollView } from "../../src/components/ui/app-scrollview";
 import { AppText } from "../../src/components/ui/app-text";
 import { appRoutes } from "../../src/configs/routes";
 import { AppStorage } from "../../src/lib/storage/app-storage";
 import { AppHeader } from "../components/ui/app-header";
-import { setToken } from "../lib/auth/session-store";
-import { useAppDispatch, useAppSelector } from "../stores/redux-store";
-import { login } from "../stores/slices/auth-slice";
+import { useAppDispatch } from "../stores/redux-store";
 import { switchTheme } from "../stores/slices/app-slice";
+import { getCookie, signIn } from "../lib/auth-client";
 
 export function LoginScreen() {
   const { t } = useTranslation("login-screen");
   const [email, setEmail] = useState("bao1@gmail.com");
   const [password, setPassword] = useState("123456#@Nn");
-  const loginMutation = useLogin();
   const router = useRouter();
-
-  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
 
   const dispatch = useAppDispatch();
 
   async function handleLogin() {
-    try {
-      loginMutation.mutate(
-        { email, password },
-        {
-          onSuccess: (result) => {
-            console.info("Login success: ");
-            SecureStore.setItemAsync("accessToken", result?.data?.accessToken);
-            dispatch(login());
-            setToken(result?.data?.accessToken);
-          },
-        }
-      );
-    } catch (error) {
-      console.error("error ====> ", (error as Error)?.message);
+    const { error } = await signIn.email({
+      email,
+      password,
+    });
+
+    if (error) {
+      return;
     }
+
+    const cookie = getCookie();
+
+    setRequestCookie(cookie);
   }
 
   return (

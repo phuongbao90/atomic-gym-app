@@ -11,10 +11,11 @@
     "expo-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "nativewind-env.d.ts",
+    "global.d.ts",
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
     "src/components/__tests__/header-test.jsx",
-    "setupTests.js"
+    "setupTests.js",
+    "nativewind-env.d.ts"
   ]
 }

@@ -46,7 +46,7 @@ export class WorkoutPlanController {
     return this.workoutPlanService.getWorkoutPlans(user, query, language);
   }
 
-  @PublicRoute()
+  // @PublicRoute()
   @Get("in-groups")
   findAllInGroups(@GetLanguage() language: Language) {
     return this.workoutPlanService.getWorkoutPlansInGroups(language);
@@ -63,8 +63,8 @@ export class WorkoutPlanController {
   }
 
   @Get("user/me")
-  findAllByMe(@GetLanguage() language: Language, @CurrentUser() session: any) {
-    return this.workoutPlanService.getWorkoutPlansByMe(language, session.user);
+  findAllByMe(@GetLanguage() language: Language, @CurrentUser() user: User) {
+    return this.workoutPlanService.getWorkoutPlansByMe(language, user);
   }
 
   @Get("user/:userId")

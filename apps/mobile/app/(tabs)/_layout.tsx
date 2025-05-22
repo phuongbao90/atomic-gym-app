@@ -29,13 +29,8 @@ const Icon = ({
 const TAB_HEIGHT = 56;
 
 export default function TabLayout() {
-  // const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
   const insets = useSafeAreaInsets();
   const colorMode = useAppSelector((state) => state.app.theme);
-
-  // if (!isLoggedIn) {
-  //   return <Redirect href={appRoutes.login} />;
-  // }
 
   return (
     <Tabs
