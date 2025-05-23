@@ -6,8 +6,8 @@ import commonEn from "../locales/en/common.json";
 import commonVi from "../locales/vi/common.json";
 import homeScreenVi from "../locales/vi/home-screen.json";
 import homeScreenEn from "../locales/en/home-screen.json";
-import loginScreenEn from "../locales/en/login-screen.json";
-import loginScreenVi from "../locales/vi/login-screen.json";
+import authScreenEn from "../locales/en/auth.json";
+import authScreenVi from "../locales/vi/auth.json";
 import settingsScreenEn from "../locales/en/settings-screen.json";
 import settingsScreenVi from "../locales/vi/settings-screen.json";
 import i18n from "i18next";
@@ -38,13 +38,13 @@ i18n.use(initReactI18next).init({
   resources: {
     en: {
       "home-screen": homeScreenEn,
-      "login-screen": loginScreenEn,
+      auth: authScreenEn,
       common: commonEn,
       "settings-screen": settingsScreenEn,
     },
     vi: {
       "home-screen": homeScreenVi,
-      "login-screen": loginScreenVi,
+      auth: authScreenVi,
       common: commonVi,
       "settings-screen": settingsScreenVi,
     },

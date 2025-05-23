@@ -1,5 +1,7 @@
 {
   "title": "Settings",
+  "guest": "Guest",
+  "sign-in-message": "Sign in to your account to get started",
   "preferences": "Preferences",
   "units-of-measurement": "Units of measurement",
   "appearance": "Appearance",

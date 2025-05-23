@@ -1,4 +1,3 @@
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { AppHeader } from "../../components/ui/app-header";
@@ -7,23 +6,45 @@ import { AppScrollView } from "../../components/ui/app-scrollview";
 import { AppText } from "../../components/ui/app-text";
 import { Icon } from "../../components/ui/icon";
 import { ItemContainer } from "../../components/ui/item-container";
-import { useAppSelector } from "../../stores/redux-store";
+import { ChevronRightIcon } from "../../components/ui/expo-icon";
+import { useSession } from "../../lib/auth-client";
+import { AppButton } from "../../components/ui/app-button";
+import { useRouter } from "expo-router";
+import { appRoutes } from "../../configs/routes";
 
 export function SettingsScreen() {
   const { t } = useTranslation("settings-screen");
+  const { t: tCommon } = useTranslation("common");
+  const router = useRouter();
 
-  const theme = useAppSelector((state) => state.app.theme);
-  const language = useAppSelector((state) => state.app.language);
+  const { data } = useSession();
 
   return (
     <AppScreen name="settings-screen">
-      <AppHeader
-        title={t("title")}
-        withBackButton
-        theme={theme}
-        language={language}
-      />
+      <AppHeader title={t("title")} withBackButton />
       <AppScrollView contentContainerClassName="px-4 pt-6">
+        {!data?.session && (
+          <ItemContainer className="mb-6">
+            <View className="flex-row items-center">
+              <Icon name={"user"} color="#15202b" containerClassName="w-12" />
+              <View>
+                <AppText className="ml-6 text-xl font-bold">
+                  {t("guest")}
+                </AppText>
+                <AppText className="ml-6 text-base">
+                  {t("sign-in-message")}
+                </AppText>
+              </View>
+              <AppButton
+                title={tCommon("sign_in")}
+                onPress={() => {
+                  router.navigate(appRoutes.login);
+                }}
+                containerClassName="ml-auto"
+              />
+            </View>
+          </ItemContainer>
+        )}
         <AppText className="text-2xl font-bold mb-6">
           {t("preferences")}
         </AppText>
@@ -90,14 +111,5 @@ export function SettingsScreen() {
 }
 
 const ChevRightIcon = () => {
-  const theme = useAppSelector((state) => state.app.theme);
-
-  return (
-    <FontAwesome5
-      name="chevron-right"
-      size={16}
-      color={theme === "light" ? "black" : "white"}
-      className="ml-auto"
-    />
-  );
+  return <ChevronRightIcon className="ml-auto" />;
 };

@@ -9,6 +9,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { AppText } from "./app-text";
 
 export const AppInput = ({
   value,
@@ -18,13 +19,14 @@ export const AppInput = ({
   labelStyle,
   inputStyle,
   containerStyle,
-
+  error,
   ...rest
 }: TextInputProps & {
   label?: string;
   labelStyle?: StyleProp<TextStyle>;
   inputStyle?: StyleProp<TextStyle>;
   containerStyle?: StyleProp<ViewStyle>;
+  error?: string;
 }) => {
   const inputRef = useRef<TextInput>(null);
 
@@ -39,6 +41,7 @@ export const AppInput = ({
         {...rest}
         style={[styles.defaultInput, inputStyle]}
       />
+      {error && <AppText className="text-red-500">{error}</AppText>}
     </View>
   );
 };

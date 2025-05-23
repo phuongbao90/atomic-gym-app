@@ -49,6 +49,8 @@
   "camera_permission_required": "We need your permission to show the camera",
   "login_required": "Login required",
   "login_required_description": "Please login to continue",
+  "sign_in": "Sign in",
+  "sign_up": "Sign up",
   "weight_category": "Weight",
   "free_weight": "Free Weight",
   "cardio": "Cardio",

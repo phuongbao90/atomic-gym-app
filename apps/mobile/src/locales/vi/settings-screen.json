@@ -1,5 +1,7 @@
 {
   "title": "Cài đặt",
+  "guest": "Khách",
+  "sign-in-message": "Đăng nhập để bắt đầu",
   "preferences": "Tùy chọn",
   "units-of-measurement": "Đơn vị đo lường",
   "appearance": "Giao diện",

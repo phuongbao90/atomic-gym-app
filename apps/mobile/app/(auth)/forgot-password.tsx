@@ -1,5 +1,5 @@
-import { Text } from "react-native";
+import { ForgotPasswordScreen } from "../../src/screens/auth/forgot-password-screen";
 
 export default function ForgotPassword() {
-  return <Text>Forgot Password</Text>;
+  return <ForgotPasswordScreen />;
 }

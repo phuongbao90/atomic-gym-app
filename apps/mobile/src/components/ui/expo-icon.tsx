@@ -215,3 +215,17 @@ export const ReplaceIcon = (props: Omit<IconProps<string>, "name">) => {
 export const ClockIcon = (props: Omit<IconProps<string>, "name">) => {
   return <ExpoIcon library="materialCommunityIcons" name="clock" {...props} />;
 };
+
+export const GoogleIcon = (props: Omit<IconProps<string>, "name">) => {
+  return <ExpoIcon library="fontAwesome6" name="google" {...props} />;
+};
+
+export const FacebookIcon = (props: Omit<IconProps<string>, "name">) => {
+  return (
+    <ExpoIcon library="materialCommunityIcons" name="facebook" {...props} />
+  );
+};
+
+export const AppleIcon = (props: Omit<IconProps<string>, "name">) => {
+  return <ExpoIcon library="materialCommunityIcons" name="apple" {...props} />;
+};

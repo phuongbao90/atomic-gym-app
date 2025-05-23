@@ -1,6 +1,6 @@
 import { cva } from "class-variance-authority";
 
-export const buttonCva = cva("group flex-1 items-center justify-center", {
+export const buttonCva = cva("group items-center justify-center", {
   variants: {
     size: {
       sx: "py-1 px-2 h-8",

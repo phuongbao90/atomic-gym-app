@@ -49,6 +49,8 @@
   "camera_permission_required": "Chúng tôi cần quyền truy cập vào camera của bạn để chụp ảnh",
   "login_required": "Yêu cầu đăng nhập",
   "login_required_description": "Vui lòng đăng nhập để tiếp tục",
+  "sign_in": "Đăng nhập",
+  "sign_up": "Đăng ký",
   "weight_category": "Kháng lưc",
   "free_weight": "Tạ tự do",
   "cardio": "Cardio",

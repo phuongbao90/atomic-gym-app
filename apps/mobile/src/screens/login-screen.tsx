@@ -1,111 +1,143 @@
-import { setRequestCookie } from "app";
+import { setRequestCookie, SigninSchema } from "app";
 import { useRouter } from "expo-router";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, StyleSheet, TextInput, View, Text } from "react-native";
+import { View } from "react-native";
 import { AppScreen } from "../../src/components/ui/app-screen";
 import { AppScrollView } from "../../src/components/ui/app-scrollview";
 import { AppText } from "../../src/components/ui/app-text";
 import { appRoutes } from "../../src/configs/routes";
-import { AppStorage } from "../../src/lib/storage/app-storage";
-import { AppHeader } from "../components/ui/app-header";
-import { useAppDispatch } from "../stores/redux-store";
-import { switchTheme } from "../stores/slices/app-slice";
 import { getCookie, signIn } from "../lib/auth-client";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AppButton } from "../components/ui/app-button";
+import {
+  AppleIcon,
+  FacebookIcon,
+  GoogleIcon,
+} from "../components/ui/expo-icon";
+import { toast } from "sonner-native";
+import { AppInput } from "../components/ui/app-input";
+import { z } from "zod";
+
+const defaultValues = {
+  email: "bao1@gmail.com",
+  password: "123456#@Nn",
+  rememberMe: false,
+};
 
 export function LoginScreen() {
-  const { t } = useTranslation("login-screen");
-  const [email, setEmail] = useState("bao1@gmail.com");
-  const [password, setPassword] = useState("123456#@Nn");
+  const { t } = useTranslation("auth");
+  const { t: tCommon } = useTranslation("common");
+  const {
+    control,
+    handleSubmit,
+    clearErrors,
+    formState: { errors },
+  } = useForm<z.infer<typeof SigninSchema>>({
+    defaultValues,
+    resolver: zodResolver(SigninSchema),
+  });
+
   const router = useRouter();
 
-  const dispatch = useAppDispatch();
-
-  async function handleLogin() {
+  async function handleLogin(values: z.infer<typeof SigninSchema>) {
     const { error } = await signIn.email({
-      email,
-      password,
+      email: values.email,
+      password: values.password,
     });
 
     if (error) {
+      toast.error(error.message ?? "Something went wrong");
       return;
     }
 
     const cookie = getCookie();
-
     setRequestCookie(cookie);
   }
 
   return (
     <AppScreen name="login-screen">
-      <AppHeader title={t("login-title")} />
-      <AppScrollView>
-        <View className="gap-4 m-4 flex-1">
-          <Text className="text-2xl font-bold">{t("login-title")}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-          />
-
-          <AppText className="text-red-500">
-            Aute id sit esse exercitation reprehenderit est velit pariatur id ut
-            et. Laboris incididunt aute minim pariatur aliqua eiusmod. Pariatur
-            duis exercitation anim amet Lorem reprehenderit excepteur duis sunt
-            adipisicing sit esse id enim. Enim tempor tempor adipisicing dolore
-            consectetur labore ea minim Lorem magna incididunt excepteur eiusmod
-            nisi ut. Laboris minim nostrud irure veniam officia ea minim ipsum
-            eu voluptate fugiat nulla pariatur.
+      <AppScrollView contentContainerStyle={{ flex: 1 }}>
+        <View className="gap-4 m-4 flex-1 mt-28">
+          <AppText className="text-3xl font-bold text-center mb-10">
+            {t("login-title")}
           </AppText>
-        </View>
-        <View className="mt-auto gap-4">
-          <Button
-            title="Switch theme"
-            onPress={() => {
-              dispatch(switchTheme());
-            }}
+          <View className="gap-4 mb-10">
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <AppInput
+                  value={value}
+                  onChangeText={onChange}
+                  placeholder="Email"
+                  autoCapitalize="none"
+                  label={t("email")}
+                  onFocus={() => {
+                    clearErrors("email");
+                  }}
+                  onBlur={onBlur}
+                  error={errors.email?.message}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <AppInput
+                  value={value}
+                  onChangeText={onChange}
+                  secureTextEntry
+                  autoCapitalize="none"
+                  label={t("password")}
+                  onFocus={() => {
+                    clearErrors("password");
+                  }}
+                  onBlur={onBlur}
+                  error={errors.password?.message}
+                />
+              )}
+            />
+          </View>
+          <AppButton
+            title={tCommon("sign_in")}
+            onPress={handleSubmit(handleLogin)}
+            size="lg"
           />
-          <Button
-            title="Login"
+          <AppText
+            className="text-right text-lg my-4"
             onPress={() => {
-              handleLogin();
+              router.push(appRoutes.forgotPassword);
             }}
-          />
-          <Button
-            title="signup"
-            color={"black"}
+          >
+            {t("forgot-password")}?
+          </AppText>
+          <AppText
+            className="text-center text-lg underline"
             onPress={() => {
-              router.push(appRoutes.register);
+              router.push(appRoutes.home);
             }}
-          />
-          <Button
-            title="Clear onboarding"
-            onPress={() => {
-              AppStorage.setIsOnboarded(false);
-            }}
-          />
-          <Button
-            title="use as guest"
-            onPress={() => {
-              router.push("/(tabs)");
-            }}
-          />
+          >
+            {t("use-as-guest")}
+          </AppText>
+          <View className="mt-auto">
+            <AppText className="text-center">{t("or-sign-in-with")}</AppText>
+            <View className="flex-row items-center justify-center gap-10 my-8">
+              <GoogleIcon size={24} color="black" />
+              <FacebookIcon size={30} color="black" />
+              <AppleIcon size={28} color="black" />
+            </View>
+            <AppButton
+              title={tCommon("sign_up")}
+              onPress={() => {
+                router.push(appRoutes.register);
+              }}
+              size="lg"
+            />
+          </View>
         </View>
       </AppScrollView>
     </AppScreen>
   );
 }
-
-const styles = StyleSheet.create({
-  input: {
-    borderWidth: 1,
-    borderColor: "gray",
-  },
-});
