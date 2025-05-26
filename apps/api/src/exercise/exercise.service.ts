@@ -123,7 +123,7 @@ export class ExerciseService {
     return paginateOutput(exercises, total, query);
   }
 
-  async findOne(id: number, language: Language) {
+  async findOne(id: string, language: Language) {
     const exercise = await this.prisma.exercise.findUnique({
       where: { id },
       include: {
@@ -162,7 +162,7 @@ export class ExerciseService {
   }
 
   async update(
-    id: number,
+    id: string,
     body: Partial<CreateExerciseDto>,
     language: Language
   ) {
@@ -181,13 +181,13 @@ export class ExerciseService {
       data: {
         ...body,
         primaryMuscle: {
-          connect: body.primaryMuscleIds?.map((id) => ({ id: +id })),
+          connect: body.primaryMuscleIds?.map((id) => ({ id: id })),
         },
       },
     });
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     return this.prisma.exercise.delete({ where: { id } });
   }
 

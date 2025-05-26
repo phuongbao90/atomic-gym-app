@@ -11,7 +11,7 @@ import {
 export class CreateExerciseDto {
   @IsNumber()
   @IsOptional()
-  id: number;
+  id: string;
 
   @IsString()
   @IsNotEmpty()

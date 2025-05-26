@@ -12,6 +12,7 @@ const initialState = {
   sizeUnit: "cm" as "cm" | "in",
   activeWorkoutPlanId: undefined as string | undefined,
   activeWorkout: undefined as Workout | undefined,
+  isConnected: true,
 };
 
 export const appStore = createSlice({
@@ -51,6 +52,9 @@ export const appStore = createSlice({
     setActiveWorkout: (state, action: PayloadAction<Workout | undefined>) => {
       state.activeWorkout = action.payload;
     },
+    setIsConnected: (state, action: PayloadAction<boolean>) => {
+      state.isConnected = action.payload;
+    },
   },
 });
 
@@ -65,5 +69,6 @@ export const {
   setSizeUnit,
   setActiveWorkoutPlanId,
   setActiveWorkout,
+  setIsConnected,
 } = appStore.actions;
 export const appReducer = appStore.reducer;

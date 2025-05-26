@@ -16,6 +16,7 @@ import {
   ChevronRightIcon,
 } from "../../../components/ui/expo-icon";
 import { dayjs } from "../../../lib/dayjs";
+import { useAppSelector } from "../../../stores/redux-store";
 
 type PeriodFilter = "month" | "year";
 type CategoryFilter = "weight" | "reps" | "time";
@@ -190,6 +191,7 @@ const Chart = ({
   item: WorkoutPlanWithStats | undefined;
 }) => {
   const { t } = useTranslation();
+  const theme = useAppSelector((state) => state.app.theme);
   const [periodValue, setPeriodValue] = useState(dayjs().format("YYYY-MM-DD"));
   const [periodFilter, setPeriodFilter] = useState<PeriodFilter>("month");
   const [categoryFilter, setCategoryFilter] =
@@ -252,8 +254,14 @@ const Chart = ({
         yAxisThickness={0}
         xAxisThickness={0}
         labelWidth={36}
-        xAxisLabelTextStyle={{ fontSize: 12 }}
-        yAxisTextStyle={{ fontSize: 12 }}
+        xAxisLabelTextStyle={{
+          fontSize: 12,
+          color: theme === "dark" ? "white" : "black",
+        }}
+        yAxisTextStyle={{
+          fontSize: 12,
+          color: theme === "dark" ? "white" : "black",
+        }}
         height={280}
       />
 
@@ -311,8 +319,10 @@ const Pill: React.FC<{ label: string; value?: number | string }> = ({
     className="bg-slate-200 rounded-lg p-4 gap-y-2"
     style={{ width: width / 2 - 20 }}
   >
-    <AppText className="text-lg">{label}</AppText>
-    <AppText className="text-3xl mt-auto">{value ?? ""}</AppText>
+    <AppText className="text-lg dark:text-black">{label}</AppText>
+    <AppText className="text-3xl mt-auto dark:text-black">
+      {value ?? ""}
+    </AppText>
   </View>
 );
 
@@ -329,6 +339,6 @@ const FilterButton: React.FC<{
       "rounded-lg py-2 px-4": true,
     })}
   >
-    <AppText className="text-dark">{capitalize(label)}</AppText>
+    <AppText className="text-dark dark:text-black">{capitalize(label)}</AppText>
   </AppTouchable>
 );

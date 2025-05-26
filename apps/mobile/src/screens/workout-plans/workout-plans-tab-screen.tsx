@@ -2,7 +2,13 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useGetWorkoutPlansByMe, useGetWorkoutPlansInGroups } from "app";
 import { useRouter } from "expo-router";
 import { useMemo } from "react";
-import { FlatList, Pressable, SectionList, View } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  RefreshControl,
+  SectionList,
+  View,
+} from "react-native";
 import { AppButton } from "../../components/ui/app-button";
 import { AppHeader } from "../../components/ui/app-header";
 import { AppScreen } from "../../components/ui/app-screen";
@@ -28,7 +34,7 @@ export function WorkoutPlansTabScreen() {
     enabled: !!session?.session,
   });
 
-  const { data } = useGetWorkoutPlansInGroups();
+  const { data, isRefetching, refetch } = useGetWorkoutPlansInGroups();
   const sections = useMemo(() => {
     if (!data) return [];
 
@@ -103,6 +109,9 @@ export function WorkoutPlansTabScreen() {
         renderItem={() => null}
         showsVerticalScrollIndicator={false}
         initialNumToRender={100}
+        refreshControl={
+          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+        }
         ListFooterComponent={
           <>
             <SectionTitle title={capitalize(t("exercises"))} />

@@ -52,8 +52,7 @@
       },
       "suspicious": {
         "noExplicitAny": "info",
-        "noConsoleLog": "warn",
-        "noConsole": "warn"
+        "noConsoleLog": "warn"
       }
     }
   },

@@ -1,10 +1,10 @@
-import { IsInt, IsDefined, IsString, IsDate, IsOptional } from "class-validator";
+import { IsString, IsDefined, IsDate, IsOptional, IsInt } from "class-validator";
 import { User, WorkoutPlan, Workout, ExerciseSetLog } from "./";
 
 export class WorkoutSessionLog {
     @IsDefined()
-    @IsInt()
-    id!: number;
+    @IsString()
+    id!: string;
 
     @IsDefined()
     user!: User;

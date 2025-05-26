@@ -87,7 +87,9 @@ export const PlanInfo = ({
           item.workouts?.map((workout, index) => (
             <Fragment key={workout.id}>
               <WorkoutItem
-                workout={workout as Workout & { _count: { exercises: number } }}
+                workout={
+                  workout as Workout & { _count: { workoutExercises: number } }
+                }
                 index={index}
                 isPremiumPlan={item.isPremium ?? false}
               />

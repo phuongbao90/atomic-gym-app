@@ -38,7 +38,10 @@ import restTimeEndSound from "../assets/sounds/rest-time-end.mp3";
 // This runs even if your app UI is backgrounded/killed
 import { enableScreens } from "react-native-screens";
 import { getCookie, useSession } from "../src/lib/auth-client";
-import { setRequestCookie, setRequestLanguage } from "app";
+import { clearRequestCookie, setRequestCookie, setRequestLanguage } from "app";
+import { useNetInfo } from "@react-native-community/netinfo";
+import { setIsConnected } from "../src/stores/slices/app-slice";
+
 enableScreens();
 
 notifee.registerForegroundService(async (task) => {
@@ -103,7 +106,11 @@ export default function RootLayout() {
                         }}
                       >
                         <App />
-                        <Toaster position="top-center" duration={2000} />
+                        <Toaster
+                          position="top-center"
+                          duration={2000}
+                          style={{ marginTop: 10 }}
+                        />
                       </View>
                     </PortalProvider>
                   </ActionSheetProvider>
@@ -118,6 +125,7 @@ export default function RootLayout() {
 }
 
 const App = () => {
+  const { isConnected } = useNetInfo();
   const [isOnboarded] = useMMKVBoolean(storageKeyNames.isOnboarded);
   const { data } = useSession();
   const language = useAppSelector((state) => state.app.language);
@@ -129,8 +137,18 @@ const App = () => {
   useEffect(() => {
     if (cookie) {
       setRequestCookie(cookie);
+    } else {
+      clearRequestCookie();
     }
   }, [cookie]);
+
+  useEffect(() => {
+    if (isConnected) {
+      setIsConnected(true);
+    } else {
+      setIsConnected(false);
+    }
+  }, [isConnected]);
 
   useEffect(() => {
     if (runOnce.current) return;

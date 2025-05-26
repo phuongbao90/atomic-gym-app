@@ -2,7 +2,6 @@ import { useRef } from "react";
 import {
   StyleProp,
   StyleSheet,
-  Text,
   TextInput,
   TextInputProps,
   TextStyle,
@@ -10,6 +9,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { AppText } from "./app-text";
+import { useAppSelector } from "../../stores/redux-store";
 
 export const AppInput = ({
   value,
@@ -29,17 +29,24 @@ export const AppInput = ({
   error?: string;
 }) => {
   const inputRef = useRef<TextInput>(null);
+  const theme = useAppSelector((state) => state.app.theme);
 
   return (
     <View style={[styles.defaultContainer, containerStyle]}>
-      <Text style={[styles.defaultLabel, labelStyle]}>{label}</Text>
+      <AppText style={[styles.defaultLabel, labelStyle]}>{label}</AppText>
       <TextInput
         ref={inputRef}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
         {...rest}
-        style={[styles.defaultInput, inputStyle]}
+        style={[
+          styles.defaultInput,
+          {
+            color: theme === "dark" ? "white" : "black",
+          },
+          inputStyle,
+        ]}
       />
       {error && <AppText className="text-red-500">{error}</AppText>}
     </View>

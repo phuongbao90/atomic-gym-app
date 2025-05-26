@@ -1,6 +1,12 @@
 import { faker, fakerVI, fakerEN_US } from "@faker-js/faker";
 import { randNumber } from "@ngneat/falso";
-import { PrismaClient } from "@prisma/client";
+import {
+  Exercise,
+  PrismaClient,
+  WorkoutPlan,
+  WorkoutPlanCategory,
+  WorkoutPlanLevel,
+} from "@prisma/client";
 import { muscleGroups } from "./data/muscle-groups";
 import { betterAuth } from "better-auth";
 import { createAuth } from "../src/lib/auth";
@@ -11,23 +17,11 @@ import { createAuth } from "../src/lib/auth";
  * https://github.com/prisma/prisma/discussions/5256
  */
 
-console.log(
+console.info(
   "---------------------------------Seeding database---------------------------------"
 );
 
 const prisma = new PrismaClient();
-
-// export const auth = betterAuth({
-//   baseURL: process.env.BASE_URL,
-//   database: prismaAdapter(prisma, {
-//     provider: "postgresql",
-//     debugLogs: true,
-//   }),
-//   secret: process.env.BETTER_AUTH_SECRET,
-//   appName: "Gym App",
-//   emailAndPassword: { enabled: true },
-// });
-
 const config = createAuth(undefined, undefined, {
   emailAndPassword: {
     enabled: true,
@@ -35,7 +29,7 @@ const config = createAuth(undefined, undefined, {
   },
   emailVerification: undefined,
 });
-console.log("config ", config);
+
 const auth = betterAuth(config);
 
 async function main() {
@@ -58,9 +52,9 @@ async function main() {
     await prisma.account.deleteMany();
     await prisma.verification.deleteMany();
 
-    const userCount = 3;
-    const workoutPlanCount = 50;
-    const exerciseCount = 100;
+    const userCount = 4;
+    const workoutPlanCount = 10;
+    const exerciseCount = 60;
 
     type User = {
       id: string;
@@ -68,34 +62,36 @@ async function main() {
     };
 
     const users: User[] = [];
+    const adminId = "68363e45-6bd2-496a-b825-a3cf85989a06";
 
     // Create users
     for (let index = 1; index <= userCount; index++) {
-      // await prisma.user.create({
-      //   data: {
-      //     name: faker.person.fullName(),
-      //     email: `bao${index}@gmail.com`,
-      //     password: await bcrypt.hash("123456#@Nn", 10),
-      //     emailVerified: true,
-      //   },
-      // });
+      if (index === 4) {
+        await prisma.user.create({
+          data: {
+            name: faker.person.fullName(),
+            email: "admin@gmail.com",
+            emailVerified: true,
+            id: adminId,
+            createdAt: "2025-05-24T06:25:09.148Z",
+            updatedAt: "2025-05-24T06:25:09.148Z",
+          },
+        });
+      }
 
-      const user = await auth.api.signUpEmail({
-        body: {
-          name: faker.person.fullName(),
-          email: `bao${index}@gmail.com`,
-          password: "123456#@Nn",
-        },
-      });
-      // console.log("user ", user);
-
-      // auth.api.verifyEmail({
-      //   body: {},
-      // });
-      users.push({
-        id: user.user.id,
-        userId: user.user.id,
-      });
+      if (index <= 3) {
+        const user = await auth.api.signUpEmail({
+          body: {
+            name: faker.person.fullName(),
+            email: `bao${index}@gmail.com`,
+            password: "123456#@Nn",
+          },
+        });
+        users.push({
+          id: user.user.id,
+          userId: user.user.id,
+        });
+      }
     }
 
     // Create muscle groups with translations
@@ -126,7 +122,7 @@ async function main() {
     }
 
     // Create exercises with translations
-    const exercises = [];
+    const exercises: Exercise[] = [];
     for (let index = 1; index <= exerciseCount; index++) {
       const viName = fakerVI.lorem.sentence();
       const enName = fakerEN_US.lorem.sentence();
@@ -152,8 +148,9 @@ async function main() {
             ],
           },
 
-          createdById:
-            users[randNumber({ min: 0, max: users.length - 1 })].userId,
+          createdById: adminId,
+          // createdById:
+          //   users[randNumber({ min: 0, max: users.length - 1 })].userId,
           images: [faker.image.url(), faker.image.url(), faker.image.url()],
           translations: {
             create: [
@@ -180,200 +177,75 @@ async function main() {
     }
 
     //* CREATE WORKOUT PLANS WITH TRANSLATIONS
-    for (let index = 1; index <= workoutPlanCount; index++) {
-      const viPlanName = fakerVI.lorem.sentence();
-      const enPlanName = fakerEN_US.lorem.sentence();
-      const countWorkout = randNumber({ min: 1, max: 12 });
+    //* DEFAULT WORKOUT PLANS BY ADMIN
+    const defaultWorkoutPlans = await createWorkoutPlan({
+      userId: adminId,
+      wpCount: workoutPlanCount,
+      wCount: randNumber({ min: 1, max: 3 }),
+      level: faker.helpers.arrayElement([
+        "BEGINNER",
+        "INTERMEDIATE",
+        "ADVANCED",
+      ]),
+      exercises: exercises,
+      isPublic: true,
+      isPremium: faker.datatype.boolean(),
+      isFeatured: faker.datatype.boolean(),
+      isSingle: faker.datatype.boolean(),
+    });
 
-      const workoutPlan = await prisma.workoutPlan.create({
-        data: {
-          cover_image: faker.image.url(),
-          level: faker.helpers.arrayElement([
-            "BEGINNER",
-            "INTERMEDIATE",
-            "ADVANCED",
-          ]),
-          createdById:
-            users[randNumber({ min: 0, max: users.length - 1 })].userId,
-          isPublic: faker.datatype.boolean(),
-          isPremium: faker.datatype.boolean(),
-          isFeatured: faker.datatype.boolean(),
-          isSingle: faker.datatype.boolean(),
-          category: faker.helpers.arrayElement([
-            "STRENGTH",
-            "ENDURANCE",
-            "BALANCE",
-            "FLEXIBILITY",
-            "LOOSE_WEIGHT",
-          ]),
-          translations: {
-            create: [
-              {
-                language: "vi",
-                name: viPlanName,
-                normalizedName: removeDiacritics(viPlanName),
-                slug: slugify(viPlanName),
-                description: fakerVI.lorem.paragraph(),
-              },
-              {
-                language: "en",
-                name: enPlanName,
-                normalizedName: removeDiacritics(enPlanName),
-                slug: slugify(enPlanName),
-                description: fakerEN_US.lorem.paragraph(),
-              },
-            ],
-          },
-
-          workouts: {
-            create: Array(countWorkout)
-              .fill(null)
-              .map((_, workoutIndex) => {
-                const viWorkoutName = fakerVI.lorem.sentence();
-                const enWorkoutName = fakerEN_US.lorem.sentence();
-
-                return {
-                  order: workoutIndex,
-                  workoutExercises: {
-                    create: Array(randNumber({ min: 1, max: 6 }))
-                      .fill(undefined)
-                      .map((_, exerciseIndex) => ({
-                        exerciseId: randNumber({ min: 1, max: exerciseCount }),
-                        order: exerciseIndex,
-                        sets: {
-                          create: Array(randNumber({ min: 1, max: 4 }))
-                            .fill(null)
-                            .map((_, setIndex) => ({
-                              restTime: randNumber({ min: 30, max: 300 }),
-                              isWarmup: faker.datatype.boolean(),
-                              isDropSet: faker.datatype.boolean(),
-                              isUntilFailure: faker.datatype.boolean(),
-                            })),
-                        },
-                      })),
-                  },
-                  translations: {
-                    create: [
-                      {
-                        language: "vi",
-                        name: viWorkoutName,
-                        normalizedName: removeDiacritics(viWorkoutName),
-                        slug: slugify(viWorkoutName),
-                      },
-                      {
-                        language: "en",
-                        name: enWorkoutName,
-                        normalizedName: removeDiacritics(enWorkoutName),
-                        slug: slugify(enWorkoutName),
-                      },
-                    ],
-                  },
-                };
-              }),
-          },
-        },
+    for (const user of users) {
+      const userWorkoutPlans = await createWorkoutPlan({
+        userId: user.userId,
+        wpCount: randNumber({ min: 1, max: 3 }),
+        wCount: randNumber({ min: 5, max: 9 }),
+        level: undefined,
+        exercises: exercises,
+        isPublic: false,
+        isPremium: false,
+        isFeatured: false,
+        isSingle: false,
+        category: undefined,
       });
 
-      const workouts = await prisma.workout.findMany({
+      const dePickedWorkoutPlan =
+        defaultWorkoutPlans[
+          randNumber({ min: 0, max: defaultWorkoutPlans.length - 1 })
+        ];
+      const deWorkouts = await prisma.workout.findMany({
         where: {
-          workoutPlanId: workoutPlan.id,
+          workoutPlanId: dePickedWorkoutPlan.id,
         },
       });
 
-      //* CREATE WORKOUT SESSION LOGS
-      Array(randNumber({ min: 3, max: 60 }))
-        .fill(null)
-        .forEach(async () => {
-          await prisma.workoutSessionLog.create({
-            data: {
-              workoutPlanId: workoutPlan.id,
-              userId:
-                users[randNumber({ min: 0, max: users.length - 1 })].userId,
-              workoutId:
-                workouts[randNumber({ min: 0, max: workouts.length - 1 })].id,
-              duration: randNumber({ min: 1 * 60 * 30, max: 1 * 60 * 120 }),
-              notes: faker.helpers.maybe(() => faker.lorem.paragraph(), {
-                probability: 0.2,
-              }),
-              createdAt: faker.date.recent({
-                days: randNumber({ min: 1, max: 360 }),
-              }),
+      createLogs({
+        userId: user.userId,
+        workoutPlanId: dePickedWorkoutPlan.id,
+        workoutId:
+          deWorkouts[randNumber({ min: 0, max: deWorkouts.length - 1 })].id,
+        exercise: exercises[randNumber({ min: 3, max: exercises.length - 1 })],
+        logCount: randNumber({ min: 3, max: 60 }),
+      });
 
-              setLogs: {
-                create: Array(randNumber({ min: 3, max: 8 }))
-                  .fill(null)
-                  .reduce((acc) => {
-                    const exercise =
-                      exercises[
-                        randNumber({ min: 3, max: exercises.length - 1 })
-                      ];
-
-                    if (exercise.category === "CARDIO") {
-                      Array(randNumber({ min: 1, max: 5 }))
-                        .fill(null)
-                        .forEach(() => {
-                          acc.push({
-                            exerciseId: exercise.id,
-                            distance: randNumber({ min: 1, max: 100 }),
-                            duration: randNumber({ min: 1, max: 100 }),
-                          });
-                        });
-                    }
-
-                    if (exercise.category === "WEIGHT") {
-                      Array(randNumber({ min: 1, max: 5 }))
-                        .fill(null)
-                        .forEach(() => {
-                          acc.push({
-                            exerciseId: exercise.id,
-                            weight: randNumber({ min: 1, max: 100 }),
-                            repetitions: randNumber({ min: 1, max: 10 }),
-                          });
-                        });
-                    }
-
-                    if (exercise.category === "FREE_WEIGHT") {
-                      Array(randNumber({ min: 1, max: 5 }))
-                        .fill(null)
-                        .forEach(() => {
-                          acc.push({
-                            exerciseId: exercise.id,
-                            repetitions: randNumber({ min: 6, max: 20 }),
-                          });
-                        });
-                    }
-
-                    if (exercise.category === "TIME") {
-                      Array(randNumber({ min: 1, max: 5 }))
-                        .fill(null)
-                        .forEach(() => {
-                          acc.push({
-                            exerciseId: exercise.id,
-                            duration: randNumber({ min: 30, max: 1 * 60 * 5 }),
-                          });
-                        });
-                    }
-
-                    if (exercise.category === "REPS") {
-                      Array(randNumber({ min: 1, max: 5 }))
-                        .fill(null)
-                        .forEach(() => {
-                          acc.push({
-                            exerciseId: exercise.id,
-                            repetitions: randNumber({ min: 6, max: 30 }),
-                          });
-                        });
-                    }
-
-                    return acc;
-                  }, []),
-              },
-            },
-          });
+      for (const workout of userWorkoutPlans) {
+        const workouts = await prisma.workout.findMany({
+          where: {
+            workoutPlanId: workout.id,
+          },
         });
+        createLogs({
+          userId: user.userId,
+          workoutPlanId: workout.id,
+          workoutId:
+            workouts[randNumber({ min: 0, max: workouts.length - 1 })].id,
+          exercise:
+            exercises[randNumber({ min: 3, max: exercises.length - 1 })],
+          logCount: randNumber({ min: 3, max: 60 }),
+        });
+      }
     }
 
-    console.log(
+    console.info(
       "---------------------------------Database seeded successfully---------------------------------"
     );
   } catch (error) {
@@ -392,6 +264,222 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
+
+async function createWorkoutPlan({
+  userId,
+  wpCount,
+  wCount,
+  exercises,
+  isPublic,
+  isPremium,
+  isFeatured,
+  isSingle,
+  category,
+  level,
+}: {
+  userId: string;
+  wpCount: number;
+  wCount: number;
+  exercises: Exercise[];
+  isPublic: boolean;
+  isPremium: boolean;
+  isFeatured: boolean;
+  isSingle: boolean;
+  category?: WorkoutPlanCategory;
+  level: WorkoutPlanLevel | undefined;
+}) {
+  const plans: WorkoutPlan[] = [];
+  for (let index = 1; index <= wpCount; index++) {
+    const viPlanName = fakerVI.lorem.sentence();
+    const enPlanName = fakerEN_US.lorem.sentence();
+
+    const workoutPlan = await prisma.workoutPlan.create({
+      data: {
+        cover_image: faker.image.url(),
+        level: level as WorkoutPlanLevel,
+        createdById: userId,
+        isPublic: isPublic,
+        isPremium: isPremium,
+        isFeatured: isFeatured,
+        isSingle: isSingle,
+        category:
+          faker.helpers.arrayElement([
+            "STRENGTH",
+            "ENDURANCE",
+            "BALANCE",
+            "FLEXIBILITY",
+            "LOOSE_WEIGHT",
+          ]) ?? category,
+        translations: {
+          create: [
+            {
+              language: "vi",
+              name: viPlanName,
+              normalizedName: removeDiacritics(viPlanName),
+              slug: slugify(viPlanName),
+              description: fakerVI.lorem.paragraph(),
+            },
+            {
+              language: "en",
+              name: enPlanName,
+              normalizedName: removeDiacritics(enPlanName),
+              slug: slugify(enPlanName),
+              description: fakerEN_US.lorem.paragraph(),
+            },
+          ],
+        },
+
+        workouts: {
+          create: Array(wCount)
+            .fill(null)
+            .map((_, workoutIndex) => {
+              const viWorkoutName = fakerVI.lorem.sentence();
+              const enWorkoutName = fakerEN_US.lorem.sentence();
+              return {
+                order: workoutIndex,
+                workoutExercises: {
+                  create: Array(randNumber({ min: 1, max: 6 }))
+                    .fill(undefined)
+                    .map((_, exerciseIndex) => ({
+                      exerciseId:
+                        exercises[
+                          randNumber({ min: 0, max: exercises.length - 1 })
+                        ].id,
+                      order: exerciseIndex,
+                      sets: {
+                        create: Array(randNumber({ min: 1, max: 4 }))
+                          .fill(null)
+                          .map((_) => ({
+                            restTime: randNumber({ min: 30, max: 300 }),
+                            isWarmup: faker.datatype.boolean(),
+                            isDropSet: faker.datatype.boolean(),
+                            isUntilFailure: faker.datatype.boolean(),
+                          })),
+                      },
+                    })),
+                },
+                translations: {
+                  create: [
+                    {
+                      language: "vi",
+                      name: viWorkoutName,
+                      normalizedName: removeDiacritics(viWorkoutName),
+                      slug: slugify(viWorkoutName),
+                    },
+                    {
+                      language: "en",
+                      name: enWorkoutName,
+                      normalizedName: removeDiacritics(enWorkoutName),
+                      slug: slugify(enWorkoutName),
+                    },
+                  ],
+                },
+              };
+            }),
+        },
+      },
+    });
+
+    plans.push(workoutPlan);
+  }
+  return plans;
+}
+
+async function createLogs({
+  workoutPlanId,
+  userId,
+  workoutId,
+  exercise,
+  logCount,
+}: {
+  workoutPlanId: string;
+  userId: string;
+  workoutId: string;
+  exercise: Exercise;
+  logCount: number;
+}) {
+  Array(logCount)
+    .fill(null)
+    .forEach(async () => {
+      await prisma.workoutSessionLog.create({
+        data: {
+          workoutPlanId: workoutPlanId,
+          userId: userId,
+          workoutId: workoutId,
+          duration: randNumber({ min: 1 * 60 * 30, max: 1 * 60 * 120 }),
+          notes: faker.helpers.maybe(() => faker.lorem.paragraph(), {
+            probability: 0.2,
+          }),
+          createdAt: faker.date.recent({
+            days: randNumber({ min: 1, max: 360 }),
+          }),
+          setLogs: {
+            create: Array(randNumber({ min: 3, max: 8 }))
+              .fill(null)
+              .reduce((acc) => {
+                if (exercise.category === "CARDIO") {
+                  Array(randNumber({ min: 1, max: 5 }))
+                    .fill(null)
+                    .forEach(() => {
+                      acc.push({
+                        exerciseId: exercise.id,
+                        distance: randNumber({ min: 1, max: 100 }),
+                        duration: randNumber({ min: 1, max: 100 }),
+                      });
+                    });
+                }
+
+                if (exercise.category === "WEIGHT") {
+                  Array(randNumber({ min: 1, max: 5 }))
+                    .fill(null)
+                    .forEach(() => {
+                      acc.push({
+                        exerciseId: exercise.id,
+                        weight: randNumber({ min: 1, max: 100 }),
+                        repetitions: randNumber({ min: 1, max: 10 }),
+                      });
+                    });
+                }
+
+                if (exercise.category === "FREE_WEIGHT") {
+                  Array(randNumber({ min: 1, max: 5 }))
+                    .fill(null)
+                    .forEach(() => {
+                      acc.push({
+                        exerciseId: exercise.id,
+                        repetitions: randNumber({ min: 6, max: 20 }),
+                      });
+                    });
+                }
+
+                if (exercise.category === "TIME") {
+                  Array(randNumber({ min: 1, max: 5 }))
+                    .fill(null)
+                    .forEach(() => {
+                      acc.push({
+                        exerciseId: exercise.id,
+                        duration: randNumber({ min: 30, max: 1 * 60 * 5 }),
+                      });
+                    });
+                }
+
+                if (exercise.category === "REPS") {
+                  Array(randNumber({ min: 1, max: 5 }))
+                    .fill(null)
+                    .forEach(() => {
+                      acc.push({
+                        exerciseId: exercise.id,
+                        repetitions: randNumber({ min: 6, max: 30 }),
+                      });
+                    });
+                }
+                return acc;
+              }, []),
+          },
+        },
+      });
+    });
+}
 
 function convert_vi_to_en(_str: string) {
   if (typeof _str !== "string") return "";

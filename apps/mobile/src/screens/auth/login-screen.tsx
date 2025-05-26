@@ -2,21 +2,21 @@ import { setRequestCookie, SigninSchema } from "app";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
-import { AppScreen } from "../../src/components/ui/app-screen";
-import { AppScrollView } from "../../src/components/ui/app-scrollview";
-import { AppText } from "../../src/components/ui/app-text";
-import { appRoutes } from "../../src/configs/routes";
-import { getCookie, signIn } from "../lib/auth-client";
+import { AppScreen } from "../../../src/components/ui/app-screen";
+import { AppScrollView } from "../../../src/components/ui/app-scrollview";
+import { AppText } from "../../../src/components/ui/app-text";
+import { appRoutes } from "../../../src/configs/routes";
+import { getCookie, signIn } from "../../lib/auth-client";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AppButton } from "../components/ui/app-button";
+import { AppButton } from "../../components/ui/app-button";
 import {
   AppleIcon,
   FacebookIcon,
   GoogleIcon,
-} from "../components/ui/expo-icon";
+} from "../../components/ui/expo-icon";
 import { toast } from "sonner-native";
-import { AppInput } from "../components/ui/app-input";
+import { AppInput } from "../../components/ui/app-input";
 import { z } from "zod";
 
 const defaultValues = {
@@ -47,6 +47,7 @@ export function LoginScreen() {
     });
 
     if (error) {
+      console.error(error);
       toast.error(error.message ?? "Something went wrong");
       return;
     }
@@ -124,9 +125,9 @@ export function LoginScreen() {
           <View className="mt-auto">
             <AppText className="text-center">{t("or-sign-in-with")}</AppText>
             <View className="flex-row items-center justify-center gap-10 my-8">
-              <GoogleIcon size={24} color="black" />
-              <FacebookIcon size={30} color="black" />
-              <AppleIcon size={28} color="black" />
+              <GoogleIcon size={24} />
+              <FacebookIcon size={30} />
+              <AppleIcon size={28} />
             </View>
             <AppButton
               title={tCommon("sign_up")}

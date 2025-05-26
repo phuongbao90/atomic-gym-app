@@ -41,7 +41,7 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage: reduxPersistStorage,
-  whitelist: ["auth", "app", "workoutSession"],
+  whitelist: ["app", "workoutSession"],
   blacklist: ["createWorkoutPlan"],
 };
 

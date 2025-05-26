@@ -81,7 +81,7 @@ export class UpdateWorkoutPlanDto extends WorkoutPlanEditorDto {
     name: string;
     workoutExercises: {
       id: string;
-      exerciseId: number;
+      exerciseId: string;
       order: number;
       sets: {
         id: string;

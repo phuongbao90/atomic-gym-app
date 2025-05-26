@@ -44,7 +44,7 @@ export interface MuscleGroupTranslation {
 }
 
 export interface Exercise {
-  id: number;
+  id: string;
   notes: string | null;
   category: ExerciseCategory;
   primaryMuscle?: MuscleGroup[];
@@ -59,7 +59,7 @@ export interface Exercise {
 }
 
 export interface ExerciseTranslation {
-  exerciseId: number;
+  exerciseId: string;
   language: Language;
   name: string;
   normalizedName: string | null;
@@ -132,14 +132,14 @@ export interface WorkoutExercise {
   workout?: Workout;
   workoutId: string;
   exercise?: Exercise;
-  exerciseId: number;
+  exerciseId: string;
   order: number;
   sets?: ExerciseSet[];
   notes: string | null;
 }
 
 export interface WorkoutSessionLog {
-  id: number;
+  id: string;
   user?: User;
   userId: string;
   workoutPlan?: WorkoutPlan;
@@ -153,11 +153,11 @@ export interface WorkoutSessionLog {
 }
 
 export interface ExerciseSetLog {
-  id: number;
+  id: string;
   workoutSession?: WorkoutSessionLog;
-  workoutSessionId: number;
+  workoutSessionId: string;
   exercise?: Exercise;
-  exerciseId: number;
+  exerciseId: string;
   weight: number | null;
   repetitions: number | null;
   distance: number | null;

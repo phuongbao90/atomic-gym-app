@@ -2,7 +2,11 @@ import { useGetWorkoutPlan } from "app";
 import { ImageBackground } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, TouchableOpacity, View } from "react-native";
-import { TabBarProps, Tabs } from "react-native-collapsible-tab-view";
+import {
+  CollapsibleRef,
+  TabBarProps,
+  Tabs,
+} from "react-native-collapsible-tab-view";
 import { AppButton } from "../../components/ui/app-button";
 import { AppHeader } from "../../components/ui/app-header";
 import { AppScreen } from "../../components/ui/app-screen";
@@ -15,6 +19,9 @@ import { EditIcon, VerticalDotsIcon } from "../../components/ui/expo-icon";
 import { appRoutes } from "../../configs/routes";
 import { useAppDispatch, useAppSelector } from "../../stores/redux-store";
 import { setActiveWorkoutPlanId } from "../../stores/slices/app-slice";
+import { useCallback, useRef } from "react";
+import { use$ } from "@legendapp/state/react";
+import { observable } from "@legendapp/state";
 
 const routes = [
   { key: "first", title: "overview" },
@@ -22,8 +29,9 @@ const routes = [
 ];
 
 const TabBar = (props: TabBarProps<string>) => {
-  const { index, tabNames } = props || {};
+  const { tabNames } = props || {};
   const { t } = useTranslation();
+  const activeTabIndex = use$(activeTabIndex$);
 
   return (
     <View className="flex-row justify-around dark:bg-slate-600">
@@ -36,7 +44,7 @@ const TabBar = (props: TabBarProps<string>) => {
           <View
             className={cn({
               "items-center h-12 justify-center": true,
-              "border-b-2 border-primary": index.get() === i,
+              "border-b-2 border-primary": activeTabIndex === i,
             })}
           >
             <AppText className="text-lg font-bold">
@@ -49,6 +57,7 @@ const TabBar = (props: TabBarProps<string>) => {
   );
 };
 
+const activeTabIndex$ = observable(0);
 const IMAGE_HEIGHT = 300;
 
 export const WorkoutPlanDetailScreen = () => {
@@ -60,31 +69,31 @@ export const WorkoutPlanDetailScreen = () => {
   const activeWorkoutPlanId = useAppSelector(
     (state) => state.app.activeWorkoutPlanId
   );
-  const renderHeader = () => {
+  const ref = useRef<CollapsibleRef>(null);
+
+  const renderHeader = useCallback(() => {
     return (
       <View>
-        <ImageBackground
-          source={{ uri: workoutPlan?.cover_image }}
-          contentFit="cover"
-          className="w-full h-full"
-          style={[
-            {
-              width: "100%",
-              height: IMAGE_HEIGHT,
-            },
-          ]}
-        >
-          <AppText className="text-2xl font-bold bottom-6 left-6 absolute">
-            {workoutPlan?.translations?.[0]?.name}
-          </AppText>
-        </ImageBackground>
+        {workoutPlan?.cover_image && (
+          <ImageBackground
+            source={{ uri: workoutPlan?.cover_image }}
+            contentFit="cover"
+            className="w-full h-full"
+            style={[
+              {
+                width: "100%",
+                height: IMAGE_HEIGHT,
+              },
+            ]}
+          >
+            <AppText className="text-2xl font-bold bottom-6 left-6 absolute">
+              {workoutPlan?.translations?.[0]?.name}
+            </AppText>
+          </ImageBackground>
+        )}
       </View>
     );
-  };
-
-  const renderTabBar = (props: TabBarProps<string>) => {
-    return <TabBar {...props} />;
-  };
+  }, [workoutPlan]);
 
   return (
     <AppScreen name="workout-plan-detail-screen">
@@ -95,7 +104,7 @@ export const WorkoutPlanDetailScreen = () => {
             <TouchableOpacity
               hitSlop={10}
               onPress={() => {
-                router.push(
+                router.navigate(
                   appRoutes.workoutPlans.create({ workoutPlanId: id })
                 );
               }}
@@ -110,9 +119,16 @@ export const WorkoutPlanDetailScreen = () => {
       />
 
       <Tabs.Container
+        ref={ref}
         renderHeader={renderHeader}
         headerHeight={IMAGE_HEIGHT}
-        renderTabBar={renderTabBar}
+        renderTabBar={(props) => {
+          return <TabBar {...props} />;
+        }}
+        onIndexChange={(index) => {
+          activeTabIndex$.set(index);
+        }}
+        lazy
       >
         <Tabs.Tab name="first">
           <Tabs.ScrollView
@@ -131,7 +147,6 @@ export const WorkoutPlanDetailScreen = () => {
             showsVerticalScrollIndicator={false}
             style={{ flex: 1 }}
             contentContainerStyle={{
-              // paddingHorizontal: 12,
               paddingBottom: 80,
             }}
           >
@@ -149,6 +164,7 @@ export const WorkoutPlanDetailScreen = () => {
               color="danger"
               className="bg-transparent border border-danger"
               textClassName="text-danger"
+              size="lg"
               onPress={() => {
                 dispatch(setActiveWorkoutPlanId(undefined));
                 router.push(appRoutes.home);
@@ -159,6 +175,7 @@ export const WorkoutPlanDetailScreen = () => {
               title={t("start_plan")}
               fullWidth
               color="primary"
+              size="lg"
               onPress={() => {
                 dispatch(setActiveWorkoutPlanId(id));
                 router.push(appRoutes.home);

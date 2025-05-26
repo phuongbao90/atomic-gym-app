@@ -77,7 +77,7 @@ model MuscleGroupTranslation {
 }
 
 model Exercise {
-  id               Int                   @id @default(autoincrement())
+  id               String                @id @default(uuid())
   notes            String?
   category         ExerciseCategory
   primaryMuscle    MuscleGroup[]
@@ -92,7 +92,7 @@ model Exercise {
 }
 
 model ExerciseTranslation {
-  exerciseId     Int // foreign key to Exercise
+  exerciseId     String // foreign key to Exercise
   language       Language // language code (e.g., 'vi', 'en')
   name           String // localized name
   normalizedName String? // localized name
@@ -197,7 +197,7 @@ model WorkoutExercise {
   workout    Workout       @relation(fields: [workoutId], references: [id], onDelete: Cascade)
   workoutId  String
   exercise   Exercise      @relation(fields: [exerciseId], references: [id])
-  exerciseId Int
+  exerciseId String
   order      Int // Position in workout
   sets       ExerciseSet[]
   notes      String?
@@ -206,7 +206,7 @@ model WorkoutExercise {
 }
 
 model WorkoutSessionLog {
-  id            Int              @id @default(autoincrement())
+  id            String           @id @default(uuid())
   user          User             @relation(fields: [userId], references: [id])
   userId        String
   workoutPlan   WorkoutPlan      @relation(fields: [workoutPlanId], references: [id])
@@ -220,11 +220,11 @@ model WorkoutSessionLog {
 }
 
 model ExerciseSetLog {
-  id               Int               @id @default(autoincrement())
+  id               String            @id @default(uuid())
   workoutSession   WorkoutSessionLog @relation(fields: [workoutSessionId], references: [id], onDelete: Cascade)
-  workoutSessionId Int
+  workoutSessionId String
   exercise         Exercise          @relation(fields: [exerciseId], references: [id])
-  exerciseId       Int
+  exerciseId       String
   weight           Float?
   repetitions      Int?
   distance         Float?

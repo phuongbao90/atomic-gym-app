@@ -23,9 +23,11 @@ export const AppScreen = ({
         "flex-1 relative",
         theme === "dark" ? "bg-pageDark" : "bg-page"
       )}
-      style={{
-        paddingBottom: insets.bottom,
-      }}
+      style={
+        {
+          // paddingBottom: insets.bottom,
+        }
+      }
     >
       {__DEV__ && <DevFloatingButtons />}
       {isLoading && (
@@ -39,7 +41,7 @@ export const AppScreen = ({
         <AppText
           className="absolute right-2 pr-1 z-50"
           style={{
-            bottom: insets.bottom,
+            bottom: 10,
           }}
         >
           {name}
@@ -61,7 +63,7 @@ AppScreen.Footer = ({
     <View
       className={cn("absolute left-0 right-0", className)}
       style={{
-        bottom: insets.bottom,
+        bottom: 0,
       }}
     >
       {children}

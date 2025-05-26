@@ -1,12 +1,12 @@
-import { IsInt, IsDefined, IsString, IsOptional, IsIn, IsDate } from "class-validator";
+import { IsString, IsDefined, IsOptional, IsIn, IsDate } from "class-validator";
 import { MuscleGroup, User, ExerciseTranslation, WorkoutExercise, ExerciseSetLog } from "./";
 import { getEnumValues } from "../helpers";
 import { ExerciseCategory } from "../enums";
 
 export class Exercise {
     @IsDefined()
-    @IsInt()
-    id!: number;
+    @IsString()
+    id!: string;
 
     @IsOptional()
     @IsString()

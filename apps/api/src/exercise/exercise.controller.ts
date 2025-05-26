@@ -43,7 +43,7 @@ export class ExerciseController {
   @PublicRoute()
   @Get(":id")
   findOne(@Param("id") id: string, @GetLanguage() language: Language) {
-    return this.exerciseService.findOne(+id, language);
+    return this.exerciseService.findOne(id, language);
   }
 
   @Patch(":id")
@@ -53,7 +53,7 @@ export class ExerciseController {
     @GetLanguage() language: Language
   ) {
     return this.exerciseService.update(
-      +id,
+      id,
       {
         ...body,
       },
@@ -63,7 +63,7 @@ export class ExerciseController {
 
   @Delete(":id")
   delete(@Param("id") id: string) {
-    return this.exerciseService.delete(+id);
+    return this.exerciseService.delete(id);
   }
 
   @PublicRoute()

@@ -19,5 +19,5 @@ export class CreateWorkoutDto {
 
   @IsArray()
   @IsOptional()
-  exerciseIds: number[];
+  exerciseIds: string[];
 }

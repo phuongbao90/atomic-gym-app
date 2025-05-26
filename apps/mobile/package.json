@@ -27,7 +27,9 @@
     },
     "autolinking": {
       "android": {
-        "buildFromSource": [".*"]
+        "buildFromSource": [
+          ".*"
+        ]
       }
     }
   },
@@ -42,12 +44,14 @@
     "@gorhom/portal": "^1.0.14",
     "@hookform/resolvers": "^5.0.1",
     "@legendapp/list": "^1.0.14",
+    "@legendapp/state": "^3.0.0-beta.30",
     "@native-html/table-plugin": "^5.3.1",
     "@notifee/react-native": "^9.1.8",
     "@quidone/react-native-wheel-picker": "^1.4.1",
     "@radix-ui/react-compose-refs": "^1.1.2",
     "@react-native-community/datetimepicker": "8.3.0",
     "@react-native-community/hooks": "^100.1.0",
+    "@react-native-community/netinfo": "11.4.1",
     "@react-native-firebase/analytics": "^22.2.0",
     "@react-native-firebase/app": "^22.2.0",
     "@react-native-firebase/auth": "^22.2.0",

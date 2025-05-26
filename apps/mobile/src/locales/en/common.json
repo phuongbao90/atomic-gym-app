@@ -16,6 +16,7 @@
   "workout_plans": "Workout Plans",
   "overview": "Overview",
   "statistics": "Statistics",
+  "body": "Body",
   "exercises_count": "{{count}} exercises",
   "exercises": "exercises",
   "start_plan": "Start plan",
@@ -43,6 +44,12 @@
   "all_levels": "All Levels",
   "search": "Search",
   "clear": "Clear",
+
+  "tab-home": "Home",
+  "tab-plans": "Plans",
+  "tab-coach": "Coach",
+  "tab-history": "History",
+  "tab-statistics": "Statistics",
 
   "take_photo": "Take photo",
   "select_from_library": "Select from library",
@@ -139,5 +146,7 @@
   "month": "Month",
   "year": "Year",
   "duration": "Duration",
-  "hour": "hour(s)"
+  "hour": "hour(s)",
+
+  "enable_internet": "Please enable internet to continue"
 }

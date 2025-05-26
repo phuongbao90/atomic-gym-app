@@ -16,6 +16,7 @@
   "workout_plans": "Giáo án luyện tập",
   "overview": "Tổng quan",
   "statistics": "Thống kê",
+  "body": "Cơ thể",
   "exercises_count": "{{count}} bài tập",
   "exercises": "bài tập",
   "start_plan": "Tiến hành buổi tập",
@@ -43,6 +44,12 @@
   "all_levels": "Tất cả cấp độ",
   "search": "Tìm kiếm",
   "clear": "Xóa",
+
+  "tab-home": "Trang chủ",
+  "tab-plans": "Giáo án",
+  "tab-coach": "Huấn luyện viên",
+  "tab-history": "Lịch sử",
+  "tab-statistics": "Thống kê",
 
   "take_photo": "Chụp ảnh",
   "select_from_library": "Chọn từ thư viện",
@@ -139,5 +146,7 @@
   "month": "Tháng",
   "year": "Năm",
   "duration": "Thời gian",
-  "hour": "giờ"
+  "hour": "giờ",
+
+  "enable_internet": "Vui lòng bật internet để tiếp tục"
 }

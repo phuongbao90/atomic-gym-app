@@ -17,8 +17,8 @@ export class WorkoutExercise {
     exercise!: Exercise;
 
     @IsDefined()
-    @IsInt()
-    exerciseId!: number;
+    @IsString()
+    exerciseId!: string;
 
     @IsDefined()
     @IsInt()

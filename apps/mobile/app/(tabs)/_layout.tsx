@@ -5,6 +5,7 @@ import { colors } from "../../src/styles/themes";
 import { Tabs } from "expo-router";
 import { useAppSelector } from "../../src/stores/redux-store";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 
 const Icon = ({
   name,
@@ -31,7 +32,7 @@ const TAB_HEIGHT = 56;
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
   const colorMode = useAppSelector((state) => state.app.theme);
-
+  const { t } = useTranslation("common");
   return (
     <Tabs
       screenOptions={{
@@ -53,7 +54,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: t("tab-home"),
           tabBarIcon: ({ focused }: { focused: boolean }) => (
             <Icon name="home" focused={focused} />
           ),
@@ -62,7 +63,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="plans"
         options={{
-          title: "Plans",
+          title: t("tab-plans"),
           tabBarIcon: ({ focused }: { focused: boolean }) => (
             <Icon name="calendar" focused={focused} />
           ),
@@ -71,7 +72,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="coach"
         options={{
-          title: "Coach",
+          title: t("tab-coach"),
           tabBarIcon: ({ focused }: { focused: boolean }) => (
             <MaterialCommunityIcons
               name="whistle-outline"
@@ -88,7 +89,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="history"
         options={{
-          title: "History",
+          title: t("tab-history"),
           tabBarIcon: ({ focused }: { focused: boolean }) => (
             <Icon name="clock" focused={focused} />
           ),
@@ -97,7 +98,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="statistics"
         options={{
-          title: "Statistics",
+          title: t("tab-statistics"),
           tabBarIcon: ({ focused }: { focused: boolean }) => (
             <Icon name="bar-chart" focused={focused} />
           ),

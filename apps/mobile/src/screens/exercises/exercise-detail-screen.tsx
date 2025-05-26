@@ -10,7 +10,6 @@ import { useGetExercise } from "app";
 import { AppText } from "../../components/ui/app-text";
 import { cn } from "../../utils/cn";
 import { useTranslation } from "react-i18next";
-import { useAppSelector } from "../../stores/redux-store";
 
 const routes = [
   { key: "summary", title: "summary" } as const,
@@ -33,8 +32,6 @@ type TabBarProps = {
 
 export const ExerciseDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const theme = useAppSelector((state) => state.app.theme);
-  const language = useAppSelector((state) => state.app.language);
   const { t } = useTranslation();
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
@@ -75,12 +72,7 @@ export const ExerciseDetailScreen = () => {
 
   return (
     <AppScreen name="exercise-detail-screen">
-      <AppHeader
-        withBackButton
-        withBottomBorder={false}
-        theme={theme}
-        language={language}
-      />
+      <AppHeader withBackButton withBottomBorder={false} />
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
