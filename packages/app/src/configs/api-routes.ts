@@ -42,4 +42,12 @@ export const API_ROUTES = {
     query: () => `${API_ROUTES.muscleGroups.base}`,
     detail: (id: number) => `${API_ROUTES.muscleGroups.base}/${id}`,
   },
+
+  logs: {
+    base: "/logs",
+    workouts: (periodType: string, periodValue: string) =>
+      `${API_ROUTES.logs.base}/workouts?periodType=${periodType}&periodValue=${periodValue}`,
+    body: (periodType: string, periodValue: string) =>
+      `${API_ROUTES.logs.base}/body?periodType=${periodType}&periodValue=${periodValue}`,
+  },
 };

@@ -14,12 +14,25 @@ import { join } from "node:path";
         transport: {
           host: cs.get<string>("mailer.host"),
           port: cs.get<number>("mailer.port"),
-          secure: false, // set to true on 465
           auth: {
             user: cs.get<string>("mailer.user"),
             pass: cs.get<string>("mailer.pass"),
           },
+          ignoreTLS: cs.get<boolean>("mailer.ignoreTLS"),
+          secure: cs.get<boolean>("mailer.secure"),
+          requireTLS: cs.get<boolean>("mailer.requireTLS"),
         },
+
+        // mail-trap
+        // transport: {
+        //   host: cs.get<string>("mailer.host"),
+        //   port: cs.get<number>("mailer.port"),
+        //   secure: false, // set to true on 465
+        //   auth: {
+        //     user: cs.get<string>("mailer.user"),
+        //     pass: cs.get<string>("mailer.pass"),
+        //   },
+        // },
         defaults: {
           from: cs.get<string>("mailer.from"),
         },

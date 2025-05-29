@@ -148,5 +148,24 @@
   "duration": "Thời gian",
   "hour": "giờ",
 
-  "enable_internet": "Vui lòng bật internet để tiếp tục"
+  "enable_internet": "Vui lòng bật internet để tiếp tục",
+  "general": "tổng quan",
+  "sets_per_muscle": "Số hiệp trên nhóm cơ",
+
+  "chest": "Ngực",
+  "back": "Lưng",
+  "shoulders": "Vai",
+  "traps": "Trụ",
+  "lats": "Lát",
+  "middle_back": "Lưng giữa",
+  "lower_back": "Lưng dưới",
+  "biceps": "Bắp tay trước",
+  "triceps": "Bắp tay sau",
+  "forearms": "Bắp tay",
+  "glutes": "Mông",
+  "hamstrings": "Bắp chân",
+  "calves": "Bắp chân",
+  "quads": "Bắp chân trước",
+  "other": "Khác",
+  "abs": "Bụng"
 }

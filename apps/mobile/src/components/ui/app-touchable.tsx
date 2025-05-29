@@ -1,13 +1,27 @@
-import {
-  Platform,
-  TouchableHighlight,
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from "react-native";
+import { TouchableOpacity, TouchableOpacityProps } from "react-native";
+import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
 
-export const AppTouchable = (props: TouchableOpacityProps) => {
-  const TouchableComponent =
-    Platform.OS === "android" ? TouchableOpacity : TouchableOpacity;
+export const AppTouchable = ({
+  debounce = true,
+  debounceDelay,
+  ...props
+}: TouchableOpacityProps & {
+  debounce?: boolean;
+  debounceDelay?: number;
+}) => {
+  const debounceFn = usePreventRepeatPress(debounceDelay);
 
-  return <TouchableComponent hitSlop={10} {...props} />;
+  return (
+    <TouchableOpacity
+      hitSlop={10}
+      {...props}
+      onPress={(e) => {
+        if (debounce) {
+          debounceFn(() => props.onPress?.(e));
+        } else {
+          props.onPress?.(e);
+        }
+      }}
+    />
+  );
 };

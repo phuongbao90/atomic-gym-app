@@ -148,5 +148,24 @@
   "duration": "Duration",
   "hour": "hour(s)",
 
-  "enable_internet": "Please enable internet to continue"
+  "enable_internet": "Please enable internet to continue",
+  "general": "general",
+  "sets_per_muscle": "Sets per muscle",
+
+  "chest": "Chest",
+  "back": "Back",
+  "shoulders": "Shoulders",
+  "traps": "Traps",
+  "lats": "Lats",
+  "middle_back": "Middle Back",
+  "lower_back": "Lower Back",
+  "biceps": "Biceps",
+  "triceps": "Triceps",
+  "forearms": "Forearms",
+  "glutes": "Glutes",
+  "hamstrings": "Hamstrings",
+  "calves": "Calves",
+  "quads": "Quads",
+  "other": "Other",
+  "abs": "Abs"
 }

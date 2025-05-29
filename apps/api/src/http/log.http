@@ -1,2 +1,5 @@
-GET {{BASE_URL}}/logs
-Authorization: Bearer {{$global.accessToken}}
+GET {{BASE_URL}}/logs/workouts
+?periodType=week
+&periodValue=2025-05-01,2025-05-07
+
+GET {{BASE_URL}}/logs/body

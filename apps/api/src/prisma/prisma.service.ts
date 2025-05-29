@@ -18,7 +18,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 
   constructor() {
     super({
-      log: ["query", "info", "warn", "error"], // Enables different levels of logging
+      // log: ["query", "info", "warn", "error"], // Enables different levels of logging
     });
 
     this.$use(async (params, next) => {

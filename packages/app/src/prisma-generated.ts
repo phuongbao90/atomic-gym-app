@@ -2,7 +2,7 @@
 
 export type Language = "vi" | "en";
 
-export type ExerciseCategory = "WEIGHT" | "FREE_WEIGHT" | "CARDIO" | "TIME" | "REPS";
+export type ExerciseCategory = "WEIGHT" | "FREE_WEIGHT" | "CARDIO";
 
 export type WorkoutPlanLevel = "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
 
@@ -24,6 +24,7 @@ export interface User {
   Exercise?: Exercise[];
   WorkoutPlan?: WorkoutPlan[];
   WorkoutSessionLog?: WorkoutSessionLog[];
+  ExerciseSetLog?: ExerciseSetLog[];
 }
 
 export interface MuscleGroup {
@@ -32,6 +33,7 @@ export interface MuscleGroup {
   image: string;
   exercises?: Exercise[];
   translations?: MuscleGroupTranslation[];
+  ExerciseSetLog?: ExerciseSetLog[];
 }
 
 export interface MuscleGroupTranslation {
@@ -164,6 +166,10 @@ export interface ExerciseSetLog {
   duration: number | null;
   isIncomplete: boolean | null;
   createdAt: string | null;
+  user?: User;
+  userId: string;
+  muscleGroupId: number;
+  muscleGroup?: MuscleGroup;
 }
 
 export interface Session {

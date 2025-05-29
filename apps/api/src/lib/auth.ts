@@ -30,8 +30,8 @@ export function createAuth(
     ],
     appName: "Gym App",
     emailAndPassword: {
-      // requireEmailVerification: true,
       enabled: true,
+      // requireEmailVerification: true,
     },
     // emailVerification: {
     //   sendVerificationEmail: async ({ user, url }) => {

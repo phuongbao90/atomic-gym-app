@@ -1,5 +1,5 @@
 import { IsString, IsDefined, IsOptional, IsInt, IsBoolean, IsDate } from "class-validator";
-import { WorkoutSessionLog, Exercise } from "./";
+import { WorkoutSessionLog, Exercise, User, MuscleGroup } from "./";
 
 export class ExerciseSetLog {
     @IsDefined()
@@ -41,4 +41,18 @@ export class ExerciseSetLog {
     @IsOptional()
     @IsDate()
     createdAt?: Date;
+
+    @IsDefined()
+    user!: User;
+
+    @IsDefined()
+    @IsString()
+    userId!: string;
+
+    @IsDefined()
+    @IsInt()
+    muscleGroupId!: number;
+
+    @IsDefined()
+    muscleGroup!: MuscleGroup;
 }

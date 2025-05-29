@@ -4,7 +4,7 @@ GET {{BASE_URL}}/api/auth/ok
 POST {{BASE_URL}}/api/auth/sign-in/email
 
 {
-  "email": "bao2@gmail.com",
+  "email": "bao1@gmail.com",
   "password": "123456#@Nn",
   "rememberMe": false,
   "callbackURL": ""
@@ -17,7 +17,7 @@ POST {{BASE_URL}}/api/auth/sign-in/email
 POST {{BASE_URL}}/api/auth/sign-up/email
 {
   "name": "ttt",
-  "email": "phuongbao10@gmail.com",
+  "email": "phuongbao14@gmail.com",
   "password": "123456789",
   "callbackURL": ""
 }

@@ -1,0 +1,396 @@
+import { TouchableOpacity, View } from "react-native";
+import { AppText } from "../../../components/ui/app-text";
+import { useCallback, useMemo, useState } from "react";
+import { useWorkoutLogs } from "app";
+import dayjs from "dayjs";
+import { Badge } from "../../../components/ui/badge";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "../../../components/ui/expo-icon";
+import { useTranslation } from "react-i18next";
+import { convertToHourMinuteSecond } from "../../../utils/convert-to-hour-minute-second";
+import { Box } from "../../../components/box";
+import { SCREEN_WIDTH } from "@gorhom/bottom-sheet";
+import { convertSecondsToHours } from "../../../utils/convert-to-hour-minute-second";
+import { PieChart } from "react-native-gifted-charts";
+import {
+  absMuscleGroupIds,
+  backMuscleGroupIds,
+  bicepsMuscleGroupIds,
+  calvesMuscleGroupIds,
+  chestMuscleGroupIds,
+  forearmsMuscleGroupIds,
+  glutesMuscleGroupIds,
+  legMuscleGroupIds,
+  shouldersMuscleGroupIds,
+  tricepsMuscleGroupIds,
+} from "../../../constants/muscle-group-data";
+import { AppScrollView } from "../../../components/ui/app-scrollview";
+import { capitalize } from "lodash";
+import { AppTouchable } from "../../../components/ui/app-touchable";
+import { Env } from "../../../configs/env";
+
+export const StatisticTabWorkouts = () => {
+  const [periodType, setPeriodType] = useState<
+    "week" | "month" | "year" | "all"
+  >("month");
+  const [periodValue, setPeriodValue] = useState<string>(
+    dayjs().format("YYYY-MM-DD")
+  );
+  const { t } = useTranslation();
+  const { data, isLoading } = useWorkoutLogs(periodType, periodValue);
+
+  const pieChartData = useMemo(() => {
+    if (!data?.data?.muscleGroupSummary) return [];
+    const group = data?.data?.muscleGroupSummary?.reduce(
+      (acc, item) => {
+        if (backMuscleGroupIds.includes(item.muscleGroupId)) {
+          acc.back.value += item.count;
+        } else if (legMuscleGroupIds.includes(item.muscleGroupId)) {
+          acc.legs.value += item.count;
+        } else if (chestMuscleGroupIds.includes(item.muscleGroupId)) {
+          acc.chest.value += item.count;
+        } else if (shouldersMuscleGroupIds.includes(item.muscleGroupId)) {
+          acc.shoulders.value += item.count;
+        } else if (absMuscleGroupIds.includes(item.muscleGroupId)) {
+          acc.abs.value += item.count;
+        } else if (bicepsMuscleGroupIds.includes(item.muscleGroupId)) {
+          acc.biceps.value += item.count;
+        } else if (tricepsMuscleGroupIds.includes(item.muscleGroupId)) {
+          acc.triceps.value += item.count;
+        } else if (forearmsMuscleGroupIds.includes(item.muscleGroupId)) {
+          acc.forearms.value += item.count;
+        } else if (glutesMuscleGroupIds.includes(item.muscleGroupId)) {
+          acc.glutes.value += item.count;
+        } else if (calvesMuscleGroupIds.includes(item.muscleGroupId)) {
+          acc.calves.value += item.count;
+        }
+        return acc;
+      },
+      {
+        chest: {
+          value: 0,
+          color: "#4300FF",
+        },
+        back: {
+          value: 0,
+          color: "#FF0B55",
+        },
+        shoulders: {
+          value: 0,
+          color: "#16610E",
+        },
+        legs: {
+          value: 0,
+          color: "#D50B8B",
+        },
+        biceps: {
+          value: 0,
+          color: "#a59391",
+        },
+        triceps: {
+          value: 0,
+          color: "#D5451B",
+        },
+        abs: {
+          value: 0,
+          color: "#939bfb",
+        },
+        calves: {
+          value: 0,
+          color: "#4B352A",
+        },
+        glutes: {
+          value: 0,
+          color: "#670D2F",
+        },
+        forearms: {
+          value: 0,
+          color: "#FFB22C",
+        },
+      }
+    );
+
+    return Object.entries(group ?? {}).map(([key, value]) => ({
+      text: `${((value.value / (data?.data?.totalSets ?? 0)) * 100).toFixed(
+        0
+      )}%`,
+      value: value.value,
+      color: value.color,
+      name: key,
+    }));
+  }, [data]);
+
+  function handleChangePeriod(type: string, direction: "left" | "right") {
+    if (type === "week") {
+      const [start, end] = periodValue.split(",");
+      const startOfCurrentWeek = dayjs(start).startOf("week");
+      const endOfCurrentWeek = dayjs(end).endOf("week");
+
+      const startOfPreviousWeek = startOfCurrentWeek.subtract(1, "week");
+      const endOfPreviousWeek = endOfCurrentWeek.subtract(1, "week");
+
+      const startOfNextWeek = startOfCurrentWeek.add(1, "week");
+      const endOfNextWeek = endOfCurrentWeek.add(1, "week");
+
+      if (direction === "left") {
+        setPeriodValue(
+          `${startOfPreviousWeek.format("YYYY-MM-DD")},${endOfPreviousWeek.format("YYYY-MM-DD")}`
+        );
+      } else {
+        setPeriodValue(
+          `${startOfNextWeek.format("YYYY-MM-DD")},${endOfNextWeek.format("YYYY-MM-DD")}`
+        );
+      }
+    } else if (type === "month") {
+      if (direction === "left") {
+        setPeriodValue((prev) =>
+          dayjs(prev).subtract(1, "month").format("YYYY-MM-DD")
+        );
+      } else {
+        setPeriodValue((prev) =>
+          dayjs(prev).add(1, "month").format("YYYY-MM-DD")
+        );
+      }
+    } else if (type === "year") {
+      if (direction === "left") {
+        setPeriodValue((prev) =>
+          dayjs(prev).subtract(1, "year").format("YYYY-MM-DD")
+        );
+      } else {
+        setPeriodValue((prev) =>
+          dayjs(prev).add(1, "year").format("YYYY-MM-DD")
+        );
+      }
+    } else if (type === "all") {
+    }
+  }
+
+  function renderPeriodValue() {
+    if (periodType === "week") {
+      const [start, end] = periodValue.split(",");
+      return `${dayjs(start).format("DD MMM")} - ${dayjs(end).format("DD MMM")}`;
+    }
+    if (periodType === "month") {
+      return dayjs(periodValue).format("MM/YYYY");
+    }
+    if (periodType === "year") {
+      return dayjs(periodValue).format("YYYY");
+    }
+    return t("all");
+  }
+
+  const disableLeft = useCallback(() => {
+    let disable = false;
+    if (periodType === "week") {
+      const [start] = periodValue.split(",");
+      const startOfCurrentWeek = dayjs(start).startOf("week");
+      const startOfLast = dayjs(Env.APP_START_DATE).startOf("week");
+
+      if (startOfCurrentWeek.isBefore(startOfLast)) {
+        disable = true;
+      }
+    }
+    if (periodType === "month") {
+      const current = dayjs(Env.APP_START_DATE).format("YYYY-MM");
+      const period = dayjs(periodValue).format("YYYY-MM");
+
+      if (period === current) {
+        disable = true;
+      }
+    }
+
+    if (periodType === "year") {
+      const current = dayjs(Env.APP_START_DATE).format("YYYY");
+      const period = dayjs(periodValue).format("YYYY");
+
+      if (period === current) {
+        disable = true;
+      }
+    }
+
+    if (periodType === "all") {
+      disable = true;
+    }
+
+    return disable;
+  }, [periodType, periodValue]);
+
+  const disableRight = useCallback(() => {
+    let disable = false;
+
+    if (periodType === "week") {
+      const [start] = periodValue.split(",");
+      const startOfCurrentWeek = dayjs(start).startOf("week");
+
+      const startOfNextWeek = startOfCurrentWeek.add(1, "week");
+
+      if (startOfNextWeek.isAfter(dayjs())) {
+        disable = true;
+      }
+    }
+
+    if (periodType === "month") {
+      const current = dayjs().format("YYYY-MM");
+      const period = dayjs(periodValue).format("YYYY-MM");
+
+      if (period === current) {
+        disable = true;
+      }
+    }
+
+    if (periodType === "year") {
+      const current = dayjs().format("YYYY");
+      const period = dayjs(periodValue).format("YYYY");
+
+      if (period === current) {
+        disable = true;
+      }
+    }
+
+    if (periodType === "all") {
+      disable = true;
+    }
+
+    return disable;
+  }, [periodType, periodValue]);
+
+  return (
+    <AppScrollView contentContainerStyle={{ paddingBottom: 60 }}>
+      <View className="flex-row items-center justify-center gap-2 mt-2">
+        <Badge
+          label={t("week")}
+          onPress={() => {
+            setPeriodType("week");
+
+            const startOfWeek = dayjs().startOf("week");
+            const endOfWeek = dayjs().endOf("week");
+            setPeriodValue(
+              `${startOfWeek.format("YYYY-MM-DD")},${endOfWeek.format("YYYY-MM-DD")}`
+            );
+          }}
+          isActive={periodType === "week"}
+        />
+        <Badge
+          label={t("month")}
+          onPress={() => {
+            setPeriodType("month");
+            setPeriodValue(dayjs().format("YYYY-MM-DD"));
+          }}
+          isActive={periodType === "month"}
+        />
+        <Badge
+          label={t("year")}
+          onPress={() => {
+            setPeriodType("year");
+            setPeriodValue(dayjs().format("YYYY-MM-DD"));
+          }}
+          isActive={periodType === "year"}
+        />
+        <Badge
+          label={t("all")}
+          onPress={() => setPeriodType("all")}
+          isActive={periodType === "all"}
+        />
+      </View>
+      <View className="flex-row items-center justify-between my-6 mx-4">
+        <AppTouchable
+          onPress={() => handleChangePeriod(periodType, "left")}
+          disabled={disableLeft()}
+          debounceDelay={400}
+        >
+          <ChevronLeftIcon disabled={disableLeft()} />
+        </AppTouchable>
+
+        <AppText>{renderPeriodValue()}</AppText>
+        <AppTouchable
+          onPress={() => handleChangePeriod(periodType, "right")}
+          disabled={disableRight()}
+          debounceDelay={400}
+        >
+          <ChevronRightIcon disabled={disableRight()} />
+        </AppTouchable>
+      </View>
+
+      <AppText className="text-2xl ml-4">{capitalize(t("general"))}</AppText>
+
+      <View className=" mt-4 gap-y-4">
+        <View className="flex-row flex-wrap gap-4 pl-4">
+          <Box
+            label={t("workout_sessions")}
+            value={data?.data?.totalWorkouts}
+            style={{ width: SCREEN_WIDTH / 2 - 20 }}
+          />
+          <Box
+            label={t("total_time (hrs)")}
+            value={convertSecondsToHours(data?.data?.totalDuration).toFixed(1)}
+            style={{ width: SCREEN_WIDTH / 2 - 20 }}
+          />
+          <Box
+            label={t("avg.session_duration")}
+            value={convertToHourMinuteSecond(data?.data?.averageDuration || 0)}
+            style={{ width: SCREEN_WIDTH / 2 - 20 }}
+          />
+          <Box
+            label={t("sets_completed")}
+            value={data?.data?.totalSets}
+            style={{ width: SCREEN_WIDTH / 2 - 20 }}
+          />
+        </View>
+      </View>
+
+      <View className="my-4 justify-center items-center">
+        {pieChartData.length > 0 && (
+          <PieChart
+            data={pieChartData || []}
+            showText
+            textColor="#ffffff"
+            textSize={14}
+            radius={150}
+            donut
+            innerCircleBorderWidth={10}
+            innerCircleBorderColor={"rgba(255, 255, 255, 0.2)"}
+            focusOnPress
+            centerLabelComponent={() => {
+              return (
+                <AppText className="text-dark dark:text-dark text-center text-sm font-semibold">
+                  {t("sets_per_muscle")}
+                </AppText>
+              );
+            }}
+          />
+        )}
+      </View>
+      <View className="flex-row flex-wrap gap-y-2">
+        {pieChartData?.map((item) => {
+          return (
+            <View key={item.name} className="w-1/3">
+              <ChartLegendItem item={item} />
+            </View>
+          );
+        })}
+      </View>
+    </AppScrollView>
+  );
+};
+
+const ChartLegendItem = ({
+  item,
+}: { item: { text: string; color: string; value: number; name: string } }) => {
+  const { t } = useTranslation();
+  return (
+    <View className="flex-row gap-2 flex-1 justify-center ml-6">
+      <View
+        className="w-1 h-10 items-center"
+        style={{ backgroundColor: item.color }}
+      />
+      <View className="flex-1">
+        <AppText className="text-sm">{capitalize(t(item.name))}</AppText>
+        <AppText className="text-sm">
+          {item.value} {t("sets")}
+        </AppText>
+      </View>
+    </View>
+  );
+};

@@ -17,6 +17,7 @@ const Mapping = {
 const ExpoIcon = ({
   name,
   library,
+  disabled,
   ...props
 }: {
   name: keyof (typeof Mapping)[keyof typeof Mapping]; // i want this to be dependent on the library
@@ -27,6 +28,7 @@ const ExpoIcon = ({
     | "materialIcons"
     | "feather"
     | "materialCommunityIcons";
+  disabled?: boolean;
 } & IconProps<string>) => {
   const theme = useAppSelector((state) => state.app.theme);
 
@@ -35,8 +37,13 @@ const ExpoIcon = ({
       return (
         <Entypo
           name={name as keyof typeof Entypo.glyphMap}
-          color={props.color ?? (theme === "dark" ? "white" : "black")}
+          color={
+            disabled
+              ? "rgba(255, 255, 255, 0.2)"
+              : (props.color ?? (theme === "dark" ? "white" : "black"))
+          }
           size={24}
+          disabled={disabled}
           {...props}
         />
       );
@@ -44,8 +51,13 @@ const ExpoIcon = ({
       return (
         <FontAwesome6
           name={name as keyof typeof FontAwesome6.glyphMap}
-          color={props.color ?? (theme === "dark" ? "white" : "black")}
+          color={
+            disabled
+              ? "rgba(255, 255, 255, 0.2)"
+              : (props.color ?? (theme === "dark" ? "white" : "black"))
+          }
           size={24}
+          disabled={disabled}
           {...props}
         />
       );
@@ -53,8 +65,13 @@ const ExpoIcon = ({
       return (
         <MaterialIcons
           name={name as keyof typeof MaterialIcons.glyphMap}
-          color={props.color ?? (theme === "dark" ? "white" : "black")}
+          color={
+            disabled
+              ? "rgba(255, 255, 255, 0.2)"
+              : (props.color ?? (theme === "dark" ? "white" : "black"))
+          }
           size={24}
+          disabled={disabled}
           {...props}
         />
       );
@@ -62,8 +79,13 @@ const ExpoIcon = ({
       return (
         <Feather
           name={name as keyof typeof Feather.glyphMap}
-          color={props.color ?? (theme === "dark" ? "white" : "black")}
+          color={
+            disabled
+              ? "rgba(255, 255, 255, 0.2)"
+              : (props.color ?? (theme === "dark" ? "white" : "black"))
+          }
           size={24}
+          disabled={disabled}
           {...props}
         />
       );
@@ -72,8 +94,13 @@ const ExpoIcon = ({
       return (
         <MaterialCommunityIcons
           name={name as keyof typeof MaterialCommunityIcons.glyphMap}
-          color={props.color ?? (theme === "dark" ? "white" : "black")}
+          color={
+            disabled
+              ? "rgba(255, 255, 255, 0.2)"
+              : (props.color ?? (theme === "dark" ? "white" : "black"))
+          }
           size={24}
+          disabled={disabled}
           {...props}
         />
       );

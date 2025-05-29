@@ -42,6 +42,7 @@ model User {
   Exercise          Exercise[]
   WorkoutPlan       WorkoutPlan[]
   WorkoutSessionLog WorkoutSessionLog[]
+  ExerciseSetLog    ExerciseSetLog[]
 
   @@unique([email])
   @@map("user")
@@ -51,16 +52,15 @@ enum ExerciseCategory {
   WEIGHT
   FREE_WEIGHT
   CARDIO
-  TIME
-  REPS
 }
 
 model MuscleGroup {
-  id           Int                      @id @default(autoincrement())
-  parentId     Int?
-  image        String
-  exercises    Exercise[]
-  translations MuscleGroupTranslation[]
+  id             Int                      @id @default(autoincrement())
+  parentId       Int?
+  image          String
+  exercises      Exercise[]
+  translations   MuscleGroupTranslation[]
+  ExerciseSetLog ExerciseSetLog[]
 }
 
 model MuscleGroupTranslation {
@@ -231,6 +231,10 @@ model ExerciseSetLog {
   duration         Int?
   isIncomplete     Boolean?          @default(false)
   createdAt        DateTime?         @default(now()) @db.Timestamptz(6)
+  user             User              @relation(fields: [userId], references: [id])
+  userId           String
+  muscleGroupId    Int
+  muscleGroup      MuscleGroup       @relation(fields: [muscleGroupId], references: [id])
 }
 
 model Session {

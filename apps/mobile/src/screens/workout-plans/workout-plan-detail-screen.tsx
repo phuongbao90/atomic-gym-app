@@ -19,7 +19,7 @@ import { EditIcon, VerticalDotsIcon } from "../../components/ui/expo-icon";
 import { appRoutes } from "../../configs/routes";
 import { useAppDispatch, useAppSelector } from "../../stores/redux-store";
 import { setActiveWorkoutPlanId } from "../../stores/slices/app-slice";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { use$ } from "@legendapp/state/react";
 import { observable } from "@legendapp/state";
 
@@ -70,6 +70,11 @@ export const WorkoutPlanDetailScreen = () => {
     (state) => state.app.activeWorkoutPlanId
   );
   const ref = useRef<CollapsibleRef>(null);
+  useEffect(() => {
+    return () => {
+      activeTabIndex$.set(0);
+    };
+  }, []);
 
   const renderHeader = useCallback(() => {
     return (

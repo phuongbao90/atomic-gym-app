@@ -9,7 +9,6 @@ import {
 import { BarChart, barDataItem } from "react-native-gifted-charts";
 import { useCallback, useMemo, useState } from "react";
 import { AppTouchable } from "../../../components/ui/app-touchable";
-import { cn } from "../../../utils/cn";
 import { capitalize } from "lodash";
 import {
   ChevronLeftIcon,
@@ -17,6 +16,9 @@ import {
 } from "../../../components/ui/expo-icon";
 import { dayjs } from "../../../lib/dayjs";
 import { useAppSelector } from "../../../stores/redux-store";
+import { Badge } from "../../../components/ui/badge";
+import { Box } from "../../../components/box";
+import { SCREEN_WIDTH } from "@gorhom/bottom-sheet";
 
 type PeriodFilter = "month" | "year";
 type CategoryFilter = "weight" | "reps" | "time";
@@ -166,18 +168,28 @@ export const WorkoutPlanStatistics = ({
   return (
     <View className=" mt-4 gap-y-4">
       <View className="flex-row flex-wrap gap-4 pl-4">
-        <Pill label={t("workout_sessions")} value={item?.stats?.sessionCount} />
-        <Pill
+        <Box
+          label={t("workout_sessions")}
+          value={item?.stats?.sessionCount}
+          style={{ width: SCREEN_WIDTH / 2 - 20 }}
+        />
+        <Box
           label={t("total_time (hrs)")}
           value={convertSecondsToHours(item?.stats?.totalDuration).toFixed(1)}
+          style={{ width: SCREEN_WIDTH / 2 - 20 }}
         />
-        <Pill
+        <Box
           label={t("avg.session_duration")}
           value={convertToHourMinuteSecond(
             item?.stats?.avgDurationPerSession || 0
           )}
+          style={{ width: SCREEN_WIDTH / 2 - 20 }}
         />
-        <Pill label={t("sets_completed")} value={item?.stats?.totalSetCount} />
+        <Box
+          label={t("sets_completed")}
+          value={item?.stats?.totalSetCount}
+          style={{ width: SCREEN_WIDTH / 2 - 20 }}
+        />
       </View>
 
       <Chart item={item} />
@@ -230,18 +242,18 @@ const Chart = ({
   return (
     <View>
       <View className="flex-row gap-3 my-4 pl-4">
-        <FilterButton
-          label={t("weight")}
+        <Badge
+          label={capitalize(t("weight"))}
           onPress={() => setCategoryFilter("weight")}
           isActive={categoryFilter === "weight"}
         />
-        <FilterButton
-          label={t("reps")}
+        <Badge
+          label={capitalize(t("reps"))}
           onPress={() => setCategoryFilter("reps")}
           isActive={categoryFilter === "reps"}
         />
-        <FilterButton
-          label={t("duration")}
+        <Badge
+          label={capitalize(t("duration"))}
           onPress={() => setCategoryFilter("time")}
           isActive={categoryFilter === "time"}
         />
@@ -288,16 +300,16 @@ const Chart = ({
       </View>
 
       <View className="flex-row gap-3 mt-4 pl-4">
-        <FilterButton
-          label={t("month")}
+        <Badge
+          label={capitalize(t("month"))}
           onPress={() => {
             setPeriodValue(dayjs().format("YYYY-MM-DD"));
             setPeriodFilter("month");
           }}
           isActive={periodFilter === "month"}
         />
-        <FilterButton
-          label={t("year")}
+        <Badge
+          label={capitalize(t("year"))}
           onPress={() => {
             setPeriodValue(dayjs().startOf("year").format("YYYY-MM-DD"));
             setPeriodFilter("year");
@@ -308,37 +320,3 @@ const Chart = ({
     </View>
   );
 };
-
-// UI subcomponents
-const { width } = Dimensions.get("window");
-const Pill: React.FC<{ label: string; value?: number | string }> = ({
-  label,
-  value,
-}) => (
-  <View
-    className="bg-slate-200 rounded-lg p-4 gap-y-2"
-    style={{ width: width / 2 - 20 }}
-  >
-    <AppText className="text-lg dark:text-black">{label}</AppText>
-    <AppText className="text-3xl mt-auto dark:text-black">
-      {value ?? ""}
-    </AppText>
-  </View>
-);
-
-const FilterButton: React.FC<{
-  label: string;
-  onPress: () => void;
-  isActive: boolean;
-}> = ({ label, onPress, isActive }) => (
-  <AppTouchable
-    onPress={onPress}
-    className={cn({
-      "bg-primary": isActive,
-      "bg-white border border-gray-300": !isActive,
-      "rounded-lg py-2 px-4": true,
-    })}
-  >
-    <AppText className="text-dark dark:text-black">{capitalize(label)}</AppText>
-  </AppTouchable>
-);
