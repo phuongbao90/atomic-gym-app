@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 import { AppText } from "../../../components/ui/app-text";
 import { useCallback, useMemo, useState } from "react";
 import { useWorkoutLogs } from "app";
@@ -30,6 +30,11 @@ import { AppScrollView } from "../../../components/ui/app-scrollview";
 import { capitalize } from "lodash";
 import { AppTouchable } from "../../../components/ui/app-touchable";
 import { Env } from "../../../configs/env";
+import { Image } from "expo-image";
+// import ChestImage from "../../../assets/images/muscles/chest.png";
+import ChestImage from "../../../../assets/images/muscles/chest.png";
+import BackImage from "../../../../assets/images/muscles/back.png";
+import ShoulderImage from "../../../../assets/images/muscles/shoulders.png";
 
 export const StatisticTabWorkouts = () => {
   const [periodType, setPeriodType] = useState<
@@ -39,7 +44,7 @@ export const StatisticTabWorkouts = () => {
     dayjs().format("YYYY-MM-DD")
   );
   const { t } = useTranslation();
-  const { data, isLoading } = useWorkoutLogs(periodType, periodValue);
+  const { data } = useWorkoutLogs(periodType, periodValue);
 
   const pieChartData = useMemo(() => {
     if (!data?.data?.muscleGroupSummary) return [];
@@ -72,42 +77,52 @@ export const StatisticTabWorkouts = () => {
         chest: {
           value: 0,
           color: "#4300FF",
+          image: ChestImage,
         },
         back: {
           value: 0,
           color: "#FF0B55",
+          image: BackImage,
         },
         shoulders: {
           value: 0,
           color: "#16610E",
+          image: ShoulderImage,
         },
         legs: {
           value: 0,
           color: "#D50B8B",
+          image: ChestImage,
         },
         biceps: {
           value: 0,
           color: "#a59391",
+          image: ChestImage,
         },
         triceps: {
           value: 0,
           color: "#D5451B",
+          image: ChestImage,
         },
         abs: {
           value: 0,
           color: "#939bfb",
+          image: ChestImage,
         },
         calves: {
           value: 0,
           color: "#4B352A",
+          image: ChestImage,
         },
         glutes: {
           value: 0,
           color: "#670D2F",
+          image: ChestImage,
         },
         forearms: {
           value: 0,
           color: "#FFB22C",
+          image: ChestImage,
         },
       }
     );
@@ -118,6 +133,7 @@ export const StatisticTabWorkouts = () => {
       )}%`,
       value: value.value,
       color: value.color,
+      image: value.image,
       name: key,
     }));
   }, [data]);
@@ -352,6 +368,30 @@ export const StatisticTabWorkouts = () => {
             innerCircleBorderWidth={10}
             innerCircleBorderColor={"rgba(255, 255, 255, 0.2)"}
             focusOnPress
+            showTooltip
+            persistTooltip
+            tooltipWidth={100}
+            tooltipComponent={(index: number) => {
+              const item = pieChartData[index];
+              return (
+                <View className="flex-row gap-2 bg-slate-600 p-2 rounded-md z-50">
+                  <View className="w-16 h-16 bg-slate-500">
+                    {item?.image && (
+                      <Image
+                        style={{ width: "100%", height: "100%" }}
+                        source={item?.image}
+                      />
+                    )}
+                  </View>
+                  <View className="justify-center">
+                    <AppText>{capitalize(t(item?.name))}</AppText>
+                    <AppText>
+                      {item?.value} {t("sets")}
+                    </AppText>
+                  </View>
+                </View>
+              );
+            }}
             centerLabelComponent={() => {
               return (
                 <AppText className="text-dark dark:text-dark text-center text-sm font-semibold">
