@@ -39,6 +39,8 @@ export const InputValueModal = ({ modal: { getParam, closeModal } }: Props) => {
   const unit = getParam("unit");
   const initialValue = getParam("initialValue");
   const onConfirm = getParam("onConfirm");
+  const allowDatePicker = getParam("allowDatePicker", true);
+  console.log("🚀 ~ InputValueModal ~ allowDatePicker:", allowDatePicker);
   const { t } = useTranslation();
   const language = useAppSelector((s) => s.app.language);
   const [date, setDate] = useState<Date>(dayjs().toDate());
@@ -107,17 +109,19 @@ export const InputValueModal = ({ modal: { getParam, closeModal } }: Props) => {
         </Pressable>
       </View>
 
-      <AppTouchable onPress={() => setShowDatePicker(true)}>
-        <AppText className="text-sm absolute -top-3 left-3 z-50">
-          {t("date")}
-        </AppText>
-        <View className="border border-gray-600 rounded-md px-3 py-5 flex-row items-center justify-between">
-          <AppText className="text-lg">
-            {dayjs(date).format("DD MMM YYYY")}
+      {allowDatePicker && (
+        <AppTouchable onPress={() => setShowDatePicker(true)}>
+          <AppText className="text-sm absolute -top-3 left-3 z-50">
+            {t("date")}
           </AppText>
-          <ChevronDownIcon />
-        </View>
-      </AppTouchable>
+          <View className="border border-gray-600 rounded-md px-3 py-5 flex-row items-center justify-between">
+            <AppText className="text-lg">
+              {dayjs(date).format("DD MMM YYYY")}
+            </AppText>
+            <ChevronDownIcon />
+          </View>
+        </AppTouchable>
+      )}
 
       <View className="flex-row gap-x-12 justify-end">
         <AppTouchable

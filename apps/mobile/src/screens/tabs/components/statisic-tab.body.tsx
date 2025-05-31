@@ -20,6 +20,7 @@ import { BodyLogResponse } from "app/src/query/logs/logs.types";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
 import { appRoutes } from "../../../configs/routes";
+import { UserPreferencesStorage } from "app";
 
 const INITIAL_SPACING = 4;
 const PADDING = 12;
@@ -113,15 +114,24 @@ export const StatisticTabBody = () => {
   );
 };
 
-const useBodyMeasurementData = (data: BodyLogResponse[number] | undefined) => {
+const useBodyMeasurementData = (
+  _data: BodyLogResponse[number] | undefined,
+  measurementTypeId: number
+) => {
+  const bodyLogGoal = UserPreferencesStorage.getBodyLogGoal(
+    measurementTypeId.toString()
+  );
+
+  // console.log("bodyLogGoal ", bodyLogGoal, measurementTypeId);
+
   const chartData: LineChartPropsType["data"] = useMemo(() => {
-    const length = data?.length || 0;
+    const length = _data?.length || 0;
 
     if (length === 1) {
       return [
         {
-          value: data?.[0]?.value,
-          label: dayjs(data?.[0]?.date).format("DD/MM"),
+          value: _data?.[0]?.value,
+          label: dayjs(_data?.[0]?.date).format("DD/MM"),
           labelTextStyle: {
             color: "white",
             fontSize: 11,
@@ -134,8 +144,8 @@ const useBodyMeasurementData = (data: BodyLogResponse[number] | undefined) => {
     if (length === 2) {
       return [
         {
-          value: data?.[0]?.value,
-          label: dayjs(data?.[0]?.date).format("DD/MM"),
+          value: _data?.[0]?.value,
+          label: dayjs(_data?.[0]?.date).format("DD/MM"),
           labelTextStyle: {
             color: "white",
             fontSize: 11,
@@ -143,8 +153,8 @@ const useBodyMeasurementData = (data: BodyLogResponse[number] | undefined) => {
           },
         },
         {
-          value: data?.[1]?.value,
-          label: dayjs(data?.[1]?.date).format("DD/MM"),
+          value: _data?.[1]?.value,
+          label: dayjs(_data?.[1]?.date).format("DD/MM"),
           labelTextStyle: {
             color: "white",
             fontSize: 11,
@@ -155,21 +165,21 @@ const useBodyMeasurementData = (data: BodyLogResponse[number] | undefined) => {
     }
 
     if (length <= 4) {
-      return data?.map((item, index) => {
+      return _data?.map((item, index) => {
         return {
           value: item.value,
           label: dayjs(item.date).format("DD/MM"),
           labelTextStyle: {
             color: "white",
             fontSize: 11,
-            right: index === data.length - 1 ? 6 : undefined,
+            right: index === _data.length - 1 ? 6 : undefined,
             left: index === 0 ? 6 : undefined,
           },
         };
       });
     }
     if (length <= 10) {
-      return data?.map((item, index) => {
+      return _data?.map((item, index) => {
         return {
           value: item.value,
           label:
@@ -181,7 +191,7 @@ const useBodyMeasurementData = (data: BodyLogResponse[number] | undefined) => {
           labelTextStyle: {
             color: "white",
             fontSize: 11,
-            right: index === data.length - 1 ? 6 : undefined,
+            right: index === _data.length - 1 ? 6 : undefined,
             left: index === 0 ? 6 : undefined,
           },
         };
@@ -189,10 +199,10 @@ const useBodyMeasurementData = (data: BodyLogResponse[number] | undefined) => {
     }
 
     return (
-      (data?.map((item, index) => {
+      (_data?.map((item, index) => {
         if (
           index === 0 ||
-          index === data.length - 1 ||
+          index === _data.length - 1 ||
           index === Math.floor(length / 4) ||
           index === Math.floor(length / 4) * 2 ||
           index === Math.floor(length / 4) * 3
@@ -226,10 +236,10 @@ const useBodyMeasurementData = (data: BodyLogResponse[number] | undefined) => {
         };
       }) as LineChartPropsType["data"]) || []
     );
-  }, [data]);
+  }, [_data]);
 
   const spacing = useMemo(() => {
-    const dataLength = data?.length || 0;
+    const dataLength = _data?.length || 0;
 
     if (dataLength === 1) {
       return 100;
@@ -240,10 +250,13 @@ const useBodyMeasurementData = (data: BodyLogResponse[number] | undefined) => {
     }
 
     return (GRAPH_WIDTH - 5) / (dataLength - 1);
-  }, [data]);
+  }, [_data]);
 
   return {
-    chartData,
+    data: chartData,
+    data2: bodyLogGoal
+      ? Array(chartData?.length || 0).fill({ value: +bodyLogGoal })
+      : undefined,
     yAxisOffset: undefined,
     stepValue: undefined,
     spacing,
@@ -268,8 +281,11 @@ const BodyMeasurementChart = ({
   const router = useRouter();
   const { t } = useTranslation();
   const createBodyLogMutation = useCreateBodyLogs();
-  const { chartData, yAxisOffset, stepValue, spacing, hideDataPoints } =
-    useBodyMeasurementData(data);
+  // const test = UserPreferencesStorage.getBodyLogGoal(
+  //   measurementTypeId.toString()
+  // );
+  const chartProps = useBodyMeasurementData(data, measurementTypeId);
+  // console.log("🚀 ~ BodyMeasurementChart ~ test:", test);
 
   return (
     <View
@@ -311,14 +327,16 @@ const BodyMeasurementChart = ({
         </AppTouchable>
       </View>
 
-      {chartData?.length && chartData?.length > 0 ? (
+      {chartProps?.data?.length && chartProps?.data?.length > 0 ? (
         <LineChart
-          data={chartData}
+          // data={chartData}
+          {...chartProps}
+          dataPointsColor2={twColors.red[700]}
+          dataPointsHeight2={2}
+          dataPointsShape2="rectangular"
           areaChart
           initialSpacing={INITIAL_SPACING}
-          spacing={spacing}
           color={twColors.slate[400]}
-          hideDataPoints={hideDataPoints}
           rulesType={"dashed"}
           rulesLength={GRAPH_WIDTH + 2}
           rulesColor={twColors.slate[400]}
@@ -326,12 +344,13 @@ const BodyMeasurementChart = ({
           width={GRAPH_WIDTH}
           dashGap={10}
           yAxisTextStyle={{ color: "white", fontSize: 11 }}
-          yAxisOffset={yAxisOffset}
           stepHeight={22}
-          stepValue={stepValue}
           yAxisColor={twColors.slate[400]}
           xAxisColor={twColors.slate[400]}
           xAxisLength={GRAPH_WIDTH + 3}
+          startFillColor1="skyblue"
+          startOpacity={0.8}
+          endOpacity={0.3}
         />
       ) : (
         <View className="flex-1 justify-center items-center">
@@ -344,7 +363,22 @@ const BodyMeasurementChart = ({
       <View className="w-full h-[1px] bg-slate-600" />
 
       <View className="flex-row gap-8 pt-4">
-        <AppTouchable onPress={() => {}}>
+        <AppTouchable
+          onPress={() => {
+            openModal("InputValueModal", {
+              label,
+              unit,
+              initialValue: undefined,
+              allowDatePicker: false,
+              onConfirm: (_date: string, value: number) => {
+                UserPreferencesStorage.setBodyLogGoal(
+                  measurementTypeId.toString(),
+                  value.toString()
+                );
+              },
+            });
+          }}
+        >
           <AppText className="text-md font-semibold">{t("set_goal")}</AppText>
         </AppTouchable>
         <AppTouchable

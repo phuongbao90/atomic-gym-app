@@ -19,7 +19,6 @@ import ContextMenu from "react-native-context-menu-view";
 
 export const BodyLogHistory = () => {
   const { type } = useLocalSearchParams();
-
   const { data, isLoading, refetch } = useGetBodyLogs("all");
   const deleteBodyLogMutation = useDeleteBodyLogMutation();
   const { data: bodyMeasurementTypes } = useGetBodyMeasurementTypes();
@@ -90,8 +89,8 @@ export const BodyLogHistory = () => {
           <View className="h-1 border-b-[1px] border-slate-600" />
         )}
         ListEmptyComponent={
-          <View className="flex-1 items-center justify-center">
-            <AppText className="text-xl">
+          <View className="mt-24">
+            <AppText className="text-xl text-center">
               {t("no_graph_data", {
                 type: bodyMeasurementTypes?.[Number(type)]?.translations?.[0]
                   ?.name,

@@ -31,6 +31,7 @@ export type ModalStackParams = {
     unit: string;
     initialValue: string | number | undefined;
     onConfirm: (date: string, value: number) => void;
+    allowDatePicker?: boolean;
   };
 };
 

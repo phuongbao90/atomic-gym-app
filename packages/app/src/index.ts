@@ -41,3 +41,4 @@ export * from "./query/logs/logs.types";
 export * from "./query/logs/logs.keys";
 
 export * from "./configs/app-storage";
+export * from "./configs/user-preferences-storage";
