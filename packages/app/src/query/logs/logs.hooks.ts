@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createBodyLogs,
+  deleteBodyLog,
   getBodyLogs,
   getBodyMeasurementTypes,
   getWorkoutLogs,
@@ -43,5 +44,11 @@ export const useGetBodyMeasurementTypes = () => {
       return data?.data;
     },
     staleTime: 1000 * 60 * 60 * 24,
+  });
+};
+
+export const useDeleteBodyLogMutation = () => {
+  return useMutation({
+    mutationFn: (id: string) => deleteBodyLog(id),
   });
 };

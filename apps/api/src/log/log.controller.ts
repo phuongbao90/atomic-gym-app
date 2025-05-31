@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Post, Query } from "@nestjs/common";
 import { LogService } from "./log.service";
 import { CurrentUser } from "../common/decorator/current-user.decorator";
 import { User } from "better-auth";
@@ -70,5 +70,10 @@ export class LogController {
     }
 
     return this.logService.createBodyLogs(user, body);
+  }
+
+  @Delete("body")
+  async deleteBodyLog(@CurrentUser() user: User, @Query("id") id: string) {
+    return this.logService.deleteBodyLog(user, id);
   }
 }

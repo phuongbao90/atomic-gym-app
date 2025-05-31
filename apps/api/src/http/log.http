@@ -9,6 +9,10 @@ GET {{BASE_URL}}/logs/body-measurement-types
 GET {{BASE_URL}}/logs/body
 ?periodType=30DAY
 
+{{
+  $global.bodyLogId=response.parsedBody.data["1"][0].id;
+}}
+
 POST {{BASE_URL}}/logs/body
 Content-Type: application/json
 {
@@ -25,3 +29,5 @@ Content-Type: application/json
     "date": "2025-05-24"
 }
 
+DELETE {{BASE_URL}}/logs/body
+?id={{$global.bodyLogId}}

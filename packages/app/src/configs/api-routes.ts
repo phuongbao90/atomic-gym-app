@@ -53,5 +53,6 @@ export const API_ROUTES = {
     createBodyLogs: () => `${API_ROUTES.logs.base}/body`,
     bodyMeasurementTypes: () =>
       `${API_ROUTES.logs.base}/body-measurement-types`,
+    deleteBodyLog: (id: string) => `${API_ROUTES.logs.base}/body?id=${id}`,
   },
 };

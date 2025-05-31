@@ -18,6 +18,8 @@ import { BodyMeasurementType } from "app/src/prisma-generated";
 import { PRIMARY_COLOR, twColors } from "../../../styles/themes";
 import { BodyLogResponse } from "app/src/query/logs/logs.types";
 import dayjs from "dayjs";
+import { useRouter } from "expo-router";
+import { appRoutes } from "../../../configs/routes";
 
 const INITIAL_SPACING = 4;
 const PADDING = 12;
@@ -263,6 +265,7 @@ const BodyMeasurementChart = ({
   refetch: () => void;
 }) => {
   const { openModal } = useModal();
+  const router = useRouter();
   const { t } = useTranslation();
   const createBodyLogMutation = useCreateBodyLogs();
   const { chartData, yAxisOffset, stepValue, spacing, hideDataPoints } =
@@ -337,6 +340,25 @@ const BodyMeasurementChart = ({
           </AppText>
         </View>
       )}
+
+      <View className="w-full h-[1px] bg-slate-600" />
+
+      <View className="flex-row gap-8 pt-4">
+        <AppTouchable onPress={() => {}}>
+          <AppText className="text-md font-semibold">{t("set_goal")}</AppText>
+        </AppTouchable>
+        <AppTouchable
+          onPress={() => {
+            router.push(
+              appRoutes.logs.bodyLogHistory(measurementTypeId?.toString())
+            );
+          }}
+        >
+          <AppText className="text-md font-semibold">
+            {t("view_history")}
+          </AppText>
+        </AppTouchable>
+      </View>
     </View>
   );
 };

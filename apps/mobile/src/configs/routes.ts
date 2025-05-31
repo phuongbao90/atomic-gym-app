@@ -101,4 +101,10 @@ export const appRoutes = {
 
   settings: "/settings",
   profile: "/profile",
+
+  logs: {
+    base: "/logs" as const,
+    bodyLogHistory: (type: string) =>
+      `${appRoutes.logs.base}/body-log-history?type=${type}` as const,
+  } as const,
 } as const;

@@ -15,6 +15,7 @@ export type BodyLogResponse = {
   [key: string]: {
     value: number;
     date: string;
+    id: string;
   }[];
 };
 

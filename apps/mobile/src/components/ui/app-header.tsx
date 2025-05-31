@@ -36,6 +36,7 @@ export const AppHeader = ({
               })
             }
             testID="back-button"
+            hitSlop={20}
           >
             <ChevronLeftIcon size={26} />
           </Pressable>

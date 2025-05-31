@@ -524,7 +524,7 @@ function createBodyLogs(userId: string) {
         data: {
           userId: userId,
           measurementTypeId: 1,
-          value: randNumber({ min: 60, max: 75 }),
+          value: randNumber({ min: 60, max: 75, fraction: 1 }),
           date: uniqueDates[i],
         },
       });

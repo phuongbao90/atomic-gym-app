@@ -36,3 +36,10 @@ export const getBodyMeasurementTypes = async () => {
     .get(API_ROUTES.logs.bodyMeasurementTypes())
     .json()) as ApiResponse<BodyMeasurementType[]>;
 };
+
+export const deleteBodyLog = async (id: string) => {
+  return (await http
+    .url(API_ROUTES.logs.deleteBodyLog(id))
+    .delete()
+    .json()) as ApiResponse<boolean>;
+};

@@ -111,6 +111,7 @@ export class LogService {
         measurementTypeId: true,
         value: true,
         date: true,
+        id: true,
       },
       orderBy: {
         date: "asc",
@@ -127,12 +128,14 @@ export class LogService {
           {
             value: item.value,
             date: item.date,
+            id: item.id,
           },
         ];
       } else {
         acc[item.measurementTypeId].push({
           value: item.value,
           date: item.date,
+          id: item.id,
         });
       }
 
@@ -225,5 +228,24 @@ export class LogService {
         },
       },
     });
+  }
+
+  async deleteBodyLog(user: User, id: string) {
+    const existing = await this.prisma.bodyMeasurement.findFirst({
+      where: { id, userId: user.id },
+    });
+
+    if (!existing) {
+      throw new NotFoundException("Body measurement not found");
+    }
+
+    await this.prisma.bodyMeasurement.delete({
+      where: { id: existing.id },
+    });
+
+    return {
+      success: true,
+      message: "Body measurement deleted successfully",
+    };
   }
 }
