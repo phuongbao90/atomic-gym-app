@@ -10,11 +10,11 @@ import {
   OnBoardingImage4,
   OnboardBackgroundBlur,
 } from "../../constants/app-assets";
-import { AppStorage } from "../../lib/storage/app-storage";
 import { extractZodErrors } from "../../utils/extract-zod-errors";
 import { showErrorToast } from "../../utils/toast";
 import { OnboardList } from "./onboard-list";
 import { onboardListSchema } from "./onboard-schemas";
+import { AppStorage } from "app";
 
 const data = [
   {

@@ -6,3 +6,9 @@ export enum LogPeriodType {
 }
 
 export type LogPeriodValue = "string";
+
+export enum BodyPeriodType {
+  "30DAY" = "30DAY",
+  "90DAY" = "90DAY",
+  ALL = "all",
+}

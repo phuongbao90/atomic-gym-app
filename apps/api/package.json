@@ -87,6 +87,6 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "5.8.3",
     "typescript-config": "*",
-    "zod": "^3.25.23"
+    "zod": "^3.25.41"
   }
 }

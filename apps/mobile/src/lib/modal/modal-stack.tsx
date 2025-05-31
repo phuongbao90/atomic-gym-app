@@ -7,11 +7,13 @@ import {
 import { TakeOrSelectMediaModal } from "../../components/modals/take-or-select-media-modal";
 import * as ImagePicker from "expo-image-picker";
 import { ConfirmModal } from "../../components/modals/confirm-modal";
+import { InputValueModal } from "../../components/modals/input-value-modal";
 
 const modalConfig: ModalStackConfig = {
   ErrorModal,
   TakeOrSelectMediaModal,
   ConfirmModal,
+  InputValueModal,
 };
 const defaultOptions: ModalOptions = { backdropOpacity: 0.6 };
 
@@ -23,6 +25,12 @@ export type ModalStackParams = {
   ConfirmModal: {
     message: string;
     onConfirm: () => void;
+  };
+  InputValueModal: {
+    label: string;
+    unit: string;
+    initialValue: string | number | undefined;
+    onConfirm: (date: string, value: number) => void;
   };
 };
 

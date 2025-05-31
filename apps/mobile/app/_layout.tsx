@@ -16,7 +16,6 @@ import { useMMKVBoolean } from "react-native-mmkv";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Toaster } from "sonner-native";
 import { ReactQueryProvider } from "../src/lib/react-query";
-import { storageKeyNames } from "../src/lib/storage/app-storage";
 import Onboarding from "./onboarding";
 import "../src/configs/i18n";
 import {
@@ -38,7 +37,13 @@ import restTimeEndSound from "../assets/sounds/rest-time-end.mp3";
 // This runs even if your app UI is backgrounded/killed
 import { enableScreens } from "react-native-screens";
 import { getCookie, useSession } from "../src/lib/auth-client";
-import { clearRequestCookie, setRequestCookie, setRequestLanguage } from "app";
+import {
+  AppStorage,
+  clearRequestCookie,
+  setRequestCookie,
+  setRequestLanguage,
+  storageKeyNames,
+} from "app";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setIsConnected } from "../src/stores/slices/app-slice";
 
@@ -137,8 +142,10 @@ const App = () => {
   useEffect(() => {
     if (cookie) {
       setRequestCookie(cookie);
+      AppStorage.setCookie(cookie);
     } else {
       clearRequestCookie();
+      AppStorage.setCookie("");
     }
   }, [cookie]);
 

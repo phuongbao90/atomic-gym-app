@@ -2,4 +2,26 @@ GET {{BASE_URL}}/logs/workouts
 ?periodType=week
 &periodValue=2025-05-01,2025-05-07
 
+GET {{BASE_URL}}/logs/body-measurement-types
+?language=vi
+
+
 GET {{BASE_URL}}/logs/body
+?periodType=30DAY
+
+POST {{BASE_URL}}/logs/body
+Content-Type: application/json
+{
+    "data": [
+        {
+            "measurementTypeId": 1,
+            "value": 130.5
+        },
+        {
+            "measurementTypeId": 2,
+            "value": 9.5    
+        }
+    ],
+    "date": "2025-05-24"
+}
+

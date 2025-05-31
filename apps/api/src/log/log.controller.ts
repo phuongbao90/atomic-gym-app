@@ -1,10 +1,16 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query } from "@nestjs/common";
 import { LogService } from "./log.service";
 import { CurrentUser } from "../common/decorator/current-user.decorator";
 import { User } from "better-auth";
-import { LogPeriodType, LogPeriodValue } from "./types/log.types";
+import {
+  BodyPeriodType,
+  LogPeriodType,
+  LogPeriodValue,
+} from "./types/log.types";
 import { ApiOkResponse, ApiQuery } from "@nestjs/swagger";
 import { LogResponseDto } from "./dto/log-response.dto";
+import { CreateBodyMeasurementDto } from "./dto/create-body-measurement.dto";
+import { Language } from "@prisma/client";
 
 @Controller("logs")
 export class LogController {
@@ -37,12 +43,32 @@ export class LogController {
     return this.logService.getAllWorkoutLogs(user, periodType, periodValue);
   }
 
+  @Get("body-measurement-types")
+  async getBodyMeasurementTypes(@Query("language") language: Language) {
+    return this.logService.getBodyMeasurementTypes(language);
+  }
+
   @Get("body")
   async getAllBodyLogs(
     @CurrentUser() user: User,
-    @Query("periodType") periodType: LogPeriodType,
-    @Query("periodValue") periodValue: LogPeriodValue
+    @Query("periodType") periodType: BodyPeriodType
   ) {
-    return this.logService.getAllBodyLogs(user);
+    return this.logService.getBodyLogs(user, periodType);
+  }
+
+  @Post("body")
+  async createBodyLog(
+    @CurrentUser() user: User,
+    @Body() body: CreateBodyMeasurementDto
+    // @Query("language") language: Language
+  ) {
+    if (!body.data || body.data.length === 0) {
+      return {
+        success: false,
+        message: "Data is required",
+      };
+    }
+
+    return this.logService.createBodyLogs(user, body);
   }
 }

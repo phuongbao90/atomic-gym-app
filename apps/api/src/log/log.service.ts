@@ -1,8 +1,15 @@
-import { Injectable } from "@nestjs/common";
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { User } from "better-auth";
-import { LogPeriodType } from "./types/log.types";
+import { BodyPeriodType, LogPeriodType } from "./types/log.types";
 import { LogPeriodValue } from "./types/log.types";
+import { CreateBodyMeasurementDto } from "./dto/create-body-measurement.dto";
+import * as dayjs from "dayjs";
+import { Language } from "@prisma/client";
 
 @Injectable()
 export class LogService {
@@ -76,5 +83,147 @@ export class LogService {
     };
   }
 
-  async getAllBodyLogs(user: User) {}
+  async getBodyLogs(user: User, periodType: BodyPeriodType) {
+    let createdAt: Date | { gte: Date; lte: Date };
+    if (periodType === "30DAY") {
+      createdAt = {
+        gte: dayjs().subtract(30, "day").toDate(),
+        lte: dayjs().toDate(),
+      };
+    } else if (periodType === "90DAY") {
+      createdAt = {
+        gte: dayjs().subtract(90, "day").toDate(),
+        lte: dayjs().toDate(),
+      };
+    } else if (periodType === "all") {
+      createdAt = {
+        gte: new Date("2024-01-01"),
+        lte: new Date(),
+      };
+    }
+
+    const bodyLogs = await this.prisma.bodyMeasurement.findMany({
+      where: {
+        userId: user.id,
+        date: createdAt,
+      },
+      select: {
+        measurementTypeId: true,
+        value: true,
+        date: true,
+      },
+      orderBy: {
+        date: "asc",
+      },
+    });
+
+    if (!bodyLogs.length) {
+      return null;
+    }
+
+    const transformed = bodyLogs.reduce((acc, item) => {
+      if (!acc[item.measurementTypeId]) {
+        acc[item.measurementTypeId] = [
+          {
+            value: item.value,
+            date: item.date,
+          },
+        ];
+      } else {
+        acc[item.measurementTypeId].push({
+          value: item.value,
+          date: item.date,
+        });
+      }
+
+      return acc;
+    }, {});
+
+    return transformed;
+  }
+
+  async createBodyLogs(user: User, body: CreateBodyMeasurementDto) {
+    const startOfDay = dayjs(body.date).startOf("day").toDate();
+    const endOfDay = dayjs(body.date).endOf("day").toDate();
+
+    const measurementTypes = await this.prisma.bodyMeasurementType.findMany({
+      where: {
+        id: { in: body.data.map((item) => item.measurementTypeId) },
+      },
+    });
+
+    if (measurementTypes.length !== body.data.length) {
+      throw new NotFoundException("Some measurement types not found");
+    }
+
+    for (const item of body.data) {
+      const measurementType = measurementTypes.find(
+        (type) => type.id === item.measurementTypeId
+      );
+
+      if (!measurementType) {
+        throw new NotFoundException("Some measurement types not found");
+      }
+
+      const existing = await this.prisma.bodyMeasurement.findFirst({
+        where: {
+          userId: user.id,
+          measurementTypeId: item.measurementTypeId,
+          date: {
+            gte: startOfDay,
+            lte: endOfDay,
+          },
+        },
+      });
+
+      if (existing) {
+        await this.prisma.bodyMeasurement
+          .update({
+            where: { id: existing.id },
+            data: { value: item.value },
+          })
+          .catch((error) => {
+            throw new InternalServerErrorException(
+              `Failed to update body measurement: ${error.message}`
+            );
+          });
+      } else {
+        await this.prisma.bodyMeasurement
+          .create({
+            data: {
+              userId: user.id,
+              measurementTypeId: measurementType.id,
+              value: item.value,
+              date: body.date,
+            },
+          })
+          .catch((error) => {
+            throw new InternalServerErrorException(
+              `Failed to create body measurement: ${error.message}`
+            );
+          });
+      }
+    }
+
+    return {
+      success: true,
+      message: "Body measurements created successfully",
+    };
+  }
+
+  async getBodyMeasurementTypes(language: Language) {
+    return this.prisma.bodyMeasurementType.findMany({
+      where: {
+        isActive: true,
+      },
+
+      include: {
+        translations: {
+          where: {
+            language: language,
+          },
+        },
+      },
+    });
+  }
 }

@@ -1,4 +1,7 @@
 export { Account } from "./Account.model";
+export { BodyMeasurement } from "./BodyMeasurement.model";
+export { BodyMeasurementType } from "./BodyMeasurementType.model";
+export { BodyMeasurementTypeTranslation } from "./BodyMeasurementTypeTranslation.model";
 export { Exercise } from "./Exercise.model";
 export { ExerciseSet } from "./ExerciseSet.model";
 export { ExerciseSetLog } from "./ExerciseSetLog.model";

@@ -46,13 +46,6 @@ const TabBar = () => {
   );
 };
 
-const FirstRoute = () => {
-  return <StatisticTabWorkouts />;
-};
-const SecondRoute = () => {
-  return <StatisticTabBody />;
-};
-
 export const StatisticTabScreen = () => {
   const { t } = useTranslation("common");
   const index = use$(() => index$.get());
@@ -71,10 +64,10 @@ export const StatisticTabScreen = () => {
   const renderScene = useCallback(({ route }: { route: { key: string } }) => {
     switch (route.key) {
       case "workouts":
-        return <FirstRoute />;
+        return <StatisticTabWorkouts />;
 
       case "body":
-        return <SecondRoute />;
+        return <StatisticTabBody />;
 
       default:
         return null;
@@ -93,7 +86,6 @@ export const StatisticTabScreen = () => {
         onIndexChange={(i: number) => index$.set(i)}
         initialLayout={{ width: layout.width }}
         renderTabBar={renderTabBar}
-        scrollEnabled
       />
     </AppScreen>
   );

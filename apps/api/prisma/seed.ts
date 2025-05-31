@@ -13,6 +13,7 @@ import { muscleGroups } from "./data/muscle-groups";
 import { betterAuth } from "better-auth";
 import { createAuth } from "../src/lib/auth";
 import { exerciseData } from "./data/exercises";
+import { measurementTypes } from "./data/measurement-types";
 
 /**
  * error with auto increment id:
@@ -199,6 +200,31 @@ async function main() {
         });
       }
     }
+
+    //* CREATE BODY MEASUREMENT TYPES
+    for (const t of measurementTypes) {
+      await prisma.bodyMeasurementType.create({
+        data: {
+          name: t.name,
+          unit: t.unit,
+          category: t.category,
+          translations: {
+            create: [
+              {
+                language: "vi",
+                name: t.vi,
+              },
+              {
+                language: "en",
+                name: t.en,
+              },
+            ],
+          },
+        },
+      });
+    }
+
+    createBodyLogs(users[0].userId);
 
     console.info(
       "---------------------------------Database seeded successfully---------------------------------"
@@ -473,4 +499,34 @@ export function slugify(string: string) {
 export function removeDiacritics(str: string) {
   const denicodeString = convert_vi_to_en(str);
   return denicodeString.toString().normalize("NFKD").toLowerCase().trim();
+}
+
+function getUniqueDates(count: number, daysRange: number): Date[] {
+  const dates = new Set<string>();
+
+  while (dates.size < count) {
+    const date = faker.date.recent({ days: daysRange });
+    const dateStr = date.toISOString().split("T")[0]; // YYYY-MM-DD
+    dates.add(dateStr);
+  }
+
+  // Convert strings back to Date
+  return Array.from(dates).map((d) => new Date(d));
+}
+
+function createBodyLogs(userId: string) {
+  const uniqueDates = getUniqueDates(100, 100);
+
+  Array(100)
+    .fill(null)
+    .forEach(async (_, i) => {
+      await prisma.bodyMeasurement.create({
+        data: {
+          userId: userId,
+          measurementTypeId: 1,
+          value: randNumber({ min: 60, max: 75 }),
+          date: uniqueDates[i],
+        },
+      });
+    });
 }

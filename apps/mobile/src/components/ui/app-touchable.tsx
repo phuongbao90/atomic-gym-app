@@ -13,7 +13,7 @@ export const AppTouchable = ({
 
   return (
     <TouchableOpacity
-      hitSlop={10}
+      hitSlop={20}
       {...props}
       onPress={(e) => {
         if (debounce) {

@@ -43,6 +43,7 @@ model User {
   WorkoutPlan       WorkoutPlan[]
   WorkoutSessionLog WorkoutSessionLog[]
   ExerciseSetLog    ExerciseSetLog[]
+  BodyMeasurements  BodyMeasurement[]
 
   @@unique([email])
   @@map("user")
@@ -280,4 +281,56 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+enum BodyMeasurementCategory {
+  COMPOSITION
+  MUSCLE
+  FAT
+  WATER
+  BONE
+  VISCERAL
+  METABOLIC
+  OTHER
+}
+
+model BodyMeasurementType {
+  id           Int                              @id @default(autoincrement())
+  category     BodyMeasurementCategory
+  name         String
+  unit         String
+  description  String?
+  isActive     Boolean                          @default(true)
+  createdAt    DateTime                         @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime                         @updatedAt @db.Timestamptz(6)
+  translations BodyMeasurementTypeTranslation[]
+  measurements BodyMeasurement[]
+}
+
+model BodyMeasurementTypeTranslation {
+  bodyMeasurementTypeId Int
+  language              Language
+  name                  String
+  description           String?
+  bodyMeasurementType   BodyMeasurementType @relation(fields: [bodyMeasurementTypeId], references: [id], onDelete: Cascade)
+
+  @@id([bodyMeasurementTypeId, language])
+  @@index([language])
+}
+
+model BodyMeasurement {
+  id                String              @id @default(uuid())
+  user              User                @relation(fields: [userId], references: [id])
+  userId            String
+  measurementType   BodyMeasurementType @relation(fields: [measurementTypeId], references: [id])
+  measurementTypeId Int
+  value             Float
+  notes             String?
+  date              DateTime            @db.Timestamptz(6)
+  createdAt         DateTime            @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime            @updatedAt @db.Timestamptz(6)
+
+  @@index([userId])
+  @@index([measurementTypeId])
+  @@index([createdAt])
 }

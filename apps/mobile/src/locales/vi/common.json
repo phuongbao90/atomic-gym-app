@@ -22,6 +22,7 @@
   "start_plan": "Tiến hành buổi tập",
   "cancel_plan": "Hủy giáo án",
   "day": "Ngày {{count}}",
+  "days": "{{count}} ngày",
   "summary": "Tóm tắt",
   "history": "Lịch sử",
   "muscle_groups": "Nhóm cơ",
@@ -169,5 +170,8 @@
   "other": "Khác",
   "abs": "Bụng",
 
-  "sets": "hiệp"
+  "sets": "hiệp",
+  "date": "Ngày",
+  "graph": "Biểu đồ",
+  "no_graph_data": "Không có dữ liệu trên {{type}}. Bắt đầu ghi chép để theo dõi tiến bộ của bạn."
 }

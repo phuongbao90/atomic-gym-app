@@ -1,4 +1,5 @@
 import { ExerciseQuery } from "../query/exercises/exercises.types";
+import { BodyLogPeriodType } from "../query/logs/logs.types";
 import { WorkoutPlanQuery } from "../query/workout-plans/workout-plans.types";
 import { WorkoutQuery } from "../query/workouts/workouts.types";
 import { stringify } from "qs";
@@ -47,7 +48,10 @@ export const API_ROUTES = {
     base: "/logs",
     workouts: (periodType: string, periodValue: string) =>
       `${API_ROUTES.logs.base}/workouts?periodType=${periodType}&periodValue=${periodValue}`,
-    body: (periodType: string, periodValue: string) =>
-      `${API_ROUTES.logs.base}/body?periodType=${periodType}&periodValue=${periodValue}`,
+    body: (periodType: BodyLogPeriodType) =>
+      `${API_ROUTES.logs.base}/body?periodType=${periodType}`,
+    createBodyLogs: () => `${API_ROUTES.logs.base}/body`,
+    bodyMeasurementTypes: () =>
+      `${API_ROUTES.logs.base}/body-measurement-types`,
   },
 };

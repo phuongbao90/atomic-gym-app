@@ -10,9 +10,6 @@ POST {{BASE_URL}}/api/auth/sign-in/email
   "callbackURL": ""
 }
 
-{{
-  $global.accessToken=response.parsedBody.data.token;
-}}
 
 POST {{BASE_URL}}/api/auth/sign-up/email
 {

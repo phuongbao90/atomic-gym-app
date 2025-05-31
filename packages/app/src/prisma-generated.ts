@@ -8,6 +8,8 @@ export type WorkoutPlanLevel = "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
 
 export type WorkoutPlanCategory = "STRENGTH" | "ENDURANCE" | "BALANCE" | "FLEXIBILITY" | "LOOSE_WEIGHT";
 
+export type BodyMeasurementCategory = "COMPOSITION" | "MUSCLE" | "FAT" | "WATER" | "BONE" | "VISCERAL" | "METABOLIC" | "OTHER";
+
 export interface User {
   id: string;
   name: string;
@@ -25,6 +27,7 @@ export interface User {
   WorkoutPlan?: WorkoutPlan[];
   WorkoutSessionLog?: WorkoutSessionLog[];
   ExerciseSetLog?: ExerciseSetLog[];
+  BodyMeasurements?: BodyMeasurement[];
 }
 
 export interface MuscleGroup {
@@ -208,4 +211,38 @@ export interface Verification {
   expiresAt: string;
   createdAt: string | null;
   updatedAt: string | null;
+}
+
+export interface BodyMeasurementType {
+  id: number;
+  category: BodyMeasurementCategory;
+  name: string;
+  unit: string;
+  description: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  translations?: BodyMeasurementTypeTranslation[];
+  measurements?: BodyMeasurement[];
+}
+
+export interface BodyMeasurementTypeTranslation {
+  bodyMeasurementTypeId: number;
+  language: Language;
+  name: string;
+  description: string | null;
+  bodyMeasurementType?: BodyMeasurementType;
+}
+
+export interface BodyMeasurement {
+  id: string;
+  user?: User;
+  userId: string;
+  measurementType?: BodyMeasurementType;
+  measurementTypeId: number;
+  value: number;
+  notes: string | null;
+  date: string;
+  createdAt: string;
+  updatedAt: string;
 }

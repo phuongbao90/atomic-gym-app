@@ -1,4 +1,4 @@
-import { configureStore, createDraftSafeSelector } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import { appReducer } from "./slices/app-slice";
 import { themeListener } from "./middlewares/theme-middleware";
 import { languageListener } from "./middlewares/language-middleware";

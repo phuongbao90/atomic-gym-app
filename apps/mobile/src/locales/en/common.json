@@ -22,6 +22,7 @@
   "start_plan": "Start plan",
   "cancel_plan": "Cancel plan",
   "day": "Day {{count}}",
+  "days": "{{count}} days",
   "summary": "Summary",
   "history": "History",
   "muscle_groups": "Muscle Groups",
@@ -169,5 +170,8 @@
   "other": "Other",
   "abs": "Abs",
 
-  "sets": "sets"
+  "sets": "sets",
+  "date": "Date",
+  "graph": "Graph",
+  "no_graph_data": "Logs on {{type}} are empty. Start logging to see your progress."
 }

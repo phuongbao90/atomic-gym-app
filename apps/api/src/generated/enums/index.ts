@@ -1,3 +1,4 @@
+export { BodyMeasurementCategory } from "./BodyMeasurementCategory.enum";
 export { ExerciseCategory } from "./ExerciseCategory.enum";
 export { Language } from "./Language.enum";
 export { WorkoutPlanCategory } from "./WorkoutPlanCategory.enum";

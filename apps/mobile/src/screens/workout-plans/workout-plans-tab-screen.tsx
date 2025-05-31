@@ -104,6 +104,7 @@ export function WorkoutPlansTabScreen() {
     <AppScreen name="workout-plans-tab-screen">
       <AppHeader title={t("workout_plans")} />
       <SectionList
+        //@ts-ignore
         sections={sections}
         renderSectionHeader={renderSectionHeader}
         renderItem={() => null}

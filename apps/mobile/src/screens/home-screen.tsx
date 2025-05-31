@@ -1,8 +1,13 @@
-import { clearRequestCookie, queryClient, useGetWorkoutPlan } from "app";
+import {
+  AppStorage,
+  clearRequestCookie,
+  queryClient,
+  useGetBodyLogs,
+  useGetWorkoutPlan,
+} from "app";
 import { useRouter } from "expo-router";
 import { Button, Pressable, TouchableOpacity, View } from "react-native";
 import { AppScrollView } from "../../src/components/ui/app-scrollview";
-import { AppStorage } from "../../src/lib/storage/app-storage";
 import { AppHeader } from "../components/ui/app-header";
 import { AppScreen } from "../components/ui/app-screen";
 import { useAppDispatch, useAppSelector } from "../stores/redux-store";
@@ -30,7 +35,7 @@ export function HomeScreen() {
     (s) => s.workoutSession.activeWorkout?.id
   );
 
-  const { data: activeWorkoutPlan } = useGetWorkoutPlan(activeWorkoutPlanId);
+  // const { data: activeWorkoutPlan } = useGetWorkoutPlan(activeWorkoutPlanId);
 
   const { t } = useTranslation();
   const router = useRouter();
@@ -69,11 +74,11 @@ export function HomeScreen() {
             {t("my_workout_plans")}
           </AppText>
 
-          {activeWorkoutPlan ? (
+          {/* {activeWorkoutPlan ? (
             <WorkoutPlanCard item={activeWorkoutPlan} />
           ) : (
             <EmptyWorkoutPlan />
-          )}
+          )} */}
         </View>
 
         <View className="px-4 mt-4">
@@ -253,7 +258,6 @@ const WeeklyTrack = () => {
 
 const DEV = () => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
   const { data } = useSession();
 
   return (

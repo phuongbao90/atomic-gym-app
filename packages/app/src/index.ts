@@ -39,3 +39,5 @@ export * from "./query/logs/logs.hooks";
 export * from "./query/logs/logs.requests";
 export * from "./query/logs/logs.types";
 export * from "./query/logs/logs.keys";
+
+export * from "./configs/app-storage";

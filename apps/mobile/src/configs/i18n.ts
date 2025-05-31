@@ -1,8 +1,6 @@
 import * as Localization from "expo-localization";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import { AppStorage } from "../lib/storage/app-storage";
-
 import commonEn from "../locales/en/common.json";
 import commonVi from "../locales/vi/common.json";
 import homeScreenVi from "../locales/vi/home-screen.json";
@@ -13,6 +11,7 @@ import authScreenEn from "../locales/en/auth.json";
 import authScreenVi from "../locales/vi/auth.json";
 import { ZodErrorMap } from "zod";
 import z from "zod";
+import { AppStorage } from "app";
 
 const customErrorMap: ZodErrorMap = (issue, ctx) => {
   switch (issue.code) {
