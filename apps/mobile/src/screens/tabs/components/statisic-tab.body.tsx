@@ -301,7 +301,8 @@ const BodyMeasurementChart = ({
             openModal("InputValueModal", {
               label,
               unit,
-              initialValue: undefined,
+              initialValue:
+                chartProps?.data?.[chartProps?.data?.length - 1]?.value || 0,
               onConfirm: (date: string, value: number) => {
                 createBodyLogMutation.mutate(
                   {
@@ -368,7 +369,7 @@ const BodyMeasurementChart = ({
             openModal("InputValueModal", {
               label,
               unit,
-              initialValue: undefined,
+              initialValue: chartProps?.data2?.[0]?.value || 0,
               allowDatePicker: false,
               onConfirm: (_date: string, value: number) => {
                 UserPreferencesStorage.setBodyLogGoal(

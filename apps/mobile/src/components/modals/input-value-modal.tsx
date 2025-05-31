@@ -17,35 +17,17 @@ import { useHoldAction } from "../../hooks/use-hold-action";
 
 type Props = ModalProps<"InputValueModal">;
 
-// const MappingTitle = {
-//   weight: "weight",
-//   height: "height",
-//   bmi: "BMI",
-//   bodyFat: "body fat",
-//   muscleMass: "muscle mass",
-//   water: "water",
-// };
-// const MappingUnit = {
-//   weight: "kg",
-//   height: "cm",
-//   bmi: "kg/m2",
-//   bodyFat: "%",
-//   muscleMass: "kg",
-//   water: "%",
-// };
-
 export const InputValueModal = ({ modal: { getParam, closeModal } }: Props) => {
   const label = getParam("label");
   const unit = getParam("unit");
   const initialValue = getParam("initialValue");
   const onConfirm = getParam("onConfirm");
   const allowDatePicker = getParam("allowDatePicker", true);
-  console.log("🚀 ~ InputValueModal ~ allowDatePicker:", allowDatePicker);
   const { t } = useTranslation();
   const language = useAppSelector((s) => s.app.language);
   const [date, setDate] = useState<Date>(dayjs().toDate());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [value, setValue] = useState<number>(Number(initialValue) || 80);
+  const [value, setValue] = useState<number>(Number(initialValue) || 0);
 
   const { start: startIncreaseValue, stop: stopIncreaseValue } = useHoldAction(
     () => {
