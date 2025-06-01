@@ -1,2 +1,12 @@
 GET {{BASE_URL}}/workout-session/history
 Accept-Language: vi
+
+{{
+  $global.workoutSessionId=response.parsedBody.data[2].id;
+}}
+
+
+###
+
+GET {{BASE_URL}}/workout-session/detail?id={{$global.workoutSessionId}}
+Accept-Language: vi

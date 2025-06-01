@@ -10,11 +10,7 @@ import {
   twColors,
 } from "../../styles/themes";
 import { useCallback, useMemo } from "react";
-import {
-  API_ROUTES,
-  useWorkoutSessionHistory,
-  WorkoutSessionHistoryItem,
-} from "app";
+import { useWorkoutSessionHistory, WorkoutSessionHistoryItem } from "app";
 import dayjs from "dayjs";
 import { LegendList } from "@legendapp/list";
 import { AppTouchable } from "../../components/ui/app-touchable";

@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Param, Query } from "@nestjs/common";
 import { WorkoutSessionService } from "./workout-session.service";
 import { GetLanguage } from "../common/decorators/get-language.decorator";
 import { CurrentUser } from "../common/decorator/current-user.decorator";
@@ -14,5 +14,18 @@ export class WorkoutSessionController {
     @GetLanguage() language: Language
   ) {
     return this.workoutSessionService.getWorkoutSessionHistory(user, language);
+  }
+
+  @Get("detail")
+  async getWorkoutSessionDetail(
+    @CurrentUser() user: User,
+    @GetLanguage() language: Language,
+    @Query("id") id: string
+  ) {
+    return this.workoutSessionService.getWorkoutSessionDetail(
+      user,
+      language,
+      id
+    );
   }
 }

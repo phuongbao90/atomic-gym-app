@@ -176,5 +176,6 @@
   "no_graph_data": "Không có dữ liệu trên {{type}}. Bắt đầu ghi chép để theo dõi tiến bộ của bạn.",
   "view_history": "Xem lịch sử",
   "set_goal": "Đặt mục tiêu",
-  "no_data": "Không có dữ liệu"
+  "no_data": "Không có dữ liệu",
+  "session_detail": "Chi tiết buổi tập"
 }

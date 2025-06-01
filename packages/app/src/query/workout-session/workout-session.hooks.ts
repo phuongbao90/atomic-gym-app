@@ -1,6 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { WORKOUT_SESSION_KEYS } from "./workout-session.keys";
-import { getWorkoutSessionHistory } from "./workout-session.requests";
+import {
+  getWorkoutSessionDetail,
+  getWorkoutSessionHistory,
+} from "./workout-session.requests";
 
 export const useWorkoutSessionHistory = () => {
   return useQuery({
@@ -8,5 +11,14 @@ export const useWorkoutSessionHistory = () => {
     queryFn: getWorkoutSessionHistory,
     select: (data) => data.data,
     staleTime: 1000 * 60 * 60 * 24,
+  });
+};
+
+export const useWorkoutSessionDetail = (id: string) => {
+  return useQuery({
+    queryKey: WORKOUT_SESSION_KEYS.detail(id),
+    queryFn: () => getWorkoutSessionDetail(id),
+    select: (data) => data.data,
+    enabled: !!id,
   });
 };

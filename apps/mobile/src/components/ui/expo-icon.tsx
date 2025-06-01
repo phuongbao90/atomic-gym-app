@@ -5,6 +5,7 @@ import FontAwesome6 from "@expo/vector-icons/build/FontAwesome6";
 import { IconProps } from "@expo/vector-icons/build/createIconSet";
 import { useAppSelector } from "../../stores/redux-store";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { twColors } from "../../styles/themes";
 
 const Mapping = {
   entypo: Feather.glyphMap,
@@ -255,4 +256,37 @@ export const FacebookIcon = (props: Omit<IconProps<string>, "name">) => {
 
 export const AppleIcon = (props: Omit<IconProps<string>, "name">) => {
   return <ExpoIcon library="materialCommunityIcons" name="apple" {...props} />;
+};
+
+export const SessionDurationIcon = (props: Omit<IconProps<string>, "name">) => {
+  return (
+    <ExpoIcon
+      library="materialCommunityIcons"
+      name="av-timer"
+      color={twColors.red[600]}
+      {...props}
+    />
+  );
+};
+
+export const SetsCompletedIcon = (props: Omit<IconProps<string>, "name">) => {
+  return (
+    <ExpoIcon
+      library="materialIcons"
+      name="checklist"
+      color={twColors.green[600]}
+      {...props}
+    />
+  );
+};
+
+export const WeightIcon = (props: Omit<IconProps<string>, "name">) => {
+  return (
+    <ExpoIcon
+      library="materialCommunityIcons"
+      name="weight"
+      color={twColors.blue[600]}
+      {...props}
+    />
+  );
 };

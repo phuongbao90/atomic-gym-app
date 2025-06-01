@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { Language, User } from "@prisma/client";
 
@@ -35,5 +35,36 @@ export class WorkoutSessionService {
     });
 
     return workoutSessions;
+  }
+
+  async getWorkoutSessionDetail(user: User, language: Language, id: string) {
+    const workoutSession = await this.prisma.workoutSessionLog.findUnique({
+      where: { id, user: { id: user.id } },
+      include: {
+        setLogs: true,
+
+        workout: {
+          include: {
+            // WorkoutSessionLog: true,
+            workoutExercises: {
+              include: {
+                sets: true,
+              },
+            },
+            translations: {
+              where: {
+                language: language,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!workoutSession) {
+      throw new NotFoundException("Workout session not found");
+    }
+
+    return workoutSession;
   }
 }

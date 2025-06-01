@@ -176,5 +176,6 @@
   "no_graph_data": "Logs on {{type}} are empty. Start logging to see your progress.",
   "view_history": "View History",
   "set_goal": "Set Goal",
-  "no_data": "No data"
+  "no_data": "No data",
+  "session_detail": "Session Detail"
 }
