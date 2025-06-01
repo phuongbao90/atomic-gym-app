@@ -22,7 +22,7 @@ export default (): ExpoConfig => ({
     supportsTablet: false,
     bundleIdentifier: appId,
     infoPlist: {
-      UIBackgroundModes: ["fetch", "remote-notification"],
+      UIBackgroundModes: ["fetch", "remote-notification", "audio"],
       NSAppTransportSecurity: { NSAllowsArbitraryLoads: true }, // ? enable HTTP requests
     },
     googleServicesFile: "../../secrets/GoogleService-Info.plist",
@@ -83,10 +83,9 @@ export default (): ExpoConfig => ({
     ],
     "expo-asset",
     [
-      "expo-av",
+      "expo-audio",
       {
-        microphonePermission:
-          "SO TAY GYM needs access to your microphone to record audio for feedback and review items",
+        microphonePermission: "Allow SO TAY GYM to access your microphone.",
       },
     ],
     [

@@ -27,14 +27,11 @@ import { modalStack } from "../src/lib/modal/modal-stack";
 import { Provider } from "react-redux";
 import { persistor, store, useAppSelector } from "../src/stores/redux-store";
 import i18n from "../src/configs/i18n";
-// import { createOfetchInstance } from "app";
 import { PersistGate } from "redux-persist/integration/react";
 import { colorScheme } from "nativewind";
 import { useReactNavigationDevTools } from "@dev-plugins/react-navigation";
 import notifee from "@notifee/react-native";
-import { Audio } from "expo-av";
 import restTimeEndSound from "../assets/sounds/rest-time-end.mp3";
-// This runs even if your app UI is backgrounded/killed
 import { enableScreens } from "react-native-screens";
 import { getCookie, useSession } from "../src/lib/auth-client";
 import {
@@ -46,6 +43,7 @@ import {
 } from "app";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setIsConnected } from "../src/stores/slices/app-slice";
+import { AudioModule } from "expo-audio";
 
 enableScreens();
 
@@ -56,7 +54,8 @@ notifee.registerForegroundService(async (task) => {
     setTimeout(async () => {
       await notifee.stopForegroundService();
 
-      await Audio.Sound.createAsync(restTimeEndSound, { shouldPlay: true });
+      // await Audio.Sound.createAsync(restTimeEndSound, { shouldPlay: true });
+      await AudioModule.playRecordingAsync(restTimeEndSound);
     }, Number(task.data?.restTime) * 1000);
   }
 });

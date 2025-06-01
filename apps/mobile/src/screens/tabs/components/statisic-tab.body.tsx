@@ -122,8 +122,6 @@ const useBodyMeasurementData = (
     measurementTypeId.toString()
   );
 
-  // console.log("bodyLogGoal ", bodyLogGoal, measurementTypeId);
-
   const chartData: LineChartPropsType["data"] = useMemo(() => {
     const length = _data?.length || 0;
 
