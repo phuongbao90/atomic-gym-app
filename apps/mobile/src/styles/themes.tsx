@@ -1,4 +1,5 @@
 export const PRIMARY_COLOR = "#bcf352";
+export const PRIMARY_COLOR_DARK = "#7FCF0A";
 export const SECONDARY_COLOR = "#8a69fb";
 export const DESTRUCTIVE_COLOR = "#ff0000";
 import _twColors from "tailwindcss/colors";

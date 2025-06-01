@@ -1,10 +1,5 @@
-import { AppScreen } from "../../src/components/ui/app-screen";
-import { AppText } from "../../src/components/ui/app-text";
+import { HistoryTabScreen } from "../../src/screens/tabs/history-tab-screen";
 
 export default function HistoryTab() {
-  return (
-    <AppScreen>
-      <AppText>History tab</AppText>
-    </AppScreen>
-  );
+  return <HistoryTabScreen />;
 }

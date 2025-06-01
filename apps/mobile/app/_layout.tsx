@@ -18,6 +18,7 @@ import { Toaster } from "sonner-native";
 import { ReactQueryProvider } from "../src/lib/react-query";
 import Onboarding from "./onboarding";
 import "../src/configs/i18n";
+import "../src/lib/calendar-locales";
 import {
   ReanimatedLogLevel,
   configureReanimatedLogger,

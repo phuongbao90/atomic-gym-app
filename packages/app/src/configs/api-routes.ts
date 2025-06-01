@@ -55,4 +55,9 @@ export const API_ROUTES = {
       `${API_ROUTES.logs.base}/body-measurement-types`,
     deleteBodyLog: (id: string) => `${API_ROUTES.logs.base}/body?id=${id}`,
   },
+
+  workoutSession: {
+    base: "/workout-session",
+    history: () => `${API_ROUTES.workoutSession.base}/history`,
+  },
 };

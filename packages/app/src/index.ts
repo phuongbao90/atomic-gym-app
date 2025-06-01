@@ -40,5 +40,10 @@ export * from "./query/logs/logs.requests";
 export * from "./query/logs/logs.types";
 export * from "./query/logs/logs.keys";
 
+export * from "./query/workout-session/workout-session.hooks";
+export * from "./query/workout-session/workout-session.requests";
+export * from "./query/workout-session/workout-session.types";
+export * from "./query/workout-session/workout-session.keys";
+
 export * from "./configs/app-storage";
 export * from "./configs/user-preferences-storage";

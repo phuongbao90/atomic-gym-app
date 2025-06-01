@@ -4,7 +4,7 @@ import { CreateWorkoutDto } from "./dto/create-workout.dto";
 import { Request } from "express";
 import { CommonQueryParamsDto } from "src/common/dto/paginated-query.dto";
 import { paginateOutput } from "src/common/utils/pagination.utils";
-import { Language } from "@prisma/client";
+import { Language, User } from "@prisma/client";
 import { slugify } from "src/helpers/slugify";
 
 @Injectable()

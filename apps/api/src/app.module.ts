@@ -16,6 +16,7 @@ import mailConfig from "./config/mail.config";
 import { RawBodyMiddleware } from "./common/middlewares/raw-body";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { TransformResponseInterceptor } from "./common/interceptor/transform-response/transform-response.interceptor";
+import { WorkoutSessionModule } from './workout-session/workout-session.module';
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -41,6 +42,7 @@ const NODE_ENV = process.env.NODE_ENV;
     WorkoutModule,
     LogModule,
     MailModule,
+    WorkoutSessionModule,
   ],
   controllers: [],
   providers: [
