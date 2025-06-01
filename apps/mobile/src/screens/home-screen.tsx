@@ -1,16 +1,10 @@
-import {
-  AppStorage,
-  clearRequestCookie,
-  queryClient,
-  useGetBodyLogs,
-  useGetWorkoutPlan,
-} from "app";
+import { clearRequestCookie, queryClient, storageKeyNames } from "app";
 import { useRouter } from "expo-router";
 import { Button, Pressable, TouchableOpacity, View } from "react-native";
 import { AppScrollView } from "../../src/components/ui/app-scrollview";
 import { AppHeader } from "../components/ui/app-header";
 import { AppScreen } from "../components/ui/app-screen";
-import { useAppDispatch, useAppSelector } from "../stores/redux-store";
+import { useAppSelector } from "../stores/redux-store";
 import { appRoutes } from "../configs/routes";
 import { useTranslation } from "react-i18next";
 import {
@@ -25,9 +19,9 @@ import { AppText } from "../components/ui/app-text";
 import { cn } from "../utils/cn";
 import { Divider } from "../components/ui/divider";
 import { t } from "i18next";
-import { WorkoutPlanCard } from "../components/workout-plan-card";
 import { usePreventRepeatPress } from "../hooks/use-prevent-repeat-press";
 import { signOut, useSession } from "../lib/auth-client";
+import { useMMKVBoolean } from "react-native-mmkv";
 
 export function HomeScreen() {
   const activeWorkoutPlanId = useAppSelector((s) => s.app.activeWorkoutPlanId);
@@ -259,6 +253,9 @@ const WeeklyTrack = () => {
 const DEV = () => {
   const router = useRouter();
   const { data } = useSession();
+  const [_isOnboarded, setIsOnboarded] = useMMKVBoolean(
+    storageKeyNames.isOnboarded
+  );
 
   return (
     <View className="flex-row items-center justify-center gap-4 mt-auto">
@@ -272,7 +269,7 @@ const DEV = () => {
       <Button
         title="clear onboarded"
         onPress={() => {
-          AppStorage.setIsOnboarded(false);
+          setIsOnboarded(false);
         }}
       />
 

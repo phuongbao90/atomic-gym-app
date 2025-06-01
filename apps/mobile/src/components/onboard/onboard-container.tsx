@@ -14,7 +14,6 @@ import { extractZodErrors } from "../../utils/extract-zod-errors";
 import { showErrorToast } from "../../utils/toast";
 import { OnboardList } from "./onboard-list";
 import { onboardListSchema } from "./onboard-schemas";
-import { AppStorage } from "app";
 
 const data = [
   {
@@ -43,7 +42,11 @@ const data = [
   },
 ];
 
-export const OnboardContainer = () => {
+export const OnboardContainer = ({
+  setIsOnboarded,
+}: {
+  setIsOnboarded: (value: boolean) => void;
+}) => {
   useEffect(() => {
     try {
       onboardListSchema.parse(data);
@@ -55,11 +58,11 @@ export const OnboardContainer = () => {
   }, []);
 
   function onOnboardComplete() {
-    AppStorage.setIsOnboarded(true);
+    setIsOnboarded(true);
   }
 
   function onOnboardSkip() {
-    AppStorage.setIsOnboarded(true);
+    setIsOnboarded(true);
   }
 
   return (

@@ -1,6 +1,6 @@
 import { MMKV } from "react-native-mmkv";
 
-const storage = new MMKV();
+const appStorage = new MMKV();
 
 export const storageKeyNames = {
   isOnboarded: "isOnboarded",
@@ -12,39 +12,39 @@ export const storageKeyNames = {
 
 export const AppStorage = {
   clearAll: () => {
-    storage.clearAll();
+    appStorage.clearAll();
   },
   getIsOnboarded: () => {
     try {
-      return storage.getBoolean(storageKeyNames.isOnboarded);
+      return appStorage.getBoolean(storageKeyNames.isOnboarded);
     } catch (_error) {
       return false;
     }
   },
   setIsOnboarded: (value: boolean) => {
     try {
-      storage.set(storageKeyNames.isOnboarded, value);
+      appStorage.set(storageKeyNames.isOnboarded, value);
     } catch (error) {
       console.error(error);
     }
   },
   getLanguage: () => {
     try {
-      return storage.getString(storageKeyNames.language);
+      return appStorage.getString(storageKeyNames.language);
     } catch (_error) {
       return null;
     }
   },
   setCookie: (value: string) => {
     try {
-      storage.set(storageKeyNames.cookie, value);
+      appStorage.set(storageKeyNames.cookie, value);
     } catch (error) {
       console.error(error);
     }
   },
   getCookie: () => {
     try {
-      return storage.getString(storageKeyNames.cookie);
+      return appStorage.getString(storageKeyNames.cookie);
     } catch (_error) {
       return null;
     }

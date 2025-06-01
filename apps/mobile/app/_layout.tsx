@@ -130,7 +130,9 @@ export default function RootLayout() {
 
 const App = () => {
   const { isConnected } = useNetInfo();
-  const [isOnboarded] = useMMKVBoolean(storageKeyNames.isOnboarded);
+  const [isOnboarded, setIsOnboarded] = useMMKVBoolean(
+    storageKeyNames.isOnboarded
+  );
   const { data } = useSession();
   const language = useAppSelector((state) => state.app.language);
   const theme = useAppSelector((state) => state.app.theme);
@@ -171,7 +173,7 @@ const App = () => {
   }, [theme]);
 
   if (!isOnboarded) {
-    return <Onboarding />;
+    return <Onboarding setIsOnboarded={setIsOnboarded} />;
   }
 
   if (!data?.session) {
