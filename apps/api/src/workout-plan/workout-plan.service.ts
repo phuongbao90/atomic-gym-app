@@ -95,9 +95,7 @@ export class WorkoutPlanService {
     query: WorkoutPlanQueryDto,
     language: Language
   ) {
-    const { isPublic, isPremium, me, category, isSingle, isFeatured } = query;
-
-    // console.log("auth instance ", this.authService);
+    const { isPremium, me, category, isSingle, isFeatured } = query;
 
     const workoutPlanQuery: Prisma.WorkoutPlanFindManyArgs = {
       where: {
@@ -206,8 +204,6 @@ export class WorkoutPlanService {
   }
 
   async getWorkoutPlanById(id: string, language: Language, user: User) {
-    // Safely get user from request if it exists
-
     const workoutPlan = await this.prisma.workoutPlan.findUnique({
       where: { id },
       include: {
@@ -216,6 +212,9 @@ export class WorkoutPlanService {
           include: { setLogs: true },
         },
         workouts: {
+          orderBy: {
+            order: "asc",
+          },
           include: {
             _count: { select: { workoutExercises: true } },
             translations: { where: { language } },

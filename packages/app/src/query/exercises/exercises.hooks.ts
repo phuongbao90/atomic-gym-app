@@ -17,7 +17,7 @@ export const useGetExercises = (query: ExerciseQuery) => {
   });
 };
 
-export const useGetExercise = (id: number) => {
+export const useGetExercise = (id: string) => {
   return useQuery({
     enabled: !!id,
     queryKey: exerciseKeys.detail(id),

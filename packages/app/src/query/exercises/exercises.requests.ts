@@ -14,7 +14,7 @@ export const getExercises = async (query: ExerciseQuery) => {
     .json()) as ApiReponseWithMeta<Exercise[]>;
 };
 
-export const getExercise = async (id: number) => {
+export const getExercise = async (id: string) => {
   // return request<ApiResponse<Exercise>>(API_ROUTES.exercises.detail(id), {
   //   method: "GET",
   // });

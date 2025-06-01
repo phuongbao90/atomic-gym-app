@@ -39,6 +39,9 @@ Authorization: Bearer {{$global.accessToken}}
 GET {{BASE_URL}}/workout-plans/{{$global.planId}}
 Authorization: Bearer {{$global.accessToken}}
 
+GET {{BASE_URL}}/workout-plans/651f63fb-4b24-4126-8787-5cf791a41eaa
+Authorization: Bearer {{$global.accessToken}}
+
 ### ------------------------------------------------------------ delete one
 ###
 DELETE {{BASE_URL}}/workout-plans/1

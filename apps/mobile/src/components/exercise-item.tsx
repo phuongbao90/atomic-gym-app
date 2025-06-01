@@ -12,11 +12,13 @@ export const ExerciseItem = ({
   index,
   right,
   setCount,
+  opPress,
 }: {
   item: Exercise | undefined;
   index: number;
   right?: React.ReactNode | null;
   setCount: number | undefined;
+  opPress?: () => void;
 }) => {
   const router = useRouter();
   const debouncedPress = usePreventRepeatPress();
@@ -36,6 +38,10 @@ export const ExerciseItem = ({
       subLabelClassName="text-sm text-gray-600 dark:text-gray-400"
       onPress={() =>
         debouncedPress(() => {
+          if (opPress) {
+            opPress?.();
+            return;
+          }
           router.push(appRoutes.exercises.detail(item.id.toString()));
         })
       }

@@ -15,3 +15,6 @@ Authorization: Bearer {{$global.accessToken}}
 ###
 GET {{BASE_URL}}/workouts/3
 Authorization: Bearer {{$global.accessToken}}
+
+GET {{BASE_URL}}/workouts/f363bd5e-479e-4a04-8f44-c9e2d6be8d96
+

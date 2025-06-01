@@ -1,4 +1,9 @@
-import { clearRequestCookie, queryClient, storageKeyNames } from "app";
+import {
+  clearRequestCookie,
+  queryClient,
+  storageKeyNames,
+  useGetWorkoutPlan,
+} from "app";
 import { useRouter } from "expo-router";
 import { Button, Pressable, TouchableOpacity, View } from "react-native";
 import { AppScrollView } from "../../src/components/ui/app-scrollview";
@@ -22,6 +27,7 @@ import { t } from "i18next";
 import { usePreventRepeatPress } from "../hooks/use-prevent-repeat-press";
 import { signOut, useSession } from "../lib/auth-client";
 import { useMMKVBoolean } from "react-native-mmkv";
+import { WorkoutPlanCard } from "../components/workout-plan-card";
 
 export function HomeScreen() {
   const activeWorkoutPlanId = useAppSelector((s) => s.app.activeWorkoutPlanId);
@@ -29,7 +35,7 @@ export function HomeScreen() {
     (s) => s.workoutSession.activeWorkout?.id
   );
 
-  // const { data: activeWorkoutPlan } = useGetWorkoutPlan(activeWorkoutPlanId);
+  const { data: activeWorkoutPlan } = useGetWorkoutPlan(activeWorkoutPlanId);
 
   const { t } = useTranslation();
   const router = useRouter();
@@ -68,11 +74,11 @@ export function HomeScreen() {
             {t("my_workout_plans")}
           </AppText>
 
-          {/* {activeWorkoutPlan ? (
+          {activeWorkoutPlan ? (
             <WorkoutPlanCard item={activeWorkoutPlan} />
           ) : (
             <EmptyWorkoutPlan />
-          )} */}
+          )}
         </View>
 
         <View className="px-4 mt-4">

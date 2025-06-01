@@ -35,7 +35,7 @@ export const API_ROUTES = {
       return `${API_ROUTES.exercises.base}${query ? `?${stringify(query)}` : ""}`;
     },
 
-    detail: (id: number) => `${API_ROUTES.exercises.base}/${id}`,
+    detail: (id: string) => `${API_ROUTES.exercises.base}/${id}`,
   },
 
   muscleGroups: {

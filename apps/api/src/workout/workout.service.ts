@@ -97,6 +97,9 @@ export class WorkoutService {
       },
       include: {
         workoutExercises: {
+          orderBy: {
+            order: "asc",
+          },
           include: {
             exercise: {
               include: {

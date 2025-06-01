@@ -25,6 +25,11 @@ console.info(
   "---------------------------------Seeding database---------------------------------"
 );
 
+const WORKOUT_PLAN_ID = "651f63fb-4b24-4126-8787-5cf791a41eaa";
+const WORKOUT_ID = "f363bd5e-479e-4a04-8f44-c9e2d6be8d96";
+const WORKOUT_SESSION_ID = "244bbc32-1b09-4885-a05c-aa3f27eaafd2";
+let USER_ID = "";
+
 const prisma = new PrismaClient();
 const config = createAuth(undefined, undefined, {
   emailAndPassword: {
@@ -97,6 +102,9 @@ async function main() {
             password: "123456#@Nn",
           },
         });
+        if (index === 1) {
+          USER_ID = user.user.id;
+        }
         users.push({
           id: user.user.id,
           userId: user.user.id,
@@ -200,6 +208,8 @@ async function main() {
         });
       }
     }
+
+    createTestCase();
 
     //* CREATE BODY MEASUREMENT TYPES
     for (const t of measurementTypes) {
@@ -529,4 +539,380 @@ function createBodyLogs(userId: string) {
         },
       });
     });
+}
+
+async function createTestCase() {
+  const workoutPlan = await prisma.workoutPlan.create({
+    data: {
+      id: WORKOUT_PLAN_ID,
+      cover_image: faker.image.url(),
+      level: "BEGINNER",
+      createdById: USER_ID,
+      isPublic: true,
+      isPremium: false,
+      isFeatured: false,
+      isSingle: false,
+      category: "STRENGTH",
+      translations: {
+        create: [
+          {
+            language: "vi",
+            name: "Lich luyện tập cơ bản",
+            normalizedName: removeDiacritics("Lich luyện tập cơ bản"),
+            slug: slugify("Lich luyện tập cơ bản"),
+            description: fakerVI.lorem.paragraph(),
+          },
+          {
+            language: "en",
+            name: "Basic workout plan",
+            normalizedName: removeDiacritics("Basic workout plan"),
+            slug: slugify("Basic workout plan"),
+            description: fakerEN_US.lorem.paragraph(),
+          },
+        ],
+      },
+      workouts: {
+        create: [
+          {
+            id: WORKOUT_ID,
+            order: 0,
+            workoutExercises: {
+              create: [
+                {
+                  order: 0,
+                  exerciseId: "36fc9e24-818b-41af-8f65-6ef4b277d0dc",
+                  sets: {
+                    create: [
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                    ],
+                  },
+                },
+                {
+                  order: 1,
+                  exerciseId: "27fba71d-f165-4680-8c64-8d685ce868d6",
+                  sets: {
+                    create: [
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                    ],
+                  },
+                },
+                {
+                  order: 2,
+                  exerciseId: "c7e00049-8dc8-4c03-9632-f2251b0dd8f7",
+                  sets: {
+                    create: [
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                    ],
+                  },
+                },
+                {
+                  order: 3,
+                  exerciseId: "fcd88db0-ba4e-49f8-9612-69a1db4d74b2",
+                  sets: {
+                    create: [
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+            translations: {
+              create: [
+                {
+                  language: "vi",
+                  name: "Thân trên",
+                  normalizedName: removeDiacritics("Thân trên"),
+                  slug: slugify("Thân trên"),
+                },
+                {
+                  language: "en",
+                  name: "Upper body",
+                  normalizedName: removeDiacritics("Upper body"),
+                  slug: slugify("Upper body"),
+                },
+              ],
+            },
+          },
+          {
+            order: 1,
+            workoutExercises: {
+              create: [
+                {
+                  order: 0,
+                  exerciseId: "3a3d6a97-2c1b-46da-bf91-07067492a6a2",
+                  sets: {
+                    create: [
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                    ],
+                  },
+                },
+                {
+                  order: 1,
+                  exerciseId: "73925205-2661-4624-9c4b-b9b91c58c8ee",
+                  sets: {
+                    create: [
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                    ],
+                  },
+                },
+                {
+                  order: 2,
+                  exerciseId: "6140fb17-bd07-408a-a330-a8fd3dbfb68c",
+                  sets: {
+                    create: [
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                    ],
+                  },
+                },
+                {
+                  order: 3,
+                  exerciseId: "21d5919a-b0a6-4755-8a6e-231196a42020",
+                  sets: {
+                    create: [
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+            translations: {
+              create: [
+                {
+                  language: "vi",
+                  name: "Thân dưới",
+                  normalizedName: removeDiacritics("Thân dưới"),
+                  slug: slugify("Thân dưới"),
+                },
+                {
+                  language: "en",
+                  name: "Lower body",
+                  normalizedName: removeDiacritics("Lower body"),
+                  slug: slugify("Lower body"),
+                },
+              ],
+            },
+          },
+          {
+            order: 2,
+            workoutExercises: {
+              create: [
+                {
+                  order: 0,
+                  exerciseId: "b1c6a294-8cce-48cb-bf39-720f66d3d88e",
+                  sets: {
+                    create: [
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                    ],
+                  },
+                },
+                {
+                  order: 1,
+                  exerciseId: "0635db4e-ca46-4130-b851-ab096e657b3e",
+                  sets: {
+                    create: [
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                    ],
+                  },
+                },
+                {
+                  order: 2,
+                  exerciseId: "ce8088a5-79ad-4f9c-bb6e-28a525265f54",
+                  sets: {
+                    create: [
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                    ],
+                  },
+                },
+                {
+                  order: 3,
+                  exerciseId: "724892b2-6d57-4e5c-9b53-a8dbf960b0a1",
+                  sets: {
+                    create: [
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+            translations: {
+              create: [
+                {
+                  language: "vi",
+                  name: "Tay",
+                  normalizedName: removeDiacritics("Tay"),
+                  slug: slugify("Tay"),
+                },
+                {
+                  language: "en",
+                  name: "Arms",
+                  normalizedName: removeDiacritics("Arms"),
+                  slug: slugify("Arms"),
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  });
+
+  await prisma.workoutSessionLog.create({
+    data: {
+      id: WORKOUT_SESSION_ID,
+      duration: 60 * 60 * 1, // 1 hour
+      notes: "This is a test case",
+      workoutPlanId: workoutPlan.id,
+      userId: USER_ID,
+      workoutId: WORKOUT_ID,
+      setLogs: {
+        createMany: {
+          data: [],
+        },
+      },
+    },
+  });
 }

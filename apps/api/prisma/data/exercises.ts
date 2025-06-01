@@ -391,6 +391,7 @@ export const exerciseData: _Exercise[] = [
     ],
   }),
   createExercise({
+    id: "b1c6a294-8cce-48cb-bf39-720f66d3d88e",
     category: "WEIGHT",
     primaryMuscle: [{ id: 10 }],
     translations: [
@@ -411,6 +412,7 @@ export const exerciseData: _Exercise[] = [
     ],
   }),
   createExercise({
+    id: "0635db4e-ca46-4130-b851-ab096e657b3e",
     category: "WEIGHT",
     primaryMuscle: [{ id: 10 }],
     translations: [
@@ -431,6 +433,7 @@ export const exerciseData: _Exercise[] = [
     ],
   }),
   createExercise({
+    id: "ce8088a5-79ad-4f9c-bb6e-28a525265f54",
     category: "WEIGHT",
     primaryMuscle: [{ id: 11 }],
     translations: [
@@ -451,6 +454,7 @@ export const exerciseData: _Exercise[] = [
     ],
   }),
   createExercise({
+    id: "724892b2-6d57-4e5c-9b53-a8dbf960b0a1",
     category: "WEIGHT",
     primaryMuscle: [{ id: 11 }],
     translations: [
@@ -551,6 +555,7 @@ export const exerciseData: _Exercise[] = [
     ],
   }),
   createExercise({
+    id: "3a3d6a97-2c1b-46da-bf91-07067492a6a2",
     category: "WEIGHT",
     primaryMuscle: [{ id: 14 }],
     translations: [
@@ -571,6 +576,7 @@ export const exerciseData: _Exercise[] = [
     ],
   }),
   createExercise({
+    id: "73925205-2661-4624-9c4b-b9b91c58c8ee",
     category: "WEIGHT",
     primaryMuscle: [{ id: 14 }],
     translations: [
@@ -611,6 +617,7 @@ export const exerciseData: _Exercise[] = [
     ],
   }),
   createExercise({
+    id: "6140fb17-bd07-408a-a330-a8fd3dbfb68c",
     category: "WEIGHT",
     primaryMuscle: [{ id: 15 }],
     translations: [
@@ -631,6 +638,7 @@ export const exerciseData: _Exercise[] = [
     ],
   }),
   createExercise({
+    id: "21d5919a-b0a6-4755-8a6e-231196a42020",
     category: "WEIGHT",
     primaryMuscle: [{ id: 16 }],
     translations: [
