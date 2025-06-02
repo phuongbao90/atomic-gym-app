@@ -239,13 +239,15 @@ export class WorkoutPlanService {
     const [sessionAgg, setAgg] = await this.prisma.$transaction([
       // count sessions and sum durations
       this.prisma.workoutSessionLog.aggregate({
-        where: { workoutPlanId: id },
+        where: { originalWorkout: { workoutPlanId: id } },
         _count: { _all: true },
         _sum: { duration: true },
       }),
       // count all sets across those sessions
       this.prisma.exerciseSetLog.aggregate({
-        where: { workoutSession: { workoutPlanId: id } },
+        where: {
+          workoutSession: { originalWorkout: { workoutPlanId: id } },
+        },
         _count: { _all: true },
       }),
     ]);

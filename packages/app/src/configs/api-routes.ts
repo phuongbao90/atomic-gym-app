@@ -60,5 +60,6 @@ export const API_ROUTES = {
     base: "/workout-session",
     history: () => `${API_ROUTES.workoutSession.base}/history`,
     detail: (id: string) => `${API_ROUTES.workoutSession.base}/detail?id=${id}`,
+    delete: (id: string) => `${API_ROUTES.workoutSession.base}/${id}`,
   },
 };

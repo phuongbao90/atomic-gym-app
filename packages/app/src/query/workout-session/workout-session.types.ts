@@ -1,7 +1,7 @@
 export type WorkoutSessionHistoryItem = {
   id: string;
-  createdAt: string;
-  workout: {
+  performedAt: string;
+  originalWorkout: {
     translations: {
       name: string;
     }[];
@@ -10,7 +10,8 @@ export type WorkoutSessionHistoryItem = {
 
 export type WorkoutSessionDetail = {
   id: string;
-  createdAt: string;
+  performedAt: string;
+  workoutNameSnapshot: string | null;
   notes: string | null;
   duration: number;
   setLogs: {
@@ -19,29 +20,9 @@ export type WorkoutSessionDetail = {
     repetitions: number;
     distance: number;
     duration: number;
-    isIncomplete: boolean;
-    createdAt: string;
-  }[];
-  workout: {
-    id: string;
     order: number;
-    workoutExercises: {
-      id: string;
-      workoutId: string;
-      exerciseId: string;
-      order: number;
-      notes: string | null;
-      sets: {
-        id: string;
-        restTime: number;
-        isWarmup: boolean;
-        isDropSet: boolean;
-        isUntilFailure: boolean;
-        workoutExerciseId: string;
-      }[];
-    }[];
-    translations: {
-      name: string;
-    }[];
-  };
+    originalExerciseId: string;
+    exerciseNameSnapshot: string;
+    isCompleted: boolean;
+  }[];
 };

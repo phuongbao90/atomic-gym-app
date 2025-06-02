@@ -1,4 +1,4 @@
-import { IsString, IsDefined, IsOptional, IsIn, IsDate } from "class-validator";
+import { IsString, IsDefined, IsOptional, IsIn, IsDate, IsBoolean } from "class-validator";
 import { MuscleGroup, User, ExerciseTranslation, WorkoutExercise, ExerciseSetLog } from "./";
 import { getEnumValues } from "../helpers";
 import { ExerciseCategory } from "../enums";
@@ -46,4 +46,8 @@ export class Exercise {
 
     @IsDefined()
     ExerciseSetLog!: ExerciseSetLog[];
+
+    @IsDefined()
+    @IsBoolean()
+    isActive!: boolean;
 }

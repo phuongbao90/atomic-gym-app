@@ -20,6 +20,7 @@ export const exerciseData: _Exercise[] = [
     id: "98adfc52-37bc-4308-8351-f004ea3bf08c",
     category: "CARDIO",
     primaryMuscle: [{ id: 20 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -43,6 +44,7 @@ export const exerciseData: _Exercise[] = [
     id: "91aafa95-9e34-4c8d-bb54-c76b94969a1f",
     category: "CARDIO",
     primaryMuscle: [{ id: 20 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -67,6 +69,7 @@ export const exerciseData: _Exercise[] = [
     id: "36fc9e24-818b-41af-8f65-6ef4b277d0dc",
     category: "WEIGHT",
     primaryMuscle: [{ id: 4 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -90,6 +93,7 @@ export const exerciseData: _Exercise[] = [
     id: "27fba71d-f165-4680-8c64-8d685ce868d6",
     category: "WEIGHT",
     primaryMuscle: [{ id: 4 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -113,6 +117,7 @@ export const exerciseData: _Exercise[] = [
     id: "e5f8e3e8-a441-4a79-aced-25458f01fde6",
     category: "WEIGHT",
     primaryMuscle: [{ id: 5 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -136,6 +141,7 @@ export const exerciseData: _Exercise[] = [
     id: "47b6500f-3ecf-485d-a1be-2a8d3fe43123",
     category: "WEIGHT",
     primaryMuscle: [{ id: 5 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -159,6 +165,7 @@ export const exerciseData: _Exercise[] = [
     id: "142bf598-61ed-4f5f-9ec8-d63bfb014d71",
     category: "WEIGHT",
     primaryMuscle: [{ id: 6 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -182,6 +189,7 @@ export const exerciseData: _Exercise[] = [
     id: "c562546f-c5a4-408e-9212-0632dc825dfe",
     category: "WEIGHT",
     primaryMuscle: [{ id: 7 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -205,6 +213,7 @@ export const exerciseData: _Exercise[] = [
     id: "c7e00049-8dc8-4c03-9632-f2251b0dd8f7",
     category: "WEIGHT",
     primaryMuscle: [{ id: 7 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -228,6 +237,7 @@ export const exerciseData: _Exercise[] = [
     id: "fcd88db0-ba4e-49f8-9612-69a1db4d74b2",
     category: "FREE_WEIGHT",
     primaryMuscle: [{ id: 7 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -251,6 +261,7 @@ export const exerciseData: _Exercise[] = [
     id: "9d8ccbf0-368c-402c-bb63-ed3698834bcd",
     category: "FREE_WEIGHT",
     primaryMuscle: [{ id: 7 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -273,6 +284,7 @@ export const exerciseData: _Exercise[] = [
   createExercise({
     category: "FREE_WEIGHT",
     primaryMuscle: [{ id: 7 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -293,6 +305,7 @@ export const exerciseData: _Exercise[] = [
   createExercise({
     category: "WEIGHT",
     primaryMuscle: [{ id: 8 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -313,6 +326,7 @@ export const exerciseData: _Exercise[] = [
   createExercise({
     category: "WEIGHT",
     primaryMuscle: [{ id: 8 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -333,6 +347,7 @@ export const exerciseData: _Exercise[] = [
   createExercise({
     category: "FREE_WEIGHT",
     primaryMuscle: [{ id: 8 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -353,6 +368,7 @@ export const exerciseData: _Exercise[] = [
   createExercise({
     category: "FREE_WEIGHT",
     primaryMuscle: [{ id: 9 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -373,6 +389,7 @@ export const exerciseData: _Exercise[] = [
   createExercise({
     category: "FREE_WEIGHT",
     primaryMuscle: [{ id: 9 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -394,6 +411,7 @@ export const exerciseData: _Exercise[] = [
     id: "b1c6a294-8cce-48cb-bf39-720f66d3d88e",
     category: "WEIGHT",
     primaryMuscle: [{ id: 10 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -415,6 +433,7 @@ export const exerciseData: _Exercise[] = [
     id: "0635db4e-ca46-4130-b851-ab096e657b3e",
     category: "WEIGHT",
     primaryMuscle: [{ id: 10 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -436,6 +455,7 @@ export const exerciseData: _Exercise[] = [
     id: "ce8088a5-79ad-4f9c-bb6e-28a525265f54",
     category: "WEIGHT",
     primaryMuscle: [{ id: 11 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -457,6 +477,7 @@ export const exerciseData: _Exercise[] = [
     id: "724892b2-6d57-4e5c-9b53-a8dbf960b0a1",
     category: "WEIGHT",
     primaryMuscle: [{ id: 11 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -477,6 +498,7 @@ export const exerciseData: _Exercise[] = [
   createExercise({
     category: "FREE_WEIGHT",
     primaryMuscle: [{ id: 11 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -497,6 +519,7 @@ export const exerciseData: _Exercise[] = [
   createExercise({
     category: "WEIGHT",
     primaryMuscle: [{ id: 12 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -517,6 +540,7 @@ export const exerciseData: _Exercise[] = [
   createExercise({
     category: "WEIGHT",
     primaryMuscle: [{ id: 13 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -537,6 +561,7 @@ export const exerciseData: _Exercise[] = [
   createExercise({
     category: "FREE_WEIGHT",
     primaryMuscle: [{ id: 13 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -558,6 +583,7 @@ export const exerciseData: _Exercise[] = [
     id: "3a3d6a97-2c1b-46da-bf91-07067492a6a2",
     category: "WEIGHT",
     primaryMuscle: [{ id: 14 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -579,6 +605,7 @@ export const exerciseData: _Exercise[] = [
     id: "73925205-2661-4624-9c4b-b9b91c58c8ee",
     category: "WEIGHT",
     primaryMuscle: [{ id: 14 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -599,6 +626,7 @@ export const exerciseData: _Exercise[] = [
   createExercise({
     category: "WEIGHT",
     primaryMuscle: [{ id: 15 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -620,6 +648,7 @@ export const exerciseData: _Exercise[] = [
     id: "6140fb17-bd07-408a-a330-a8fd3dbfb68c",
     category: "WEIGHT",
     primaryMuscle: [{ id: 15 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -641,6 +670,7 @@ export const exerciseData: _Exercise[] = [
     id: "21d5919a-b0a6-4755-8a6e-231196a42020",
     category: "WEIGHT",
     primaryMuscle: [{ id: 16 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -661,6 +691,7 @@ export const exerciseData: _Exercise[] = [
   createExercise({
     category: "FREE_WEIGHT",
     primaryMuscle: [{ id: 16 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -681,6 +712,7 @@ export const exerciseData: _Exercise[] = [
   createExercise({
     category: "WEIGHT",
     primaryMuscle: [{ id: 17 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -701,6 +733,7 @@ export const exerciseData: _Exercise[] = [
   createExercise({
     category: "WEIGHT",
     primaryMuscle: [{ id: 18 }],
+    isActive: true,
     translations: [
       {
         language: "vi",
@@ -722,6 +755,7 @@ export const exerciseData: _Exercise[] = [
     id: "b6cf41b5-e256-4fb3-9c80-93ad7b07a113",
     category: "WEIGHT",
     primaryMuscle: [{ id: 19 }],
+    isActive: true,
     translations: [
       {
         language: "vi",

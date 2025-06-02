@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from "@nestjs/common";
+import { Controller, Delete, Get, Param, Query } from "@nestjs/common";
 import { WorkoutSessionService } from "./workout-session.service";
 import { GetLanguage } from "../common/decorators/get-language.decorator";
 import { CurrentUser } from "../common/decorator/current-user.decorator";
@@ -27,5 +27,13 @@ export class WorkoutSessionController {
       language,
       id
     );
+  }
+
+  @Delete(":id")
+  async deleteWorkoutSession(
+    @CurrentUser() user: User,
+    @Param("id") id: string
+  ) {
+    return this.workoutSessionService.deleteWorkoutSession(user, id);
   }
 }

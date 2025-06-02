@@ -59,4 +59,8 @@ export class WorkoutPlan {
 
     @IsDefined()
     WorkoutSessionLog!: WorkoutSessionLog[];
+
+    @IsDefined()
+    @IsBoolean()
+    isActive!: boolean;
 }

@@ -1,6 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { WORKOUT_SESSION_KEYS } from "./workout-session.keys";
 import {
+  deleteWorkoutSession,
   getWorkoutSessionDetail,
   getWorkoutSessionHistory,
 } from "./workout-session.requests";
@@ -20,5 +21,11 @@ export const useWorkoutSessionDetail = (id: string) => {
     queryFn: () => getWorkoutSessionDetail(id),
     select: (data) => data.data,
     enabled: !!id,
+  });
+};
+
+export const useDeleteWorkoutSession = () => {
+  return useMutation({
+    mutationFn: (id: string) => deleteWorkoutSession(id),
   });
 };

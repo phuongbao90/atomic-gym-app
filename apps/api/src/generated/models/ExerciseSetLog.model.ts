@@ -14,11 +14,15 @@ export class ExerciseSetLog {
     workoutSessionId!: string;
 
     @IsDefined()
-    exercise!: Exercise;
+    originalExercise!: Exercise;
 
     @IsDefined()
     @IsString()
-    exerciseId!: string;
+    originalExerciseId!: string;
+
+    @IsDefined()
+    @IsString()
+    exerciseNameSnapshot!: string;
 
     @IsOptional()
     weight?: number;
@@ -34,13 +38,17 @@ export class ExerciseSetLog {
     @IsInt()
     duration?: number;
 
-    @IsOptional()
-    @IsBoolean()
-    isIncomplete?: boolean;
+    @IsDefined()
+    @IsInt()
+    order!: number;
 
-    @IsOptional()
+    @IsDefined()
+    @IsBoolean()
+    isCompleted!: boolean;
+
+    @IsDefined()
     @IsDate()
-    createdAt?: Date;
+    performedAt!: Date;
 
     @IsDefined()
     user!: User;
@@ -50,9 +58,9 @@ export class ExerciseSetLog {
     userId!: string;
 
     @IsDefined()
-    @IsInt()
-    muscleGroupId!: number;
+    muscleGroup!: MuscleGroup;
 
     @IsDefined()
-    muscleGroup!: MuscleGroup;
+    @IsInt()
+    muscleGroupId!: number;
 }

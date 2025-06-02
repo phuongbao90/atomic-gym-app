@@ -1,4 +1,4 @@
-import { IsString, IsDefined, IsInt, IsOptional, IsDate } from "class-validator";
+import { IsString, IsDefined, IsInt, IsOptional, IsDate, IsBoolean } from "class-validator";
 import { WorkoutPlan, WorkoutTranslation, WorkoutExercise, WorkoutSessionLog } from "./";
 
 export class Workout {
@@ -33,4 +33,8 @@ export class Workout {
 
     @IsDefined()
     WorkoutSessionLog!: WorkoutSessionLog[];
+
+    @IsDefined()
+    @IsBoolean()
+    isActive!: boolean;
 }

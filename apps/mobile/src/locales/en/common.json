@@ -177,5 +177,7 @@
   "view_history": "View History",
   "set_goal": "Set Goal",
   "no_data": "No data",
-  "session_detail": "Session Detail"
+  "session_detail": "Session Detail",
+  "incomplete": "Incomplete",
+  "confirm_delete_session": "Are you sure you want to delete this session?"
 }

@@ -37,6 +37,7 @@ export interface MuscleGroup {
   exercises?: Exercise[];
   translations?: MuscleGroupTranslation[];
   ExerciseSetLog?: ExerciseSetLog[];
+  isActive: boolean;
 }
 
 export interface MuscleGroupTranslation {
@@ -61,6 +62,7 @@ export interface Exercise {
   translations?: ExerciseTranslation[];
   workoutExercises?: WorkoutExercise[];
   ExerciseSetLog?: ExerciseSetLog[];
+  isActive: boolean;
 }
 
 export interface ExerciseTranslation {
@@ -89,6 +91,7 @@ export interface WorkoutPlan {
   updatedAt: string;
   translations?: WorkoutPlanTranslation[];
   WorkoutSessionLog?: WorkoutSessionLog[];
+  isActive: boolean;
 }
 
 export interface WorkoutPlanTranslation {
@@ -111,6 +114,7 @@ export interface Workout {
   translations?: WorkoutTranslation[];
   workoutExercises?: WorkoutExercise[];
   WorkoutSessionLog?: WorkoutSessionLog[];
+  isActive: boolean;
 }
 
 export interface WorkoutTranslation {
@@ -128,6 +132,10 @@ export interface ExerciseSet {
   isWarmup: boolean;
   isDropSet: boolean;
   isUntilFailure: boolean;
+  plannedReps: number | null;
+  plannedWeight: number | null;
+  plannedDuration: number | null;
+  plannedDistance: number | null;
   WorkoutExercise?: WorkoutExercise;
   workoutExerciseId: string;
 }
@@ -147,11 +155,13 @@ export interface WorkoutSessionLog {
   id: string;
   user?: User;
   userId: string;
-  workoutPlan?: WorkoutPlan;
-  workoutPlanId: string;
-  workout?: Workout;
-  workoutId: string;
-  createdAt: string | null;
+  originalWorkoutPlanId: string;
+  originalWorkout?: Workout;
+  originalWorkoutId: string;
+  originalWorkoutPlan?: WorkoutPlan;
+  workoutPlanNameSnapshot: string | null;
+  workoutNameSnapshot: string;
+  performedAt: string;
   notes: string | null;
   setLogs?: ExerciseSetLog[];
   duration: number;
@@ -161,18 +171,20 @@ export interface ExerciseSetLog {
   id: string;
   workoutSession?: WorkoutSessionLog;
   workoutSessionId: string;
-  exercise?: Exercise;
-  exerciseId: string;
+  originalExercise?: Exercise;
+  originalExerciseId: string;
+  exerciseNameSnapshot: string;
   weight: number | null;
   repetitions: number | null;
   distance: number | null;
   duration: number | null;
-  isIncomplete: boolean | null;
-  createdAt: string | null;
+  order: number;
+  isCompleted: boolean;
+  performedAt: string;
   user?: User;
   userId: string;
-  muscleGroupId: number;
   muscleGroup?: MuscleGroup;
+  muscleGroupId: number;
 }
 
 export interface Session {

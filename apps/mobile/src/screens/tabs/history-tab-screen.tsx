@@ -34,10 +34,10 @@ export const HistoryTabScreen = () => {
           <View className="h-20 mx-4 border-b border-gray-200 flex-row justify-between items-center">
             <View>
               <AppText className="text-sm">
-                {dayjs(item.createdAt).format("ddd, DD MMM")}
+                {dayjs(item?.performedAt).format("ddd, DD MMM")}
               </AppText>
               <AppText className="text-lg">
-                {item.workout.translations[0].name}
+                {item?.originalWorkout?.translations[0]?.name ?? ""}
               </AppText>
             </View>
           </View>
@@ -122,7 +122,7 @@ const useCalendarData = (
     if (!workoutSessionHistory || workoutSessionHistory.length === 0) return {};
     return workoutSessionHistory?.reduce(
       (acc, cur) => {
-        const date = dayjs(cur.createdAt).format("YYYY-MM-DD");
+        const date = dayjs(cur.performedAt).format("YYYY-MM-DD");
         if (!acc[date]) {
           //   "2025-05-01": {
           //     marked: true,

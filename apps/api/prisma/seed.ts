@@ -14,6 +14,7 @@ import { betterAuth } from "better-auth";
 import { createAuth } from "../src/lib/auth";
 import { exerciseData } from "./data/exercises";
 import { measurementTypes } from "./data/measurement-types";
+import * as dayjs from "dayjs";
 
 /**
  * error with auto increment id:
@@ -197,16 +198,16 @@ async function main() {
           randNumber({ min: 0, max: defaultWorkoutPlans.length - 1 })
         ];
 
-      await createLogs({
-        userId: user.userId,
-        workoutPlanId: dePickedWorkoutPlan.id,
-      });
-      for (const workout of userWorkoutPlans) {
-        await createLogs({
-          userId: user.userId,
-          workoutPlanId: workout.id,
-        });
-      }
+      // await createLogs({
+      //   userId: user.userId,
+      //   workoutPlanId: dePickedWorkoutPlan.id,
+      // });
+      // for (const workout of userWorkoutPlans) {
+      //   await createLogs({
+      //     userId: user.userId,
+      //     workoutPlanId: workout.id,
+      //   });
+      // }
     }
 
     createTestCase();
@@ -412,7 +413,7 @@ async function createLogs({
   // console.log("🚀 ~ workouts:", workouts[0].workoutExercises);
 
   for (const workout of workouts) {
-    for (const workoutExercise of workout.workoutExercises) {
+    for (const _workoutExercised of workout.workoutExercises) {
       Array(randNumber({ min: 10, max: 20 }))
         .fill(null)
         .forEach(async () => {
@@ -421,45 +422,45 @@ async function createLogs({
           });
           await prisma.workoutSessionLog.create({
             data: {
-              workoutPlanId: workoutPlanId,
+              originalWorkoutPlanId: workoutPlanId,
               userId: userId,
-              workoutId: workout.id,
+              originalWorkoutId: workout.id,
               duration: randNumber({ min: 1 * 60 * 30, max: 1 * 60 * 120 }),
               notes: faker.helpers.maybe(() => faker.lorem.paragraph(), {
                 probability: 0.2,
               }),
-              createdAt,
+              performedAt: createdAt,
               setLogs: {
-                create: workoutExercise.sets.map(() => {
-                  if (workoutExercise.exercise.category === "CARDIO") {
-                    return {
-                      exerciseId: workoutExercise.exerciseId,
-                      distance: randNumber({ min: 1, max: 100 }),
-                      duration: randNumber({ min: 1, max: 100 }),
-                      muscleGroupId: 20,
-                      userId: userId,
-                      createdAt,
-                    };
-                  }
-                  if (workoutExercise.exercise.category === "WEIGHT") {
-                    return {
-                      exerciseId: workoutExercise.exerciseId,
-                      weight: randNumber({ min: 1, max: 100 }),
-                      repetitions: randNumber({ min: 1, max: 10 }),
-                      muscleGroupId:
-                        workoutExercise.exercise.primaryMuscle[0].id,
-                      userId: userId,
-                      createdAt,
-                    };
-                  }
-                  return {
-                    exerciseId: workoutExercise.exerciseId,
-                    repetitions: randNumber({ min: 6, max: 20 }),
-                    muscleGroupId: workoutExercise.exercise.primaryMuscle[0].id,
-                    userId: userId,
-                    createdAt,
-                  };
-                }),
+                // create: workoutExercise.sets.map(() => {
+                //   if (workoutExercise.exercise.category === "CARDIO") {
+                //     return {
+                //       exerciseId: workoutExercise.exerciseId,
+                //       distance: randNumber({ min: 1, max: 100 }),
+                //       duration: randNumber({ min: 1, max: 100 }),
+                //       muscleGroupId: 20,
+                //       userId: userId,
+                //       createdAt,
+                //     };
+                //   }
+                //   if (workoutExercise.exercise.category === "WEIGHT") {
+                //     return {
+                //       exerciseId: workoutExercise.exerciseId,
+                //       weight: randNumber({ min: 1, max: 100 }),
+                //       repetitions: randNumber({ min: 1, max: 10 }),
+                //       muscleGroupId:
+                //         workoutExercise.exercise.primaryMuscle[0].id,
+                //       userId: userId,
+                //       createdAt,
+                //     };
+                //   }
+                //   return {
+                //     exerciseId: workoutExercise.exerciseId,
+                //     repetitions: randNumber({ min: 6, max: 20 }),
+                //     muscleGroupId: workoutExercise.exercise.primaryMuscle[0].id,
+                //     userId: userId,
+                //     createdAt,
+                //   };
+                // }),
               },
             },
           });
@@ -609,6 +610,30 @@ async function createTestCase() {
                   exerciseId: "27fba71d-f165-4680-8c64-8d685ce868d6",
                   sets: {
                     create: [
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
+                      {
+                        restTime: 120,
+                        isWarmup: false,
+                        isDropSet: false,
+                        isUntilFailure: false,
+                      },
                       {
                         restTime: 120,
                         isWarmup: false,
@@ -900,17 +925,57 @@ async function createTestCase() {
     },
   });
 
+  const workoutExercises = await prisma.workoutExercise.findMany({
+    where: {
+      workoutId: WORKOUT_ID,
+    },
+    include: {
+      sets: true,
+      exercise: {
+        select: {
+          primaryMuscle: true,
+          translations: {
+            where: {
+              language: "vi",
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const oneDayAgo = dayjs().subtract(1, "day").toDate();
+
   await prisma.workoutSessionLog.create({
     data: {
       id: WORKOUT_SESSION_ID,
       duration: 60 * 60 * 1, // 1 hour
       notes: "This is a test case",
-      workoutPlanId: workoutPlan.id,
+      originalWorkoutPlanId: workoutPlan.id,
       userId: USER_ID,
-      workoutId: WORKOUT_ID,
+      originalWorkoutId: WORKOUT_ID,
+      workoutNameSnapshot: "Thân trên",
+      workoutPlanNameSnapshot: "Lich luyện tập cơ bản",
+      performedAt: oneDayAgo,
       setLogs: {
         createMany: {
-          data: [],
+          data: workoutExercises.reduce((acc, curr) => {
+            curr.sets.forEach((_set, index) => {
+              acc.push({
+                exerciseNameSnapshot: curr.exercise.translations[0].name,
+                isCompleted: true,
+                muscleGroupId: curr.exercise.primaryMuscle[0].id,
+                originalExerciseId: curr.exerciseId,
+                userId: USER_ID,
+                weight: randNumber({ min: 60, max: 100 }),
+                repetitions: randNumber({ min: 6, max: 10 }),
+                order: index,
+                performedAt: dayjs(oneDayAgo).add(3, "minutes").toDate(),
+              });
+            });
+
+            return acc;
+          }, []),
         },
       },
     },

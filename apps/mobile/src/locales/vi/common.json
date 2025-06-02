@@ -177,5 +177,7 @@
   "view_history": "Xem lịch sử",
   "set_goal": "Đặt mục tiêu",
   "no_data": "Không có dữ liệu",
-  "session_detail": "Chi tiết buổi tập"
+  "session_detail": "Chi tiết buổi tập",
+  "incomplete": "Chưa hoàn thành",
+  "confirm_delete_session": "Bạn có chắc chắn muốn xóa buổi tập này không?"
 }

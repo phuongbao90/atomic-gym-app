@@ -1,8 +1,9 @@
 import { SCREEN_WIDTH } from "@gorhom/bottom-sheet";
-import { TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 import { ModalProps } from "react-native-modalfy";
 import { AppText } from "../ui/app-text";
 import { t } from "i18next";
+import { AppTouchable } from "../ui/app-touchable";
 
 type Props = ModalProps<"ConfirmModal">;
 
@@ -18,16 +19,16 @@ export const ConfirmModal = ({ modal: { getParam, closeModal } }: Props) => {
         maxWidth: 400,
       }}
     >
-      <AppText>{message}</AppText>
+      <AppText className="text-lg">{message}</AppText>
 
       <View className="flex-row gap-x-10 justify-end">
-        <TouchableOpacity
+        <AppTouchable
           testID="confirm-modal-cancel-button"
           onPress={() => closeModal()}
         >
           <AppText>{t("cancel")}</AppText>
-        </TouchableOpacity>
-        <TouchableOpacity
+        </AppTouchable>
+        <AppTouchable
           testID="confirm-modal-confirm-button"
           onPress={() => {
             onConfirm();
@@ -37,7 +38,7 @@ export const ConfirmModal = ({ modal: { getParam, closeModal } }: Props) => {
           <AppText className="dark:text-primary text-primaryDarken font-bold">
             {t("confirm")}
           </AppText>
-        </TouchableOpacity>
+        </AppTouchable>
       </View>
     </View>
   );

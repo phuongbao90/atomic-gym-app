@@ -15,8 +15,8 @@ export class WorkoutSessionService {
       },
       select: {
         id: true,
-        createdAt: true,
-        workout: {
+        performedAt: true,
+        originalWorkout: {
           select: {
             translations: {
               select: {
@@ -30,7 +30,7 @@ export class WorkoutSessionService {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        performedAt: "desc",
       },
     });
 
@@ -40,25 +40,45 @@ export class WorkoutSessionService {
   async getWorkoutSessionDetail(user: User, language: Language, id: string) {
     const workoutSession = await this.prisma.workoutSessionLog.findUnique({
       where: { id, user: { id: user.id } },
-      include: {
-        setLogs: true,
-
-        workout: {
-          include: {
-            // WorkoutSessionLog: true,
-            workoutExercises: {
-              include: {
-                sets: true,
-              },
-            },
-            translations: {
-              where: {
-                language: language,
-              },
-            },
+      select: {
+        id: true,
+        workoutNameSnapshot: true,
+        performedAt: true,
+        notes: true,
+        duration: true,
+        setLogs: {
+          select: {
+            id: true,
+            exerciseNameSnapshot: true,
+            originalExerciseId: true,
+            weight: true,
+            repetitions: true,
+            distance: true,
+            duration: true,
+            order: true,
+            isCompleted: true,
           },
         },
       },
+
+      // include: {
+      //   setLogs: true,
+
+      //   originalWorkout: {
+      //     include: {
+      //       workoutExercises: {
+      //         include: {
+      //           sets: true,
+      //         },
+      //       },
+      //       translations: {
+      //         where: {
+      //           language: language,
+      //         },
+      //       },
+      //     },
+      //   },
+      // },
     });
 
     if (!workoutSession) {
@@ -66,5 +86,21 @@ export class WorkoutSessionService {
     }
 
     return workoutSession;
+  }
+
+  async deleteWorkoutSession(user: User, id: string) {
+    const workoutSession = await this.prisma.workoutSessionLog.findUnique({
+      where: { id, user: { id: user.id } },
+    });
+
+    if (!workoutSession) {
+      throw new NotFoundException("Workout session not found");
+    }
+
+    await this.prisma.workoutSessionLog.delete({
+      where: { id },
+    });
+
+    return true;
   }
 }

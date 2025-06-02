@@ -1,5 +1,5 @@
-import { IsString, IsDefined, IsDate, IsOptional, IsInt } from "class-validator";
-import { User, WorkoutPlan, Workout, ExerciseSetLog } from "./";
+import { IsString, IsDefined, IsOptional, IsDate, IsInt } from "class-validator";
+import { User, Workout, WorkoutPlan, ExerciseSetLog } from "./";
 
 export class WorkoutSessionLog {
     @IsDefined()
@@ -14,22 +14,30 @@ export class WorkoutSessionLog {
     userId!: string;
 
     @IsDefined()
-    workoutPlan!: WorkoutPlan;
+    @IsString()
+    originalWorkoutPlanId!: string;
+
+    @IsDefined()
+    originalWorkout!: Workout;
 
     @IsDefined()
     @IsString()
-    workoutPlanId!: string;
+    originalWorkoutId!: string;
 
     @IsDefined()
-    workout!: Workout;
-
-    @IsDefined()
-    @IsString()
-    workoutId!: string;
+    originalWorkoutPlan!: WorkoutPlan;
 
     @IsOptional()
+    @IsString()
+    workoutPlanNameSnapshot?: string;
+
+    @IsDefined()
+    @IsString()
+    workoutNameSnapshot!: string;
+
+    @IsDefined()
     @IsDate()
-    createdAt?: Date;
+    performedAt!: Date;
 
     @IsOptional()
     @IsString()

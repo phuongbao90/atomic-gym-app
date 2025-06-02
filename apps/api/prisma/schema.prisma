@@ -59,20 +59,20 @@ model MuscleGroup {
   id             Int                      @id @default(autoincrement())
   parentId       Int?
   image          String
-  exercises      Exercise[]
+  exercises      Exercise[] // Exercises primarily targeting this muscle group
   translations   MuscleGroupTranslation[]
   ExerciseSetLog ExerciseSetLog[]
+  isActive       Boolean                  @default(true) // For soft delete
 }
 
 model MuscleGroupTranslation {
-  muscleGroupId  Int // foreign key to Exercise
-  language       Language // language code (e.g., 'vi', 'en')
-  name           String // localized name
-  normalizedName String? // localized name
+  muscleGroupId  Int
+  language       Language
+  name           String
+  normalizedName String?
   slug           String
   muscleGroup    MuscleGroup @relation(fields: [muscleGroupId], references: [id], onDelete: Cascade)
 
-  // composite primary key for uniqueness
   @@id([muscleGroupId, language])
   @@index([language])
 }
@@ -90,18 +90,20 @@ model Exercise {
   translations     ExerciseTranslation[]
   workoutExercises WorkoutExercise[]
   ExerciseSetLog   ExerciseSetLog[]
+  isActive         Boolean               @default(true) // For soft delete
+
+  @@index([createdById])
 }
 
 model ExerciseTranslation {
-  exerciseId     String // foreign key to Exercise
-  language       Language // language code (e.g., 'vi', 'en')
-  name           String // localized name
-  normalizedName String? // localized name
-  description    String? // localized description
-  slug           String // localized description
+  exerciseId     String
+  language       Language
+  name           String
+  normalizedName String?
+  description    String?
+  slug           String
   exercise       Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
 
-  // composite primary key for uniqueness
   @@id([exerciseId, language])
   @@index([language])
 }
@@ -136,106 +138,127 @@ model WorkoutPlan {
   updatedAt         DateTime                 @updatedAt @db.Timestamptz(6)
   translations      WorkoutPlanTranslation[]
   WorkoutSessionLog WorkoutSessionLog[]
+  isActive          Boolean                  @default(true) // For soft delete
+
+  @@index([createdById])
+  @@index([level])
+  @@index([category])
+  @@index([isPublic])
+  @@index([isFeatured])
 }
 
 model WorkoutPlanTranslation {
-  workoutPlanId  String // foreign key to WorkoutPlan
-  language       Language // language code (e.g., 'vi', 'en')
-  name           String // localized name
-  normalizedName String? // localized name
-  description    String? // localized description
-  slug           String // localized description
+  workoutPlanId  String
+  language       Language
+  name           String
+  normalizedName String?
+  description    String?
+  slug           String
   workoutPlan    WorkoutPlan @relation(fields: [workoutPlanId], references: [id], onDelete: Cascade)
 
-  // composite primary key for uniqueness
   @@id([workoutPlanId, language])
   @@index([language])
 }
 
-// NO NEED TO HAVE USER / CREATEDBY FIELD AS IT IS RELATED TO WORKOUT-PLAN
-// AND WORKOUT-PLAN IS RELATED TO USER 
-// IF OTHER USER WANT TO USE PLAN => THEY MUST CLONE IT AND CREATE IT AS A NEW WORKOUT PLAN
-
 model Workout {
   id                String               @id @default(uuid())
-  order             Int?
+  order             Int? // Order of this workout within the plan
   createdAt         DateTime             @default(now()) @db.Timestamptz(6)
   updatedAt         DateTime             @updatedAt @db.Timestamptz(6)
-  WorkoutPlan       WorkoutPlan          @relation(fields: [workoutPlanId], references: [id])
+  WorkoutPlan       WorkoutPlan          @relation(fields: [workoutPlanId], references: [id], onDelete: Cascade) // If plan is deleted, its workouts are gone
   workoutPlanId     String
   translations      WorkoutTranslation[]
   workoutExercises  WorkoutExercise[]
   WorkoutSessionLog WorkoutSessionLog[]
+  isActive          Boolean              @default(true) // For soft delete
+
+  @@index([workoutPlanId])
 }
 
 model WorkoutTranslation {
-  workoutId      String // foreign key to Workout
-  language       Language // language code (e.g., 'vi', 'en')
-  name           String // localized name
-  normalizedName String? // localized name
-  slug           String // localized name
+  workoutId      String
+  language       Language
+  name           String
+  normalizedName String?
+  slug           String
   workout        Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
 
-  // composite primary key for uniqueness
   @@id([workoutId, language])
   @@index([language])
 }
 
-// Set is related to exercise of workout , not exercise alone
-
 model ExerciseSet {
   id                String          @id @default(uuid())
-  restTime          Int
+  restTime          Int // in seconds
   isWarmup          Boolean         @default(false)
   isDropSet         Boolean         @default(false)
   isUntilFailure    Boolean         @default(false)
+  // Planned values for the set
+  plannedReps       Int?
+  plannedWeight     Float?
+  plannedDuration   Int? // in seconds, for time-based sets like cardio
+  plannedDistance   Float? // for distance-based sets
   WorkoutExercise   WorkoutExercise @relation(fields: [workoutExerciseId], references: [id], onDelete: Cascade)
   workoutExerciseId String
 }
 
 model WorkoutExercise {
   id         String        @id @default(uuid())
-  workout    Workout       @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  workout    Workout       @relation(fields: [workoutId], references: [id], onDelete: Cascade) // If workout is deleted, its exercise entries are gone
   workoutId  String
-  exercise   Exercise      @relation(fields: [exerciseId], references: [id])
+  exercise   Exercise      @relation(fields: [exerciseId], references: [id], onDelete: Restrict) // Prevent exercise deletion if used in workout structures
   exerciseId String
   order      Int // Position in workout
   sets       ExerciseSet[]
-  notes      String?
+  notes      String? // Notes specific to this exercise in this workout, e.g., "Focus on form"
 
   @@unique([workoutId, exerciseId, order])
+  @@index([exerciseId])
 }
 
 model WorkoutSessionLog {
-  id            String           @id @default(uuid())
-  user          User             @relation(fields: [userId], references: [id])
-  userId        String
-  workoutPlan   WorkoutPlan      @relation(fields: [workoutPlanId], references: [id])
-  workoutPlanId String
-  workout       Workout          @relation(fields: [workoutId], references: [id])
-  workoutId     String
-  createdAt     DateTime?        @default(now()) @db.Timestamptz(6)
-  notes         String?
-  setLogs       ExerciseSetLog[]
-  duration      Int
+  id                      String           @id @default(uuid())
+  user                    User             @relation(fields: [userId], references: [id])
+  userId                  String
+  originalWorkoutPlanId   String
+  originalWorkout         Workout          @relation(fields: [originalWorkoutId], references: [id], onDelete: Restrict) // Log should remain even if original workout is deleted (soft delete preferred)
+  originalWorkoutId       String
+  originalWorkoutPlan     WorkoutPlan      @relation(fields: [originalWorkoutPlanId], references: [id], onDelete: Restrict) // Log should remain even if original plan is deleted (soft delete preferred)
+  workoutPlanNameSnapshot String?
+  workoutNameSnapshot     String
+  performedAt             DateTime         @default(now()) @db.Timestamptz(6) // Renamed from createdAt for clarity
+  notes                   String? // User's notes for the overall session
+  setLogs                 ExerciseSetLog[]
+  duration                Int // Total duration in seconds
+
+  @@index([userId, performedAt])
+  @@index([originalWorkoutPlanId])
+  @@index([originalWorkoutId])
 }
 
 model ExerciseSetLog {
-  id               String            @id @default(uuid())
-  workoutSession   WorkoutSessionLog @relation(fields: [workoutSessionId], references: [id], onDelete: Cascade)
-  workoutSessionId String
-  exercise         Exercise          @relation(fields: [exerciseId], references: [id])
-  exerciseId       String
-  weight           Float?
-  repetitions      Int?
-  distance         Float?
-  duration         Int?
-  isIncomplete     Boolean?          @default(false)
-  createdAt        DateTime?         @default(now()) @db.Timestamptz(6)
-  user             User              @relation(fields: [userId], references: [id])
-  userId           String
-  muscleGroupId    Int
-  muscleGroup      MuscleGroup       @relation(fields: [muscleGroupId], references: [id])
+  id                   String            @id @default(uuid())
+  workoutSession       WorkoutSessionLog @relation(fields: [workoutSessionId], references: [id], onDelete: Cascade)
+  workoutSessionId     String
+  originalExercise     Exercise          @relation(fields: [originalExerciseId], references: [id], onDelete: Restrict) // Log should remain even if original exercise is deleted (soft delete preferred)
+  originalExerciseId   String
+  exerciseNameSnapshot String
+  weight               Float? // Actual weight lifted
+  repetitions          Int? // Actual repetitions performed
+  distance             Float? // Actual distance covered
+  duration             Int? // Actual duration of the set (e.g. for timed holds or cardio)
+  order                Int // Order of the set in the exercise
+  isCompleted          Boolean
+  performedAt          DateTime          @default(now()) @db.Timestamptz(6) // Renamed from createdAt
+  user                 User              @relation(fields: [userId], references: [id])
+  userId               String
+  muscleGroup          MuscleGroup       @relation(fields: [muscleGroupId], references: [id], onDelete: Restrict) // Protect muscle group if referenced in logs
+  muscleGroupId        Int // Primary muscle group targeted by this exercise at the time of logging
+
+  @@index([workoutSessionId])
+  @@index([originalExerciseId])
+  @@index([userId, performedAt])
+  @@index([userId, originalExerciseId, performedAt])
 }
 
 model Session {
@@ -300,7 +323,7 @@ model BodyMeasurementType {
   name         String
   unit         String
   description  String?
-  isActive     Boolean                          @default(true)
+  isActive     Boolean                          @default(true) // For soft delete
   createdAt    DateTime                         @default(now()) @db.Timestamptz(6)
   updatedAt    DateTime                         @updatedAt @db.Timestamptz(6)
   translations BodyMeasurementTypeTranslation[]
@@ -322,15 +345,14 @@ model BodyMeasurement {
   id                String              @id @default(uuid())
   user              User                @relation(fields: [userId], references: [id])
   userId            String
-  measurementType   BodyMeasurementType @relation(fields: [measurementTypeId], references: [id])
+  measurementType   BodyMeasurementType @relation(fields: [measurementTypeId], references: [id], onDelete: Restrict) // Prevent deletion of type if in use
   measurementTypeId Int
   value             Float
   notes             String?
-  date              DateTime            @db.Timestamptz(6)
-  createdAt         DateTime            @default(now()) @db.Timestamptz(6)
+  date              DateTime            @db.Timestamptz(6) // Specific date of measurement
+  createdAt         DateTime            @default(now()) @db.Timestamptz(6) // Log creation time
   updatedAt         DateTime            @updatedAt @db.Timestamptz(6)
 
-  @@index([userId])
-  @@index([measurementTypeId])
-  @@index([createdAt])
+  @@index([userId, date])
+  @@index([userId, measurementTypeId, date])
 }
