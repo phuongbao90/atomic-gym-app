@@ -429,6 +429,7 @@ async function createLogs({
               notes: faker.helpers.maybe(() => faker.lorem.paragraph(), {
                 probability: 0.2,
               }),
+              workoutNameSnapshot: "wip",
               performedAt: createdAt,
               setLogs: {
                 // create: workoutExercise.sets.map(() => {

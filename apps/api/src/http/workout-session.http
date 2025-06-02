@@ -6,12 +6,12 @@ Accept-Language: vi
 }}
 
 
-###
-
+### Get workout session detail
 GET {{BASE_URL}}/workout-session/detail?id={{$global.workoutSessionId}}
 Accept-Language: vi
 
 GET {{BASE_URL}}/workout-session/detail?id=244bbc32-1b09-4885-a05c-aa3f27eaafd2
 Accept-Language: vi
 
+### Delete workout session
 DELETE {{BASE_URL}}/workout-session/{{$global.workoutSessionId}}

@@ -137,11 +137,13 @@ export class ExerciseService {
     }
 
     const logs = await this.prisma.exerciseSetLog.findMany({
-      where: { exerciseId: id },
-      include: {
-        workoutSession: { select: { id: true, createdAt: true } },
+      where: {
+        originalExerciseId: id,
       },
-      orderBy: { workoutSession: { createdAt: "desc" } },
+      include: {
+        workoutSession: { select: { id: true, performedAt: true } },
+      },
+      orderBy: { workoutSession: { performedAt: "desc" } },
     });
 
     const logsBySession = logs.reduce<Record<number, typeof logs>>(

@@ -48,14 +48,14 @@ export class LogService {
 
     const muscleGroupCounts = await this.prisma.exerciseSetLog.groupBy({
       by: ["muscleGroupId"],
-      where: { userId: user.id, createdAt },
+      where: { userId: user.id, performedAt: createdAt },
       _count: {
         _all: true,
       },
     });
 
     const wpCounts = await this.prisma.workoutSessionLog.aggregate({
-      where: { userId: user.id, createdAt },
+      where: { userId: user.id, performedAt: createdAt },
       _count: {
         _all: true,
       },
@@ -64,7 +64,7 @@ export class LogService {
     });
 
     const setCounts = await this.prisma.exerciseSetLog.aggregate({
-      where: { workoutSession: { userId: user.id }, createdAt },
+      where: { workoutSession: { userId: user.id }, performedAt: createdAt },
       _count: {
         _all: true,
       },

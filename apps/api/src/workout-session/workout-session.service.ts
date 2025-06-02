@@ -60,25 +60,6 @@ export class WorkoutSessionService {
           },
         },
       },
-
-      // include: {
-      //   setLogs: true,
-
-      //   originalWorkout: {
-      //     include: {
-      //       workoutExercises: {
-      //         include: {
-      //           sets: true,
-      //         },
-      //       },
-      //       translations: {
-      //         where: {
-      //           language: language,
-      //         },
-      //       },
-      //     },
-      //   },
-      // },
     });
 
     if (!workoutSession) {
