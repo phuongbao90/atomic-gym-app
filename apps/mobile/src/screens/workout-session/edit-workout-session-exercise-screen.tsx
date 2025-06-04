@@ -77,9 +77,9 @@ export const EditWorkoutSessionExerciseScreen = () => {
       (set) => set.type === "delete"
     );
 
-    console.log("🚀 ~ onSubmitChanges ~ setLogsToCreate:", setLogsToCreate);
-    console.log("🚀 ~ onSubmitChanges ~ setLogsToUpdate:", setLogsToUpdate);
-    console.log("🚀 ~ onSubmitChanges ~ setLogsToDelete:", setLogsToDelete);
+    // console.log("🚀 ~ onSubmitChanges ~ setLogsToCreate:", setLogsToCreate);
+    // console.log("🚀 ~ onSubmitChanges ~ setLogsToUpdate:", setLogsToUpdate);
+    // console.log("🚀 ~ onSubmitChanges ~ setLogsToDelete:", setLogsToDelete);
 
     updateWorkoutSessionExerciseSets(
       {

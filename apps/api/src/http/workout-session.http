@@ -36,3 +36,9 @@ Content-Type: application/json
   ],
   "setLogsToDelete": []
 }
+
+PUT {{BASE_URL}}/workout-session/244bbc32-1b09-4885-a05c-aa3f27eaafd2
+{
+  "performedAt": "2025-06-04T10:00:00.000Z",
+  "duration": 1800
+}

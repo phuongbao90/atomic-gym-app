@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { Language, User } from "@prisma/client";
 import { UpdateWorkoutSessionExerciseDto } from "./dto/update-workout-session-exercise.dto";
+import { UpdateWorkoutSessionDto } from "./dto/update-workout-session.dto";
 
 @Injectable()
 export class WorkoutSessionService {
@@ -218,6 +219,30 @@ export class WorkoutSessionService {
           },
         });
       }
+    });
+
+    return true;
+  }
+
+  async updateWorkoutSession(
+    user: User,
+    id: string,
+    body: UpdateWorkoutSessionDto
+  ) {
+    const workoutSession = await this.prisma.workoutSessionLog.findUnique({
+      where: { id, user: { id: user.id } },
+    });
+
+    if (!workoutSession) {
+      throw new NotFoundException("Workout session not found");
+    }
+
+    await this.prisma.workoutSessionLog.update({
+      where: { id },
+      data: {
+        performedAt: body.performedAt,
+        duration: body.duration,
+      },
     });
 
     return true;

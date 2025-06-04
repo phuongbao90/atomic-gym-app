@@ -46,6 +46,12 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import { setIsConnected } from "../src/stores/slices/app-slice";
 import { AudioModule } from "expo-audio";
 
+import { withLayoutContext } from "expo-router";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+const NStack = createNativeStackNavigator();
+const StackLayout = withLayoutContext(NStack);
+
 enableScreens();
 
 notifee.registerForegroundService(async (task) => {
@@ -194,6 +200,12 @@ const App = () => {
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
+      <Stack.Screen
+        name="(app)/workout-session/edit-session-date"
+        options={{
+          animation: "slide_from_bottom",
+        }}
+      />
     </Stack>
   );
 };

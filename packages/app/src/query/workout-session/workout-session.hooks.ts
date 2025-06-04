@@ -5,9 +5,13 @@ import {
   deleteWorkoutSessionExercise,
   getWorkoutSessionDetail,
   getWorkoutSessionHistory,
+  updateWorkoutSession,
   updateWorkoutSessionExerciseSets,
 } from "./workout-session.requests";
-import { UpdateWorkoutSessionExerciseSetsBody } from "./workout-session.types";
+import {
+  UpdateWorkoutSessionBody,
+  UpdateWorkoutSessionExerciseSetsBody,
+} from "./workout-session.types";
 
 export const useWorkoutSessionHistory = () => {
   return useQuery({
@@ -52,5 +56,15 @@ export const useUpdateWorkoutSessionExerciseSets = () => {
       exerciseId: string;
       body: UpdateWorkoutSessionExerciseSetsBody;
     }) => updateWorkoutSessionExerciseSets(id, exerciseId, body),
+  });
+};
+
+export const useUpdateWorkoutSession = () => {
+  return useMutation({
+    mutationFn: ({
+      id,
+      body,
+    }: { id: string; body: UpdateWorkoutSessionBody }) =>
+      updateWorkoutSession(id, body),
   });
 };

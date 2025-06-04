@@ -50,3 +50,8 @@ export type UpdateWorkoutSessionExerciseSetsBody = {
   setLogsToUpdate: PickExerciseSetLog[];
   setLogsToDelete: string[];
 };
+
+export type UpdateWorkoutSessionBody = {
+  performedAt?: string;
+  duration?: number;
+};

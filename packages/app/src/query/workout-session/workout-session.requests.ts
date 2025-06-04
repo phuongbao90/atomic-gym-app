@@ -2,6 +2,7 @@ import { API_ROUTES } from "../../configs/api-routes";
 import { http } from "../../libs/request";
 import { ApiResponse } from "../../types/meta";
 import {
+  UpdateWorkoutSessionBody,
   UpdateWorkoutSessionExerciseSetsBody,
   WorkoutSessionDetail,
   WorkoutSessionHistoryItem,
@@ -41,6 +42,16 @@ export const updateWorkoutSessionExerciseSets = async (
 ) => {
   return (await http
     .url(API_ROUTES.workoutSession.updateExerciseSets(id, exerciseId))
+    .put(body)
+    .json()) as ApiResponse<boolean>;
+};
+
+export const updateWorkoutSession = async (
+  id: string,
+  body: UpdateWorkoutSessionBody
+) => {
+  return (await http
+    .url(API_ROUTES.workoutSession.update(id))
     .put(body)
     .json()) as ApiResponse<boolean>;
 };

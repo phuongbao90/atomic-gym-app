@@ -183,5 +183,7 @@
   "confirm_delete_session": "Bạn có chắc chắn muốn xóa buổi tập này không?",
   "edit_session": "Chỉnh sửa buổi tập",
   "confirm_cancel": "Bạn có chắc chắn muốn hủy và bỏ qua các thay đổi không?",
-  "wip": "Tính năng này vẫn đang phát triển"
+  "wip": "Tính năng này vẫn đang phát triển",
+  "date_of_session": "Ngày buổi tập",
+  "duration_of_session": "Thời gian buổi tập"
 }

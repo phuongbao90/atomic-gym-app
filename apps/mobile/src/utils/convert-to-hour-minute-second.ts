@@ -11,7 +11,7 @@ export const convertToHourMinuteSecond = (seconds: number) => {
   const minutes = Math.floor((seconds % 3600) / 60);
   const secondsLeft = seconds % 60;
   if (hours > 0) {
-    return `${hours}:${minutes}:${Math.ceil(secondsLeft).toString().padStart(2, "0")}`;
+    return `${hours}:${minutes.toString().padStart(2, "0")}:${Math.ceil(secondsLeft).toString().padStart(2, "0")}`;
   }
   if (minutes > 0) {
     return `${minutes}:${Math.ceil(secondsLeft).toString().padStart(2, "0")}`;

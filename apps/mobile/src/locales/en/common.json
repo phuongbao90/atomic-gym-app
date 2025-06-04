@@ -183,5 +183,7 @@
   "confirm_delete_session": "Are you sure you want to delete this session?",
   "edit_session": "Edit Session",
   "confirm_cancel": "Are you sure you want to cancel and discard changes?",
-  "wip": "This feature is still under development"
+  "wip": "This feature is still under development",
+  "date_of_session": "Date of Session",
+  "duration_of_session": "Duration of Session"
 }

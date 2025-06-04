@@ -65,5 +65,6 @@ export const API_ROUTES = {
       `${API_ROUTES.workoutSession.base}/${id}/exercise/${exerciseId}`,
     updateExerciseSets: (id: string, exerciseId: string) =>
       `${API_ROUTES.workoutSession.base}/${id}/exercise/${exerciseId}/sets`,
+    update: (id: string) => `${API_ROUTES.workoutSession.base}/${id}`,
   },
 };

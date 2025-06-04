@@ -12,6 +12,7 @@ import { GetLanguage } from "../common/decorators/get-language.decorator";
 import { CurrentUser } from "../common/decorator/current-user.decorator";
 import { Language, User } from "@prisma/client";
 import { UpdateWorkoutSessionExerciseDto } from "./dto/update-workout-session-exercise.dto";
+import { UpdateWorkoutSessionDto } from "./dto/update-workout-session.dto";
 
 @Controller("workout-session")
 export class WorkoutSessionController {
@@ -67,7 +68,6 @@ export class WorkoutSessionController {
     @Body() body: UpdateWorkoutSessionExerciseDto,
     @GetLanguage() language: Language
   ) {
-    console.log("🚀 ~ WorkoutSessionController ~ body:", body);
     return this.workoutSessionService.updateWorkoutSessionExercise({
       user,
       id,
@@ -75,5 +75,14 @@ export class WorkoutSessionController {
       body,
       language,
     });
+  }
+
+  @Put(":id")
+  async updateWorkoutSession(
+    @CurrentUser() user: User,
+    @Param("id") id: string,
+    @Body() body: UpdateWorkoutSessionDto
+  ) {
+    return this.workoutSessionService.updateWorkoutSession(user, id, body);
   }
 }

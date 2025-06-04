@@ -26,6 +26,7 @@ import { capitalize } from "lodash";
 import { useModal } from "react-native-modalfy";
 import { appRoutes } from "../../configs/routes";
 import { useGroupSetsByExercise } from "./hooks/use-group-sets-by-exercise";
+import { OrderNumberCircle } from "../../components/ui/OrderNumberCircle";
 
 export const WorkoutSessionDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -83,8 +84,16 @@ export const WorkoutSessionDetailScreen = () => {
         <View className="flex-row items-center gap-6">
           <ClockIcon />
           <AppText className="text-xl">
-            {dayjs(workoutSession?.performedAt).format("ddd, DD MMM")}
+            {dayjs(workoutSession?.performedAt)?.format("ddd, DD MMM")}
           </AppText>
+          <AppTouchable
+            className="ml-auto mr-2"
+            onPress={() => {
+              router.navigate(appRoutes.workoutSession.editSessionDate(id));
+            }}
+          >
+            <EditIcon />
+          </AppTouchable>
         </View>
         <Divider className="my-4" />
         <View className="flex-row items-center justify-between">
@@ -128,9 +137,10 @@ export const WorkoutSessionDetailScreen = () => {
                 key={set.id || index}
                 className="flex-row items-center gap-2 mb-1"
               >
-                <View className="w-10 h-10 rounded-full border border-gray-300 justify-center items-center mr-6">
-                  <AppText>{index + 1}</AppText>
-                </View>
+                <OrderNumberCircle
+                  orderNumber={index + 1}
+                  className="mr-4 w-10 h-10 "
+                />
                 {set.isCompleted ? (
                   <AppText className="text-xl">
                     {set.weight} kg x {set.reps} {t("reps")}
