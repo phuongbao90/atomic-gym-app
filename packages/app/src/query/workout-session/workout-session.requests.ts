@@ -2,6 +2,7 @@ import { API_ROUTES } from "../../configs/api-routes";
 import { http } from "../../libs/request";
 import { ApiResponse } from "../../types/meta";
 import {
+  UpdateWorkoutSessionExerciseSetsBody,
   WorkoutSessionDetail,
   WorkoutSessionHistoryItem,
 } from "./workout-session.types";
@@ -21,5 +22,25 @@ export const getWorkoutSessionDetail = async (id: string) => {
 export const deleteWorkoutSession = async (id: string) => {
   return (await http
     .delete(API_ROUTES.workoutSession.delete(id))
+    .json()) as ApiResponse<boolean>;
+};
+
+export const deleteWorkoutSessionExercise = async (
+  id: string,
+  exerciseId: string
+) => {
+  return (await http
+    .delete(API_ROUTES.workoutSession.deleteExercise(id, exerciseId))
+    .json()) as ApiResponse<boolean>;
+};
+
+export const updateWorkoutSessionExerciseSets = async (
+  id: string,
+  exerciseId: string,
+  body: UpdateWorkoutSessionExerciseSetsBody
+) => {
+  return (await http
+    .url(API_ROUTES.workoutSession.updateExerciseSets(id, exerciseId))
+    .put(body)
     .json()) as ApiResponse<boolean>;
 };

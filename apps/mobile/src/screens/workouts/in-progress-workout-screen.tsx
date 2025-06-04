@@ -31,6 +31,8 @@ import React, { useMemo } from "react";
 import { shallowEqual } from "react-redux";
 import deepEqual from "deep-equal";
 import { useWorkoutSessionNotification } from "../../hooks/use-workout-session-notification";
+import { WorkoutExerciseItem } from "../../components/workout-exercise-item";
+import { AppTouchable } from "../../components/ui/app-touchable";
 
 export const InProgressWorkoutScreen = () => {
   const { t } = useTranslation();
@@ -227,43 +229,28 @@ const ExerciseItem = ({
     return workoutExercise?.sets?.filter((s) => s.isCompleted).length;
   }, [workoutExercise]);
   const router = useRouter();
-  const debouncedPress = usePreventRepeatPress();
+
   return (
-    <TouchableOpacity
-      onLongPress={drag}
+    <WorkoutExerciseItem
+      index={getIndex()! + 1}
+      setsCount={workoutExercise?.sets?.length || 0}
+      exerciseName={workoutExercise?.exercise?.translations?.[0]?.name || ""}
+      completedSetsCount={completedSetsCount || 0}
+      className="border-b border-gray-500"
+      Right={
+        <AppTouchable onPress={() => onPressMore(item)}>
+          <VerticalDotsIcon size={28} />
+        </AppTouchable>
+      }
       onPress={() => {
-        debouncedPress(() => {
-          router.push(
-            appRoutes.inProgress.workoutExercises({
-              workoutId: workoutExercise?.workoutId || "",
-              page: getIndex()!.toString(),
-            })
-          );
-        });
+        router.navigate(
+          appRoutes.inProgress.workoutExercises({
+            workoutId: workoutExercise?.workoutId || "",
+            page: getIndex()!.toString(),
+          })
+        );
       }}
-    >
-      <View className="flex-row items-center gap-x-4 py-4 pl-2 pr-2 border-b border-gray-500">
-        <View className="w-10 h-10 bg-gray-500 rounded-full items-center justify-center">
-          <AppText>{getIndex()! + 1}</AppText>
-        </View>
-        <View>
-          <AppText>
-            {workoutExercise?.exercise?.translations?.[0]?.name}
-          </AppText>
-          <AppText>{`${completedSetsCount}/${workoutExercise?.sets?.length} sets completed`}</AppText>
-        </View>
-        <TouchableOpacity
-          className="ml-auto"
-          hitSlop={16}
-          onPress={() =>
-            debouncedPress(() => {
-              onPressMore(item);
-            })
-          }
-        >
-          <VerticalDotsIcon />
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
+      onLongPress={drag}
+    />
   );
 };

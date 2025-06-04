@@ -108,6 +108,7 @@
   "rest": "nghỉ giữa hiệp",
 
   "edit_set": "Chỉnh sửa hiệp",
+  "add_set": "Thêm hiệp",
   "warmup": "khởi động",
   "drop_set": "drop set",
   "until_failure": "đến khi thất bại",
@@ -141,7 +142,7 @@
   "workout_sessions": "Số buổi tập",
   "total_time (hrs)": "Tổng thời gian (giờ)",
   "avg.session_duration": "Trung bình thời gian buổi tập",
-  "sets_completed": "Số hiệp đã hoàn thành",
+  "sets_completed": "hiệp hoàn thành",
   "all": "Tất cả",
   "week": "Tuần",
   "month": "Tháng",
@@ -179,5 +180,7 @@
   "no_data": "Không có dữ liệu",
   "session_detail": "Chi tiết buổi tập",
   "incomplete": "Chưa hoàn thành",
-  "confirm_delete_session": "Bạn có chắc chắn muốn xóa buổi tập này không?"
+  "confirm_delete_session": "Bạn có chắc chắn muốn xóa buổi tập này không?",
+  "edit_session": "Chỉnh sửa buổi tập",
+  "confirm_cancel": "Bạn có chắc chắn muốn hủy và bỏ qua các thay đổi không?"
 }

@@ -50,3 +50,17 @@ export function useHoldAction(
 
   return { start, stop };
 }
+
+/** Exmmple
+ * const { start: startIncreaseValue, stop: stopIncreaseValue } = useHoldAction(
+ * () => {
+ *    handleChangeValue("increase");
+ * },
+ * { delay: 300, interval: 300 }
+ * );
+ *
+ *
+ * <Pressable hitSlop={10} onPressIn={() => startIncreaseValue()} onPressOut={() => stopIncreaseValue()} onResponderRelease={() => stopIncreaseValue()}>
+ *   <PlusCircleIcon />
+ * </Pressable>
+ */

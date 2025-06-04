@@ -77,7 +77,6 @@ export default function RootLayout() {
   });
 
   const navigationRef = useNavigationContainerRef();
-
   useReactNavigationDevTools(navigationRef);
 
   useEffect(() => {
@@ -95,8 +94,8 @@ export default function RootLayout() {
           <KeyboardProvider>
             <GestureHandlerRootView style={{ flex: 1 }}>
               <ModalProvider stack={modalStack}>
-                <BottomSheetModalProvider>
-                  <ActionSheetProvider>
+                <ActionSheetProvider>
+                  <BottomSheetModalProvider>
                     <PortalProvider>
                       <StatusBar
                         translucent
@@ -118,8 +117,8 @@ export default function RootLayout() {
                         />
                       </View>
                     </PortalProvider>
-                  </ActionSheetProvider>
-                </BottomSheetModalProvider>
+                  </BottomSheetModalProvider>
+                </ActionSheetProvider>
               </ModalProvider>
             </GestureHandlerRootView>
           </KeyboardProvider>
@@ -187,7 +186,12 @@ const App = () => {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        // animation: "slide_from_right",
+      }}
+    >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>

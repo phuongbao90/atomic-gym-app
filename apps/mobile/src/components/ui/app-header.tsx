@@ -12,12 +12,14 @@ export const AppHeader = ({
   withBottomBorder = true,
   Right,
   className,
+  onBackPress,
 }: {
-  title?: string;
+  title?: string | React.ReactNode;
   withBackButton?: boolean;
   withBottomBorder?: boolean;
   Right?: React.ReactNode;
   className?: string;
+  onBackPress?: () => void;
 }) => {
   const router = useRouter();
   const debouncedPress = usePreventRepeatPress();
@@ -26,13 +28,17 @@ export const AppHeader = ({
     <>
       <View
         testID="app-header"
-        className={cn("flex-row items-center h-14 z-50", className)}
+        className={cn("flex-row items-center py-2 z-50 min-h-16", className)}
       >
         {withBackButton && (
           <Pressable
             onPress={() =>
               debouncedPress(() => {
-                router.back();
+                if (onBackPress) {
+                  onBackPress();
+                } else {
+                  router.back();
+                }
               })
             }
             testID="back-button"
@@ -41,11 +47,17 @@ export const AppHeader = ({
             <ChevronLeftIcon size={26} />
           </Pressable>
         )}
-        {!!title && (
-          <AppText numberOfLines={1} className="flex-1 ml-8 text-xl font-bold">
-            {title}
-          </AppText>
-        )}
+        {!!title &&
+          (typeof title === "string" ? (
+            <AppText
+              numberOfLines={1}
+              className="flex-1 ml-8 text-xl font-bold"
+            >
+              {title}
+            </AppText>
+          ) : (
+            title
+          ))}
 
         {!!Right && <View style={styles.right}>{Right}</View>}
 

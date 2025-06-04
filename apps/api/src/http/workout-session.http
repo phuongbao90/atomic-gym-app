@@ -15,3 +15,24 @@ Accept-Language: vi
 
 ### Delete workout session
 DELETE {{BASE_URL}}/workout-session/{{$global.workoutSessionId}}
+
+### Delete workout session exercise
+DELETE {{BASE_URL}}/workout-session/244bbc32-1b09-4885-a05c-aa3f27eaafd2/exercise/36fc9e24-818b-41af-8f65-6ef4b277d0dc
+
+PUT {{BASE_URL}}/workout-session/244bbc32-1b09-4885-a05c-aa3f27eaafd2/exercise/27fba71d-f165-4680-8c64-8d685ce868d6/sets
+Content-Type: application/json
+
+{
+  "setLogsToCreate": [],
+  "setLogsToUpdate": [
+    {
+        "id": "eba00145-794a-404d-b1b4-b225a67cd965",
+        "weight": 7,
+        "repetitions": 6,
+        "distance": null,
+        "duration": null,
+        "isCompleted": true
+      }
+  ],
+  "setLogsToDelete": []
+}

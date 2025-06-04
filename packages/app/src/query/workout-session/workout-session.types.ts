@@ -1,3 +1,5 @@
+import { ExerciseSetLog } from "../../prisma-generated";
+
 export type WorkoutSessionHistoryItem = {
   id: string;
   performedAt: string;
@@ -14,15 +16,37 @@ export type WorkoutSessionDetail = {
   workoutNameSnapshot: string | null;
   notes: string | null;
   duration: number;
-  setLogs: {
-    id: string;
-    weight: number;
-    repetitions: number;
-    distance: number;
-    duration: number;
-    order: number;
-    originalExerciseId: string;
-    exerciseNameSnapshot: string;
-    isCompleted: boolean;
-  }[];
+  setLogs: WorkoutSessionExerciseSet[];
+};
+
+export type WorkoutSessionExerciseSet = {
+  id: string;
+  weight: number;
+  repetitions: number;
+  distance: number;
+  duration: number;
+  order: number;
+  originalExerciseId: string;
+  exerciseNameSnapshot: string;
+  isCompleted: boolean;
+  type: UpdateSetStatus;
+};
+
+export type UpdateSetStatus = "update" | "create" | "delete" | "untouched";
+
+type PickExerciseSetLog = Pick<
+  ExerciseSetLog,
+  | "id"
+  | "weight"
+  | "distance"
+  | "duration"
+  | "repetitions"
+  | "isCompleted"
+  | "order"
+>;
+
+export type UpdateWorkoutSessionExerciseSetsBody = {
+  setLogsToCreate: PickExerciseSetLog[];
+  setLogsToUpdate: PickExerciseSetLog[];
+  setLogsToDelete: string[];
 };

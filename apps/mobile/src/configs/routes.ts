@@ -93,6 +93,10 @@ export const appRoutes = {
     base: "/workout-session" as const,
     detail: (id: string) =>
       `${appRoutes.workoutSession.base}/detail?id=${id}` as const,
+    edit: (id: string) =>
+      `${appRoutes.workoutSession.base}/edit-session?id=${id}` as const,
+    editExercise: (sessionId: string, exerciseId: string) =>
+      `${appRoutes.workoutSession.base}/edit-session-exercise?sessionId=${sessionId}&exerciseId=${exerciseId}` as const,
   } as const,
 
   inProgress: {

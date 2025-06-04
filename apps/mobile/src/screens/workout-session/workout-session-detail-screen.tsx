@@ -22,9 +22,10 @@ import { Divider } from "../../components/ui/divider";
 import dayjs from "dayjs";
 import { convertToHourMinuteSecond } from "../../utils/convert-to-hour-minute-second";
 import { twColors } from "../../styles/themes";
-import { useMemo } from "react";
 import { capitalize } from "lodash";
 import { useModal } from "react-native-modalfy";
+import { appRoutes } from "../../configs/routes";
+import { useGroupSetsByExercise } from "./hooks/use-group-sets-by-exercise";
 
 export const WorkoutSessionDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -34,39 +35,7 @@ export const WorkoutSessionDetailScreen = () => {
   const { mutate: deleteWorkoutSession, isPending } = useDeleteWorkoutSession();
 
   const { data: workoutSession } = useWorkoutSessionDetail(id);
-  const setsGroupByExercise = useMemo(() => {
-    if (!workoutSession?.setLogs) return [];
-
-    return workoutSession.setLogs.reduce(
-      (acc, curr) => {
-        if (!acc[curr.originalExerciseId]) {
-          acc[curr.originalExerciseId] = {
-            exerciseName: curr.exerciseNameSnapshot,
-            sets: [],
-          };
-        }
-        acc[curr.originalExerciseId].sets.push({
-          order: curr.order,
-          reps: curr.repetitions,
-          weight: curr.weight,
-          isCompleted: curr.isCompleted,
-        });
-        return acc;
-      },
-      {} as Record<
-        string,
-        {
-          exerciseName: string;
-          sets: {
-            order: number;
-            reps: number;
-            weight: number;
-            isCompleted: boolean;
-          }[];
-        }
-      >
-    );
-  }, [workoutSession?.setLogs]);
+  const setsGroupByExercise = useGroupSetsByExercise(workoutSession?.setLogs);
 
   return (
     <AppScreen name="workout-session-detail-screen" isLoading={isPending}>
@@ -75,7 +44,9 @@ export const WorkoutSessionDetailScreen = () => {
         withBackButton
         Right={
           <View className="flex-row items-center gap-10">
-            <AppTouchable>
+            <AppTouchable
+              onPress={() => router.push(appRoutes.workoutSession.edit(id))}
+            >
               <EditIcon color={twColors.blue[600]} />
             </AppTouchable>
             <AppTouchable
@@ -119,21 +90,21 @@ export const WorkoutSessionDetailScreen = () => {
         <View className="flex-row items-center justify-between">
           <View className="items-center w-1/3">
             <SessionDurationIcon />
-            <AppText className="mt-2">{t("duration")}</AppText>
+            <AppText className="mt-2 text-xl">{t("duration")}</AppText>
             <AppText className="text-xl">
               {convertToHourMinuteSecond(workoutSession?.duration || 0)}
             </AppText>
           </View>
           <View className="items-center w-1/3">
             <SetsCompletedIcon />
-            <AppText className="mt-2">{t("sets")}</AppText>
+            <AppText className="mt-2 text-xl">{capitalize(t("sets"))}</AppText>
             <AppText className="text-xl">
               {workoutSession?.setLogs?.length}
             </AppText>
           </View>
           <View className="items-center w-1/3">
             <WeightIcon />
-            <AppText className="mt-2">{t("weight")} (kg)</AppText>
+            <AppText className="mt-2 text-xl">{t("weight")} (kg)</AppText>
             <AppText className="text-xl">
               {workoutSession?.setLogs?.reduce(
                 (acc, curr) => acc + curr.weight,
@@ -154,7 +125,7 @@ export const WorkoutSessionDetailScreen = () => {
             </AppText>
             {exercise.sets.map((set, index) => (
               <View
-                key={set.order}
+                key={set.id || index}
                 className="flex-row items-center gap-2 mb-1"
               >
                 <View className="w-10 h-10 rounded-full border border-gray-300 justify-center items-center mr-6">

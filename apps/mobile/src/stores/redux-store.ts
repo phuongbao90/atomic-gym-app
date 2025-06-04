@@ -18,6 +18,8 @@ import { MMKV } from "react-native-mmkv";
 import { createWorkoutPlanReducer } from "./slices/create-workout-plan-slice";
 import { workoutSessionReducer } from "./slices/workout-session-slice";
 import devToolsEnhancer from "redux-devtools-expo-dev-plugin";
+import { bottomSheetReducer } from "./slices/bottom-sheet.slice";
+import { editExerciseSetReducer } from "./slices/edit-exercise-set.slice";
 
 export const storage = new MMKV();
 
@@ -42,13 +44,15 @@ const persistConfig = {
   version: 1,
   storage: reduxPersistStorage,
   whitelist: ["app", "workoutSession"],
-  blacklist: ["createWorkoutPlan"],
+  blacklist: ["createWorkoutPlan", "bottomSheet", "editExerciseSet"],
 };
 
 const reducer = combineReducers({
   app: appReducer,
   createWorkoutPlan: createWorkoutPlanReducer,
   workoutSession: workoutSessionReducer,
+  editExerciseSet: editExerciseSetReducer,
+  bottomSheet: bottomSheetReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);

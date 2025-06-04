@@ -14,7 +14,7 @@ export const box = cva([], {
     {
       intent: "divider",
       theme: "light",
-      className: ["border-b-2 border-gray-200"],
+      className: ["border-b-[1px] border-gray-200"],
     },
     {
       intent: "divider",

@@ -1,4 +1,4 @@
-import { FlatList, Touchable, View } from "react-native";
+import { FlatList, View } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { AppScreen } from "../../components/ui/app-screen";
 import {
@@ -22,7 +22,6 @@ import { useAppDispatch, useAppSelector } from "../../stores/redux-store";
 import { InProgressWorkoutExercisesScreenParams } from "../../configs/routes";
 import React, { Fragment, useRef, useState } from "react";
 import { ExerciseSet } from "app";
-import { Image } from "expo-image";
 import {
   completeActiveWorkoutSessionExerciseSet,
   decreaseExerciseSetValue,
@@ -43,14 +42,11 @@ import { useCountDownRestTime } from "../../hooks/use-count-down-rest-time";
 import { shallowEqual } from "react-redux";
 import { AddNotesToWorkoutExerciseSheet } from "../../components/bottom-sheets/add-notes-to-workout-exercise-sheet";
 import { useWorkoutSessionNotification } from "../../hooks/use-workout-session-notification";
+import { SetExerciseHeader } from "../../components/set-exercise-header";
 
 export const InProgressWorkoutExercisesScreen = () => {
-  const router = useRouter();
   const { page } =
     useLocalSearchParams<InProgressWorkoutExercisesScreenParams>();
-
-  const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
 
   const workoutExerciseIds = useAppSelector(
     (s) =>
@@ -203,18 +199,13 @@ const ExerciseHeader = ({
         (we) => we.id === workoutExerciseId
       )?.exercise?.images?.[0]
   );
+
   return (
-    <View className="flex-row items-center gap-4">
-      <View>
-        <Image
-          source={image}
-          style={{ width: 80, height: 80, borderRadius: 10 }}
-        />
-      </View>
-      <View>
-        <AppText className="text-xl">{name}</AppText>
-      </View>
-    </View>
+    <SetExerciseHeader
+      exerciseId={workoutExerciseId}
+      exerciseImageUrl={image}
+      exerciseName={name}
+    />
   );
 };
 
