@@ -1,4 +1,4 @@
-import { RefreshControl, StyleSheet, View } from "react-native";
+import { RefreshControl, View } from "react-native";
 import { AppScreen } from "../../components/ui/app-screen";
 import { AppText } from "../../components/ui/app-text";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -15,8 +15,13 @@ import {
   useGroupSetsByExercise,
 } from "./hooks/use-group-sets-by-exercise";
 import { WorkoutExerciseItem } from "../../components/workout-exercise-item";
-import ContextMenu from "react-native-context-menu-view";
+// import ContextMenu from "react-native-context-menu-view";
 import { appRoutes } from "../../configs/routes";
+import { EditSessionExerciseSheet } from "../../components/bottom-sheets/edit-session-exercise-sheet";
+import { useRef, useState } from "react";
+import BottomSheet from "@gorhom/bottom-sheet";
+import { AppTouchable } from "../../components/ui/app-touchable";
+import { toast } from "sonner-native";
 
 export const EditWorkoutSessionScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -31,6 +36,10 @@ export const EditWorkoutSessionScreen = () => {
     isPending,
   } = useWorkoutSessionDetail(id);
   const setsGroupByExercise = useGroupSetsByExercise(workoutSession?.setLogs);
+  const sheetRef = useRef<BottomSheet>(null);
+  const [selectedExerciseId, setSelectedExerciseId] = useState<string | null>(
+    null
+  );
 
   const renderItem = ({
     item,
@@ -52,33 +61,43 @@ export const EditWorkoutSessionScreen = () => {
           );
         }}
         Right={
-          <ContextMenu
-            actions={[{ title: t("delete") }, { title: t("replace") }]}
-            onPress={(e) => {
-              if (e.nativeEvent.index === 0) {
-                deleteWorkoutSessionExercise(
-                  {
-                    id,
-                    exerciseId: item.exerciseId,
-                  },
-                  {
-                    onSuccess: () => {
-                      refetch?.();
-                    },
-                  }
-                );
-              }
-              if (e.nativeEvent.index === 1) {
-                console.log("replace");
-              }
+          <AppTouchable
+            onPress={() => {
+              setSelectedExerciseId(item.exerciseId);
+              sheetRef.current?.expand();
             }}
-            dropdownMenuMode={true}
-            hitSlop={50}
-            style={styles.moreButton}
           >
-            <VerticalDotsIcon size={28} />
-          </ContextMenu>
+            <VerticalDotsIcon />
+          </AppTouchable>
         }
+        // Right={
+        //   <ContextMenu
+        //     actions={[{ title: t("delete") }, { title: t("replace") }]}
+        //     onPress={(e) => {
+        //       if (e.nativeEvent.index === 0) {
+        //         deleteWorkoutSessionExercise(
+        //           {
+        //             id,
+        //             exerciseId: item.exerciseId,
+        //           },
+        //           {
+        //             onSuccess: () => {
+        //               refetch?.();
+        //             },
+        //           }
+        //         );
+        //       }
+        //       if (e.nativeEvent.index === 1) {
+        //         console.log("replace");
+        //       }
+        //     }}
+        //     dropdownMenuMode={true}
+        //     hitSlop={50}
+        //     style={styles.moreButton}
+        //   >
+        //     <VerticalDotsIcon size={28} />
+        //   </ContextMenu>
+        // }
       />
     );
   };
@@ -106,15 +125,29 @@ export const EditWorkoutSessionScreen = () => {
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
         }
       />
+      <EditSessionExerciseSheet
+        modalRef={sheetRef}
+        onDeleteItem={() => {
+          if (!selectedExerciseId) return;
+          deleteWorkoutSessionExercise(
+            {
+              id,
+              exerciseId: selectedExerciseId,
+            },
+            {
+              onSuccess: () => {
+                refetch?.();
+              },
+            }
+          );
+        }}
+        onReplaceItem={() => {
+          if (!selectedExerciseId) return;
+          toast.info(t("wip"), {
+            position: "bottom-center",
+          });
+        }}
+      />
     </AppScreen>
   );
 };
-
-const styles = StyleSheet.create({
-  moreButton: {
-    width: 40,
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

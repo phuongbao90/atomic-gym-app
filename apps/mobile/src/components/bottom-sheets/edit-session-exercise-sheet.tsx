@@ -5,13 +5,13 @@ import { Divider } from "../ui/divider";
 import { AppBottomSheet } from "../ui/app-bottom-sheet";
 import { StyleSheet } from "react-native";
 
-export const ExerciseSetItemSheet = ({
+export const EditSessionExerciseSheet = ({
   modalRef,
   onDeleteItem,
-  onEditItem,
+  onReplaceItem,
 }: {
   modalRef: React.RefObject<BottomSheet | null>;
-  onEditItem?: () => void;
+  onReplaceItem?: () => void;
   onDeleteItem: () => void;
 }) => {
   const { t } = useTranslation();
@@ -27,12 +27,12 @@ export const ExerciseSetItemSheet = ({
     >
       <BottomSheetView style={styles.container}>
         <ButtonGroup>
-          {onEditItem && (
+          {onReplaceItem && (
             <>
               <ButtonGroup.Button
-                title={t("edit")}
+                title={t("replace")}
                 onPress={() => {
-                  onEditItem();
+                  onReplaceItem();
                   modalRef?.current?.close();
                 }}
               />
