@@ -23,6 +23,8 @@ import {
   removeExerciseSet,
   resetEditExerciseSet,
   cloneExerciseSets,
+  selectActiveExerciseSetLogs,
+  selectDeletedSetIds,
 } from "../../stores/slices/edit-exercise-set.slice";
 import { useModal } from "react-native-modalfy";
 import { CompletedSetItem } from "../../components/exercise-set-item/completed-exercise-set-item";
@@ -45,37 +47,32 @@ export const EditWorkoutSessionExerciseScreen = () => {
   const { mutate: updateWorkoutSessionExerciseSets, isPending } =
     useUpdateWorkoutSessionExerciseSets();
   const { t } = useTranslation();
+  const deletedSetIds = useAppSelector((state) =>
+    selectDeletedSetIds(state, 0)
+  );
 
   useEffect(() => {
     if (workoutSession) {
       dispatch(
-        cloneExerciseSets(
-          workoutSession.setLogs.filter(
+        cloneExerciseSets({
+          0: workoutSession.setLogs.filter(
             (log) => log.originalExerciseId === exerciseId
-          )
-        )
+          ),
+        })
       );
     }
   }, [workoutSession, dispatch, exerciseId]);
 
-  const _exerciseSets = useAppSelector(
-    (state) => state.editExerciseSet.exerciseSetLogs
+  const exerciseSets = useAppSelector((state) =>
+    selectActiveExerciseSetLogs(state, 0)
   );
-  const exerciseSets = useMemo(() => {
-    return _exerciseSets.filter((set) => set.type !== "delete");
-  }, [_exerciseSets]);
+
   const isDirty = useAppSelector((state) => state.editExerciseSet.isDirty);
 
-  const onSubmitChanges = useCallback(() => {
-    const setLogsToCreate = _exerciseSets.filter(
-      (set) => set.type === "create"
-    );
-    const setLogsToUpdate = _exerciseSets.filter(
-      (set) => set.type === "update"
-    );
-    const setLogsToDelete = _exerciseSets.filter(
-      (set) => set.type === "delete"
-    );
+  const onSubmitChanges = () => {
+    const setLogsToCreate = exerciseSets.filter((set) => set.type === "create");
+    const setLogsToUpdate = exerciseSets.filter((set) => set.type === "update");
+    const setLogsToDelete = exerciseSets.filter((set) => set.type === "delete");
 
     // console.log("🚀 ~ onSubmitChanges ~ setLogsToCreate:", setLogsToCreate);
     // console.log("🚀 ~ onSubmitChanges ~ setLogsToUpdate:", setLogsToUpdate);
@@ -102,7 +99,7 @@ export const EditWorkoutSessionExerciseScreen = () => {
         },
       }
     );
-  }, [_exerciseSets, exerciseId, sessionId]);
+  };
 
   useEffect(() => {
     return () => {
@@ -135,6 +132,7 @@ export const EditWorkoutSessionExerciseScreen = () => {
           setSelectedSetId(item.id);
           incompletedSetSheetRef.current?.expand();
         }}
+        pageIndex={0}
       />
     );
   };
@@ -200,6 +198,7 @@ export const EditWorkoutSessionExerciseScreen = () => {
                   addExerciseSet({
                     exerciseId,
                     exerciseName: exercise?.data?.translations?.[0]?.name || "",
+                    pageIndex: 0,
                   })
                 );
               }}
@@ -216,16 +215,19 @@ export const EditWorkoutSessionExerciseScreen = () => {
       <ExerciseSetItemSheet
         modalRef={completedSetSheetRef}
         onEditItem={() => {
-          if (selectedSetId) dispatch(editExerciseSet({ id: selectedSetId }));
+          if (selectedSetId)
+            dispatch(editExerciseSet({ id: selectedSetId, pageIndex: 0 }));
         }}
         onDeleteItem={() => {
-          if (selectedSetId) dispatch(removeExerciseSet({ id: selectedSetId }));
+          if (selectedSetId)
+            dispatch(removeExerciseSet({ id: selectedSetId, pageIndex: 0 }));
         }}
       />
       <ExerciseSetItemSheet
         modalRef={incompletedSetSheetRef}
         onDeleteItem={() => {
-          if (selectedSetId) dispatch(removeExerciseSet({ id: selectedSetId }));
+          if (selectedSetId)
+            dispatch(removeExerciseSet({ id: selectedSetId, pageIndex: 0 }));
         }}
       />
     </AppScreen>

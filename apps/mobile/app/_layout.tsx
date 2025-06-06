@@ -9,7 +9,7 @@ import { PortalProvider } from "@gorhom/portal";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useNavigationContainerRef } from "expo-router";
 import { useEffect, useRef } from "react";
-import { StatusBar, View } from "react-native";
+import { Platform, StatusBar, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { useMMKVBoolean } from "react-native-mmkv";
@@ -36,8 +36,10 @@ import restTimeEndSound from "../assets/sounds/rest-time-end.mp3";
 import { enableScreens } from "react-native-screens";
 import { getCookie, useSession } from "../src/lib/auth-client";
 import {
+  appStorage,
   AppStorage,
   clearRequestCookie,
+  queryClient,
   setRequestCookie,
   setRequestLanguage,
   storageKeyNames,
@@ -45,12 +47,8 @@ import {
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setIsConnected } from "../src/stores/slices/app-slice";
 import { AudioModule } from "expo-audio";
-
-import { withLayoutContext } from "expo-router";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-const NStack = createNativeStackNavigator();
-const StackLayout = withLayoutContext(NStack);
+import { useSyncQueriesExternal } from "react-query-external-sync";
+import Constants from "expo-constants";
 
 enableScreens();
 
@@ -66,6 +64,10 @@ notifee.registerForegroundService(async (task) => {
     }, Number(task.data?.restTime) * 1000);
   }
 });
+
+const hostIP =
+  Constants.expoGoConfig?.debuggerHost?.split(`:`)[0] ||
+  Constants.expoConfig?.hostUri?.split(`:`)[0];
 
 // This is the default configuration
 configureReanimatedLogger({
@@ -88,6 +90,35 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) SplashScreen.hideAsync();
   }, [loaded]);
+
+  useSyncQueriesExternal({
+    queryClient: queryClient,
+    socketURL: `http://${hostIP}:42831`, // Use local network IP
+    deviceName: Platform?.OS || "web", // Platform detection
+    platform: Platform?.OS || "web", // Use appropriate platform identifier
+    deviceId: Platform?.OS || "web", // Use a PERSISTENT identifier (see note below)
+    extraDeviceInfo: {
+      // Optional additional info about your device
+      appVersion: "1.0.0",
+      // Add any relevant platform info
+    },
+    enableLogs: false,
+    envVariables: {
+      NODE_ENV: process.env.NODE_ENV,
+      // Add any private environment variables you want to monitor
+      // Public environment variables are automatically loaded
+    },
+    // Storage monitoring with CRUD operations
+    mmkvStorage: appStorage, // MMKV storage for ['#storage', 'mmkv', 'key'] queries + monitoring
+    // asyncStorage: AsyncStorage, // AsyncStorage for ['#storage', 'async', 'key'] queries + monitoring
+    // secureStorage: SecureStore, // SecureStore for ['#storage', 'secure', 'key'] queries + monitoring
+    // secureStorageKeys: [
+    //   "userToken",
+    //   "refreshToken",
+    //   "biometricKey",
+    //   "deviceId",
+    // ], // SecureStore keys to monitor
+  });
 
   if (!loaded) {
     return null;

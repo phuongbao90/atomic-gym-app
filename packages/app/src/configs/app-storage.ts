@@ -1,6 +1,6 @@
 import { MMKV } from "react-native-mmkv";
 
-const appStorage = new MMKV();
+export const appStorage = new MMKV();
 
 export const storageKeyNames = {
   isOnboarded: "isOnboarded",

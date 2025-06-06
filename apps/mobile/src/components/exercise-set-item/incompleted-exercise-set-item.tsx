@@ -21,11 +21,13 @@ import {
 import { useHoldAction } from "../../hooks/use-hold-action";
 
 export const IncompletedSetItem = ({
+  pageIndex,
   index,
   exerciseSet,
   onPressMore,
   onCompleteSet,
 }: {
+  pageIndex: number;
   index: number;
   exerciseSet: ExerciseSetItemProps["exerciseSet"];
   onPressMore: () => void;
@@ -45,6 +47,7 @@ export const IncompletedSetItem = ({
           type: "weight",
           direction: "increase",
           step: incrementWeight,
+          pageIndex,
         })
       );
     });
@@ -56,6 +59,7 @@ export const IncompletedSetItem = ({
           type: "reps",
           direction: "increase",
           step: 1,
+          pageIndex,
         })
       );
     }
@@ -68,6 +72,7 @@ export const IncompletedSetItem = ({
           type: "weight",
           direction: "decrease",
           step: incrementWeight,
+          pageIndex,
         })
       );
     });
@@ -79,6 +84,7 @@ export const IncompletedSetItem = ({
           type: "reps",
           direction: "decrease",
           step: 1,
+          pageIndex,
         })
       );
     }
@@ -122,6 +128,7 @@ export const IncompletedSetItem = ({
                   id: exerciseSet.id,
                   type: "weight",
                   value: text,
+                  pageIndex,
                 })
               );
             }}
@@ -163,6 +170,7 @@ export const IncompletedSetItem = ({
                   id: exerciseSet.id,
                   type: "reps",
                   value: text,
+                  pageIndex,
                 })
               );
             }}
@@ -190,7 +198,7 @@ export const IncompletedSetItem = ({
             });
             return;
           }
-          dispatch(completeSet({ id: exerciseSet.id }));
+          dispatch(completeSet({ id: exerciseSet.id, pageIndex }));
           onCompleteSet?.();
 
           // notifyRestTime(exerciseSet?.restTime || 0);

@@ -1,57 +1,76 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { WorkoutSessionExerciseSet } from "app";
+import { WorkoutExercise, WorkoutSessionExerciseSet } from "app";
 import uuid from "react-native-uuid";
+import { RootState } from "../redux-store";
+import { createSelector } from "@reduxjs/toolkit";
+
+export type EditExercise = {
+  id: string;
+  name: string;
+  order: number;
+  sets: WorkoutSessionExerciseSet[];
+};
 
 const initialState = {
   isDirty: false,
-  exerciseSetLogs: [] as WorkoutSessionExerciseSet[],
+  exercises: [] as EditExercise[],
+  selectedSetId: null as string | null,
+  selectedExerciseId: null as string | null,
 };
 
 export const editExerciseSetSlice = createSlice({
   name: "editExerciseSet",
   initialState,
   reducers: {
-    cloneExerciseSets: (
-      state,
-      action: PayloadAction<WorkoutSessionExerciseSet[]>
-    ) => {
-      state.exerciseSetLogs = action.payload.map((set) => ({
-        ...set,
-        type: "untouched",
-      }));
+    cloneExercises: (state, action: PayloadAction<EditExercise[]>) => {
+      state.exercises = action.payload;
     },
-    editExerciseSet: (state, action: PayloadAction<{ id: string }>) => {
-      const index = state.exerciseSetLogs.findIndex(
-        (set) => set.id === action.payload.id
+    // cloneExerciseSets: (
+    //   state,
+    //   action: PayloadAction<Record<string, WorkoutSessionExerciseSet[]>>
+    // ) => {
+    //   state.exerciseSets = action.payload;
+    // },
+    editExerciseSet: (
+      state,
+      action: PayloadAction<{ id: string; pageIndex: number }>
+    ) => {
+      const { id, pageIndex } = action.payload;
+      const index = state.exercises[pageIndex]?.sets?.findIndex(
+        (set) => set.id === id
       );
       if (index !== -1) {
-        const currentType = state.exerciseSetLogs[index].type;
+        const currentType = state.exercises[pageIndex]?.sets[index].type;
 
         //* if it is newly created => keep current type, switch to update will cause bug as id does not exist in db
-        state.exerciseSetLogs[index].type =
+        state.exercises[pageIndex].sets[index].type =
           currentType === "create" ? "create" : "update";
-        state.exerciseSetLogs[index].isCompleted = false;
+        state.exercises[pageIndex].sets[index].isCompleted = false;
       }
       state.isDirty = true;
     },
     updateExerciseSet: (
       state,
       action: PayloadAction<
-        | {
-            id: string;
-            type: "weight" | "reps";
-            direction: "increase" | "decrease";
-            step: number;
-          }
-        | {
-            id: string;
-            type: "weight" | "reps";
-            value: string;
-          }
+        {
+          id: string;
+          type: "weight" | "reps";
+          pageIndex: number;
+        } & (
+          | {
+              direction: "increase" | "decrease";
+              step: number;
+            }
+          | {
+              value: string;
+            }
+        )
       >
     ) => {
-      const { id, type } = action.payload;
-      const index = state.exerciseSetLogs.findIndex((set) => set.id === id);
+      const { id, type, pageIndex } = action.payload;
+      const index = state.exercises[pageIndex].sets?.findIndex(
+        (set) => set.id === id
+      );
       if (index === -1) {
         return;
       }
@@ -59,49 +78,57 @@ export const editExerciseSetSlice = createSlice({
       if ("value" in action.payload) {
         const value = Number(action.payload.value);
         if (type === "weight") {
-          state.exerciseSetLogs[index].weight = value;
+          state.exercises[pageIndex].sets[index].weight = value;
         } else {
-          state.exerciseSetLogs[index].repetitions = value;
+          state.exercises[pageIndex].sets[index].repetitions = value;
         }
       } else {
         const { direction, step } = action.payload;
         if (type === "weight") {
-          state.exerciseSetLogs[index].weight = Math.max(
-            state.exerciseSetLogs[index].weight +
+          state.exercises[pageIndex].sets[index].weight = Math.max(
+            state.exercises[pageIndex].sets[index].weight +
               (direction === "increase" ? step : -step),
             0
           );
         } else {
-          state.exerciseSetLogs[index].repetitions = Math.max(
-            state.exerciseSetLogs[index].repetitions +
+          state.exercises[pageIndex].sets[index].repetitions = Math.max(
+            state.exercises[pageIndex].sets[index].repetitions +
               (direction === "increase" ? 1 : -1),
             0
           );
         }
       }
 
-      const currentType = state.exerciseSetLogs[index].type;
-      state.exerciseSetLogs[index].type =
+      const currentType = state.exercises[pageIndex].sets[index].type;
+      state.exercises[pageIndex].sets[index].type =
         currentType === "create" ? "create" : "update";
       state.isDirty = true;
     },
-    removeExerciseSet: (state, action: PayloadAction<{ id: string }>) => {
-      const index = state.exerciseSetLogs.findIndex(
-        (set) => set.id === action.payload.id
+    removeExerciseSet: (
+      state,
+      action: PayloadAction<{ id: string; pageIndex: number }>
+    ) => {
+      const { id, pageIndex } = action.payload;
+      const index = state.exercises[pageIndex].sets?.findIndex(
+        (set) => set.id === id
       );
       if (index !== -1) {
-        state.exerciseSetLogs[index].type = "delete";
+        state.exercises[pageIndex].sets[index].type = "delete";
       }
       state.isDirty = true;
     },
-    completeSet: (state, action: PayloadAction<{ id: string }>) => {
-      const index = state.exerciseSetLogs.findIndex(
-        (set) => set.id === action.payload.id
+    completeSet: (
+      state,
+      action: PayloadAction<{ id: string; pageIndex: number }>
+    ) => {
+      const { id, pageIndex } = action.payload;
+      const index = state.exercises[pageIndex].sets?.findIndex(
+        (set) => set.id === id
       );
       if (index !== -1) {
-        state.exerciseSetLogs[index].isCompleted = true;
-        const currentType = state.exerciseSetLogs[index].type;
-        state.exerciseSetLogs[index].type =
+        state.exercises[pageIndex].sets[index].isCompleted = true;
+        const currentType = state.exercises[pageIndex].sets[index].type;
+        state.exercises[pageIndex].sets[index].type =
           currentType === "create" ? "create" : "update";
         state.isDirty = true;
       }
@@ -109,36 +136,95 @@ export const editExerciseSetSlice = createSlice({
     reset: () => initialState,
     addExerciseSet: (
       state,
-      action: PayloadAction<{ exerciseId: string; exerciseName: string }>
+      action: PayloadAction<{
+        exerciseId: string;
+        exerciseName: string;
+        pageIndex: number;
+      }>
     ) => {
+      const { exerciseId, exerciseName, pageIndex } = action.payload;
       const latestSet =
-        state.exerciseSetLogs?.[state.exerciseSetLogs.length - 1];
+        state.exercises[pageIndex].sets?.[
+          state.exercises[pageIndex].sets.length - 1
+        ];
 
-      state.exerciseSetLogs.push({
+      state.exercises[pageIndex].sets.push({
         id: uuid.v4(),
         isCompleted: false,
         weight: latestSet?.weight || 0,
         repetitions: latestSet?.repetitions || 0,
         distance: latestSet?.distance || 0,
         duration: latestSet?.duration || 0,
-        order: state.exerciseSetLogs.length + 1,
-        originalExerciseId: action.payload.exerciseId,
-        exerciseNameSnapshot: action.payload.exerciseName,
+        order: state.exercises[pageIndex].sets.length + 1,
+        originalExerciseId: exerciseId,
+        exerciseNameSnapshot: exerciseName,
         type: "create",
       });
       state.isDirty = true;
+    },
+    setSelectedSetId: (state, action: PayloadAction<string>) => {
+      state.selectedSetId = action.payload;
+    },
+    setSelectedExerciseId: (state, action: PayloadAction<string>) => {
+      state.selectedExerciseId = action.payload;
     },
   },
 });
 
 export const {
-  cloneExerciseSets,
+  cloneExercises,
+  // cloneExerciseSets,
   editExerciseSet,
   removeExerciseSet,
   reset: resetEditExerciseSet,
   updateExerciseSet,
   completeSet,
   addExerciseSet,
+  setSelectedSetId,
+  setSelectedExerciseId,
 } = editExerciseSetSlice.actions;
+
+export const selectActiveExerciseSetLogs = createSelector(
+  [
+    (state: RootState, pageIndex: number) =>
+      state.editExerciseSet.exercises[pageIndex],
+  ],
+  (exerciseSets) =>
+    exerciseSets?.sets?.filter((set) => set.type !== "delete") || []
+);
+
+export const selectDeletedSetIds = createSelector(
+  [(state: RootState) => state.editExerciseSet.exercises],
+  (exercises) =>
+    exercises
+      .flat()
+      .filter((exercise) => exercise.sets.some((set) => set.type === "delete"))
+      .flatMap((exercise) =>
+        exercise.sets.filter((set) => set.type === "delete")
+      )
+      .map((set) => set.id) || []
+);
+
+export const selectExerciseSetsByPageIndex = createSelector(
+  [
+    (state: RootState, pageIndex: number) =>
+      state.editExerciseSet.exercises[pageIndex],
+  ],
+  (exerciseSets) => exerciseSets?.sets?.filter((s) => s.type !== "delete") || []
+);
+
+export const selectExercisesForList = createSelector(
+  [(state: RootState) => state.editExerciseSet.exercises],
+  (exercises) =>
+    exercises.map((e) => ({
+      id: e.id,
+      name: e.name,
+      order: e.order,
+      setsCount: e.sets.filter((s) => s.type !== "delete").length,
+      completedSetsCount: e.sets.filter(
+        (s) => s.isCompleted && s.type !== "delete"
+      ).length,
+    }))
+);
 
 export const editExerciseSetReducer = editExerciseSetSlice.reducer;

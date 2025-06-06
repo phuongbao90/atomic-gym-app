@@ -26,7 +26,10 @@ export const CompletedSetItem = ({
   index,
   onPressMore,
 }: {
-  exerciseSet: ExerciseSetItemProps["exerciseSet"];
+  exerciseSet: {
+    weight: number;
+    repetitions: number;
+  };
   index: ExerciseSetItemProps["index"];
   onPressMore: () => void;
 }) => {
@@ -36,10 +39,7 @@ export const CompletedSetItem = ({
   return (
     <View className="rounded-xl overflow-hidden">
       <View className="flex-row items-center py-4 px-4 bg-slate-600">
-        <OrderNumberCircle
-          orderNumber={index + 1}
-          isActive={exerciseSet.isCompleted}
-        />
+        <OrderNumberCircle orderNumber={index + 1} isActive />
         <AppText className="text-xl ml-4">
           {exerciseSet?.weight} {weightUnit} x {exerciseSet?.repetitions}{" "}
           {t("reps")}

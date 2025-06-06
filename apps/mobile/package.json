@@ -172,7 +172,9 @@
     "nock": "^14.0.5",
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
+    "react-query-external-sync": "^2.2.2",
     "redux-devtools-expo-dev-plugin": "^2.0.0",
+    "socket.io-client": "^4.8.1",
     "ts-node": "^10.9.2",
     "typescript": "5.8.3",
     "typescript-config": "*"

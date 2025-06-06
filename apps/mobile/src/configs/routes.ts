@@ -22,8 +22,8 @@ export type ExercisesScreenParams =
     ));
 
 export type InProgressWorkoutExercisesScreenParams = {
-  workoutId: string;
-  page: string;
+  // workoutId: string;
+  pageIndex: string;
 };
 
 export const appRoutes = {

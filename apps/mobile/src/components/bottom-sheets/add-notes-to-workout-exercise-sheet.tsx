@@ -1,8 +1,7 @@
 import { Platform, TouchableOpacity, View } from "react-native";
 import { AppBottomSheetModal } from "../ui/app-bottom-sheet-modal";
 import { AppText } from "../ui/app-text";
-import {
-  BottomSheetModal,
+import BottomSheet, {
   BottomSheetModalProps,
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
@@ -14,12 +13,13 @@ import { TextInput } from "react-native";
 import { twColors } from "../../styles/themes";
 import { useTranslation } from "react-i18next";
 import { AppBottomSheetView } from "../ui/app-bottom-sheet-view";
+import { AppBottomSheet } from "../ui/app-bottom-sheet";
 
 export const AddNotesToWorkoutExerciseSheet = ({
   modalRef,
   workoutExerciseId,
 }: {
-  modalRef: React.RefObject<BottomSheetModal>;
+  modalRef: React.RefObject<BottomSheet | null>;
   workoutExerciseId: string;
 }) => {
   const { handleSheetPositionChange } = useBottomSheetBackHandler(modalRef);
@@ -42,7 +42,7 @@ export const AddNotesToWorkoutExerciseSheet = ({
         notes: notes || "",
       })
     );
-    modalRef.current?.dismiss();
+    modalRef.current?.close();
   }
 
   type IosSetting =
@@ -74,10 +74,10 @@ export const AddNotesToWorkoutExerciseSheet = ({
   });
 
   return (
-    <AppBottomSheetModal
+    <AppBottomSheet
       testID="add-notes-to-workout-exercise-sheet"
       modalRef={modalRef}
-      index={1}
+      // index={-1}
       snapPoints={["30%"]}
       maxDynamicContentSize={600}
       {...settings}
@@ -115,6 +115,6 @@ export const AddNotesToWorkoutExerciseSheet = ({
           onChangeText={setNotes}
         />
       </AppBottomSheetView>
-    </AppBottomSheetModal>
+    </AppBottomSheet>
   );
 };

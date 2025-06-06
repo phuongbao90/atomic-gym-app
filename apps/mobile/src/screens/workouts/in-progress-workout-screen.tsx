@@ -27,12 +27,21 @@ import { colors } from "../../styles/themes";
 import { appRoutes } from "../../configs/routes";
 import { AppButton } from "../../components/ui/app-button";
 import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { shallowEqual } from "react-redux";
 import deepEqual from "deep-equal";
 import { useWorkoutSessionNotification } from "../../hooks/use-workout-session-notification";
 import { WorkoutExerciseItem } from "../../components/workout-exercise-item";
 import { AppTouchable } from "../../components/ui/app-touchable";
+import { EditSessionExerciseSheet } from "../../components/bottom-sheets/edit-session-exercise-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
+import {
+  cloneExercises,
+  EditExercise,
+  resetEditExerciseSet,
+  setSelectedExerciseId,
+} from "../../stores/slices/edit-exercise-set.slice";
+import { WorkoutSessionExerciseSet } from "app";
 
 export const InProgressWorkoutScreen = () => {
   const { t } = useTranslation();
@@ -41,14 +50,42 @@ export const InProgressWorkoutScreen = () => {
   const router = useRouter();
   const { showActionSheetWithOptions } = useActionSheet();
   const theme = useAppSelector((s) => s.app.theme);
-  const workoutExercises = useAppSelector(
-    (s) =>
-      s.workoutSession.activeWorkout?.workoutExercises?.map((e) => ({
-        id: e.id,
-        order: e.order,
-      })),
-    deepEqual
+  const sheetRef = useRef<BottomSheet>(null);
+  const selectedExerciseId = useAppSelector(
+    (s) => s.editExerciseSet.selectedExerciseId
   );
+  const activeWorkout = useAppSelector((s) => s.workoutSession.activeWorkout);
+
+  useEffect(() => {
+    if (!activeWorkout) return;
+    dispatch(
+      cloneExercises(
+        activeWorkout.workoutExercises?.map((e, index) => ({
+          id: e.id,
+          name: e.exercise?.translations?.[0]?.name || "",
+          order: e.order,
+          sets:
+            e.sets?.map((e) => ({
+              id: e.id,
+              isCompleted: false,
+              weight: 0,
+              repetitions: 0,
+              distance: 0,
+              duration: 0,
+              order: index,
+              originalExerciseId: e.workoutExerciseId,
+              exerciseNameSnapshot: "ss",
+              type: "untouched",
+            })) || [],
+        })) || []
+      )
+    );
+    return () => {
+      dispatch(resetEditExerciseSet());
+    };
+  }, [activeWorkout, dispatch]);
+
+  const workoutExercises = useAppSelector((s) => s.editExerciseSet.exercises);
 
   function onPressMore(workoutExerciseId: string) {
     const options = [t("replace"), t("delete"), t("cancel")];
@@ -102,15 +139,21 @@ export const InProgressWorkoutScreen = () => {
     );
   }
 
-  const renderItem = (
-    params: RenderItemParams<{ id: string; order: number }>
-  ) => {
+  const renderItem = (params: RenderItemParams<EditExercise>) => {
     return (
       <ScaleDecorator>
         <ExerciseItem
           {...params}
-          onPressMore={onPressMore}
-          item={params.item.id}
+          onPressMore={(item) => {
+            dispatch(setSelectedExerciseId(item.id));
+            sheetRef.current?.expand();
+          }}
+          item={{
+            id: params.item.id,
+            name: params.item.name,
+            order: params.item.order,
+            sets: params.item.sets,
+          }}
         />
       </ScaleDecorator>
     );
@@ -123,7 +166,7 @@ export const InProgressWorkoutScreen = () => {
 
       <DraggableFlatList
         keyExtractor={(item) => item.id}
-        data={[...(workoutExercises || [])].sort((a, b) => a.order - b.order)}
+        data={workoutExercises || []}
         renderItem={renderItem}
         style={{ flex: 1 }}
         containerStyle={{ flexGrow: 1 }}
@@ -164,6 +207,30 @@ export const InProgressWorkoutScreen = () => {
             />
           </View>
         }
+      />
+      <EditSessionExerciseSheet
+        modalRef={sheetRef}
+        onDeleteItem={() => {
+          if (!selectedExerciseId) return;
+          dispatch(
+            removeActiveWorkoutSessionExercise({
+              workoutExerciseId: selectedExerciseId,
+            })
+          );
+        }}
+        onReplaceItem={() => {
+          if (!selectedExerciseId) return;
+          router.push(
+            appRoutes.exercises.list({
+              replaceWorkoutExerciseId: selectedExerciseId,
+              allowSelect: "true",
+              mode: "replaceToActiveWorkoutSession",
+            })
+          );
+          // toast.info(t("wip"), {
+          //   position: "bottom-center",
+          // });
+        }}
       />
     </AppScreen>
   );
@@ -215,27 +282,18 @@ const ExerciseItem = ({
   drag,
   getIndex,
   onPressMore,
-}: RenderItemParams<string> & {
-  onPressMore: (item: string) => void;
+}: RenderItemParams<EditExercise> & {
+  onPressMore: (item: EditExercise) => void;
 }) => {
-  const workoutExercise = useAppSelector(
-    (s) =>
-      s.workoutSession.activeWorkout?.workoutExercises?.find(
-        (e) => e.id === item
-      ),
-    shallowEqual
-  );
-  const completedSetsCount = useMemo(() => {
-    return workoutExercise?.sets?.filter((s) => s.isCompleted).length;
-  }, [workoutExercise]);
   const router = useRouter();
+  const pageIndex = getIndex();
 
   return (
     <WorkoutExerciseItem
-      index={getIndex()! + 1}
-      setsCount={workoutExercise?.sets?.length || 0}
-      exerciseName={workoutExercise?.exercise?.translations?.[0]?.name || ""}
-      completedSetsCount={completedSetsCount || 0}
+      index={(pageIndex || 0) + 1}
+      setsCount={item?.sets?.length || 0}
+      exerciseName={item?.name || ""}
+      completedSetsCount={item?.sets?.filter((s) => s.isCompleted).length || 0}
       className="border-b border-gray-500"
       Right={
         <AppTouchable onPress={() => onPressMore(item)}>
@@ -243,10 +301,10 @@ const ExerciseItem = ({
         </AppTouchable>
       }
       onPress={() => {
+        if (pageIndex === undefined) return;
         router.navigate(
           appRoutes.inProgress.workoutExercises({
-            workoutId: workoutExercise?.workoutId || "",
-            page: getIndex()!.toString(),
+            pageIndex: pageIndex.toString(),
           })
         );
       }}
