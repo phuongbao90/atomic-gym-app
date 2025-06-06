@@ -227,4 +227,9 @@ export const selectExercisesForList = createSelector(
     }))
 );
 
+export const selectExercisesForPagerView = createSelector(
+  [(state: RootState) => state.editExerciseSet.exercises],
+  (exercises) => exercises.map((e) => ({ id: e.id, name: e.name }))
+);
+
 export const editExerciseSetReducer = editExerciseSetSlice.reducer;

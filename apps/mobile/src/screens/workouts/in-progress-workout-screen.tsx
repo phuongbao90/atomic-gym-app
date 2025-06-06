@@ -27,8 +27,7 @@ import { colors } from "../../styles/themes";
 import { appRoutes } from "../../configs/routes";
 import { AppButton } from "../../components/ui/app-button";
 import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { shallowEqual } from "react-redux";
+import React, { useEffect, useRef } from "react";
 import deepEqual from "deep-equal";
 import { useWorkoutSessionNotification } from "../../hooks/use-workout-session-notification";
 import { WorkoutExerciseItem } from "../../components/workout-exercise-item";
@@ -37,11 +36,12 @@ import { EditSessionExerciseSheet } from "../../components/bottom-sheets/edit-se
 import BottomSheet from "@gorhom/bottom-sheet";
 import {
   cloneExercises,
-  EditExercise,
   resetEditExerciseSet,
+  selectExercisesForList,
   setSelectedExerciseId,
 } from "../../stores/slices/edit-exercise-set.slice";
-import { WorkoutSessionExerciseSet } from "app";
+
+type ExerciseListItem = ReturnType<typeof selectExercisesForList>[number];
 
 export const InProgressWorkoutScreen = () => {
   const { t } = useTranslation();
@@ -85,7 +85,7 @@ export const InProgressWorkoutScreen = () => {
     };
   }, [activeWorkout, dispatch]);
 
-  const workoutExercises = useAppSelector((s) => s.editExerciseSet.exercises);
+  const workoutExercises = useAppSelector(selectExercisesForList, deepEqual);
 
   function onPressMore(workoutExerciseId: string) {
     const options = [t("replace"), t("delete"), t("cancel")];
@@ -139,7 +139,7 @@ export const InProgressWorkoutScreen = () => {
     );
   }
 
-  const renderItem = (params: RenderItemParams<EditExercise>) => {
+  const renderItem = (params: RenderItemParams<ExerciseListItem>) => {
     return (
       <ScaleDecorator>
         <ExerciseItem
@@ -147,12 +147,6 @@ export const InProgressWorkoutScreen = () => {
           onPressMore={(item) => {
             dispatch(setSelectedExerciseId(item.id));
             sheetRef.current?.expand();
-          }}
-          item={{
-            id: params.item.id,
-            name: params.item.name,
-            order: params.item.order,
-            sets: params.item.sets,
           }}
         />
       </ScaleDecorator>
@@ -282,8 +276,8 @@ const ExerciseItem = ({
   drag,
   getIndex,
   onPressMore,
-}: RenderItemParams<EditExercise> & {
-  onPressMore: (item: EditExercise) => void;
+}: RenderItemParams<ExerciseListItem> & {
+  onPressMore: (item: ExerciseListItem) => void;
 }) => {
   const router = useRouter();
   const pageIndex = getIndex();
@@ -291,9 +285,9 @@ const ExerciseItem = ({
   return (
     <WorkoutExerciseItem
       index={(pageIndex || 0) + 1}
-      setsCount={item?.sets?.length || 0}
+      setsCount={item.setsCount}
       exerciseName={item?.name || ""}
-      completedSetsCount={item?.sets?.filter((s) => s.isCompleted).length || 0}
+      completedSetsCount={item.completedSetsCount}
       className="border-b border-gray-500"
       Right={
         <AppTouchable onPress={() => onPressMore(item)}>

@@ -51,6 +51,7 @@ import { ExerciseSetPagerDots } from "../../components/exercise-set-pager-dots";
 import {
   resetEditExerciseSet,
   selectActiveExerciseSetLogs,
+  selectExercisesForPagerView,
   selectExerciseSetsByPageIndex,
   setSelectedSetId,
 } from "../../stores/slices/edit-exercise-set.slice";
@@ -58,7 +59,10 @@ import {
 export const InProgressWorkoutExercisesScreen = () => {
   const { pageIndex } =
     useLocalSearchParams<InProgressWorkoutExercisesScreenParams>();
-  const workoutExercises = useAppSelector((s) => s.editExerciseSet.exercises);
+  const workoutExercises = useAppSelector(
+    selectExercisesForPagerView,
+    shallowEqual
+  );
   const [activePage, setActivePage] = useState(Number(pageIndex));
   const completedSetSheetRef = useRef<BottomSheet>(null);
   const incompletedSetSheetRef = useRef<BottomSheet>(null);
@@ -81,7 +85,7 @@ export const InProgressWorkoutExercisesScreen = () => {
       >
         {workoutExercises?.map((workoutExercise, index) => (
           <WorkoutExercisePage
-            key={index.toString()}
+            key={workoutExercise.id}
             pageIndex={index}
             completedSetSheetRef={completedSetSheetRef}
             incompletedSetSheetRef={incompletedSetSheetRef}
@@ -167,7 +171,7 @@ const WorkoutExercisePage = React.memo(
     if (!exerciseSets) return null;
 
     return (
-      <View key={pageIndex.toString()} className="flex-1">
+      <View key={exercise.id} className="flex-1">
         <FlatList
           keyExtractor={(item) => item.id}
           data={exerciseSets}
