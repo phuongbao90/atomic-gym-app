@@ -7,10 +7,12 @@ import BottomSheet, {
 export const AppBottomSheet = ({
   modalRef,
   children,
+  testID,
   ...props
 }: {
   modalRef: React.RefObject<BottomSheet | null>;
   children: React.ReactNode;
+  testID?: string;
 } & BottomSheetProps) => {
   const renderBackdrop = (props: BottomSheetBackdropProps) => {
     return (
@@ -27,12 +29,6 @@ export const AppBottomSheet = ({
     <BottomSheet
       ref={modalRef}
       enablePanDownToClose
-      //   detached
-      //   bottomInset={40}
-      //   backgroundStyle={{
-      //     backgroundColor: "transparent",
-      //   }}
-      //   handleComponent={null}
       backdropComponent={renderBackdrop}
       index={-1}
       {...props}

@@ -13,7 +13,7 @@ export const SelectMuscleGroupSheet = ({
   modalRef,
   setSelectedMuscleGroup,
 }: {
-  modalRef: React.RefObject<BottomSheetModal>;
+  modalRef: React.RefObject<BottomSheetModal | null>;
   setSelectedMuscleGroup: (muscleGroup: MuscleGroup | null) => void;
 }) => {
   const { t } = useTranslation();

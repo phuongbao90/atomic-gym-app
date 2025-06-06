@@ -1,4 +1,4 @@
-import { Logger, ValidationPipe } from "@nestjs/common";
+import { Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import * as compression from "compression";
@@ -7,11 +7,17 @@ import helmet from "helmet";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { LoggingInterceptor } from "./common/interceptors/logging.interceptor";
+import { writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { patchNestJsSwagger } from "nestjs-zod";
+
+patchNestJsSwagger();
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bodyParser: false,
   });
+
   // Starts listening for shutdown hooks
   app.enableShutdownHooks();
   app.set("trust proxy", "loopback"); // Trust requests from the loopback address
@@ -29,14 +35,15 @@ async function bootstrap() {
   // Enable global logging interceptor
   app.useGlobalInterceptors(new LoggingInterceptor());
   // enable global validation pipe
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      stopAtFirstError: true,
-      transformOptions: { enableImplicitConversion: true },
-    })
-  );
+  // disable as using nestjs-zod
+  // app.useGlobalPipes(
+  //   new ValidationPipe({
+  //     transform: true,
+  //     whitelist: true,
+  //     stopAtFirstError: true,
+  //     transformOptions: { enableImplicitConversion: true },
+  //   })
+  // );
 
   const config = new DocumentBuilder()
     .setTitle("API")
@@ -45,8 +52,14 @@ async function bootstrap() {
     // .addTag("API")
     // .addServer("http://localhost:3001")
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api", app, document);
+
+  writeFileSync(
+    join(__dirname, "../../../../tools/openapi-generator/openapi.json"),
+    JSON.stringify(document, null, 2)
+  );
 
   await app.listen(process.env.PORT as string);
   Logger.log(

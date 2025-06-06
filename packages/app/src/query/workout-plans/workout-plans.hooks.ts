@@ -5,18 +5,20 @@ import {
   getWorkoutPlans,
   getWorkoutPlansByMe,
   getWorkoutPlansInGroups,
+  getWorkoutPlanStats,
   updateWorkoutPlan,
 } from "./workout-plans.requests";
 import { useAppInfiniteQuery } from "../helpers";
-import {
-  CreateWorkoutPlanSchema,
-  UpdateWorkoutPlanSchema,
-  WorkoutPlanQuery,
-} from "./workout-plans.types";
+import { WorkoutPlanQuery } from "./workout-plans.types";
 import { workoutPlanKeys } from "./workout-plans.keys";
 import { z } from "zod";
 import { WorkoutPlan } from "../../prisma-generated";
 import { ApiResponse } from "../..";
+import {
+  CreateWorkoutPlanBodySchema,
+  UpdateWorkoutPlanBodySchema,
+  WorkoutPlanItemResponseSchema,
+} from "app-config";
 
 export const useGetWorkoutPlans = (query: WorkoutPlanQuery) => {
   return useAppInfiniteQuery({
@@ -28,7 +30,11 @@ export const useGetWorkoutPlans = (query: WorkoutPlanQuery) => {
 
 export const useGetWorkoutPlansByMe = (
   options?: Pick<
-    UseQueryOptions<ApiResponse<WorkoutPlan[]>, Error, WorkoutPlan[]>,
+    UseQueryOptions<
+      ApiResponse<z.infer<typeof WorkoutPlanItemResponseSchema>[]>,
+      Error,
+      z.infer<typeof WorkoutPlanItemResponseSchema>[]
+    >,
     "enabled"
   >
 ) => {
@@ -60,14 +66,23 @@ export const useGetWorkoutPlansInGroups = () => {
 
 export const useCreateWorkoutPlan = () => {
   return useMutation({
-    mutationFn: (data: z.infer<typeof CreateWorkoutPlanSchema>) =>
+    mutationFn: (data: z.infer<typeof CreateWorkoutPlanBodySchema>) =>
       createWorkoutPlan(data),
   });
 };
 
 export const useUpdateWorkoutPlan = () => {
   return useMutation({
-    mutationFn: (data: z.infer<typeof UpdateWorkoutPlanSchema>) =>
+    mutationFn: (data: z.infer<typeof UpdateWorkoutPlanBodySchema>) =>
       updateWorkoutPlan(data),
+  });
+};
+
+export const useGetWorkoutPlanStats = (id: string) => {
+  return useQuery({
+    queryKey: workoutPlanKeys.stats(id),
+    queryFn: () => getWorkoutPlanStats(id),
+    select: (data) => data?.data,
+    enabled: !!id,
   });
 };

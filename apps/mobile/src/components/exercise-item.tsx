@@ -1,4 +1,3 @@
-import { Exercise } from "app";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { appRoutes } from "../configs/routes";
@@ -6,6 +5,8 @@ import { ListItem } from "./ui/list-item";
 import { usePreventRepeatPress } from "../hooks/use-prevent-repeat-press";
 import { useTranslation } from "react-i18next";
 import { upperCase } from "lodash";
+import { z } from "zod";
+import { ExerciseItemSchema } from "app-config";
 
 export const ExerciseItem = ({
   item,
@@ -14,12 +15,13 @@ export const ExerciseItem = ({
   setCount,
   opPress,
 }: {
-  item: Exercise | undefined;
+  item: z.infer<typeof ExerciseItemSchema> | undefined;
   index: number;
   right?: React.ReactNode | null;
   setCount: number | undefined;
   opPress?: () => void;
 }) => {
+  // console.log("🚀 ~ item:", JSON.stringify(item, null, 2));
   const router = useRouter();
   const debouncedPress = usePreventRepeatPress();
   const { t } = useTranslation();
@@ -31,7 +33,7 @@ export const ExerciseItem = ({
   return (
     <ListItem
       testID={`exercise-item-${item.id}`}
-      label={`${item?.translations?.[0]?.name}${__DEV__ ? ` - ${index + 1}` : ""}`}
+      label={`${item?.name}${__DEV__ ? ` - ${index + 1}` : ""}`}
       labelClassName="text-lg font-bold"
       labelContainerClassName="ml-4"
       subLabel={setCount ? `${upperCase(t("sets"))}: ${setCount}` : undefined}

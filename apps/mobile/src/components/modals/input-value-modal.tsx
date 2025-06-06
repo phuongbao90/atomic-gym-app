@@ -11,9 +11,9 @@ import {
 import { AppTouchable } from "../ui/app-touchable";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
-import dayjs from "dayjs";
 import { useAppSelector } from "../../stores/redux-store";
 import { useHoldAction } from "../../hooks/use-hold-action";
+import { dayjs } from "../../lib/dayjs";
 
 type Props = ModalProps<"InputValueModal">;
 

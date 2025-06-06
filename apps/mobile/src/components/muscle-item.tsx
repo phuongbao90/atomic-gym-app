@@ -1,19 +1,21 @@
-import { MuscleGroup } from "app";
 import { Image } from "expo-image";
 import { View } from "react-native";
 import { AppText } from "./ui/app-text";
 import { useAppSelector } from "../stores/redux-store";
 import { cn } from "../utils/cn";
+import { MuscleGroupItemSchema } from "app-config";
+import { z } from "zod";
 
 export const MuscleItem = ({
   muscleGroup,
   vertical = false,
   className,
 }: {
-  muscleGroup: MuscleGroup;
+  muscleGroup: z.infer<typeof MuscleGroupItemSchema>;
   vertical?: boolean;
   className?: string;
 }) => {
+  // console.log("🚀 ~ muscleGroup:", JSON.stringify(muscleGroup, null, 2));
   const theme = useAppSelector((state) => state.app.theme);
   return (
     <View
@@ -23,12 +25,11 @@ export const MuscleItem = ({
         vertical && "flex-col items-center gap-2",
         className
       )}
-      key={muscleGroup.id}
     >
       {vertical ? (
         <>
           <AppText className={cn("text-xl font-semibold text-center")}>
-            {muscleGroup.translations?.[0].name}
+            {muscleGroup.name}
           </AppText>
           <Image
             source={muscleGroup.image}
@@ -56,7 +57,7 @@ export const MuscleItem = ({
             contentFit="cover"
           />
           <AppText className={cn("text-xl font-semibold")}>
-            {muscleGroup.translations?.[0].name}
+            {muscleGroup.name}
           </AppText>
         </>
       )}

@@ -1,5 +1,5 @@
 import { waitFor } from "@testing-library/react-native";
-import { Exercise, useGetWorkout } from "app";
+import { Exercise, useGetWorkoutTemplate } from "app";
 import { WorkoutDetailScreen } from "../workouts/workout-detail-screen";
 import { customRenderUI, customRenderQueryHook } from "../../utils/test-utils";
 import nock from "nock";
@@ -171,13 +171,13 @@ const mockDataWithoutExercises: Exercise = {
 describe("WorkoutDetailScreen", () => {
   it("should render correctly", async () => {
     nock(ENV.API_URL)
-      .get(API_ROUTES.workouts.detail(mockDataWithExercises.id))
+      .get(API_ROUTES.workoutTemplates.detail(mockDataWithExercises.id))
       .reply(200, {
         data: mockDataWithExercises,
       });
     setSearchParams({ id: mockDataWithExercises.id.toString() });
     const { result } = customRenderQueryHook(() =>
-      useGetWorkout(mockDataWithExercises.id)
+      useGetWorkoutTemplate(mockDataWithExercises.id)
     );
     const { getByText, getByTestId, getAllByTestId } = customRenderUI(
       <WorkoutDetailScreen />
@@ -212,13 +212,13 @@ describe("WorkoutDetailScreen", () => {
   });
   it("should render correctly when there are no exercises", async () => {
     nock(ENV.API_URL)
-      .get(API_ROUTES.workouts.detail(mockDataWithoutExercises.id))
+      .get(API_ROUTES.workoutTemplates.detail(mockDataWithoutExercises.id))
       .reply(200, {
         data: mockDataWithoutExercises,
       });
     setSearchParams({ id: mockDataWithoutExercises.id.toString() });
     const { result } = customRenderQueryHook(() =>
-      useGetWorkout(mockDataWithoutExercises.id)
+      useGetWorkoutTemplate(mockDataWithoutExercises.id)
     );
     const { getByText } = customRenderUI(<WorkoutDetailScreen />);
 

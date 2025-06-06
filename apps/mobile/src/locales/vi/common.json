@@ -185,5 +185,13 @@
   "confirm_cancel": "Bạn có chắc chắn muốn hủy và bỏ qua các thay đổi không?",
   "wip": "Tính năng này vẫn đang phát triển",
   "date_of_session": "Ngày buổi tập",
-  "duration_of_session": "Thời gian buổi tập"
+  "duration_of_session": "Thời gian buổi tập",
+  "cancel_workout_session_description": "Bạn có chắc chắn muốn hủy buổi tập này không?",
+
+  "zod_errors": {
+    "workout_plan_name_too_small": "Tên giáo án phải có ít nhất 3 ký tự",
+    "workout_plan_name_too_large": "Tên giáo án phải có ít hơn 100 ký tự",
+    "workout_template_name_too_small": "Tên buổi tập phải có ít nhất 3 ký tự",
+    "workout_template_name_too_large": "Tên buổi tập phải có ít hơn 100 ký tự"
+  }
 }

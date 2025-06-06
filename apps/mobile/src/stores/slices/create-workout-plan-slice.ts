@@ -1,58 +1,38 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Exercise, Language } from "app";
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
+
 import { ImagePickerAsset } from "expo-image-picker";
 import { DEFAULT_WORKOUT_PLAN_IMAGE } from "../../constants/constants";
 import { RootState } from "../redux-store";
 import uuid from "react-native-uuid";
+import { z } from "zod";
+import { CreateWorkoutPlanSliceSchema, ExerciseItemSchema } from "app-config";
+import { reorderItems } from "react-native-reorderable-list";
 
-export type CreateWorkoutPlanSliceType = {
-  name: string;
-  cover_image: ImagePickerAsset;
-  activeWorkoutIndex: number;
-  translations?: {
-    language: Language;
-    name: string;
-    description: string;
-  }[];
-  workouts: {
-    id: string;
-    name: string;
-    order: number;
-    translations?: {
-      language: Language;
-      name: string;
-      description: string;
-    }[];
-    workoutExercises: {
-      id: string;
-      exercise: Exercise;
-      order: number;
-      sets: {
-        restTime: number;
-        isWarmup: boolean;
-        isDropSet: boolean;
-        isUntilFailure: boolean;
-      }[];
-    }[];
-  }[];
-};
+export type InitialWorkoutPlan = z.infer<typeof CreateWorkoutPlanSliceSchema>;
 
 const initialState = {
+  activeWorkoutIndex: 0,
+  // scover_image: {
+  //   uri: DEFAULT_WORKOUT_PLAN_IMAGE,
+  // } as ImagePickerAsset,
   workoutPlan: {
     name: "",
-    cover_image: {
-      uri: DEFAULT_WORKOUT_PLAN_IMAGE,
-    } as ImagePickerAsset,
-    activeWorkoutIndex: 0,
-    workouts: [
+    cover_image: DEFAULT_WORKOUT_PLAN_IMAGE,
+    description: "",
+    workoutTemplates: [
       {
         id: uuid.v4(),
         name: "Buổi tập 1",
         order: 0,
-        workoutExercises: [],
+        templateExercises: [],
       },
     ],
-  } as CreateWorkoutPlanSliceType,
+  } as InitialWorkoutPlan,
 };
 
 export const createWorkoutPlanSlice = createSlice({
@@ -62,7 +42,7 @@ export const createWorkoutPlanSlice = createSlice({
     initWorkoutPlan: (
       state,
       action: PayloadAction<{
-        workoutPlan: CreateWorkoutPlanSliceType;
+        workoutPlan: InitialWorkoutPlan;
       }>
     ) => {
       state.workoutPlan = action.payload.workoutPlan;
@@ -78,17 +58,17 @@ export const createWorkoutPlanSlice = createSlice({
     updateWorkoutPlanImage: (
       state,
       action: PayloadAction<{
-        cover_image: ImagePickerAsset;
+        cover_image: string;
       }>
     ) => {
       state.workoutPlan.cover_image = action.payload.cover_image;
     },
     addWorkout: (state, action: PayloadAction<{ name: string }>) => {
-      state.workoutPlan.workouts.push({
+      state.workoutPlan.workoutTemplates.push({
         id: uuid.v4(),
         name: action.payload.name,
-        order: state.workoutPlan.workouts.length,
-        workoutExercises: [],
+        order: state.workoutPlan.workoutTemplates.length,
+        templateExercises: [],
       });
     },
     removeWorkout: (
@@ -98,13 +78,13 @@ export const createWorkoutPlanSlice = createSlice({
       }>
     ) => {
       const { workoutId } = action.payload;
-      const filteredWorkouts = state.workoutPlan.workouts
+      const filteredWorkouts = state.workoutPlan.workoutTemplates
         .filter((workout) => workout.id !== workoutId)
         .map((workout, index) => ({
           ...workout,
           order: index,
         }));
-      state.workoutPlan.workouts = filteredWorkouts;
+      state.workoutPlan.workoutTemplates = filteredWorkouts;
     },
     updateWorkoutName: (
       state,
@@ -114,7 +94,7 @@ export const createWorkoutPlanSlice = createSlice({
       }>
     ) => {
       const { workoutId, name } = action.payload;
-      const workout = state.workoutPlan.workouts.find(
+      const workout = state.workoutPlan.workoutTemplates.find(
         (workout) => workout.id === workoutId
       );
       if (workout) {
@@ -127,7 +107,7 @@ export const createWorkoutPlanSlice = createSlice({
         workoutIndex: number;
       }>
     ) => {
-      state.workoutPlan.activeWorkoutIndex = action.payload.workoutIndex;
+      state.activeWorkoutIndex = action.payload.workoutIndex;
     },
     resetCreateWorkoutPlan: (state) => {
       state.workoutPlan = initialState.workoutPlan;
@@ -141,11 +121,11 @@ export const createWorkoutPlanSlice = createSlice({
       }>
     ) => {
       const { workoutId, workoutExerciseId } = action.payload;
-      const workout = state.workoutPlan.workouts.find(
+      const workout = state.workoutPlan.workoutTemplates.find(
         (workout) => workout.id === workoutId
       );
       if (workout) {
-        workout.workoutExercises = workout.workoutExercises.filter(
+        workout.templateExercises = workout.templateExercises.filter(
           (workoutExercise) => workoutExercise.id !== workoutExerciseId
         );
       }
@@ -157,11 +137,11 @@ export const createWorkoutPlanSlice = createSlice({
       }>
     ) => {
       const { workoutId } = action.payload;
-      const workout = state.workoutPlan.workouts.find(
+      const workout = state.workoutPlan.workoutTemplates.find(
         (workout) => workout.id === workoutId
       );
       if (workout) {
-        state.workoutPlan.workouts.push(workout);
+        state.workoutPlan.workoutTemplates.push(workout);
       }
     },
     removeExerciseSet: (
@@ -173,15 +153,15 @@ export const createWorkoutPlanSlice = createSlice({
       }>
     ) => {
       const { workoutId, workoutExerciseId, setIndex } = action.payload;
-      const workout = state.workoutPlan.workouts.find(
+      const workout = state.workoutPlan.workoutTemplates.find(
         (workout) => workout.id === workoutId
       );
       if (workout) {
-        const workoutExercise = workout.workoutExercises.find(
+        const workoutExercise = workout.templateExercises.find(
           (workoutExercise) => workoutExercise.id === workoutExerciseId
         );
         if (workoutExercise) {
-          workoutExercise.sets.splice(setIndex, 1);
+          workoutExercise.templateSets.splice(setIndex, 1);
         }
       }
     },
@@ -191,20 +171,20 @@ export const createWorkoutPlanSlice = createSlice({
         workoutId: string;
         workoutExerciseId: string;
         setIndex: number;
-        set: CreateWorkoutPlanSliceType["workouts"][number]["workoutExercises"][number]["sets"][number];
+        set: InitialWorkoutPlan["workoutTemplates"][number]["templateExercises"][number]["templateSets"][number];
       }>
     ) => {
       const { workoutExerciseId, workoutId, setIndex, set } = action.payload;
 
-      const workout = state.workoutPlan.workouts.find(
+      const workout = state.workoutPlan.workoutTemplates.find(
         (workout) => workout.id === workoutId
       );
       if (workout) {
-        const workoutExercise = workout.workoutExercises.find(
+        const workoutExercise = workout.templateExercises.find(
           (workoutExercise) => workoutExercise.id === workoutExerciseId
         );
         if (workoutExercise) {
-          workoutExercise.sets[setIndex] = set;
+          workoutExercise.templateSets[setIndex] = set;
         }
       }
     },
@@ -213,33 +193,35 @@ export const createWorkoutPlanSlice = createSlice({
       state,
       action: PayloadAction<{
         workoutId: string;
-        workoutExercises: CreateWorkoutPlanSliceType["workouts"][number]["workoutExercises"];
+        from: number;
+        to: number;
       }>
     ) => {
-      const { workoutId, workoutExercises } = action.payload;
-      const workout = state.workoutPlan.workouts.find(
+      const { workoutId, from, to } = action.payload;
+      const workout = state.workoutPlan.workoutTemplates.find(
         (workout) => workout.id === workoutId
       );
       if (workout) {
-        workout.workoutExercises = workoutExercises.map(
-          (workoutExercise, index) => ({
-            ...workoutExercise,
-            order: index,
-          })
+        workout.templateExercises = reorderItems(
+          workout.templateExercises,
+          from,
+          to
         );
       }
     },
     overrideWorkoutOrders: (
       state,
       action: PayloadAction<{
-        workouts: CreateWorkoutPlanSliceType["workouts"];
+        from: number;
+        to: number;
       }>
     ) => {
-      const { workouts } = action.payload;
-      state.workoutPlan.workouts = workouts.map((workout, index) => ({
-        ...workout,
-        order: index,
-      }));
+      const { from, to } = action.payload;
+      state.workoutPlan.workoutTemplates = reorderItems(
+        state.workoutPlan.workoutTemplates,
+        from,
+        to
+      );
     },
   },
   extraReducers: (builder) => {
@@ -252,21 +234,21 @@ export const createWorkoutPlanSlice = createSlice({
         workoutExerciseId,
       } = action.payload;
 
-      const currentWorkoutExercise = state.workoutPlan.workouts
-        .find((workout) => workout.id === workoutId)
-        ?.workoutExercises.find(
+      const currentWorkoutExercise = state.workoutPlan.workoutTemplates
+        .find((workoutTemplate) => workoutTemplate.id === workoutId)
+        ?.templateExercises.find(
           (workoutExercise) => workoutExercise.id === workoutExerciseId
         );
 
-      const currentWorkoutExercises = state.workoutPlan.workouts.find(
-        (workout) => workout.id === workoutId
-      )?.workoutExercises;
+      const currentWorkoutExercises = state.workoutPlan.workoutTemplates.find(
+        (workoutTemplate) => workoutTemplate.id === workoutId
+      )?.templateExercises;
 
       const workoutExercise = {
         exercise,
         order: currentWorkoutExercise?.order,
         id: uuid.v4(),
-        sets: Array(defaultSets)
+        templateSets: Array(defaultSets)
           .fill(null)
           .map((_, i) => ({
             id: i,
@@ -275,14 +257,14 @@ export const createWorkoutPlanSlice = createSlice({
             isDropSet: false,
             isUntilFailure: false,
           })),
-      } as CreateWorkoutPlanSliceType["workouts"][number]["workoutExercises"][number];
+      };
 
       if (currentWorkoutExercise) {
-        currentWorkoutExercises?.splice(
-          currentWorkoutExercise.order,
-          1,
-          workoutExercise
-        );
+        // currentWorkoutExercises?.splice(
+        //   currentWorkoutExercise.order,
+        //   1,
+        //   workoutExercise
+        // );
       }
     });
     builder.addCase(
@@ -291,7 +273,7 @@ export const createWorkoutPlanSlice = createSlice({
         state,
         action: PayloadAction<{
           workoutId: string;
-          exercises: Exercise[];
+          exercises: z.infer<typeof ExerciseItemSchema>[];
           defaultSets: number;
           defaultRestTime: number;
         }>
@@ -299,31 +281,61 @@ export const createWorkoutPlanSlice = createSlice({
         const { workoutId, exercises, defaultSets, defaultRestTime } =
           action.payload;
 
-        const currentWorkoutExercises = state.workoutPlan.workouts.find(
-          (workout) => workout.id === workoutId
-        )?.workoutExercises;
+        // const currentWorkoutExercises = state.workoutPlan.workoutTemplates.find(
+        //   (workout) => workout.id === workoutId
+        // )?.templateExercises;
 
-        const workout = state.workoutPlan.workouts.find(
+        const workoutTemplate = state.workoutPlan.workoutTemplates.find(
           (workout) => workout.id === workoutId
         );
 
-        if (workout) {
-          workout.workoutExercises.push(
-            ...exercises.map((exercise, index) => ({
+        if (workoutTemplate) {
+          exercises.forEach((exercise) => {
+            workoutTemplate.templateExercises.push({
               id: uuid.v4(),
-              exercise,
-              order: Number(currentWorkoutExercises?.length) + index,
-              sets: Array(defaultSets)
+              order: workoutTemplate.templateExercises.length,
+              exercise: {
+                id: exercise.id,
+                name: exercise.name,
+                images: exercise.images,
+              },
+              templateSets: Array(defaultSets)
                 .fill(null)
                 .map((_, i) => ({
-                  id: i,
+                  id: uuid.v4(),
                   restTime: defaultRestTime,
                   isWarmup: false,
                   isDropSet: false,
                   isUntilFailure: false,
+                  setNumber: i + 1,
                 })),
-            }))
-          );
+            });
+          });
+
+          // workoutTemplate.templateExercises.push({
+          //   id: uuid.v4(),
+          //   order: workoutTemplate.templateExercises.length,
+          //   exercise: {
+          //     ...exercises[0],
+          //     name: exercises[0].translations?.[0]?.name || "",
+          //     createdAt: new Date(),
+          //     updatedAt: new Date(),
+          //     isPublic: false,
+          //     createdById: "",
+          //     isActive: true,
+          //     category: exercises[0].category,
+          //   },
+          //   templateSets: Array(defaultSets)
+          //     .fill(null)
+          //     .map((_, i) => ({
+          //       id: uuid.v4(),
+          //       restTime: defaultRestTime,
+          //       isWarmup: false,
+          //       isDropSet: false,
+          //       isUntilFailure: false,
+          //       setNumber: i + 1,
+          //     })),
+          // });
         }
       }
     );
@@ -335,7 +347,7 @@ export const addWorkoutExercises = createAsyncThunk(
   async (
     payload: {
       workoutId: string;
-      exercises: Exercise[];
+      exercises: z.infer<typeof ExerciseItemSchema>[];
     },
     { getState }
   ) => {
@@ -358,7 +370,7 @@ export const replaceExerciseInWorkout = createAsyncThunk(
     payload: {
       workoutId: string;
       workoutExerciseId: string;
-      exercise: Exercise;
+      exercise: z.infer<typeof ExerciseItemSchema>;
       exerciseIndex: number;
     },
     { getState }
@@ -395,6 +407,21 @@ export const {
 } = createWorkoutPlanSlice.actions;
 
 export const createWorkoutPlanReducer = createWorkoutPlanSlice.reducer;
+
+export const selectWorkoutTemplateIds = createSelector(
+  [(state: RootState) => state.createWorkoutPlan.workoutPlan.workoutTemplates],
+  (workoutTemplates) =>
+    workoutTemplates.map((workoutTemplate) => workoutTemplate.id)
+);
+
+export const selectWorkoutTemplateById = createSelector(
+  [
+    (state: RootState) => state.createWorkoutPlan.workoutPlan.workoutTemplates,
+    (state: RootState, workoutId: string) => workoutId,
+  ],
+  (workoutTemplates, workoutId) =>
+    workoutTemplates.find((workoutTemplate) => workoutTemplate.id === workoutId)
+);
 
 /**
  * [1,2,3]

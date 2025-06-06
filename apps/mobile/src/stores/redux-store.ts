@@ -16,10 +16,10 @@ import {
 import { combineReducers } from "@reduxjs/toolkit";
 import { MMKV } from "react-native-mmkv";
 import { createWorkoutPlanReducer } from "./slices/create-workout-plan-slice";
-import { workoutSessionReducer } from "./slices/workout-session-slice";
+import { activeWorkoutSessionReducer } from "./slices/workout-session-slice";
 import devToolsEnhancer from "redux-devtools-expo-dev-plugin";
-import { bottomSheetReducer } from "./slices/bottom-sheet.slice";
-import { editExerciseSetReducer } from "./slices/edit-exercise-set.slice";
+import { bottomSheetReducer } from "./slices/bottom-sheet-slice";
+import { editExerciseSetReducer } from "./slices/edit-exercise-set-slice";
 
 export const storage = new MMKV();
 
@@ -43,14 +43,14 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage: reduxPersistStorage,
-  whitelist: ["app", "workoutSession"],
-  blacklist: ["createWorkoutPlan", "bottomSheet", "editExerciseSet"],
+  whitelist: ["app", "activeWorkoutSession", "editExerciseSet"],
+  blacklist: ["createWorkoutPlan", "bottomSheet"],
 };
 
 const reducer = combineReducers({
   app: appReducer,
   createWorkoutPlan: createWorkoutPlanReducer,
-  workoutSession: workoutSessionReducer,
+  activeWorkoutSession: activeWorkoutSessionReducer,
   editExerciseSet: editExerciseSetReducer,
   bottomSheet: bottomSheetReducer,
 });
@@ -64,11 +64,13 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
+      // immutableCheck: false,
+      // serializableCheck: false,
     }).prepend(themeListener.middleware, languageListener.middleware),
 
   devTools: false,
   enhancers: (getDefaultEnhancers) =>
-    getDefaultEnhancers().concat(devToolsEnhancer()),
+    getDefaultEnhancers().concat(devToolsEnhancer({ trace: true })),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

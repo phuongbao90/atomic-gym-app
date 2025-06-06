@@ -23,6 +23,8 @@ import { useTranslation } from "react-i18next";
 import { capitalize } from "lodash";
 import { AppText } from "../../components/ui/app-text";
 import { useSession } from "../../lib/auth-client";
+import { z } from "zod";
+import { WorkoutPlanItemResponseSchema } from "app-config";
 
 export function WorkoutPlansTabScreen() {
   const router = useRouter();
@@ -42,7 +44,11 @@ export function WorkoutPlansTabScreen() {
       myWorkoutPlans && myWorkoutPlans.length > 0
         ? {
             title: "my_workout_plans",
-            data: [myWorkoutPlans],
+            data: myWorkoutPlans
+              ? ([myWorkoutPlans] as unknown as z.infer<
+                  typeof WorkoutPlanItemResponseSchema
+                >[])
+              : [],
           }
         : null,
       {
@@ -57,7 +63,10 @@ export function WorkoutPlansTabScreen() {
         title: "SINGLE_PLANS",
         data: [data.single],
       },
-    ];
+    ] as {
+      title: string;
+      data: z.infer<typeof WorkoutPlanItemResponseSchema>[];
+    }[];
 
     return sections.filter((item) => item?.data && item?.data.length > 0);
   }, [data, myWorkoutPlans]);

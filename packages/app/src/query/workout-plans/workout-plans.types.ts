@@ -45,51 +45,51 @@ export const WorkoutSchema = z.object({
   }[];
  * 
  */
-export const CreateWorkoutPlanSchema = z.object({
-  cover_image: z.string().url({ message: "Ảnh lịch tập không hợp lệ" }),
-  level: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED"]).optional(),
-  isPublic: z.boolean().optional(),
-  isPremium: z.boolean().optional(),
-  isFeatured: z.boolean().optional(),
-  isSingle: z.boolean().optional(),
-  category: z
-    .enum(["STRENGTH", "ENDURANCE", "BALANCE", "FLEXIBILITY", "LOOSE_WEIGHT"])
-    .optional(),
+// export const CreateWorkoutPlanSchema = z.object({
+//   cover_image: z.string().url({ message: "Ảnh lịch tập không hợp lệ" }),
+//   level: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED"]).optional(),
+//   isPublic: z.boolean().optional(),
+//   isPremium: z.boolean().optional(),
+//   isFeatured: z.boolean().optional(),
+//   isSingle: z.boolean().optional(),
+//   category: z
+//     .enum(["STRENGTH", "ENDURANCE", "BALANCE", "FLEXIBILITY", "LOOSE_WEIGHT"])
+//     .optional(),
 
-  name: z
-    .string({ message: "Tên lịch tập không hợp lệ" })
-    .min(1, { message: "Tên lịch tập không hợp lệ" })
-    .max(100, { message: "Tên lịch tập không hợp lệ" }),
-  description: z
-    .string()
-    .min(1, { message: "Mô tả lịch tập không hợp lệ" })
-    .max(1000, {
-      message: "Mô tả lịch tập không hợp lệ",
-    })
-    .optional(),
+//   name: z
+//     .string({ message: "Tên lịch tập không hợp lệ" })
+//     .min(1, { message: "Tên lịch tập không hợp lệ" })
+//     .max(100, { message: "Tên lịch tập không hợp lệ" }),
+//   description: z
+//     .string()
+//     .min(1, { message: "Mô tả lịch tập không hợp lệ" })
+//     .max(1000, {
+//       message: "Mô tả lịch tập không hợp lệ",
+//     })
+//     .optional(),
 
-  workouts: z.array(
-    z.object({
-      name: z.string(),
-      description: z.string().optional(),
-      order: z.number(),
-      workoutExercises: z.array(
-        z.object({
-          exerciseId: z.number(),
-          order: z.number(),
-          sets: z.array(
-            z.object({
-              restTime: z.number(),
-              isWarmup: z.boolean(),
-              isDropSet: z.boolean(),
-              isUntilFailure: z.boolean(),
-            })
-          ),
-        })
-      ),
-    })
-  ),
-});
+//   workouts: z.array(
+//     z.object({
+//       name: z.string(),
+//       description: z.string().optional(),
+//       order: z.number(),
+//       workoutExercises: z.array(
+//         z.object({
+//           exerciseId: z.number(),
+//           order: z.number(),
+//           sets: z.array(
+//             z.object({
+//               restTime: z.number(),
+//               isWarmup: z.boolean(),
+//               isDropSet: z.boolean(),
+//               isUntilFailure: z.boolean(),
+//             })
+//           ),
+//         })
+//       ),
+//     })
+//   ),
+// });
 
 export const UpdateWorkoutPlanSchema = z.object({
   id: z.string(),

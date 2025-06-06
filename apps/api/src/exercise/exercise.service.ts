@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from "@nestjs/common";
 import { paginateOutput } from "src/common/utils/pagination.utils";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateExerciseDto } from "./dto/create-exercise.dto";
@@ -6,6 +11,7 @@ import { ExerciseQueryParamsDto } from "./dto/exercise-query-params.dto";
 import { Language, Prisma } from "@prisma/client";
 import { slugify, convert_vi_to_en } from "src/helpers/slugify";
 import { User } from "better-auth";
+import { flattenTranslation } from "../helpers/flatten-prisma-result";
 
 @Injectable()
 export class ExerciseService {
@@ -19,16 +25,42 @@ export class ExerciseService {
         category: body.category,
         createdById: user.id,
         images: body.images,
-        primaryMuscle: {
-          connect: body.primaryMuscleIds.map((muscleId) => ({ id: muscleId })),
+        muscleGroups: {
+          connect: body.primaryMuscleIds.map((muscleId) => ({
+            isPrimary: true,
+            exerciseId_muscleGroupId: {
+              exerciseId: body.id,
+              muscleGroupId: muscleId,
+            },
+          })),
+        },
+        translations: {
+          create: {
+            language,
+            name: body.name,
+            slug: slugify(body.name),
+            description: body.description,
+          },
         },
       },
-      include: {
-        primaryMuscle: {
-          include: {
-            translations: {
-              where: {
-                language,
+
+      select: {
+        category: true,
+        images: true,
+        muscleGroups: {
+          select: {
+            isPrimary: true,
+            muscleGroup: {
+              select: {
+                id: true,
+                image: true,
+                parentId: true,
+                translations: {
+                  select: {
+                    name: true,
+                    slug: true,
+                  },
+                },
               },
             },
           },
@@ -36,18 +68,13 @@ export class ExerciseService {
       },
     });
 
-    const translation = await this.prisma.exerciseTranslation.create({
-      data: {
-        exerciseId: exercise.id,
-        language,
-        name: body.name,
-        slug: slugify(body.name),
-        description: body.description,
-      },
-    });
+    if (!exercise) {
+      throw new BadRequestException("Failed to create exercise");
+    }
+
     return {
-      ...exercise,
-      translation,
+      ...flattenTranslation(exercise),
+      muscleGroups: exercise.muscleGroups.map(flattenTranslation),
     };
   }
 
@@ -79,9 +106,9 @@ export class ExerciseService {
           some: searchQuery,
         },
         ...(muscleGroupId && {
-          primaryMuscle: {
+          muscleGroups: {
             some: {
-              id: +muscleGroupId,
+              muscleGroupId: +muscleGroupId,
             },
           },
         }),
@@ -89,20 +116,16 @@ export class ExerciseService {
       take: limit,
       skip: (page - 1) * limit,
       include: {
-        primaryMuscle: {
+        muscleGroups: {
           include: {
-            translations: {
-              where: {
-                language,
+            muscleGroup: {
+              include: {
+                translations: { where: { language } },
               },
             },
           },
         },
-        translations: {
-          where: {
-            language,
-          },
-        },
+        translations: { where: { language } },
       },
     });
     const total = await this.prisma.exercise.count({
@@ -111,23 +134,37 @@ export class ExerciseService {
           some: searchQuery,
         },
         ...(muscleGroupId && {
-          primaryMuscle: {
+          muscleGroups: {
             some: {
-              id: +muscleGroupId,
+              muscleGroupId: +muscleGroupId,
             },
           },
         }),
       },
     });
 
-    return paginateOutput(exercises, total, query);
+    const flattenedExercises = exercises.map((e) => ({
+      ...flattenTranslation(e),
+      muscleGroups: e.muscleGroups.map((g) => ({
+        ...g,
+        muscleGroup: flattenTranslation(g.muscleGroup),
+      })),
+    }));
+
+    return paginateOutput(flattenedExercises, total, query);
   }
 
   async findOne(id: string, language: Language) {
     const exercise = await this.prisma.exercise.findUnique({
       where: { id },
       include: {
-        primaryMuscle: { include: { translations: { where: { language } } } },
+        muscleGroups: {
+          include: {
+            muscleGroup: {
+              include: { translations: { where: { language } } },
+            },
+          },
+        },
         translations: { where: { language } },
       },
     });
@@ -136,30 +173,39 @@ export class ExerciseService {
       throw new HttpException("Exercise not found", HttpStatus.NOT_FOUND);
     }
 
-    const logs = await this.prisma.exerciseSetLog.findMany({
-      where: {
-        originalExerciseId: id,
-      },
-      include: {
-        workoutSession: { select: { id: true, performedAt: true } },
-      },
-      orderBy: { workoutSession: { performedAt: "desc" } },
-    });
+    // const logs = await this.prisma.performedSet.findMany({
+    //   where: {
+    //     sessionExercise: {
+    //       exerciseId: id,
+    //     },
+    //   },
+    //   include: {
+    //     sessionExercise: { select: { id: true } },
+    //   },
+    //   // orderBy: { sessionExercise: { performedAt: "desc" } },
+    // });
 
-    const logsBySession = logs.reduce<Record<number, typeof logs>>(
-      (acc, log) => {
-        const sid = log.workoutSessionId;
-        if (!acc[sid]) acc[sid] = [];
-        acc[sid].push(log);
-        return acc;
-      },
-      {}
-    );
+    // const logsBySession = logs.reduce<Record<number, typeof logs>>(
+    //   (acc, log) => {
+    //     const sid = log.sessionExerciseId;
+    //     if (!acc[sid]) acc[sid] = [];
+    //     acc[sid].push(log);
+    //     return acc;
+    //   },
+    //   {}
+    // );
 
+    // return {
+    //   ...exercise,
+    //   // logsBySession,
+    //   // logs: logsBySession,
+    // };
     return {
-      ...exercise,
-      // logsBySession,
-      logs: logsBySession,
+      ...flattenTranslation(exercise),
+      muscleGroups: exercise.muscleGroups.map((g) => ({
+        ...g,
+        muscleGroup: flattenTranslation(g.muscleGroup),
+      })),
     };
   }
 
@@ -170,7 +216,7 @@ export class ExerciseService {
   ) {
     return this.prisma.exercise.update({
       include: {
-        primaryMuscle: true,
+        muscleGroups: true,
         translations: {
           where: {
             language,
@@ -182,9 +228,8 @@ export class ExerciseService {
       },
       data: {
         ...body,
-        primaryMuscle: {
-          connect: body.primaryMuscleIds?.map((id) => ({ id: id })),
-        },
+        //!fix
+        muscleGroups: {},
       },
     });
   }
@@ -196,9 +241,9 @@ export class ExerciseService {
   async findByWorkout(id: string, language: Language) {
     return this.prisma.exercise.findMany({
       where: {
-        workoutExercises: {
+        templateExercises: {
           some: {
-            workoutId: id,
+            workoutTemplateId: id,
           },
         },
       },

@@ -1,8 +1,7 @@
-import { View } from "react-native";
+import { RefreshControl, View } from "react-native";
 import { AppText } from "../../../components/ui/app-text";
-import { useCallback, useMemo, useState } from "react";
-import { ApiResponse, useWorkoutLogs, WorkoutLogResponse } from "app";
-import dayjs from "dayjs";
+import { useCallback, useState } from "react";
+import { useGetMuscleGroupStats, useWorkoutLogs } from "app";
 import { Badge } from "../../../components/ui/badge";
 import {
   ChevronLeftIcon,
@@ -14,27 +13,16 @@ import { Box } from "../../../components/box";
 import { SCREEN_WIDTH } from "@gorhom/bottom-sheet";
 import { convertSecondsToHours } from "../../../utils/convert-to-hour-minute-second";
 import { PieChart } from "react-native-gifted-charts";
-import {
-  absMuscleGroupIds,
-  backMuscleGroupIds,
-  bicepsMuscleGroupIds,
-  calvesMuscleGroupIds,
-  chestMuscleGroupIds,
-  forearmsMuscleGroupIds,
-  glutesMuscleGroupIds,
-  legMuscleGroupIds,
-  shouldersMuscleGroupIds,
-  tricepsMuscleGroupIds,
-} from "../../../constants/muscle-group-data";
+
 import { AppScrollView } from "../../../components/ui/app-scrollview";
 import { capitalize } from "lodash";
 import { AppTouchable } from "../../../components/ui/app-touchable";
 import { Env } from "../../../configs/env";
 import { Image } from "expo-image";
-import ChestImage from "../../../../assets/images/muscles/chest.png";
-import BackImage from "../../../../assets/images/muscles/back.png";
-import ShoulderImage from "../../../../assets/images/muscles/shoulders.png";
+
 import { twColors } from "../../../styles/themes";
+import { dayjs } from "../../../lib/dayjs";
+import { useSetsPerMuscleGroupChartData } from "../hooks/use-sets-per-muscle-group-chart-data";
 
 export const StatisticTabWorkouts = () => {
   const [periodType, setPeriodType] = useState<
@@ -44,8 +32,16 @@ export const StatisticTabWorkouts = () => {
     dayjs().format("YYYY-MM-DD")
   );
   const { t } = useTranslation();
-  const { data } = useWorkoutLogs(periodType, periodValue);
-  const chartProps = usePieChartData(data);
+  const { data, refetch, isRefetching } = useWorkoutLogs(
+    periodType,
+    periodValue
+  );
+  const { data: muscleGroupStats } = useGetMuscleGroupStats(
+    periodType,
+    periodValue
+  );
+
+  const chartProps = useSetsPerMuscleGroupChartData(muscleGroupStats);
 
   function handleChangePeriod(type: string, direction: "left" | "right") {
     if (type === "week") {
@@ -182,7 +178,12 @@ export const StatisticTabWorkouts = () => {
   }, [periodType, periodValue]);
 
   return (
-    <AppScrollView contentContainerStyle={{ paddingBottom: 60 }}>
+    <AppScrollView
+      contentContainerStyle={{ paddingBottom: 60 }}
+      refreshControl={
+        <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+      }
+    >
       <View className="flex-row items-center justify-center gap-2 mt-2">
         <Badge
           label={t("week")}
@@ -259,7 +260,7 @@ export const StatisticTabWorkouts = () => {
           />
           <Box
             label={t("sets_completed")}
-            value={data?.data?.totalSets}
+            value={chartProps.totalSets}
             style={{ width: SCREEN_WIDTH / 2 - 20 }}
           />
         </View>
@@ -342,105 +343,6 @@ export const StatisticTabWorkouts = () => {
       </View>
     </AppScrollView>
   );
-};
-
-const usePieChartData = (data: ApiResponse<WorkoutLogResponse> | undefined) => {
-  const pieChartData = useMemo(() => {
-    if (!data?.data?.muscleGroupSummary) return [];
-    const group = data?.data?.muscleGroupSummary?.reduce(
-      (acc, item) => {
-        if (backMuscleGroupIds.includes(item.muscleGroupId)) {
-          acc.back.value += item.count;
-        } else if (legMuscleGroupIds.includes(item.muscleGroupId)) {
-          acc.legs.value += item.count;
-        } else if (chestMuscleGroupIds.includes(item.muscleGroupId)) {
-          acc.chest.value += item.count;
-        } else if (shouldersMuscleGroupIds.includes(item.muscleGroupId)) {
-          acc.shoulders.value += item.count;
-        } else if (absMuscleGroupIds.includes(item.muscleGroupId)) {
-          acc.abs.value += item.count;
-        } else if (bicepsMuscleGroupIds.includes(item.muscleGroupId)) {
-          acc.biceps.value += item.count;
-        } else if (tricepsMuscleGroupIds.includes(item.muscleGroupId)) {
-          acc.triceps.value += item.count;
-        } else if (forearmsMuscleGroupIds.includes(item.muscleGroupId)) {
-          acc.forearms.value += item.count;
-        } else if (glutesMuscleGroupIds.includes(item.muscleGroupId)) {
-          acc.glutes.value += item.count;
-        } else if (calvesMuscleGroupIds.includes(item.muscleGroupId)) {
-          acc.calves.value += item.count;
-        }
-        return acc;
-      },
-      {
-        chest: {
-          value: 0,
-          color: "#4300FF",
-          image: ChestImage,
-        },
-        back: {
-          value: 0,
-          color: "#FF0B55",
-          image: BackImage,
-        },
-        shoulders: {
-          value: 0,
-          color: "#16610E",
-          image: ShoulderImage,
-        },
-        legs: {
-          value: 0,
-          color: "#D50B8B",
-          image: ChestImage,
-        },
-        biceps: {
-          value: 0,
-          color: "#a59391",
-          image: ChestImage,
-        },
-        triceps: {
-          value: 0,
-          color: "#D5451B",
-          image: ChestImage,
-        },
-        abs: {
-          value: 0,
-          color: "#939bfb",
-          image: ChestImage,
-        },
-        calves: {
-          value: 0,
-          color: "#4B352A",
-          image: ChestImage,
-        },
-        glutes: {
-          value: 0,
-          color: "#670D2F",
-          image: ChestImage,
-        },
-        forearms: {
-          value: 0,
-          color: "#FFB22C",
-          image: ChestImage,
-        },
-      }
-    );
-
-    return Object.entries(group ?? {}).map(([key, value]) => ({
-      text: value.value
-        ? `${((value.value / (data?.data?.totalSets ?? 0)) * 100).toFixed(0)}%`
-        : "0%",
-      value: value.value,
-      color: value.color,
-      image: value.image,
-      name: key,
-    }));
-  }, [data]);
-
-  return {
-    data: pieChartData,
-    hasChartData: !pieChartData.every((item) => item.value === 0),
-  };
 };
 
 const ChartLegendItem = ({

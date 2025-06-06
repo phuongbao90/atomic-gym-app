@@ -19,9 +19,9 @@ export * from "./query/workout-plans/workout-plans.hooks";
 export * from "./query/workout-plans/workout-plans.requests";
 export * from "./query/workout-plans/workout-plans.types";
 
-export * from "./query/workouts/workouts.hooks";
-export * from "./query/workouts/workouts.requests";
-export * from "./query/workouts/workouts.types";
+export * from "./query/workout-template/workout-template.hooks";
+export * from "./query/workout-template/workout-template.requests";
+export * from "./query/workout-template/workout-template.types";
 
 export * from "./query/muscle-groups/muscle-groups.hooks";
 export * from "./query/muscle-groups/muscle-groups.requests";

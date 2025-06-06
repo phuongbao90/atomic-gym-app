@@ -17,10 +17,10 @@ import { LineChart, LineChartPropsType } from "react-native-gifted-charts";
 import { BodyMeasurementType } from "app/src/prisma-generated";
 import { PRIMARY_COLOR, twColors } from "../../../styles/themes";
 import { BodyLogResponse } from "app/src/query/logs/logs.types";
-import dayjs from "dayjs";
 import { useRouter } from "expo-router";
 import { appRoutes } from "../../../configs/routes";
 import { UserPreferencesStorage } from "app";
+import { dayjs } from "../../../lib/dayjs";
 
 const INITIAL_SPACING = 4;
 const PADDING = 12;

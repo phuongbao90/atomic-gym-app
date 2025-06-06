@@ -12,4 +12,5 @@ export const workoutPlanKeys = {
     userId,
   ],
   listByMe: () => [...workoutPlanKeys.lists(), "by-me"],
+  stats: (id: string) => [...workoutPlanKeys.all, "stats", id],
 };

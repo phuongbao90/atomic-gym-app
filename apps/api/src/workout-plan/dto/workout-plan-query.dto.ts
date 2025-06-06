@@ -1,29 +1,29 @@
-import { WorkoutPlanCategory } from "@prisma/client"
-import { IsBoolean, IsEnum, IsOptional } from "class-validator"
-import { CommonQueryParamsDto } from "src/common/dto/paginated-query.dto"
+import { WorkoutPlanGoal } from "@prisma/client";
+import { IsBoolean, IsEnum, IsOptional } from "class-validator";
+import { CommonQueryParamsDto } from "src/common/dto/paginated-query.dto";
 
 export class WorkoutPlanQueryDto extends CommonQueryParamsDto {
   @IsOptional()
   @IsBoolean()
-  isPublic: boolean
+  isPublic: boolean;
 
   @IsOptional()
   @IsBoolean()
-  isPremium: boolean
+  isPremium: boolean;
 
   @IsOptional()
   @IsBoolean()
-  me: boolean
+  me: boolean;
 
   @IsOptional()
   @IsBoolean()
-  isSingle: boolean
+  isSingle: boolean;
 
   @IsOptional()
   @IsBoolean()
-  isFeatured: boolean
+  isFeatured: boolean;
 
   @IsOptional()
-  @IsEnum(WorkoutPlanCategory)
-  category: WorkoutPlanCategory
+  @IsEnum(WorkoutPlanGoal)
+  goal: WorkoutPlanGoal;
 }

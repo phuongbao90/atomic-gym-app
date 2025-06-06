@@ -1,5 +1,5 @@
 import { IsInt, IsDefined, IsOptional, IsString, IsBoolean } from "class-validator";
-import { Exercise, MuscleGroupTranslation, ExerciseSetLog } from "./";
+import { MuscleGroupTranslation, Exercise, ExerciseMuscleGroup } from "./";
 
 export class MuscleGroup {
     @IsDefined()
@@ -15,15 +15,15 @@ export class MuscleGroup {
     image!: string;
 
     @IsDefined()
-    exercises!: Exercise[];
+    @IsBoolean()
+    isActive!: boolean;
 
     @IsDefined()
     translations!: MuscleGroupTranslation[];
 
     @IsDefined()
-    ExerciseSetLog!: ExerciseSetLog[];
+    exercises!: Exercise[];
 
     @IsDefined()
-    @IsBoolean()
-    isActive!: boolean;
+    exerciseMuscleGroup!: ExerciseMuscleGroup[];
 }

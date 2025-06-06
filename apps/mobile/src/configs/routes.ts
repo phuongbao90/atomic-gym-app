@@ -22,8 +22,8 @@ export type ExercisesScreenParams =
     ));
 
 export type InProgressWorkoutExercisesScreenParams = {
-  workoutId: string;
-  page: string;
+  // workoutId: string;
+  pageIndex: string;
 };
 
 export const appRoutes = {
@@ -95,8 +95,8 @@ export const appRoutes = {
       `${appRoutes.workoutSession.base}/detail?id=${id}` as const,
     edit: (id: string) =>
       `${appRoutes.workoutSession.base}/edit-session?id=${id}` as const,
-    editExercise: (sessionId: string, exerciseId: string) =>
-      `${appRoutes.workoutSession.base}/edit-session-exercise?sessionId=${sessionId}&exerciseId=${exerciseId}` as const,
+    editExercise: (sessionId: string, exerciseId: string, pageIndex: string) =>
+      `${appRoutes.workoutSession.base}/edit-session-exercise?sessionId=${sessionId}&exerciseId=${exerciseId}&pageIndex=${pageIndex}` as const,
     editSessionDate: (id: string) =>
       `${appRoutes.workoutSession.base}/edit-session-date?id=${id}` as const,
   } as const,
@@ -105,10 +105,8 @@ export const appRoutes = {
     base: "/in-progress" as const,
     workout: (id: string) =>
       `${appRoutes.inProgress.base}/workout?workoutId=${id}` as const,
-    workoutExercises: (params: InProgressWorkoutExercisesScreenParams) =>
-      `${appRoutes.inProgress.base}/workout-exercises?${QueryString.stringify(
-        params
-      )}` as const,
+    workoutExercises: (pageIndex: string) =>
+      `${appRoutes.inProgress.base}/workout-exercises?pageIndex=${pageIndex}` as const,
   },
 
   settings: "/settings",

@@ -16,6 +16,13 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "noFallthroughCasesInSwitch": false,
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "../../packages/app-config/src/generated-zod-schemas",
+    "../../packages/app-config/src/generated-zod-schemas/index.ts",
+    "app-config"
+  ]
 }

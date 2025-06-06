@@ -32,12 +32,15 @@ type TabBarProps = {
 
 export const ExerciseDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-
   const { t } = useTranslation();
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
 
   const { data: exercise } = useGetExercise(id);
+  // console.log(
+  //   "🚀 ~ ExerciseDetailScreen ~ exercise:",
+  //   JSON.stringify(exercise, null, 2)
+  // );
 
   function renderTabBar(props: TabBarProps) {
     const routes = props.navigationState?.routes;

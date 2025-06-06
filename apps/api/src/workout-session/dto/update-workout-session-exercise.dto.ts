@@ -1,4 +1,3 @@
-import { ExerciseSetLog } from "@prisma/client";
 import {
   IsArray,
   IsBoolean,
@@ -9,6 +8,7 @@ import {
   ValidateNested,
 } from "class-validator";
 import { Type } from "class-transformer";
+import { PerformedSet } from "@prisma/client";
 
 export class UpdateWorkoutSessionExerciseDto {
   @IsArray()
@@ -26,14 +26,8 @@ export class UpdateWorkoutSessionExerciseDto {
 }
 
 type PickExerciseSetLog = Pick<
-  ExerciseSetLog,
-  | "id"
-  | "weight"
-  | "distance"
-  | "duration"
-  | "repetitions"
-  | "isCompleted"
-  | "order"
+  PerformedSet,
+  "id" | "weight" | "distance" | "duration" | "reps" | "isCompleted"
 >;
 
 class Item {

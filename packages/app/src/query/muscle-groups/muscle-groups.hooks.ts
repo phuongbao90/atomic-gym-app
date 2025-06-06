@@ -9,5 +9,6 @@ export const useGetMuscleGroups = () => {
     select: (data) => data.data,
     queryKey: muscleGroupsKeys.lists(),
     queryFn: () => getMuscleGroups(),
+    staleTime: 1000 * 60 * 60 * 24,
   });
 };

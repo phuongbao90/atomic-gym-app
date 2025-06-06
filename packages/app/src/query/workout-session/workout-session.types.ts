@@ -30,6 +30,7 @@ export type WorkoutSessionExerciseSet = {
   exerciseNameSnapshot: string;
   isCompleted: boolean;
   type: UpdateSetStatus;
+  restTime?: number;
 };
 
 export type UpdateSetStatus = "update" | "create" | "delete" | "untouched";
@@ -54,4 +55,25 @@ export type UpdateWorkoutSessionExerciseSetsBody = {
 export type UpdateWorkoutSessionBody = {
   performedAt?: string;
   duration?: number;
+};
+
+export type CreateWorkoutSessionBody = {
+  id?: string;
+  originalWorkoutPlanId: string;
+  originalWorkoutId: string;
+  workoutNameSnapshot: string;
+  workoutPlanNameSnapshot: string;
+  performedAt: string;
+  notes?: string;
+  duration: number;
+  setLogs: {
+    exerciseNameSnapshot: string;
+    isCompleted: boolean;
+    muscleGroupId: string;
+    originalExerciseId: string;
+    weight: number;
+    repetitions: number;
+    order: number;
+    performedAt: string;
+  }[];
 };

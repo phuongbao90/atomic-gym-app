@@ -1,0 +1,3 @@
+generatorName: typescript-fetch
+inputSpec: ./openapi.json
+output: ./packages/app-config/src/generated-api

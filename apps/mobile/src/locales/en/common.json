@@ -185,5 +185,12 @@
   "confirm_cancel": "Are you sure you want to cancel and discard changes?",
   "wip": "This feature is still under development",
   "date_of_session": "Date of Session",
-  "duration_of_session": "Duration of Session"
+  "duration_of_session": "Duration of Session",
+  "cancel_workout_session_description": "Are you sure you want to cancel the workout session?",
+  "zod_errors": {
+    "workout_plan_name_too_small": "Workout plan name must be at least 3 characters",
+    "workout_plan_name_too_large": "Workout plan name must be less than 100 characters",
+    "workout_template_name_too_small": "Workout Session name must be at least 3 characters",
+    "workout_template_name_too_large": "Workout Session name must be less than 100 characters"
+  }
 }

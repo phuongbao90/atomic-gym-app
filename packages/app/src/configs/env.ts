@@ -2,9 +2,9 @@ const _ENV =
   (process.env.EXPO_PUBLIC_NODE_ENV as "development" | "test" | "production") ||
   process.env.NODE_ENV;
 
-const url = "192.168.31.64"; // home
+const url = "192.168.31.183"; // home
 // const url = "192.168.110.2"; // my-coffee
-// const url = "192.168.1.27";
+// const url = "192.168.0.101";
 // const url = "localhost";
 
 const _API_URL = {

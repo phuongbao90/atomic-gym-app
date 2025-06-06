@@ -9,7 +9,7 @@ import { Button, Pressable, TouchableOpacity, View } from "react-native";
 import { AppScrollView } from "../../src/components/ui/app-scrollview";
 import { AppHeader } from "../components/ui/app-header";
 import { AppScreen } from "../components/ui/app-screen";
-import { useAppSelector } from "../stores/redux-store";
+import { useAppDispatch, useAppSelector } from "../stores/redux-store";
 import { appRoutes } from "../configs/routes";
 import { useTranslation } from "react-i18next";
 import {
@@ -18,6 +18,7 @@ import {
   RunIcon,
   SearchIcon,
   SettingsIcon,
+  XIcon,
 } from "../components/ui/expo-icon";
 import { useMemo } from "react";
 import { AppText } from "../components/ui/app-text";
@@ -28,11 +29,14 @@ import { usePreventRepeatPress } from "../hooks/use-prevent-repeat-press";
 import { signOut, useSession } from "../lib/auth-client";
 import { useMMKVBoolean } from "react-native-mmkv";
 import { WorkoutPlanCard } from "../components/workout-plan-card";
+import { AppTouchable } from "../components/ui/app-touchable";
+import { cancelWorkoutSession } from "../stores/slices/workout-session-slice";
+import { useModal } from "react-native-modalfy";
 
 export function HomeScreen() {
   const activeWorkoutPlanId = useAppSelector((s) => s.app.activeWorkoutPlanId);
   const activeWorkoutId = useAppSelector(
-    (s) => s.workoutSession.activeWorkout?.id
+    (s) => s.activeWorkoutSession.activeWorkout?.id
   );
 
   const { data: activeWorkoutPlan } = useGetWorkoutPlan(activeWorkoutPlanId);
@@ -61,13 +65,11 @@ export function HomeScreen() {
 
         <Divider className="my-4" />
 
-        <View className="px-4">
-          {activeWorkoutId ? (
-            <View className="mb-4">
-              <ActiveWorkout />
-            </View>
-          ) : null}
-        </View>
+        {activeWorkoutId ? (
+          <View className="px-4 mb-4">
+            <ActiveWorkout />
+          </View>
+        ) : null}
 
         <View className="px-4">
           <AppText className="text-xl font-bold mb-4">
@@ -98,11 +100,13 @@ const ActiveWorkout = () => {
   const router = useRouter();
   const debouncedPress = usePreventRepeatPress();
   const activeWorkoutId = useAppSelector(
-    (s) => s.workoutSession.activeWorkout?.id
+    (s) => s.activeWorkoutSession.activeWorkout?.id
   );
   const activeWorkoutName = useAppSelector(
-    (s) => s.workoutSession.activeWorkout?.translations?.[0]?.name
+    (s) => s.activeWorkoutSession.activeWorkout?.name
   );
+  const dispatch = useAppDispatch();
+  const { openModal } = useModal();
   return (
     <Pressable
       className="flex-row items-start px-4 py-4 bg-slate-200 dark:bg-slate-700 rounded-lg gap-x-4"
@@ -121,6 +125,23 @@ const ActiveWorkout = () => {
         <AppText className="text-xl">{t("workout_in_progress")}</AppText>
         <AppText className="text-lg">{activeWorkoutName}</AppText>
       </View>
+      <AppTouchable
+        style={{
+          position: "absolute",
+          top: "48%",
+          right: 20,
+        }}
+        onPress={() => {
+          openModal("ConfirmModal", {
+            message: t("cancel_workout_session_description"),
+            onConfirm: () => {
+              dispatch(cancelWorkoutSession());
+            },
+          });
+        }}
+      >
+        <XIcon size={24} />
+      </AppTouchable>
     </Pressable>
   );
 };

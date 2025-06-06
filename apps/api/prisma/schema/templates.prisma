@@ -1,0 +1,57 @@
+// model WorkoutTemplate {
+//     id                   String      @id @default(uuid())
+//     name                 String
+//     slug                 String
+//     description          String?
+//     order                Int // Order within the plan (Day 1, Day 2, etc.)
+//     estimatedDuration    Int? // Estimated duration in minutes
+//     restBetweenExercises Int? // Default rest between exercises (seconds)
+//     workoutPlan          WorkoutPlan @relation(fields: [workoutPlanId], references: [id], onDelete: Cascade)
+//     workoutPlanId        String
+//     createdAt            DateTime    @default(now()) @db.Timestamptz(6)
+//     updatedAt            DateTime    @updatedAt @db.Timestamptz(6)
+//     isActive             Boolean     @default(true)
+
+//     // Relationships
+//     templateExercises TemplateExercise[] // Exercises in this template
+//     workoutSessions   WorkoutSession[] // Sessions performed from this template
+
+//     @@unique([workoutPlanId, order])
+//     @@index([workoutPlanId])
+// }
+
+// // Exercise within a workout template
+// model TemplateExercise {
+//     id                String          @id @default(uuid())
+//     workoutTemplate   WorkoutTemplate @relation(fields: [workoutTemplateId], references: [id], onDelete: Cascade)
+//     workoutTemplateId String
+//     exercise          Exercise        @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+//     exerciseId        String
+//     order             Int // Order within the workout
+//     notes             String? // Exercise-specific notes
+//     restTime          Int? // Rest time after this exercise (seconds)
+
+//     // Planned sets configuration
+//     targetSets TemplateSets[]
+
+//     @@unique([workoutTemplateId, order])
+//     @@index([exerciseId])
+// }
+
+// // Planned sets for template exercises
+// model TemplateSets {
+//     id                 String           @id @default(uuid())
+//     templateExercise   TemplateExercise @relation(fields: [templateExerciseId], references: [id], onDelete: Cascade)
+//     templateExerciseId String
+//     setNumber          Int // 1, 2, 3, etc.
+//     targetReps         Int? // Target repetitions
+//     targetWeight       Float? // Target weight
+//     targetDuration     Int? // Target duration (seconds)
+//     targetDistance     Float? // Target distance
+//     restTime           Int? // Rest time after this set (seconds)
+//     isWarmup           Boolean          @default(false)
+//     isDropSet          Boolean          @default(false)
+//     notes              String?
+
+//     @@unique([templateExerciseId, setNumber])
+// }

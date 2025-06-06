@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { RefreshControl, View } from "react-native";
 import { AppScreen } from "../../components/ui/app-screen";
 import { AppText } from "../../components/ui/app-text";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -19,24 +19,68 @@ import {
 } from "../../components/ui/expo-icon";
 import { AppScrollView } from "../../components/ui/app-scrollview";
 import { Divider } from "../../components/ui/divider";
-import dayjs from "dayjs";
 import { convertToHourMinuteSecond } from "../../utils/convert-to-hour-minute-second";
 import { twColors } from "../../styles/themes";
 import { capitalize } from "lodash";
 import { useModal } from "react-native-modalfy";
 import { appRoutes } from "../../configs/routes";
-import { useGroupSetsByExercise } from "./hooks/use-group-sets-by-exercise";
 import { OrderNumberCircle } from "../../components/ui/OrderNumberCircle";
+import { dayjs } from "../../lib/dayjs";
+import { useMemo } from "react";
+import { useAppDispatch } from "../../stores/redux-store";
+import {
+  cloneExercises,
+  setEditedWorkoutSessionId,
+  setWorkoutSessionName,
+} from "../../stores/slices/edit-exercise-set-slice";
 
 export const WorkoutSessionDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation();
   const { openModal } = useModal();
   const router = useRouter();
-  const { mutate: deleteWorkoutSession, isPending } = useDeleteWorkoutSession();
+  const dispatch = useAppDispatch();
 
-  const { data: workoutSession } = useWorkoutSessionDetail(id);
-  const setsGroupByExercise = useGroupSetsByExercise(workoutSession?.setLogs);
+  const { mutate: deleteWorkoutSession, isPending } = useDeleteWorkoutSession();
+  const { data: workoutSession, refetch } = useWorkoutSessionDetail(id);
+
+  const totalWeight = useMemo(() => {
+    return workoutSession?.sessionExercises?.reduce(
+      (acc, curr) =>
+        acc +
+        curr.performedSets?.reduce((acc, curr) => acc + (curr.weight ?? 0), 0),
+      0
+    );
+  }, [workoutSession]);
+
+  const data = useMemo(() => {
+    if (!workoutSession) return [];
+
+    const sessionExercises = workoutSession.sessionExercises;
+
+    return sessionExercises.map((sessionExercise) => {
+      return {
+        id: sessionExercise.id,
+        name: sessionExercise.exercise.name,
+        images: sessionExercise.exercise.images,
+        exerciseId: sessionExercise.exercise.id,
+        sets: sessionExercise.performedSets.map((set, index) => {
+          return {
+            id: set.id,
+            weight: set.weight ?? 0,
+            repetitions: set.reps ?? 0,
+            distance: set.distance ?? 0,
+            duration: set.duration ?? 0,
+            isCompleted: set.isCompleted,
+            restTime: set.restTime ?? 0,
+            notes: "",
+            order: index + 1,
+            type: "untouched" as const,
+          };
+        }),
+      };
+    });
+  }, [workoutSession]);
 
   return (
     <AppScreen name="workout-session-detail-screen" isLoading={isPending}>
@@ -46,7 +90,17 @@ export const WorkoutSessionDetailScreen = () => {
         Right={
           <View className="flex-row items-center gap-10">
             <AppTouchable
-              onPress={() => router.push(appRoutes.workoutSession.edit(id))}
+              onPress={() => {
+                dispatch(cloneExercises(data));
+                if (workoutSession?.workoutTemplate?.name) {
+                  dispatch(
+                    setWorkoutSessionName(workoutSession?.workoutTemplate?.name)
+                  );
+                }
+                dispatch(setEditedWorkoutSessionId(id));
+
+                router.push(appRoutes.workoutSession.edit(id));
+              }}
             >
               <EditIcon color={twColors.blue[600]} />
             </AppTouchable>
@@ -75,16 +129,19 @@ export const WorkoutSessionDetailScreen = () => {
           paddingHorizontal: 12,
           paddingBottom: 36,
         }}
+        refreshControl={
+          <RefreshControl refreshing={false} onRefresh={refetch} />
+        }
       >
         <AppText className="text-2xl">
-          {workoutSession?.workoutNameSnapshot}
+          {workoutSession?.workoutTemplate?.name}
         </AppText>
 
         <Divider className="my-4" />
         <View className="flex-row items-center gap-6">
           <ClockIcon />
           <AppText className="text-xl">
-            {dayjs(workoutSession?.performedAt)?.format("ddd, DD MMM")}
+            {dayjs(workoutSession?.completedAt)?.format("ddd, DD MMM")}
           </AppText>
           <AppTouchable
             className="ml-auto mr-2"
@@ -108,31 +165,26 @@ export const WorkoutSessionDetailScreen = () => {
             <SetsCompletedIcon />
             <AppText className="mt-2 text-xl">{capitalize(t("sets"))}</AppText>
             <AppText className="text-xl">
-              {workoutSession?.setLogs?.length}
+              {workoutSession?.sessionExercises?.length}
             </AppText>
           </View>
           <View className="items-center w-1/3">
             <WeightIcon />
             <AppText className="mt-2 text-xl">{t("weight")} (kg)</AppText>
-            <AppText className="text-xl">
-              {workoutSession?.setLogs?.reduce(
-                (acc, curr) => acc + curr.weight,
-                0
-              )}
-            </AppText>
+            <AppText className="text-xl">{totalWeight}</AppText>
           </View>
         </View>
         <Divider className="my-4" />
 
-        {Object.entries(setsGroupByExercise).map(([exerciseId, exercise]) => (
+        {workoutSession?.sessionExercises?.map((exercise) => (
           <View
-            key={exerciseId}
+            key={exercise.id}
             className="gap-2 mb-4 border-b border-slate-600 pb-4"
           >
             <AppText className="text-xl mb-4">
-              {capitalize(exercise.exerciseName)}
+              {capitalize(exercise.exercise.name)}
             </AppText>
-            {exercise.sets.map((set, index) => (
+            {exercise.performedSets.map((set, index) => (
               <View
                 key={set.id || index}
                 className="flex-row items-center gap-2 mb-1"

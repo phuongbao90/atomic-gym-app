@@ -15,10 +15,12 @@ import { AppBottomSheetView } from "../../../components/ui/app-bottom-sheet-view
 import { colors } from "../../../styles/themes";
 import { AppBottomSheetModal } from "../../../components/ui/app-bottom-sheet-modal";
 import { useAppSelector } from "../../../stores/redux-store";
+import { ExerciseItemSchema } from "app-config";
+import { z } from "zod";
 
 export const ExerciseSummary = ({
   exercise,
-}: { exercise: Exercise | undefined }) => {
+}: { exercise: z.infer<typeof ExerciseItemSchema> | undefined }) => {
   const ref = useRef<BottomSheetModal>(null);
   const { t } = useTranslation();
   const theme = useAppSelector((state) => state.app.theme);
@@ -57,20 +59,19 @@ export const ExerciseSummary = ({
         />
       )}
       <View className="px-4">
-        <AppText className="text-3xl mt-4">
-          {exercise?.translations?.[0].name}
-        </AppText>
+        <AppText className="text-3xl mt-4">{exercise?.name}</AppText>
         <Divider className="my-4" />
-        <AppText className="text-lg">
-          {exercise?.translations?.[0].description}
-        </AppText>
+        <AppText className="text-lg">{exercise?.description}</AppText>
         <Divider className="my-4" />
         <AppText className="text-xl font-semibold my-4">
           {t("muscle_groups")}
         </AppText>
         <View className="flex-row flex-wrap gap-2">
-          {exercise?.primaryMuscle?.map((muscleGroup) => (
-            <MuscleItem key={muscleGroup.id} muscleGroup={muscleGroup} />
+          {exercise?.muscleGroups?.map((muscleGroup) => (
+            <MuscleItem
+              key={muscleGroup.muscleGroup.id}
+              muscleGroup={muscleGroup.muscleGroup}
+            />
           ))}
         </View>
         <Divider className="my-4" />
@@ -95,7 +96,7 @@ export const ExerciseSummary = ({
           labelClassName="text-xl"
           onPress={() => {
             Linking.openURL(
-              `https://www.youtube.com/results?search_query=${exercise?.translations?.[0]?.name}`
+              `https://www.youtube.com/results?search_query=${exercise?.name}`
             );
           }}
           Left={
@@ -124,9 +125,7 @@ export const ExerciseSummary = ({
                 </AppText>
               </TouchableOpacity>
             </View>
-            <AppText className="text-xl">
-              {exercise?.translations?.[0].name}
-            </AppText>
+            <AppText className="text-xl">{exercise?.name}</AppText>
           </View>
           <Divider className="my-4" />
 

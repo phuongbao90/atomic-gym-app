@@ -3,7 +3,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { queryClient } from "app";
 import { MMKV } from "react-native-mmkv";
-import { useReactQueryDevTools } from "@dev-plugins/react-query";
+// import { useReactQueryDevTools } from "@dev-plugins/react-query";
 
 const storage = new MMKV();
 
@@ -38,7 +38,7 @@ export const ReactQueryProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  useReactQueryDevTools(queryClient);
+  // useReactQueryDevTools(queryClient);
 
   // console.log("__DEV__", __DEV__);
 

@@ -39,7 +39,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarStyle: Platform.select({
           ios: {
-            position: "absolute",
+            height: TAB_HEIGHT,
           },
           default: {
             backgroundColor: colors.pageBackground[colorMode],

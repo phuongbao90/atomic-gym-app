@@ -9,7 +9,6 @@ import {
   useUpdateWorkoutSession,
   useWorkoutSessionDetail,
 } from "app/src/query/workout-session/workout-session.hooks";
-import dayjs from "dayjs";
 import { AppScrollView } from "../../../src/components/ui/app-scrollview";
 import DateTimePicker, {
   DateTimePickerAndroid,
@@ -23,30 +22,30 @@ import {
   convertToTimeObject,
 } from "../../utils/convert-to-hour-minute-second";
 import { cn } from "../../utils/cn";
+import { dayjs } from "../../lib/dayjs";
 
 export function EditSessionDateScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation();
   const { data: workoutSession, refetch } = useWorkoutSessionDetail(id);
-  const [date, setDate] = useState(workoutSession?.performedAt);
+  const [date, setDate] = useState(workoutSession?.completedAt);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const { mutate: updateWorkoutSession, isPending } = useUpdateWorkoutSession();
-
   const isIOS = Platform.OS === "ios";
   const isAndroid = Platform.OS === "android";
   const [showPicker, setShowPicker] = useState(false);
   const [duration, setDuration] = useState(workoutSession?.duration);
   const theme = useAppSelector((state) => state.app.theme);
   const language = useAppSelector((state) => state.app.language);
+  const { mutate: updateWorkoutSession } = useUpdateWorkoutSession();
 
   const isDisabled =
     !date ||
     !duration ||
-    (workoutSession?.performedAt === date &&
+    (workoutSession?.completedAt === date &&
       workoutSession?.duration === duration);
 
   return (
-    <AppScreen name="edit-session-date-screen" isLoading={isPending}>
+    <AppScreen name="edit-session-date-screen">
       <AppHeader
         title={t("edit_session")}
         withBackButton
@@ -58,8 +57,10 @@ export function EditSessionDateScreen() {
                 {
                   id,
                   body: {
-                    performedAt: date,
-                    duration,
+                    completedAt: date
+                      ? new Date(date).toISOString()
+                      : undefined,
+                    duration: duration ?? undefined,
                   },
                 },
                 {
@@ -101,7 +102,7 @@ export function EditSessionDateScreen() {
                   value: date ? new Date(date) : new Date(),
                   onChange: (_event, selectedDate) => {
                     if (selectedDate) {
-                      setDate(selectedDate.toISOString());
+                      setDate(selectedDate);
                     }
                   },
                   mode: "date",
@@ -143,7 +144,7 @@ export function EditSessionDateScreen() {
           is24Hour={true}
           onChange={(_event, selectedDate) => {
             if (selectedDate) {
-              setDate(selectedDate.toISOString());
+              setDate(selectedDate);
               setShowDatePicker(false);
             }
           }}

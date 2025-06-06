@@ -1,6 +1,6 @@
 import { MiddlewareConsumer, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from "@nestjs/core";
 import { AuthModule } from "./auth/auth.module";
 import { CommonModule } from "./common/common.module";
 import envConfig from "./config/env.config";
@@ -9,14 +9,16 @@ import { UserModule } from "./user/user.module";
 import { ExerciseModule } from "./exercise/exercise.module";
 import { MuscleGroupModule } from "./muscle-group/muscle-group.module";
 import { WorkoutPlanModule } from "./workout-plan/workout-plan.module";
-import { WorkoutModule } from "./workout/workout.module";
+import { WorkoutTemplateModule } from "./workout-template/workout-template.module";
 import { LogModule } from "./log/log.module";
 import { MailModule } from "./mail/mail.module";
 import mailConfig from "./config/mail.config";
 import { RawBodyMiddleware } from "./common/middlewares/raw-body";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { TransformResponseInterceptor } from "./common/interceptor/transform-response/transform-response.interceptor";
-import { WorkoutSessionModule } from './workout-session/workout-session.module';
+import { WorkoutSessionModule } from "./workout-session/workout-session.module";
+import { ZodSerializerInterceptor, ZodValidationPipe } from "nestjs-zod";
+import { HttpExceptionFilter } from "./http-exeption.filter";
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -39,7 +41,7 @@ const NODE_ENV = process.env.NODE_ENV;
     MuscleGroupModule,
     ExerciseModule,
     WorkoutPlanModule,
-    WorkoutModule,
+    WorkoutTemplateModule,
     LogModule,
     MailModule,
     WorkoutSessionModule,
@@ -51,6 +53,19 @@ const NODE_ENV = process.env.NODE_ENV;
       useClass: TransformResponseInterceptor,
     },
     { provide: APP_GUARD, useClass: ThrottlerGuard },
+    {
+      provide: APP_PIPE,
+      useClass: ZodValidationPipe,
+    },
+
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ZodSerializerInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
   ],
 })
 export class AppModule {

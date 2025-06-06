@@ -7,7 +7,7 @@ import {
   LegendListRef,
   LegendListRenderItemProps,
 } from "@legendapp/list";
-import { Exercise, MuscleGroup, useGetExercises } from "app";
+import { MuscleGroup, useGetExercises } from "app";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { AppText } from "../../components/ui/app-text";
 import {
@@ -38,11 +38,11 @@ import {
   addWorkoutExercises,
   replaceExerciseInWorkout,
 } from "../../stores/slices/create-workout-plan-slice";
-import {
-  addWorkoutExercisesToActiveWorkoutSession,
-  replaceActiveWorkoutSessionExercise,
-} from "../../stores/slices/workout-session-slice";
 import { useSession } from "../../lib/auth-client";
+import { AppTouchable } from "../../components/ui/app-touchable";
+import { replaceExercise } from "../../stores/slices/edit-exercise-set-slice";
+import { ExerciseItemSchema } from "app-config";
+import { z } from "zod";
 
 export const ExercisesScreen = () => {
   const params = useLocalSearchParams<ExercisesScreenParams>();
@@ -61,8 +61,6 @@ export const ExercisesScreen = () => {
   }
 
   const mode = params.mode || "default";
-
-  // const allowSelect = _allowSelect === "true";
 
   const dispatch = useAppDispatch();
 
@@ -89,14 +87,20 @@ export const ExercisesScreen = () => {
     return data?.pages?.flatMap((page) => page?.data);
   }, [data]);
 
-  const [selectedExercises, setSelectedExercises] = useState<Exercise[]>([]);
+  const [selectedExercises, setSelectedExercises] = useState<
+    z.infer<typeof ExerciseItemSchema>[]
+  >([]);
 
   const onSelect = useCallback(
     ({
       item,
       index,
       isSelected,
-    }: { item: Exercise; index: number; isSelected: boolean }) => {
+    }: {
+      item: z.infer<typeof ExerciseItemSchema>;
+      index: number;
+      isSelected: boolean;
+    }) => {
       if (isSelected) {
         setSelectedExercises((prev) => prev.filter((e) => e.id !== item.id));
         return;
@@ -125,9 +129,13 @@ export const ExercisesScreen = () => {
         replaceWorkoutExerciseId
       ) {
         dispatch(
-          replaceActiveWorkoutSessionExercise({
-            replaceWorkoutExerciseId,
-            newExercise: item,
+          replaceExercise({
+            exercise: {
+              id: item.id,
+              name: item.name,
+              imageUrl: item.images?.[0] || "",
+            },
+            replacedExerciseId: replaceWorkoutExerciseId,
           })
         );
         delay(() => router.back(), 200);
@@ -148,13 +156,13 @@ export const ExercisesScreen = () => {
       );
     }
     if (mode === "addToActiveWorkoutSession") {
-      dispatch(
-        addWorkoutExercisesToActiveWorkoutSession({
-          exercises: selectedExercises,
-          defaultSets,
-          defaultRestTime,
-        })
-      );
+      // dispatch(
+      //   addWorkoutExercisesToActiveWorkoutSession({
+      //     exercises: selectedExercises,
+      //     defaultSets,
+      //     defaultRestTime,
+      //   })
+      // );
     }
     router.back();
   }, [
@@ -166,7 +174,10 @@ export const ExercisesScreen = () => {
     defaultRestTime,
   ]);
 
-  const renderItem = ({ item, index }: LegendListRenderItemProps<Exercise>) => {
+  const renderItem = ({
+    item,
+    index,
+  }: LegendListRenderItemProps<z.infer<typeof ExerciseItemSchema>>) => {
     const isSelected =
       selectedExercises.findIndex((e) => e.id === item.id) !== -1;
 
@@ -188,7 +199,7 @@ export const ExercisesScreen = () => {
   };
 
   return (
-    <AppScreen name="exercise-screen">
+    <AppScreen name="exercises-screen">
       <AppHeader
         title={capitalize(t("exercises"))}
         withBackButton
@@ -196,7 +207,7 @@ export const ExercisesScreen = () => {
           allowSelect &&
           (mode === "addToCreateWorkoutPlan" ||
             mode === "addToActiveWorkoutSession") ? (
-            <TouchableOpacity
+            <AppTouchable
               onPress={() =>
                 debouncedPress(() => {
                   onFinish();
@@ -204,7 +215,7 @@ export const ExercisesScreen = () => {
               }
             >
               <CheckIcon size={28} />
-            </TouchableOpacity>
+            </AppTouchable>
           ) : null
         }
       />
@@ -260,7 +271,7 @@ export const ExercisesScreen = () => {
         contentContainerStyle={{
           paddingBottom: 100,
         }}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item?.id?.toString() || ""}
         onEndReached={() => {
           if (hasNextPage && !isFetchingNextPage) {
             fetchNextPage();

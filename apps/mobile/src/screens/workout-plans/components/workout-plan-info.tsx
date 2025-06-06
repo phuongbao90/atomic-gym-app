@@ -1,4 +1,3 @@
-import { Workout, WorkoutPlan } from "app";
 import { capitalizeString } from "app";
 import { cva } from "class-variance-authority";
 import { Fragment } from "react";
@@ -13,6 +12,8 @@ import {
 import { ListItem } from "../../../components/ui/list-item";
 import { WorkoutItem } from "../../../components/workout-item";
 import { useTranslation } from "react-i18next";
+import { z } from "zod";
+import { WorkoutPlanItemResponseSchema } from "app-config";
 
 const mapCategory = cva("", {
   variants: {
@@ -29,28 +30,28 @@ const mapCategory = cva("", {
 export const PlanInfo = ({
   item,
 }: {
-  item: WorkoutPlan | undefined;
+  item: z.infer<typeof WorkoutPlanItemResponseSchema> | undefined;
 }) => {
   const { t } = useTranslation();
 
   if (!item) return null;
 
-  const description = item?.translations?.[0]?.description;
+  const description = item?.description;
 
   return (
     <View className="mt-4">
       {description && (
         <Fragment>
-          <AppText>{item?.translations?.[0]?.description}</AppText>
+          <AppText>{item?.description}</AppText>
           <Divider className="my-2" />
         </Fragment>
       )}
 
-      {item?.category && (
+      {item?.goal && (
         <Fragment>
           <ListItem
             Left={<CrosshairsIcon size={22} />}
-            label={t(mapCategory({ category: item?.category }))}
+            label={t(mapCategory({ category: item?.goal }))}
           />
           <Divider className="my-2" />
         </Fragment>
@@ -66,14 +67,16 @@ export const PlanInfo = ({
         </Fragment>
       )}
 
-      {!!item.workouts?.length && (
+      {!!item.workoutTemplates?.length && (
         <>
           <ListItem
             Left={<CalendarIcon />}
             label={`${t(
-              item.workouts?.length > 1 ? "days_per_week" : "day_per_week",
+              item.workoutTemplates?.length > 1
+                ? "days_per_week"
+                : "day_per_week",
               {
-                count: item.workouts?.length,
+                count: item.workoutTemplates?.length,
               }
             )}`}
           />
@@ -83,13 +86,11 @@ export const PlanInfo = ({
 
       <AppText className="text-lg font-bold mb-4">{t("workouts")}</AppText>
       <View className="gap-4">
-        {Number(item?.workouts?.length) > 0 ? (
-          item.workouts?.map((workout, index) => (
-            <Fragment key={workout.id}>
+        {Number(item?.workoutTemplates?.length) > 0 ? (
+          item.workoutTemplates?.map((workoutTemplate, index) => (
+            <Fragment key={workoutTemplate.id}>
               <WorkoutItem
-                workout={
-                  workout as Workout & { _count: { workoutExercises: number } }
-                }
+                workoutTemplate={workoutTemplate}
                 index={index}
                 isPremiumPlan={item.isPremium ?? false}
               />

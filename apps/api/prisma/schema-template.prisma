@@ -1,0 +1,385 @@
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// generator typescriptInterfaces {
+//   provider = "prisma-generator-typescript-interfaces"
+//   output   = "../../../packages/app/src/prisma-generated.ts"
+//   dateType = "string"
+// }
+
+// generator class_validator {
+//   provider = "prisma-class-validator-generator"
+//   output   = "../src/generated/"
+// }
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = "postgresql://bao:3246@localhost:5432/gymapp"
+// }
+
+// model User {
+//   id            String    @id
+//   name          String    @db.Text
+//   email         String
+//   emailVerified Boolean
+//   image         String?   @db.Text
+//   createdAt     DateTime
+//   updatedAt     DateTime
+//   sessions      Session[]
+//   accounts      Account[]
+//   gender        String?
+//   age           Int?
+//   avatar        String?
+
+//   // Fitness related
+//   exercises        Exercise[]
+//   workoutPlans     WorkoutPlan[]
+//   workoutSessions  WorkoutSession[]
+//   bodyMeasurements BodyMeasurement[]
+
+//   @@unique([email])
+//   @@map("user")
+// }
+
+// enum ExerciseCategory {
+//   WEIGHT
+//   FREE_WEIGHT
+//   CARDIO
+// }
+
+// model MuscleGroup {
+//   id                  Int                   @id @default(autoincrement())
+//   name                String
+//   slug                String                @unique
+//   image               String?
+//   parentId            Int?
+//   parent              MuscleGroup?          @relation("MusclGroupHierarchy", fields: [parentId], references: [id])
+//   children            MuscleGroup[]         @relation("MusclGroupHierarchy")
+//   exercises           Exercise[] // Many-to-many through ExerciseMuscleGroup
+//   isActive            Boolean               @default(true)
+//   ExerciseMuscleGroup ExerciseMuscleGroup[]
+// }
+
+// model Exercise {
+//   id          String           @id @default(uuid())
+//   name        String
+//   slug        String           @unique
+//   description String?
+//   notes       String?
+//   category    ExerciseCategory
+//   images      String[] // Array of image URLs
+//   youtubeUrl  String? // YouTube URL for exercise demo
+//   isPublic    Boolean          @default(false) // Public exercises can be used by all users
+//   createdBy   User             @relation(fields: [createdById], references: [id])
+//   createdById String
+//   createdAt   DateTime         @default(now()) @db.Timestamptz(6)
+//   updatedAt   DateTime         @updatedAt @db.Timestamptz(6)
+//   isActive    Boolean          @default(true)
+
+//   // Relationships
+//   muscleGroups      ExerciseMuscleGroup[] // Many-to-many with MuscleGroup
+//   sessionExercises  SessionExercise[]
+//   templateExercises TemplateExercise[]
+//   MuscleGroup       MuscleGroup?          @relation(fields: [muscleGroupId], references: [id])
+//   muscleGroupId     Int?
+
+//   @@index([createdById, isActive])
+//   @@index([category])
+//   @@index([isPublic])
+// }
+
+// // Join table for Exercise and MuscleGroup many-to-many relationship
+// model ExerciseMuscleGroup {
+//   exerciseId    String
+//   muscleGroupId Int
+//   isPrimary     Boolean     @default(false) // True for primary muscle, false for secondary
+//   exercise      Exercise    @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+//   muscleGroup   MuscleGroup @relation(fields: [muscleGroupId], references: [id], onDelete: Cascade)
+
+//   @@id([exerciseId, muscleGroupId])
+// }
+
+// enum WorkoutPlanLevel {
+//   BEGINNER
+//   INTERMEDIATE
+//   ADVANCED
+// }
+
+// enum WorkoutPlanGoal {
+//   WEIGHT_LOSS
+//   MUSCLE_BUILDING
+//   STRENGTH
+//   ENDURANCE
+//   FLEXIBILITY
+//   GENERAL_FITNESS
+//   SPORT_SPECIFIC
+// }
+
+// model WorkoutPlan {
+//   id              String            @id @default(uuid())
+//   name            String
+//   slug            String            @unique
+//   description     String?
+//   coverImage      String?
+//   level           WorkoutPlanLevel?
+//   goal            WorkoutPlanGoal?
+//   durationWeeks   Int? // Planned duration in weeks
+//   sessionsPerWeek Int? // Recommended sessions per week
+//   isPublic        Boolean           @default(false)
+//   isPremium       Boolean           @default(false)
+//   isFeatured      Boolean           @default(false)
+//   createdBy       User              @relation(fields: [createdById], references: [id])
+//   createdById     String
+//   createdAt       DateTime          @default(now()) @db.Timestamptz(6)
+//   updatedAt       DateTime          @updatedAt @db.Timestamptz(6)
+//   isActive        Boolean           @default(true)
+
+//   // Relationships
+//   workoutTemplates WorkoutTemplate[] // Sessions within this plan
+//   workoutSessions  WorkoutSession[] // Actual performed sessions from this plan
+
+//   @@index([createdById, isActive])
+//   @@index([level, goal])
+//   @@index([isPublic, isFeatured])
+// }
+
+// // Template for a workout session within a plan
+// model WorkoutTemplate {
+//   id                   String      @id @default(uuid())
+//   name                 String
+//   slug                 String
+//   description          String?
+//   order                Int // Order within the plan (Day 1, Day 2, etc.)
+//   estimatedDuration    Int? // Estimated duration in minutes
+//   restBetweenExercises Int? // Default rest between exercises (seconds)
+//   workoutPlan          WorkoutPlan @relation(fields: [workoutPlanId], references: [id], onDelete: Cascade)
+//   workoutPlanId        String
+//   createdAt            DateTime    @default(now()) @db.Timestamptz(6)
+//   updatedAt            DateTime    @updatedAt @db.Timestamptz(6)
+//   isActive             Boolean     @default(true)
+
+//   // Relationships
+//   templateExercises TemplateExercise[] // Exercises in this template
+//   workoutSessions   WorkoutSession[] // Sessions performed from this template
+
+//   @@unique([workoutPlanId, order])
+//   @@index([workoutPlanId])
+// }
+
+// // Exercise within a workout template
+// model TemplateExercise {
+//   id                String          @id @default(uuid())
+//   workoutTemplate   WorkoutTemplate @relation(fields: [workoutTemplateId], references: [id], onDelete: Cascade)
+//   workoutTemplateId String
+//   exercise          Exercise        @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+//   exerciseId        String
+//   order             Int // Order within the workout
+//   notes             String? // Exercise-specific notes
+//   restTime          Int? // Rest time after this exercise (seconds)
+
+//   // Planned sets configuration
+//   targetSets TemplateSets[]
+
+//   @@unique([workoutTemplateId, order])
+//   @@index([exerciseId])
+// }
+
+// // Planned sets for template exercises
+// model TemplateSets {
+//   id                 String           @id @default(uuid())
+//   templateExercise   TemplateExercise @relation(fields: [templateExerciseId], references: [id], onDelete: Cascade)
+//   templateExerciseId String
+//   setNumber          Int // 1, 2, 3, etc.
+//   targetReps         Int? // Target repetitions
+//   targetWeight       Float? // Target weight
+//   targetDuration     Int? // Target duration (seconds)
+//   targetDistance     Float? // Target distance
+//   restTime           Int? // Rest time after this set (seconds)
+//   isWarmup           Boolean          @default(false)
+//   isDropSet          Boolean          @default(false)
+//   notes              String?
+
+//   @@unique([templateExerciseId, setNumber])
+// }
+
+// enum WorkoutSessionStatus {
+//   PLANNED
+//   IN_PROGRESS
+//   COMPLETED
+//   CANCELLED
+// }
+
+// // Actual workout session performed by user
+// model WorkoutSession {
+//   id          String               @id @default(uuid())
+//   name        String // Session name
+//   user        User                 @relation(fields: [userId], references: [id])
+//   userId      String
+//   status      WorkoutSessionStatus @default(PLANNED)
+//   notes       String? // Overall session notes
+//   scheduledAt DateTime?            @db.Timestamptz(6) // When planned to perform
+//   startedAt   DateTime?            @db.Timestamptz(6) // When actually started
+//   completedAt DateTime?            @db.Timestamptz(6) // When completed
+//   duration    Int? // Total duration in minutes
+
+//   // Template references (nullable for custom sessions)
+//   workoutPlan       WorkoutPlan?     @relation(fields: [workoutPlanId], references: [id], onDelete: SetNull)
+//   workoutPlanId     String?
+//   workoutTemplate   WorkoutTemplate? @relation(fields: [workoutTemplateId], references: [id], onDelete: SetNull)
+//   workoutTemplateId String?
+
+//   // Snapshot data for historical accuracy
+//   planNameSnapshot     String? // Plan name at time of session
+//   templateNameSnapshot String? // Template name at time of session
+
+//   // Track if session structure was modified
+//   wasModified        Boolean @default(false)
+//   modificationsSaved Boolean @default(false) // Whether modifications were saved back to template
+
+//   createdAt DateTime @default(now()) @db.Timestamptz(6)
+//   updatedAt DateTime @updatedAt @db.Timestamptz(6)
+
+//   // Relationships
+//   sessionExercises SessionExercise[] // Actual exercises performed
+
+//   @@index([userId, status])
+//   @@index([userId, startedAt])
+//   @@index([workoutPlanId])
+//   @@index([workoutTemplateId])
+//   @@index([scheduledAt])
+// }
+
+// // Exercise actually performed in a session
+// model SessionExercise {
+//   id          String         @id @default(uuid())
+//   session     WorkoutSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+//   sessionId   String
+//   exercise    Exercise       @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+//   exerciseId  String
+//   order       Int // Order within the session
+//   notes       String? // Exercise-specific notes for this session
+//   restTime    Int? // Actual rest time taken
+//   isCompleted Boolean        @default(false)
+//   startedAt   DateTime?      @db.Timestamptz(6)
+//   completedAt DateTime?      @db.Timestamptz(6)
+
+//   // Snapshot for historical accuracy
+//   exerciseNameSnapshot String // Exercise name at time of performance
+
+//   // Relationships
+//   performedSets PerformedSet[] // Actual sets performed
+
+//   @@unique([sessionId, order])
+//   @@index([exerciseId])
+// }
+
+// // Individual set performance
+// model PerformedSet {
+//   id                String          @id @default(uuid())
+//   sessionExercise   SessionExercise @relation(fields: [sessionExerciseId], references: [id], onDelete: Cascade)
+//   sessionExerciseId String
+//   setNumber         Int // 1, 2, 3, etc.
+
+//   // Performance data
+//   reps        Int?
+//   weight      Float? // in kg or lbs
+//   duration    Int? // in seconds
+//   distance    Float? // in km or miles
+//   restTime    Int? // actual rest time taken (seconds)
+//   rpe         Int? // Rate of Perceived Exertion (1-10)
+//   isCompleted Boolean  @default(true)
+//   isWarmup    Boolean  @default(false)
+//   isDropSet   Boolean  @default(false)
+//   isFailure   Boolean  @default(false) // Set taken to failure
+//   notes       String?
+//   performedAt DateTime @default(now()) @db.Timestamptz(6)
+
+//   @@unique([sessionExerciseId, setNumber])
+//   @@index([performedAt])
+// }
+
+// // Keep your existing Session, Account, Verification models
+// model Session {
+//   id        String   @id
+//   expiresAt DateTime
+//   token     String
+//   createdAt DateTime
+//   updatedAt DateTime
+//   ipAddress String?
+//   userAgent String?
+//   userId    String
+//   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@unique([token])
+//   @@map("session")
+// }
+
+// model Account {
+//   id                    String    @id
+//   accountId             String
+//   providerId            String
+//   userId                String
+//   user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   accessToken           String?
+//   refreshToken          String?
+//   idToken               String?
+//   accessTokenExpiresAt  DateTime?
+//   refreshTokenExpiresAt DateTime?
+//   scope                 String?
+//   password              String?
+//   createdAt             DateTime
+//   updatedAt             DateTime
+
+//   @@map("account")
+// }
+
+// model Verification {
+//   id         String    @id
+//   identifier String
+//   value      String
+//   expiresAt  DateTime
+//   createdAt  DateTime?
+//   updatedAt  DateTime?
+
+//   @@map("verification")
+// }
+
+// enum BodyMeasurementCategory {
+//   COMPOSITION
+//   MUSCLE
+//   FAT
+//   WATER
+//   BONE
+//   VISCERAL
+//   METABOLIC
+//   OTHER
+// }
+
+// model BodyMeasurementType {
+//   id           Int                     @id @default(autoincrement())
+//   category     BodyMeasurementCategory
+//   name         String
+//   unit         String
+//   description  String?
+//   isActive     Boolean                 @default(true)
+//   createdAt    DateTime                @default(now()) @db.Timestamptz(6)
+//   updatedAt    DateTime                @updatedAt @db.Timestamptz(6)
+//   measurements BodyMeasurement[]
+// }
+
+// model BodyMeasurement {
+//   id                String              @id @default(uuid())
+//   user              User                @relation(fields: [userId], references: [id])
+//   userId            String
+//   measurementType   BodyMeasurementType @relation(fields: [measurementTypeId], references: [id], onDelete: Restrict)
+//   measurementTypeId Int
+//   value             Float
+//   notes             String?
+//   date              DateTime            @db.Timestamptz(6)
+//   createdAt         DateTime            @default(now()) @db.Timestamptz(6)
+//   updatedAt         DateTime            @updatedAt @db.Timestamptz(6)
+
+//   @@index([userId, date])
+//   @@index([userId, measurementTypeId, date])
+// }

@@ -46,16 +46,8 @@ export class LogService {
       };
     }
 
-    const muscleGroupCounts = await this.prisma.exerciseSetLog.groupBy({
-      by: ["muscleGroupId"],
-      where: { userId: user.id, performedAt: createdAt },
-      _count: {
-        _all: true,
-      },
-    });
-
-    const wpCounts = await this.prisma.workoutSessionLog.aggregate({
-      where: { userId: user.id, performedAt: createdAt },
+    const wpCounts = await this.prisma.workoutSession.aggregate({
+      where: { userId: user.id, createdAt: createdAt },
       _count: {
         _all: true,
       },
@@ -63,23 +55,10 @@ export class LogService {
       _avg: { duration: true },
     });
 
-    const setCounts = await this.prisma.exerciseSetLog.aggregate({
-      where: { workoutSession: { userId: user.id }, performedAt: createdAt },
-      _count: {
-        _all: true,
-      },
-    });
-
     return {
       totalWorkouts: wpCounts._count._all || 0,
       totalDuration: wpCounts._sum.duration || 0,
       averageDuration: wpCounts._avg.duration || 0,
-      totalSets: setCounts._count._all || 0,
-      muscleGroupSummary:
-        muscleGroupCounts?.map((item) => ({
-          muscleGroupId: item.muscleGroupId,
-          count: item._count._all || 0,
-        })) || [],
     };
   }
 
