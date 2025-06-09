@@ -2,7 +2,6 @@ import { View } from "react-native";
 import { AppText } from "../../../components/ui/app-text";
 import { useCallback, useMemo, useState } from "react";
 import { ApiResponse, useWorkoutLogs, WorkoutLogResponse } from "app";
-import dayjs from "dayjs";
 import { Badge } from "../../../components/ui/badge";
 import {
   ChevronLeftIcon,
@@ -35,6 +34,7 @@ import ChestImage from "../../../../assets/images/muscles/chest.png";
 import BackImage from "../../../../assets/images/muscles/back.png";
 import ShoulderImage from "../../../../assets/images/muscles/shoulders.png";
 import { twColors } from "../../../styles/themes";
+import { dayjs } from "../../../lib/dayjs";
 
 export const StatisticTabWorkouts = () => {
   const [periodType, setPeriodType] = useState<

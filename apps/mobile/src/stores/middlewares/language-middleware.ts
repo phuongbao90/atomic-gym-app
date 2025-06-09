@@ -4,7 +4,7 @@ import i18n from "../../configs/i18n";
 import { RootState } from "../redux-store";
 
 import { queryClient, setRequestLanguage } from "app";
-import dayjs from "dayjs";
+import { dayjs } from "../../lib/dayjs";
 
 const vi = {
   monthsShort: [

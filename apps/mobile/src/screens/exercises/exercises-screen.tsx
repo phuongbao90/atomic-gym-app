@@ -38,11 +38,10 @@ import {
   addWorkoutExercises,
   replaceExerciseInWorkout,
 } from "../../stores/slices/create-workout-plan-slice";
-import {
-  addWorkoutExercisesToActiveWorkoutSession,
-  replaceActiveWorkoutSessionExercise,
-} from "../../stores/slices/workout-session-slice";
+import { addWorkoutExercisesToActiveWorkoutSession } from "../../stores/slices/workout-session-slice";
 import { useSession } from "../../lib/auth-client";
+import { AppTouchable } from "../../components/ui/app-touchable";
+import { replaceExercise } from "../../stores/slices/edit-exercise-set.slice";
 
 export const ExercisesScreen = () => {
   const params = useLocalSearchParams<ExercisesScreenParams>();
@@ -125,9 +124,13 @@ export const ExercisesScreen = () => {
         replaceWorkoutExerciseId
       ) {
         dispatch(
-          replaceActiveWorkoutSessionExercise({
-            replaceWorkoutExerciseId,
-            newExercise: item,
+          replaceExercise({
+            exercise: {
+              id: item.id,
+              name: item.translations?.[0]?.name || "",
+              imageUrl: item.images?.[0] || "",
+            },
+            replacedExerciseId: replaceWorkoutExerciseId,
           })
         );
         delay(() => router.back(), 200);
@@ -188,7 +191,7 @@ export const ExercisesScreen = () => {
   };
 
   return (
-    <AppScreen name="exercise-screen">
+    <AppScreen name="exercises-screen">
       <AppHeader
         title={capitalize(t("exercises"))}
         withBackButton
@@ -196,7 +199,7 @@ export const ExercisesScreen = () => {
           allowSelect &&
           (mode === "addToCreateWorkoutPlan" ||
             mode === "addToActiveWorkoutSession") ? (
-            <TouchableOpacity
+            <AppTouchable
               onPress={() =>
                 debouncedPress(() => {
                   onFinish();
@@ -204,7 +207,7 @@ export const ExercisesScreen = () => {
               }
             >
               <CheckIcon size={28} />
-            </TouchableOpacity>
+            </AppTouchable>
           ) : null
         }
       />

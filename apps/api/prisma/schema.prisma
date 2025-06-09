@@ -193,11 +193,6 @@ model ExerciseSet {
   isWarmup          Boolean         @default(false)
   isDropSet         Boolean         @default(false)
   isUntilFailure    Boolean         @default(false)
-  // Planned values for the set
-  plannedReps       Int?
-  plannedWeight     Float?
-  plannedDuration   Int? // in seconds, for time-based sets like cardio
-  plannedDistance   Float? // for distance-based sets
   WorkoutExercise   WorkoutExercise @relation(fields: [workoutExerciseId], references: [id], onDelete: Cascade)
   workoutExerciseId String
 }

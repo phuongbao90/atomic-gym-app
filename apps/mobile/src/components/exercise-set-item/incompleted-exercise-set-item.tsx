@@ -9,28 +9,28 @@ import {
 import { Pressable, TextInput, View } from "react-native";
 import { AppText } from "../ui/app-text";
 import { AppTouchable } from "../ui/app-touchable";
-import { useWorkoutSessionNotification } from "../../hooks/use-workout-session-notification";
 import { Divider } from "../ui/divider";
 import { AppButton } from "../ui/app-button";
 import { toast } from "sonner-native";
-import { ExerciseSetItemProps } from "./exercise-set-item-type";
 import {
   completeSet,
+  makeSelectExerciseSetById,
   updateExerciseSet,
 } from "../../stores/slices/edit-exercise-set.slice";
 import { useHoldAction } from "../../hooks/use-hold-action";
+import { useMemo } from "react";
 
 export const IncompletedSetItem = ({
-  pageIndex,
   index,
-  exerciseSet,
+  pageIndex,
   onPressMore,
+  exerciseSetId,
   onCompleteSet,
 }: {
-  pageIndex: number;
   index: number;
-  exerciseSet: ExerciseSetItemProps["exerciseSet"];
+  pageIndex: number;
   onPressMore: () => void;
+  exerciseSetId: string;
   onCompleteSet?: () => void;
 }) => {
   const { t } = useTranslation();
@@ -38,12 +38,18 @@ export const IncompletedSetItem = ({
   // const { notifyRestTime } = useWorkoutSessionNotification();
   const dispatch = useAppDispatch();
   const incrementWeight = useAppSelector((s) => s.app.weightIncrement);
+  const selectSet = useMemo(
+    () => makeSelectExerciseSetById(pageIndex, exerciseSetId),
+    [pageIndex, exerciseSetId]
+  );
+
+  const exerciseSet = useAppSelector(selectSet);
 
   const { start: startIncreaseWeight, stop: stopIncreaseWeight } =
     useHoldAction(() => {
       dispatch(
         updateExerciseSet({
-          id: exerciseSet.id,
+          id: exerciseSetId,
           type: "weight",
           direction: "increase",
           step: incrementWeight,
@@ -55,7 +61,7 @@ export const IncompletedSetItem = ({
     () => {
       dispatch(
         updateExerciseSet({
-          id: exerciseSet.id,
+          id: exerciseSetId,
           type: "reps",
           direction: "increase",
           step: 1,
@@ -68,7 +74,7 @@ export const IncompletedSetItem = ({
     useHoldAction(() => {
       dispatch(
         updateExerciseSet({
-          id: exerciseSet.id,
+          id: exerciseSetId,
           type: "weight",
           direction: "decrease",
           step: incrementWeight,
@@ -80,7 +86,7 @@ export const IncompletedSetItem = ({
     () => {
       dispatch(
         updateExerciseSet({
-          id: exerciseSet.id,
+          id: exerciseSetId,
           type: "reps",
           direction: "decrease",
           step: 1,
@@ -125,7 +131,7 @@ export const IncompletedSetItem = ({
             onChangeText={(text) => {
               dispatch(
                 updateExerciseSet({
-                  id: exerciseSet.id,
+                  id: exerciseSetId,
                   type: "weight",
                   value: text,
                   pageIndex,
@@ -167,7 +173,7 @@ export const IncompletedSetItem = ({
             onChangeText={(text) => {
               dispatch(
                 updateExerciseSet({
-                  id: exerciseSet.id,
+                  id: exerciseSetId,
                   type: "reps",
                   value: text,
                   pageIndex,
@@ -192,13 +198,13 @@ export const IncompletedSetItem = ({
         title={t("complete_set")}
         size="lg"
         onPress={() => {
-          if (!exerciseSet.weight || !exerciseSet.repetitions) {
+          if (!exerciseSet?.weight || !exerciseSet?.repetitions) {
             toast.error(t("please_fill_all_fields"), {
               position: "bottom-center",
             });
             return;
           }
-          dispatch(completeSet({ id: exerciseSet.id, pageIndex }));
+          dispatch(completeSet({ id: exerciseSetId, pageIndex }));
           onCompleteSet?.();
 
           // notifyRestTime(exerciseSet?.restTime || 0);

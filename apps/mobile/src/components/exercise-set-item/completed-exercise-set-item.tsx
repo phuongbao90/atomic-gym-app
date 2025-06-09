@@ -7,34 +7,43 @@ import { AppTouchable } from "../ui/app-touchable";
 import { OrderNumberCircle } from "../ui/OrderNumberCircle";
 import { ExerciseSetItemProps } from "./exercise-set-item-type";
 import { useExerciseSetItemContext } from "./exercise-set-item.context";
+import { makeSelectExerciseSetById } from "../../stores/slices/edit-exercise-set.slice";
+import { useMemo } from "react";
 
 export const CompletedSetItemWithContext = () => {
-  const { exerciseSet, index, onPressMoreCompleted } =
-    useExerciseSetItemContext();
+  return null;
+  // const { pageIndex, exerciseSet, index, onPressMoreCompleted } =
+  //   useExerciseSetItemContext();
 
-  return (
-    <CompletedSetItem
-      index={index}
-      exerciseSet={exerciseSet}
-      onPressMore={onPressMoreCompleted}
-    />
-  );
+  // return (
+  //   <CompletedSetItem
+  //     index={index}
+  //     pageIndex={pageIndex}
+  //     exerciseSetId={exerciseSet.id}
+  //     onPressMore={onPressMoreCompleted}
+  //   />
+  // );
 };
 
 export const CompletedSetItem = ({
-  exerciseSet,
+  pageIndex,
+  exerciseSetId,
   index,
   onPressMore,
 }: {
-  exerciseSet: {
-    weight: number;
-    repetitions: number;
-  };
+  pageIndex: number;
+  exerciseSetId: string;
   index: ExerciseSetItemProps["index"];
   onPressMore: () => void;
 }) => {
   const { t } = useTranslation();
   const weightUnit = useAppSelector((s) => s.app.weightUnit);
+  const selectSet = useMemo(
+    () => makeSelectExerciseSetById(pageIndex, exerciseSetId),
+    [pageIndex, exerciseSetId]
+  );
+
+  const exerciseSet = useAppSelector(selectSet);
 
   return (
     <View className="rounded-xl overflow-hidden">

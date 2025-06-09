@@ -3,7 +3,6 @@ import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetProps,
 } from "@gorhom/bottom-sheet";
-import { View } from "react-native";
 
 export const AppBottomSheet = ({
   modalRef,
@@ -27,22 +26,14 @@ export const AppBottomSheet = ({
   };
 
   return (
-    <View testID={testID}>
-      <BottomSheet
-        ref={modalRef}
-        enablePanDownToClose
-        //   detached
-        //   bottomInset={40}
-        //   backgroundStyle={{
-        //     backgroundColor: "transparent",
-        //   }}
-        //   handleComponent={null}
-        backdropComponent={renderBackdrop}
-        index={-1}
-        {...props}
-      >
-        {children}
-      </BottomSheet>
-    </View>
+    <BottomSheet
+      ref={modalRef}
+      enablePanDownToClose
+      backdropComponent={renderBackdrop}
+      index={-1}
+      {...props}
+    >
+      {children}
+    </BottomSheet>
   );
 };

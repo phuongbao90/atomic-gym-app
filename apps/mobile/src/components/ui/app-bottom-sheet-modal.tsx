@@ -7,7 +7,7 @@ import { CustomBottomSheetBackdrop } from "../custom-bottom-sheet-backdrop";
 export const AppBottomSheetModal = (
   props: BottomSheetModalProps & {
     children: React.ReactNode;
-    modalRef: React.RefObject<BottomSheetModal> | null;
+    modalRef: React.RefObject<BottomSheetModal | null>;
     testID?: string;
   }
 ) => {

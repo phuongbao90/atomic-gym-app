@@ -30,6 +30,7 @@ export type WorkoutSessionExerciseSet = {
   exerciseNameSnapshot: string;
   isCompleted: boolean;
   type: UpdateSetStatus;
+  restTime?: number;
 };
 
 export type UpdateSetStatus = "update" | "create" | "delete" | "untouched";

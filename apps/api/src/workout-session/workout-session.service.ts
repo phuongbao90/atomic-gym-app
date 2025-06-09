@@ -3,6 +3,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { Language, User } from "@prisma/client";
 import { UpdateWorkoutSessionExerciseDto } from "./dto/update-workout-session-exercise.dto";
 import { UpdateWorkoutSessionDto } from "./dto/update-workout-session.dto";
+import { CreateWorkoutSessionDto } from "./dto/create-workout-session.dto";
 
 @Injectable()
 export class WorkoutSessionService {
@@ -246,5 +247,34 @@ export class WorkoutSessionService {
     });
 
     return true;
+  }
+
+  async createWorkoutSession(user: User, body: CreateWorkoutSessionDto) {
+    const workoutSession = await this.prisma.workoutSessionLog.create({
+      data: {
+        originalWorkoutPlanId: body.originalWorkoutPlanId,
+        originalWorkoutId: body.originalWorkoutId,
+        workoutNameSnapshot: body.workoutNameSnapshot,
+        workoutPlanNameSnapshot: body.workoutPlanNameSnapshot,
+        performedAt: body.performedAt,
+        id: body.id,
+        duration: body.duration,
+        notes: body.notes,
+        userId: user.id,
+
+        setLogs: {
+          createMany: {
+            data: body.setLogs?.map((s) => ({
+              ...s,
+              userId: user.id,
+              performedAt: body.performedAt,
+              muscleGroupId: Number(s.muscleGroupId),
+            })),
+          },
+        },
+      },
+    });
+
+    return workoutSession;
   }
 }

@@ -12,7 +12,6 @@ import { USFlag } from "../constants/app-assets";
 import { VNFlag } from "../constants/app-assets";
 import { useAppDispatch, useAppSelector } from "../stores/redux-store";
 import { switchLanguage, switchTheme } from "../stores/slices/app-slice";
-import { increaseExerciseSetValue } from "../stores/slices/workout-session-slice";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -84,22 +83,6 @@ export const DevFloatingButtons = () => {
             />
           )}
         </FloatingActionButton>
-        <FloatingActionButton
-          isExpanded={isExpanded}
-          index={3}
-          buttonLetter={"X"}
-          onPress={() => {
-            dispatch(
-              increaseExerciseSetValue({
-                workoutExerciseId: "19428957-ce2e-436b-b0ba-a829db55acb4",
-                exerciseSetId: "f5250f1c-6b57-45b7-83ae-f97a8ac15485",
-                type: "weight",
-                value: 1,
-              })
-            );
-            handlePress();
-          }}
-        />
       </View>
     </View>
   );

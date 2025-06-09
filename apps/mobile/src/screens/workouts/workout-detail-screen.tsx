@@ -11,7 +11,7 @@ import { AppText } from "../../components/ui/app-text";
 import { useAppDispatch } from "../../stores/redux-store";
 import { appRoutes } from "../../configs/routes";
 import { startWorkout } from "../../stores/slices/workout-session-slice";
-// import { useWorkoutSessionNotification } from "../../hooks/use-workout-session-notification";
+import { cloneExercises } from "../../stores/slices/edit-exercise-set.slice";
 
 export function WorkoutDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -68,6 +68,28 @@ export function WorkoutDetailScreen() {
           onPress={() => {
             if (workout) {
               dispatch(startWorkout(workout));
+              dispatch(
+                cloneExercises(
+                  workout.workoutExercises?.map((e, index) => ({
+                    id: e.exerciseId,
+                    name: e.exercise?.translations?.[0]?.name || "",
+                    order: e.order,
+                    sets:
+                      e.sets?.map((s) => ({
+                        id: s.id,
+                        isCompleted: false,
+                        weight: 0,
+                        repetitions: 0,
+                        distance: 0,
+                        duration: 0,
+                        order: index,
+                        originalExerciseId: e.exerciseId,
+                        exerciseNameSnapshot: "ss",
+                        type: "untouched",
+                      })) || [],
+                  })) || []
+                )
+              );
               router.push(appRoutes.inProgress.workout(id));
             }
           }}

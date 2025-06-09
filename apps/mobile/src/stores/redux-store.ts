@@ -70,7 +70,7 @@ export const store = configureStore({
 
   devTools: false,
   enhancers: (getDefaultEnhancers) =>
-    getDefaultEnhancers().concat(devToolsEnhancer()),
+    getDefaultEnhancers().concat(devToolsEnhancer({ trace: true })),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

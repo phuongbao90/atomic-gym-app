@@ -1,45 +1,21 @@
 import { FlatList, View } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { AppScreen } from "../../components/ui/app-screen";
-import {
-  CancelIcon,
-  ChevronLeftIcon,
-  DeleteIcon,
-  EditIcon,
-  MinusCircleIcon,
-  PlusCircleIcon,
-  VerticalDotsIcon,
-  XIcon,
-} from "../../components/ui/expo-icon";
+import { ChevronLeftIcon, XIcon } from "../../components/ui/expo-icon";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { AppText } from "../../components/ui/app-text";
 import { Divider } from "../../components/ui/divider";
-import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
 import { useTranslation } from "react-i18next";
 import { useWorkoutTimer } from "../../hooks/use-workout-timer";
 import PagerView from "react-native-pager-view";
 import { useAppDispatch, useAppSelector } from "../../stores/redux-store";
 import { InProgressWorkoutExercisesScreenParams } from "../../configs/routes";
-import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { ExerciseSet, WorkoutSessionExerciseSet } from "app";
-import {
-  completeActiveWorkoutSessionExerciseSet,
-  decreaseExerciseSetValue,
-  deleteActiveWorkoutSessionExerciseSet,
-  increaseExerciseSetValue,
-  setCountDownRestTimeEndTime,
-  undoCompleteActiveWorkoutSessionExerciseSet,
-} from "../../stores/slices/workout-session-slice";
-import { capitalize } from "lodash";
-import { AppButton } from "../../components/ui/app-button";
+import React, { Fragment, useRef, useState } from "react";
+import { setCountDownRestTimeEndTime } from "../../stores/slices/workout-session-slice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useActionSheet } from "@expo/react-native-action-sheet";
-import { colors } from "../../styles/themes";
-import BottomSheet, { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { toast } from "sonner-native";
+import BottomSheet from "@gorhom/bottom-sheet";
 import { convertToHourMinuteSecond } from "../../utils/convert-to-hour-minute-second";
 import { useCountDownRestTime } from "../../hooks/use-count-down-rest-time";
-import { shallowEqual } from "react-redux";
 import { AddNotesToWorkoutExerciseSheet } from "../../components/bottom-sheets/add-notes-to-workout-exercise-sheet";
 import { useWorkoutSessionNotification } from "../../hooks/use-workout-session-notification";
 import { SetExerciseHeader } from "../../components/set-exercise-header";
@@ -49,20 +25,22 @@ import { HistoryAndNotes } from "../../components/set-history-note";
 import { IncompletedSetItem } from "../../components/exercise-set-item/incompleted-exercise-set-item";
 import { ExerciseSetPagerDots } from "../../components/exercise-set-pager-dots";
 import {
-  resetEditExerciseSet,
-  selectActiveExerciseSetLogs,
   selectExercisesForPagerView,
   selectExerciseSetsByPageIndex,
   setSelectedSetId,
 } from "../../stores/slices/edit-exercise-set.slice";
+import deepEqual from "deep-equal";
+import { LegendList } from "@legendapp/list";
 
 export const InProgressWorkoutExercisesScreen = () => {
   const { pageIndex } =
     useLocalSearchParams<InProgressWorkoutExercisesScreenParams>();
+
   const workoutExercises = useAppSelector(
     selectExercisesForPagerView,
-    shallowEqual
+    deepEqual
   );
+
   const [activePage, setActivePage] = useState(Number(pageIndex));
   const completedSetSheetRef = useRef<BottomSheet>(null);
   const incompletedSetSheetRef = useRef<BottomSheet>(null);
@@ -121,32 +99,39 @@ export const InProgressWorkoutExercisesScreen = () => {
 const WorkoutExercisePage = React.memo(
   ({
     pageIndex,
+    exercise,
     completedSetSheetRef,
     incompletedSetSheetRef,
-    exercise,
   }: {
     pageIndex: number;
+    exercise: { id: string; name: string; image: string };
     completedSetSheetRef: React.RefObject<BottomSheet | null>;
     incompletedSetSheetRef: React.RefObject<BottomSheet | null>;
-    exercise: { id: string; name: string; image: string };
   }) => {
     const insets = useSafeAreaInsets();
     const noteRef = useRef<BottomSheet>(null);
     const historyRef = useRef<BottomSheet>(null);
-    const exerciseSets = useAppSelector((s) =>
-      selectExerciseSetsByPageIndex(s, pageIndex)
+    const exerciseSets = useAppSelector(
+      (s) => selectExerciseSetsByPageIndex(s, pageIndex),
+      deepEqual
     );
+
     const dispatch = useAppDispatch();
+    const { notifyRestTime } = useWorkoutSessionNotification();
 
     const renderItem = ({
       item,
       index,
-    }: { item: WorkoutSessionExerciseSet; index: number }) => {
+    }: {
+      item: { id: string; isCompleted: boolean; restTime?: number };
+      index: number;
+    }) => {
       if (item.isCompleted) {
         return (
           <CompletedSetItem
-            exerciseSet={item}
             index={index}
+            pageIndex={pageIndex}
+            exerciseSetId={item.id}
             onPressMore={() => {
               dispatch(setSelectedSetId(item.id));
               completedSetSheetRef.current?.expand();
@@ -157,12 +142,15 @@ const WorkoutExercisePage = React.memo(
 
       return (
         <IncompletedSetItem
-          pageIndex={pageIndex}
-          exerciseSet={item}
           index={index}
+          pageIndex={pageIndex}
+          exerciseSetId={item.id}
           onPressMore={() => {
             dispatch(setSelectedSetId(item.id));
             incompletedSetSheetRef.current?.expand();
+          }}
+          onCompleteSet={() => {
+            notifyRestTime(item.restTime || 60);
           }}
         />
       );
@@ -172,7 +160,7 @@ const WorkoutExercisePage = React.memo(
 
     return (
       <View key={exercise.id} className="flex-1">
-        <FlatList
+        <LegendList
           keyExtractor={(item) => item.id}
           data={exerciseSets}
           renderItem={renderItem}
@@ -199,6 +187,8 @@ const WorkoutExercisePage = React.memo(
             </Fragment>
           }
           ItemSeparatorComponent={() => <View className="my-2" />}
+          recycleItems
+          maintainVisibleContentPosition
         />
         <AddNotesToWorkoutExerciseSheet
           modalRef={noteRef}

@@ -9,7 +9,6 @@ import {
   useUpdateWorkoutSession,
   useWorkoutSessionDetail,
 } from "app/src/query/workout-session/workout-session.hooks";
-import dayjs from "dayjs";
 import { AppScrollView } from "../../../src/components/ui/app-scrollview";
 import DateTimePicker, {
   DateTimePickerAndroid,
@@ -23,6 +22,7 @@ import {
   convertToTimeObject,
 } from "../../utils/convert-to-hour-minute-second";
 import { cn } from "../../utils/cn";
+import { dayjs } from "../../lib/dayjs";
 
 export function EditSessionDateScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

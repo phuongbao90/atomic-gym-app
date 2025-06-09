@@ -11,11 +11,12 @@ import {
 } from "../../styles/themes";
 import { useCallback, useMemo } from "react";
 import { useWorkoutSessionHistory, WorkoutSessionHistoryItem } from "app";
-import dayjs from "dayjs";
+
 import { LegendList } from "@legendapp/list";
 import { AppTouchable } from "../../components/ui/app-touchable";
 import { useRouter } from "expo-router";
 import { appRoutes } from "../../configs/routes";
+import { dayjs } from "../../lib/dayjs";
 
 export const HistoryTabScreen = () => {
   const { t } = useTranslation();
@@ -34,7 +35,9 @@ export const HistoryTabScreen = () => {
           <View className="h-20 mx-4 border-b border-gray-200 flex-row justify-between items-center">
             <View>
               <AppText className="text-sm">
-                {dayjs(item?.performedAt).format("ddd, DD MMM")}
+                {item?.performedAt
+                  ? dayjs(item?.performedAt)?.format("ddd, DD MMM")
+                  : ""}
               </AppText>
               <AppText className="text-lg">
                 {item?.originalWorkout?.translations[0]?.name ?? ""}
@@ -122,7 +125,10 @@ const useCalendarData = (
     if (!workoutSessionHistory || workoutSessionHistory.length === 0) return {};
     return workoutSessionHistory?.reduce(
       (acc, cur) => {
-        const date = dayjs(cur.performedAt).format("YYYY-MM-DD");
+        const date = cur.performedAt
+          ? dayjs(cur.performedAt)?.format("YYYY-MM-DD")
+          : undefined;
+        if (!date) return acc;
         if (!acc[date]) {
           //   "2025-05-01": {
           //     marked: true,

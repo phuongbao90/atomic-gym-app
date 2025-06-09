@@ -185,5 +185,6 @@
   "confirm_cancel": "Are you sure you want to cancel and discard changes?",
   "wip": "This feature is still under development",
   "date_of_session": "Date of Session",
-  "duration_of_session": "Duration of Session"
+  "duration_of_session": "Duration of Session",
+  "cancel_workout_session_description": "Are you sure you want to cancel the workout session?"
 }

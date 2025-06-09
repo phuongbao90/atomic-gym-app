@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { WorkoutExercise, WorkoutSessionExerciseSet } from "app";
+import { WorkoutSessionExerciseSet } from "app";
 import uuid from "react-native-uuid";
 import { RootState } from "../redux-store";
 import { createSelector } from "@reduxjs/toolkit";
+import { reorderItems } from "react-native-reorderable-list";
 
 export type EditExercise = {
   id: string;
@@ -22,15 +23,65 @@ export const editExerciseSetSlice = createSlice({
   name: "editExerciseSet",
   initialState,
   reducers: {
+    reset: () => initialState,
+    //* EXERCISES
     cloneExercises: (state, action: PayloadAction<EditExercise[]>) => {
       state.exercises = action.payload;
     },
-    // cloneExerciseSets: (
-    //   state,
-    //   action: PayloadAction<Record<string, WorkoutSessionExerciseSet[]>>
-    // ) => {
-    //   state.exerciseSets = action.payload;
-    // },
+    setSelectedExerciseId: (state, action: PayloadAction<string>) => {
+      state.selectedExerciseId = action.payload;
+    },
+    removeExercise: (state, action: PayloadAction<{ id: string }>) => {
+      const { id } = action.payload;
+      state.exercises = state.exercises.filter((e) => e.id !== id);
+    },
+    replaceExercise: (
+      state,
+      action: PayloadAction<{
+        exercise: { id: string; name: string; imageUrl: string };
+        replacedExerciseId: string;
+      }>
+    ) => {
+      const { exercise, replacedExerciseId } = action.payload;
+
+      const index = state.exercises.findIndex(
+        (e) => e.id === replacedExerciseId
+      );
+      if (index !== -1) {
+        state.exercises[index].name = exercise.name;
+        // state.exercises[index].imageUrl = exercise.imageUrl;
+        state.exercises[index].id = exercise.id;
+        state.exercises[index].sets = state.exercises[index].sets.map(
+          (_s, index) => ({
+            id: uuid.v4(),
+            isCompleted: false,
+            weight: 0,
+            repetitions: 0,
+            distance: 0,
+            duration: 0,
+            type: "untouched",
+            order: index,
+            originalExerciseId: exercise.id,
+            exerciseNameSnapshot: exercise.name,
+          })
+        );
+      }
+
+      state.isDirty = true;
+    },
+    reorderExercise: (
+      state,
+      action: PayloadAction<{
+        from: number;
+        to: number;
+      }>
+    ) => {
+      const { from, to } = action.payload;
+
+      state.exercises = reorderItems(state.exercises, from, to);
+    },
+
+    //* EXERCISE SETS
     editExerciseSet: (
       state,
       action: PayloadAction<{ id: string; pageIndex: number }>
@@ -133,7 +184,6 @@ export const editExerciseSetSlice = createSlice({
         state.isDirty = true;
       }
     },
-    reset: () => initialState,
     addExerciseSet: (
       state,
       action: PayloadAction<{
@@ -165,14 +215,12 @@ export const editExerciseSetSlice = createSlice({
     setSelectedSetId: (state, action: PayloadAction<string>) => {
       state.selectedSetId = action.payload;
     },
-    setSelectedExerciseId: (state, action: PayloadAction<string>) => {
-      state.selectedExerciseId = action.payload;
-    },
   },
 });
 
 export const {
   cloneExercises,
+  replaceExercise,
   // cloneExerciseSets,
   editExerciseSet,
   removeExerciseSet,
@@ -182,6 +230,8 @@ export const {
   addExerciseSet,
   setSelectedSetId,
   setSelectedExerciseId,
+  removeExercise,
+  reorderExercise,
 } = editExerciseSetSlice.actions;
 
 export const selectActiveExerciseSetLogs = createSelector(
@@ -210,7 +260,14 @@ export const selectExerciseSetsByPageIndex = createSelector(
     (state: RootState, pageIndex: number) =>
       state.editExerciseSet.exercises[pageIndex],
   ],
-  (exerciseSets) => exerciseSets?.sets?.filter((s) => s.type !== "delete") || []
+  (exerciseSets) =>
+    exerciseSets?.sets
+      ?.filter((s) => s.type !== "delete")
+      ?.map((e) => ({
+        id: e.id,
+        isCompleted: e.isCompleted,
+        restTime: e.restTime,
+      }))
 );
 
 export const selectExercisesForList = createSelector(
@@ -231,5 +288,19 @@ export const selectExercisesForPagerView = createSelector(
   [(state: RootState) => state.editExerciseSet.exercises],
   (exercises) => exercises.map((e) => ({ id: e.id, name: e.name }))
 );
+
+export const selectExerciseSetById = createSelector(
+  [
+    (state: RootState, pageIndex: number, id: string) =>
+      state.editExerciseSet.exercises[pageIndex].sets.find((s) => s.id === id),
+  ],
+  (exerciseSet) => exerciseSet
+);
+
+export const makeSelectExerciseSetById = (pageIndex: number, id: string) =>
+  createSelector(
+    [(state: RootState) => state.editExerciseSet.exercises[pageIndex]?.sets],
+    (sets) => sets?.find((s) => s.id === id)
+  );
 
 export const editExerciseSetReducer = editExerciseSetSlice.reducer;

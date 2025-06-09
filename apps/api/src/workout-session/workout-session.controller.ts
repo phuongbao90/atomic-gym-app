@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Post,
   Put,
   Query,
 } from "@nestjs/common";
@@ -13,6 +14,7 @@ import { CurrentUser } from "../common/decorator/current-user.decorator";
 import { Language, User } from "@prisma/client";
 import { UpdateWorkoutSessionExerciseDto } from "./dto/update-workout-session-exercise.dto";
 import { UpdateWorkoutSessionDto } from "./dto/update-workout-session.dto";
+import { CreateWorkoutSessionDto } from "./dto/create-workout-session.dto";
 
 @Controller("workout-session")
 export class WorkoutSessionController {
@@ -37,6 +39,14 @@ export class WorkoutSessionController {
       language,
       id
     );
+  }
+
+  @Post()
+  async createWorkoutSession(
+    @CurrentUser() user: User,
+    @Body() body: CreateWorkoutSessionDto
+  ) {
+    return this.workoutSessionService.createWorkoutSession(user, body);
   }
 
   @Delete(":id")

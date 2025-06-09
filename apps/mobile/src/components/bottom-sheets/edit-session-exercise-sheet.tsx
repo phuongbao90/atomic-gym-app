@@ -4,6 +4,7 @@ import { ButtonGroup } from "../ui/button-group";
 import { Divider } from "../ui/divider";
 import { AppBottomSheet } from "../ui/app-bottom-sheet";
 import { StyleSheet } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export const EditSessionExerciseSheet = ({
   modalRef,
@@ -15,17 +16,18 @@ export const EditSessionExerciseSheet = ({
   onDeleteItem: () => void;
 }) => {
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   return (
     <AppBottomSheet
       modalRef={modalRef}
       detached
-      bottomInset={40}
+      bottomInset={insets.bottom}
       handleComponent={null}
       backgroundStyle={{
         backgroundColor: "transparent",
       }}
     >
-      <BottomSheetView style={styles.container}>
+      <BottomSheetView style={[styles.container, { minHeight: 100 }]}>
         <ButtonGroup>
           {onReplaceItem && (
             <>

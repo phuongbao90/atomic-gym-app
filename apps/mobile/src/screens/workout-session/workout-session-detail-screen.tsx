@@ -19,7 +19,6 @@ import {
 } from "../../components/ui/expo-icon";
 import { AppScrollView } from "../../components/ui/app-scrollview";
 import { Divider } from "../../components/ui/divider";
-import dayjs from "dayjs";
 import { convertToHourMinuteSecond } from "../../utils/convert-to-hour-minute-second";
 import { twColors } from "../../styles/themes";
 import { capitalize } from "lodash";
@@ -27,6 +26,7 @@ import { useModal } from "react-native-modalfy";
 import { appRoutes } from "../../configs/routes";
 import { useGroupSetsByExercise } from "./hooks/use-group-sets-by-exercise";
 import { OrderNumberCircle } from "../../components/ui/OrderNumberCircle";
+import { dayjs } from "../../lib/dayjs";
 
 export const WorkoutSessionDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();

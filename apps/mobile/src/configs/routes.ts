@@ -105,10 +105,8 @@ export const appRoutes = {
     base: "/in-progress" as const,
     workout: (id: string) =>
       `${appRoutes.inProgress.base}/workout?workoutId=${id}` as const,
-    workoutExercises: (params: InProgressWorkoutExercisesScreenParams) =>
-      `${appRoutes.inProgress.base}/workout-exercises?${QueryString.stringify(
-        params
-      )}` as const,
+    workoutExercises: (pageIndex: string) =>
+      `${appRoutes.inProgress.base}/workout-exercises?pageIndex=${pageIndex}` as const,
   },
 
   settings: "/settings",

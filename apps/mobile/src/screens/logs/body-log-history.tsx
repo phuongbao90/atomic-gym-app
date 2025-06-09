@@ -11,11 +11,11 @@ import { View } from "react-native";
 import { PRIMARY_COLOR } from "../../styles/themes";
 import { AppHeader } from "../../components/ui/app-header";
 import { AppFlatList } from "../../components/ui/app-flat-list";
-import dayjs from "dayjs";
 import { VerticalDotsIcon } from "../../components/ui/expo-icon";
 import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
 import ContextMenu from "react-native-context-menu-view";
+import { dayjs } from "../../lib/dayjs";
 
 export const BodyLogHistory = () => {
   const { type } = useLocalSearchParams();
