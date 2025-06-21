@@ -10,7 +10,6 @@ import {
   VerticalDotsIcon,
 } from "../../components/ui/expo-icon";
 import { Divider } from "../../components/ui/divider";
-import { finishWorkoutSession } from "../../stores/slices/workout-session-slice";
 import { appRoutes } from "../../configs/routes";
 import { AppButton } from "../../components/ui/app-button";
 import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
@@ -26,10 +25,13 @@ import {
   reorderExercise,
   selectExercisesForList,
   setSelectedExerciseId,
-} from "../../stores/slices/edit-exercise-set.slice";
+} from "../../stores/slices/edit-exercise-set-slice";
 import ReorderableList, {
   useReorderableDrag,
 } from "react-native-reorderable-list";
+import { useCreateWorkoutSession } from "app";
+import { finishWorkoutSession } from "../../stores/slices/workout-session-slice";
+import { CreateWorkoutSessionSchema } from "app-config";
 
 type ExerciseListItem = ReturnType<typeof selectExercisesForList>[number];
 
@@ -40,6 +42,10 @@ export const InProgressWorkoutScreen = () => {
   const router = useRouter();
   const replaceOrDeleteSheet = useRef<BottomSheet>(null);
   const workoutExercises = useAppSelector(selectExercisesForList, deepEqual);
+  // console.log(
+  //   "🚀 ~ InProgressWorkoutScreen ~ workoutExercises:",
+  //   JSON.stringify(workoutExercises, null, 2)
+  // );
 
   const renderItem = ({
     item,
@@ -150,7 +156,6 @@ const ExerciseItem = ({
   onPressMore: (item: ExerciseListItem) => void;
 }) => {
   const router = useRouter();
-
   const drag = useReorderableDrag();
 
   return (
@@ -178,10 +183,7 @@ const ExerciseItem = ({
 
 const Header = React.memo(() => {
   const router = useRouter();
-  const { t } = useTranslation();
-  const debouncedPress = usePreventRepeatPress();
-  const dispatch = useAppDispatch();
-  const { cancelRestTimeNotification } = useWorkoutSessionNotification();
+
   return (
     <View className="py-4 mx-4 flex-row items-center justify-center relative">
       <TouchableOpacity
@@ -193,22 +195,81 @@ const Header = React.memo(() => {
       </TouchableOpacity>
 
       <CountDown />
-      <TouchableOpacity
-        hitSlop={10}
-        className="absolute right-0"
-        onPress={() =>
-          debouncedPress(() => {
-            cancelRestTimeNotification();
-            dispatch(finishWorkoutSession());
-            router.back();
-          })
-        }
-      >
-        <AppText>{t("finish")}</AppText>
-      </TouchableOpacity>
+      <FinishButton />
     </View>
   );
 });
+
+const FinishButton = () => {
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const { cancelRestTimeNotification } = useWorkoutSessionNotification();
+  const { mutate: createWorkoutSession, isPending } = useCreateWorkoutSession();
+  const activeWorkoutTemplate = useAppSelector(
+    (s) => s.activeWorkoutSession.activeWorkout
+  );
+  const sessionExercises = useAppSelector(
+    (s) => s.editExerciseSet.sessionExercises
+  );
+  return (
+    <AppTouchable
+      className="absolute right-0"
+      isLoading={isPending}
+      disabled={isPending}
+      onPress={() => {
+        if (!activeWorkoutTemplate) return;
+
+        const {
+          success,
+          data: parsedData,
+          error,
+        } = CreateWorkoutSessionSchema.safeParse({
+          completedAt: new Date(),
+          duration: 100,
+          notes: null,
+          workoutPlanId: activeWorkoutTemplate.workoutPlanId,
+          workoutTemplateId: activeWorkoutTemplate.id,
+          sessionExercises: sessionExercises.map((e) => ({
+            exerciseId: e.exerciseId,
+            exerciseName: e.name,
+            performedSets: e.sets.map((s, index) => ({
+              id: s.id,
+              reps: s.repetitions,
+              weight: s.weight,
+              isCompleted: s.isCompleted,
+              restTime: s.restTime,
+              setNumber: index + 1,
+              duration: s.duration,
+              distance: s.distance,
+              performedAt: new Date(),
+            })),
+          })),
+        });
+        if (error) {
+          console.error("parsing error ", JSON.stringify(error, null, 2));
+        }
+
+        if (success) {
+          createWorkoutSession(parsedData, {
+            onError: (error) => {
+              console.log("error ", JSON.stringify(error, null, 2));
+              // console.log("-------");
+            },
+            onSuccess: (data) => {
+              console.log("data ", JSON.stringify(data, null, 2));
+
+              cancelRestTimeNotification();
+              dispatch(finishWorkoutSession());
+              router.back();
+            },
+          });
+        }
+      }}
+    >
+      <AppText>{t("finish")}</AppText>
+    </AppTouchable>
+  );
+};
 
 const CountDown = React.memo(() => {
   const { formattedTime } = useWorkoutTimer();

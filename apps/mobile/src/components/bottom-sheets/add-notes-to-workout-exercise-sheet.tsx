@@ -1,19 +1,18 @@
 import { Platform, TouchableOpacity, View } from "react-native";
-import { AppBottomSheetModal } from "../ui/app-bottom-sheet-modal";
 import { AppText } from "../ui/app-text";
 import BottomSheet, {
   BottomSheetModalProps,
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
 import { useBottomSheetBackHandler } from "../../hooks/use-bottom-sheet-back-handler";
-import { addNotesToWorkoutExercise } from "../../stores/slices/workout-session-slice";
 import { useAppDispatch, useAppSelector } from "../../stores/redux-store";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { TextInput } from "react-native";
 import { twColors } from "../../styles/themes";
 import { useTranslation } from "react-i18next";
 import { AppBottomSheetView } from "../ui/app-bottom-sheet-view";
 import { AppBottomSheet } from "../ui/app-bottom-sheet";
+import { addNotesToExercise } from "../../stores/slices/edit-exercise-set-slice";
 
 export const AddNotesToWorkoutExerciseSheet = ({
   modalRef,
@@ -24,24 +23,19 @@ export const AddNotesToWorkoutExerciseSheet = ({
 }) => {
   const { handleSheetPositionChange } = useBottomSheetBackHandler(modalRef);
   const dispatch = useAppDispatch();
-
   const _notes = useAppSelector(
     (s) =>
-      s.workoutSession.activeWorkout?.workoutExercises?.find(
-        (we) => we.id === workoutExerciseId
-      )?.notes
+      s.editExerciseSet.sessionExercises.find((e) => e.id === workoutExerciseId)
+        ?.notes
   );
   const [notes, setNotes] = useState(_notes);
   const inputRef = useRef<TextInput>(null);
   const { t } = useTranslation();
 
   function onSaveNotes() {
-    dispatch(
-      addNotesToWorkoutExercise({
-        workoutExerciseId: workoutExerciseId,
-        notes: notes || "",
-      })
-    );
+    if (notes) {
+      dispatch(addNotesToExercise({ id: workoutExerciseId, notes }));
+    }
     modalRef.current?.close();
   }
 

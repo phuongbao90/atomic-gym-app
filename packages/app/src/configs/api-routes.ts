@@ -1,7 +1,7 @@
 import { ExerciseQuery } from "../query/exercises/exercises.types";
 import { BodyLogPeriodType } from "../query/logs/logs.types";
 import { WorkoutPlanQuery } from "../query/workout-plans/workout-plans.types";
-import { WorkoutQuery } from "../query/workouts/workouts.types";
+import { WorkoutQuery } from "../query/workout-template/workout-template.types";
 import { stringify } from "qs";
 
 export const API_ROUTES = {
@@ -18,15 +18,16 @@ export const API_ROUTES = {
     inGroups: "/workout-plans/in-groups",
     byMe: "/workout-plans/user/me",
     byUserId: (userId: string) => `/workout-plans/user/${userId}`,
+    stats: (id: string) => `/workout-plans/stats/${id}`,
   },
 
-  workouts: {
-    base: "/workouts",
+  workoutTemplates: {
+    base: "/workout-templates",
     query: (query?: WorkoutQuery) =>
-      `${API_ROUTES.workouts.base}${query ? `?${stringify(query)}` : ""}`,
-    detail: (id: string) => `${API_ROUTES.workouts.base}/${id}`,
+      `${API_ROUTES.workoutTemplates.base}${query ? `?${stringify(query)}` : ""}`,
+    detail: (id: string) => `${API_ROUTES.workoutTemplates.base}/${id}`,
     byWorkoutPlanId: (planId: string) =>
-      `${API_ROUTES.workouts.base}/plan/${planId}`,
+      `${API_ROUTES.workoutTemplates.base}/plan/${planId}`,
   },
 
   exercises: {
@@ -66,5 +67,9 @@ export const API_ROUTES = {
     updateExerciseSets: (id: string, exerciseId: string) =>
       `${API_ROUTES.workoutSession.base}/${id}/exercise/${exerciseId}/sets`,
     update: (id: string) => `${API_ROUTES.workoutSession.base}/${id}`,
+    create: () => `${API_ROUTES.workoutSession.base}`,
+    plan: (id: string) => `${API_ROUTES.workoutSession.base}/plan/${id}`,
+    muscleGroupStats: (periodType: string, periodValue: string) =>
+      `${API_ROUTES.workoutSession.base}/muscle-group-stats?periodType=${periodType}&periodValue=${periodValue}`,
   },
 };

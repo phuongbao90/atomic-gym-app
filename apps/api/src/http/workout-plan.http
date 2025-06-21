@@ -1,7 +1,43 @@
 POST {{BASE_URL}}/workout-plans
-Authorization: Bearer {{$global.accessToken}}
+Content-Type: application/json
+Accept-Language: vi
 {
-  "name": "Workout Plan 1"
+  "name": "full body workout 1",
+  "goal": "STRENGTH",
+  "level": "BEGINNER",
+  "workoutTemplates": [
+    {
+      "order": 1,
+      "name": "workout template 1",
+      "templateExercises": [
+        {
+          "order": 1,
+          "exerciseId": "e5f8e3e8-a441-4a79-aced-25458f01fde6",
+          "targetSets": [
+            {
+              "setNumber": 1,
+              "restTime": 30,
+              "isWarmup": true,
+              "isDropSet": true,
+              "isUntilFailure": true
+            },
+            {
+              "setNumber": 2,
+              "restTime": 30,
+              "isWarmup": true,
+              "isDropSet": true,
+              "isUntilFailure": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "order": 2,
+      "name": "workout template 2",
+      "templateExercises": []
+    }
+  ]
 }
 
 ### ------------------------------------------------------------ find many
@@ -40,7 +76,8 @@ GET {{BASE_URL}}/workout-plans/{{$global.planId}}
 Authorization: Bearer {{$global.accessToken}}
 
 GET {{BASE_URL}}/workout-plans/651f63fb-4b24-4126-8787-5cf791a41eaa
-Authorization: Bearer {{$global.accessToken}}
+
+GET {{BASE_URL}}/workout-plans/stats/651f63fb-4b24-4126-8787-5cf791a41eaa
 
 ### ------------------------------------------------------------ delete one
 ###

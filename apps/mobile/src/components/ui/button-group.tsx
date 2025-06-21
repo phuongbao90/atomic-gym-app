@@ -29,7 +29,16 @@ export const ButtonGroup = ({
   }
 
   return (
-    <BlurView intensity={10} tint="dark" style={styles.container}>
+    <BlurView
+      intensity={10}
+      tint="dark"
+      style={[
+        styles.container,
+        {
+          backgroundColor: twColors.neutral[800],
+        },
+      ]}
+    >
       {children}
     </BlurView>
   );
@@ -52,7 +61,12 @@ const Button = ({
       className={cn("py-4", className)}
       hitSlop={10}
     >
-      <AppText className={cn("text-center text-lg", textClassName)}>
+      <AppText
+        className={cn(
+          "text-center text-lg text-white dark:text-white",
+          textClassName
+        )}
+      >
         {capitalize(title)}
       </AppText>
     </AppTouchable>

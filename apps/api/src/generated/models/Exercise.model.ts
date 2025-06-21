@@ -1,5 +1,5 @@
-import { IsString, IsDefined, IsOptional, IsIn, IsDate, IsBoolean } from "class-validator";
-import { MuscleGroup, User, ExerciseTranslation, WorkoutExercise, ExerciseSetLog } from "./";
+import { IsString, IsDefined, IsOptional, IsIn, IsDate, IsBoolean, IsInt } from "class-validator";
+import { User, SessionExercise, ExerciseMuscleGroup, ExerciseTranslation, TemplateExercise, MuscleGroup } from "./";
 import { getEnumValues } from "../helpers";
 import { ExerciseCategory } from "../enums";
 
@@ -15,9 +15,6 @@ export class Exercise {
     @IsDefined()
     @IsIn(getEnumValues(ExerciseCategory))
     category!: ExerciseCategory;
-
-    @IsDefined()
-    primaryMuscle!: MuscleGroup[];
 
     @IsDefined()
     createdBy!: User;
@@ -39,15 +36,29 @@ export class Exercise {
     updatedAt!: Date;
 
     @IsDefined()
-    translations!: ExerciseTranslation[];
-
-    @IsDefined()
-    workoutExercises!: WorkoutExercise[];
-
-    @IsDefined()
-    ExerciseSetLog!: ExerciseSetLog[];
+    @IsBoolean()
+    isPublic!: boolean;
 
     @IsDefined()
     @IsBoolean()
     isActive!: boolean;
+
+    @IsDefined()
+    sessionExercises!: SessionExercise[];
+
+    @IsDefined()
+    muscleGroups!: ExerciseMuscleGroup[];
+
+    @IsDefined()
+    translations!: ExerciseTranslation[];
+
+    @IsDefined()
+    templateExercises!: TemplateExercise[];
+
+    @IsOptional()
+    MuscleGroup?: MuscleGroup;
+
+    @IsOptional()
+    @IsInt()
+    muscleGroupId?: number;
 }

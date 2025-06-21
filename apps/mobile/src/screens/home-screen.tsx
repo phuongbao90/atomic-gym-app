@@ -36,7 +36,7 @@ import { useModal } from "react-native-modalfy";
 export function HomeScreen() {
   const activeWorkoutPlanId = useAppSelector((s) => s.app.activeWorkoutPlanId);
   const activeWorkoutId = useAppSelector(
-    (s) => s.workoutSession.activeWorkout?.id
+    (s) => s.activeWorkoutSession.activeWorkout?.id
   );
 
   const { data: activeWorkoutPlan } = useGetWorkoutPlan(activeWorkoutPlanId);
@@ -100,10 +100,10 @@ const ActiveWorkout = () => {
   const router = useRouter();
   const debouncedPress = usePreventRepeatPress();
   const activeWorkoutId = useAppSelector(
-    (s) => s.workoutSession.activeWorkout?.id
+    (s) => s.activeWorkoutSession.activeWorkout?.id
   );
   const activeWorkoutName = useAppSelector(
-    (s) => s.workoutSession.activeWorkout?.translations?.[0]?.name
+    (s) => s.activeWorkoutSession.activeWorkout?.name
   );
   const dispatch = useAppDispatch();
   const { openModal } = useModal();

@@ -7,7 +7,7 @@ import { AppTouchable } from "../ui/app-touchable";
 import { OrderNumberCircle } from "../ui/OrderNumberCircle";
 import { ExerciseSetItemProps } from "./exercise-set-item-type";
 import { useExerciseSetItemContext } from "./exercise-set-item.context";
-import { makeSelectExerciseSetById } from "../../stores/slices/edit-exercise-set.slice";
+import { makeSelectExerciseSetById } from "../../stores/slices/edit-exercise-set-slice";
 import { useMemo } from "react";
 
 export const CompletedSetItemWithContext = () => {
@@ -33,7 +33,7 @@ export const CompletedSetItem = ({
 }: {
   pageIndex: number;
   exerciseSetId: string;
-  index: ExerciseSetItemProps["index"];
+  index: number;
   onPressMore: () => void;
 }) => {
   const { t } = useTranslation();

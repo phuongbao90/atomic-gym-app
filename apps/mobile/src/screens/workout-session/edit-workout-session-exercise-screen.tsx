@@ -1,235 +1,225 @@
 import { View } from "react-native";
+import React from "react";
 import { AppScreen } from "../../components/ui/app-screen";
 import { AppText } from "../../components/ui/app-text";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import {
-  useUpdateWorkoutSessionExerciseSets,
-  useWorkoutSessionDetail,
-} from "app/src/query/workout-session/workout-session.hooks";
+import { useLocalSearchParams } from "expo-router";
 import { AppHeader } from "../../components/ui/app-header";
 import { useTranslation } from "react-i18next";
 import { SetExerciseHeader } from "../../components/set-exercise-header";
-import { useGetExercise, WorkoutSessionExerciseSet } from "app";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AppFlatList } from "../../components/ui/app-flat-list";
-import { AppTouchable } from "../../components/ui/app-touchable";
-import { CheckIcon, PlusCircleIcon } from "../../components/ui/expo-icon";
+import { Fragment, useRef, useState } from "react";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { ExerciseSetItemSheet } from "../../components/bottom-sheets/exercise-set-item-sheet";
 import { useAppDispatch, useAppSelector } from "../../stores/redux-store";
 import {
-  addExerciseSet,
   editExerciseSet,
   removeExerciseSet,
-  resetEditExerciseSet,
-  cloneExerciseSets,
-  selectActiveExerciseSetLogs,
-  selectDeletedSetIds,
-} from "../../stores/slices/edit-exercise-set.slice";
-import { useModal } from "react-native-modalfy";
+  selectExerciseSetsByPageIndex,
+  selectExercisesForPagerView,
+  setSelectedSetId,
+} from "../../stores/slices/edit-exercise-set-slice";
 import { CompletedSetItem } from "../../components/exercise-set-item/completed-exercise-set-item";
 import { IncompletedSetItem } from "../../components/exercise-set-item/incompleted-exercise-set-item";
-import { toast } from "sonner-native";
+import deepEqual from "deep-equal";
+import PagerView from "react-native-pager-view";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LegendList } from "@legendapp/list";
+import { HistoryAndNotes } from "../../components/set-history-note";
+import { AddNotesToWorkoutExerciseSheet } from "../../components/bottom-sheets/add-notes-to-workout-exercise-sheet";
+import { ExerciseSetPagerDots } from "../../components/exercise-set-pager-dots";
+import { Divider } from "../../components/ui/divider";
 
 export const EditWorkoutSessionExerciseScreen = () => {
-  const router = useRouter();
-  const { sessionId, exerciseId } = useLocalSearchParams<{
-    sessionId: string;
-    exerciseId: string;
+  const { pageIndex } = useLocalSearchParams<{
+    pageIndex: string;
   }>();
-  const { openModal } = useModal();
-  const [selectedSetId, setSelectedSetId] = useState<string | null>(null);
-  const dispatch = useAppDispatch();
+  const workoutExercises = useAppSelector(
+    selectExercisesForPagerView,
+    deepEqual
+  );
+  const [activePage, setActivePage] = useState(Number(pageIndex));
   const completedSetSheetRef = useRef<BottomSheet>(null);
   const incompletedSetSheetRef = useRef<BottomSheet>(null);
-  const { data: workoutSession, refetch } = useWorkoutSessionDetail(sessionId);
-  const exercise = useGetExercise(exerciseId);
-  const { mutate: updateWorkoutSessionExerciseSets, isPending } =
-    useUpdateWorkoutSessionExerciseSets();
+  // const [selectedSetId, setSelectedSetId] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const selectedSetId = useAppSelector((s) => s.editExerciseSet.selectedSetId);
+
+  const workoutSessionName = useAppSelector(
+    (s) => s.editExerciseSet.workoutSessionName
+  );
+
   const { t } = useTranslation();
   const deletedSetIds = useAppSelector((state) =>
     selectDeletedSetIds(state, 0)
   );
 
-  useEffect(() => {
-    if (workoutSession) {
-      dispatch(
-        cloneExerciseSets({
-          0: workoutSession.setLogs.filter(
-            (log) => log.originalExerciseId === exerciseId
-          ),
-        })
-      );
-    }
-  }, [workoutSession, dispatch, exerciseId]);
-
-  const exerciseSets = useAppSelector((state) =>
-    selectActiveExerciseSetLogs(state, 0)
-  );
-
-  const isDirty = useAppSelector((state) => state.editExerciseSet.isDirty);
-
-  const onSubmitChanges = () => {
-    const setLogsToCreate = exerciseSets.filter((set) => set.type === "create");
-    const setLogsToUpdate = exerciseSets.filter((set) => set.type === "update");
-    const setLogsToDelete = exerciseSets.filter((set) => set.type === "delete");
-
-    // console.log("🚀 ~ onSubmitChanges ~ setLogsToCreate:", setLogsToCreate);
-    // console.log("🚀 ~ onSubmitChanges ~ setLogsToUpdate:", setLogsToUpdate);
-    // console.log("🚀 ~ onSubmitChanges ~ setLogsToDelete:", setLogsToDelete);
-
-    updateWorkoutSessionExerciseSets(
-      {
-        id: sessionId,
-        exerciseId,
-        body: {
-          setLogsToCreate,
-          setLogsToUpdate,
-          setLogsToDelete: setLogsToDelete.map((set) => set.id),
-        },
-      },
-      {
-        onSuccess: () => {
-          refetch();
-          router.back();
-        },
-        onError: (err) => {
-          console.error("updateWorkoutSessionExerciseSets error", err);
-          toast.error(t("error_occurred"));
-        },
-      }
-    );
-  };
-
-  useEffect(() => {
-    return () => {
-      dispatch(resetEditExerciseSet());
-    };
-  }, [dispatch]);
-
-  const renderItem = ({
-    item,
-    index,
-  }: { item: WorkoutSessionExerciseSet; index: number }) => {
-    if (item.isCompleted) {
-      return (
-        <CompletedSetItem
-          exerciseSet={item}
-          index={index}
-          onPressMore={() => {
-            setSelectedSetId(item.id);
-            completedSetSheetRef.current?.expand();
-          }}
-        />
-      );
-    }
-
-    return (
-      <IncompletedSetItem
-        exerciseSet={item}
-        index={index}
-        onPressMore={() => {
-          setSelectedSetId(item.id);
-          incompletedSetSheetRef.current?.expand();
-        }}
-        pageIndex={0}
-      />
-    );
-  };
+  // console.log("workoutExercises ", JSON.stringify(workoutExercises, null, 2));
 
   return (
-    <AppScreen
-      name="edit-workout-session-exercise-screen"
-      isLoading={isPending}
-    >
+    <AppScreen name="edit-workout-session-exercise-screen">
       <AppHeader
         title={
           <View className="flex-col gap-1 ml-4">
             <AppText className="text-xl font-bold">{t("edit_session")}</AppText>
             <AppText className="text-lg text-green-500 font-semibold">
-              {workoutSession?.workoutNameSnapshot}
+              {workoutSessionName}
             </AppText>
           </View>
         }
         withBackButton
-        Right={
-          <AppTouchable disabled={!isDirty} onPress={onSubmitChanges}>
-            <CheckIcon disabled={!isDirty} />
-          </AppTouchable>
-        }
-        onBackPress={() => {
-          if (isDirty) {
-            openModal("ConfirmModal", {
-              message: t("confirm_cancel"),
-              onConfirm: () => {
-                router.back();
-              },
-            });
-          } else {
-            router.back();
-          }
-        }}
+        withBottomBorder={false}
       />
 
-      <AppFlatList
-        ListHeaderComponent={
-          <SetExerciseHeader
-            exerciseId={exerciseId}
-            exerciseImageUrl={exercise?.data?.images?.[0]}
-            exerciseName={exercise?.data?.translations?.[0]?.name}
+      <View className="mb-3">
+        <ExerciseSetPagerDots
+          activePage={activePage}
+          pages={workoutExercises?.length || 0}
+        />
+      </View>
+      <Divider />
+
+      <PagerView
+        style={{ flex: 1 }}
+        initialPage={activePage}
+        onPageSelected={(e) => setActivePage(e.nativeEvent.position)}
+      >
+        {workoutExercises?.map((workoutExercise, index) => (
+          <WorkoutExercisePage
+            key={workoutExercise.id}
+            pageIndex={index}
+            completedSetSheetRef={completedSetSheetRef}
+            incompletedSetSheetRef={incompletedSetSheetRef}
+            exercise={{
+              id: workoutExercise.id,
+              name: workoutExercise.name,
+              images: workoutExercise.images,
+            }}
           />
-        }
-        ListHeaderComponentStyle={{
-          marginTop: 12,
-        }}
-        contentContainerStyle={{
-          paddingHorizontal: 12,
-          gap: 16,
-        }}
-        data={exerciseSets}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        ListFooterComponent={() => {
-          return (
-            <AppTouchable
-              className="items-center my-8"
-              onPress={() => {
-                dispatch(
-                  addExerciseSet({
-                    exerciseId,
-                    exerciseName: exercise?.data?.translations?.[0]?.name || "",
-                    pageIndex: 0,
-                  })
-                );
-              }}
-            >
-              <View className="flex-row items-center gap-2">
-                <PlusCircleIcon size={24} />
-                <AppText className="text-lg font-bold">{t("add_set")}</AppText>
-              </View>
-            </AppTouchable>
-          );
-        }}
-      />
+        ))}
+      </PagerView>
 
       <ExerciseSetItemSheet
         modalRef={completedSetSheetRef}
         onEditItem={() => {
           if (selectedSetId)
-            dispatch(editExerciseSet({ id: selectedSetId, pageIndex: 0 }));
+            dispatch(
+              editExerciseSet({ id: selectedSetId, pageIndex: activePage })
+            );
         }}
         onDeleteItem={() => {
           if (selectedSetId)
-            dispatch(removeExerciseSet({ id: selectedSetId, pageIndex: 0 }));
+            dispatch(
+              removeExerciseSet({ id: selectedSetId, pageIndex: activePage })
+            );
         }}
       />
       <ExerciseSetItemSheet
         modalRef={incompletedSetSheetRef}
         onDeleteItem={() => {
           if (selectedSetId)
-            dispatch(removeExerciseSet({ id: selectedSetId, pageIndex: 0 }));
+            dispatch(
+              removeExerciseSet({ id: selectedSetId, pageIndex: activePage })
+            );
         }}
       />
     </AppScreen>
   );
 };
+
+const WorkoutExercisePage = React.memo(
+  ({
+    pageIndex,
+    exercise,
+    completedSetSheetRef,
+    incompletedSetSheetRef,
+  }: {
+    pageIndex: number;
+    exercise: { id: string; name: string; images: string[] | undefined };
+    completedSetSheetRef: React.RefObject<BottomSheet | null>;
+    incompletedSetSheetRef: React.RefObject<BottomSheet | null>;
+  }) => {
+    const insets = useSafeAreaInsets();
+    const noteRef = useRef<BottomSheet>(null);
+    const historyRef = useRef<BottomSheet>(null);
+    const exerciseSets = useAppSelector(
+      (s) => selectExerciseSetsByPageIndex(s, pageIndex),
+      deepEqual
+    );
+
+    const dispatch = useAppDispatch();
+
+    const renderItem = ({
+      item,
+      index,
+    }: {
+      item: { id: string; isCompleted: boolean; restTime?: number };
+      index: number;
+    }) => {
+      if (item.isCompleted) {
+        return (
+          <CompletedSetItem
+            index={index}
+            pageIndex={pageIndex}
+            exerciseSetId={item.id}
+            onPressMore={() => {
+              dispatch(setSelectedSetId(item.id));
+              completedSetSheetRef.current?.expand();
+            }}
+          />
+        );
+      }
+
+      return (
+        <IncompletedSetItem
+          index={index}
+          pageIndex={pageIndex}
+          exerciseSetId={item.id}
+          onPressMore={() => {
+            dispatch(setSelectedSetId(item.id));
+            incompletedSetSheetRef.current?.expand();
+          }}
+        />
+      );
+    };
+
+    if (!exerciseSets) return null;
+
+    return (
+      <View key={exercise.id} className="flex-1">
+        <LegendList
+          keyExtractor={(item) => item.id}
+          data={exerciseSets}
+          renderItem={renderItem}
+          contentContainerStyle={{
+            paddingHorizontal: 10,
+            paddingTop: 10,
+            paddingBottom: insets.bottom + 60,
+          }}
+          style={{ flex: 1 }}
+          ListHeaderComponent={
+            <Fragment>
+              <SetExerciseHeader
+                exerciseId={exercise.id}
+                exerciseImageUrl={exercise.images?.[0]}
+                exerciseName={exercise.name}
+              />
+              <View className="my-2">
+                <HistoryAndNotes
+                  noteRef={noteRef}
+                  historyRef={historyRef}
+                  workoutExerciseId={exercise.id}
+                />
+              </View>
+            </Fragment>
+          }
+          ItemSeparatorComponent={() => <View className="my-2" />}
+          recycleItems
+          maintainVisibleContentPosition
+        />
+        <AddNotesToWorkoutExerciseSheet
+          modalRef={noteRef}
+          workoutExerciseId={exercise.id}
+        />
+      </View>
+    );
+  }
+);

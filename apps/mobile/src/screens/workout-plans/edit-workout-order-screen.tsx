@@ -2,78 +2,91 @@ import { useTranslation } from "react-i18next";
 import { AppHeader } from "../../components/ui/app-header";
 import { AppScreen } from "../../components/ui/app-screen";
 import { useAppDispatch, useAppSelector } from "../../stores/redux-store";
-import DraggableFlatList, {
-  RenderItemParams,
-  ScaleDecorator,
-} from "react-native-draggable-flatlist";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import { AppText } from "../../components/ui/app-text";
 import { DragIcon } from "../../components/ui/expo-icon";
 import {
-  CreateWorkoutPlanSliceType,
+  InitialWorkoutPlan,
   overrideWorkoutOrders,
 } from "../../stores/slices/create-workout-plan-slice";
-import { useMemo } from "react";
+import ReorderableList, {
+  useReorderableDrag,
+} from "react-native-reorderable-list";
+import { useCallback } from "react";
 
 export const EditWorkoutOrderScreen = () => {
   const { t } = useTranslation();
-  const workouts = useAppSelector(
-    (state) => state.createWorkoutPlan.workoutPlan?.workouts
-  );
-  const sortedWorkouts = useMemo(() => {
-    return [...workouts].sort((a, b) => a.order - b.order);
-  }, [workouts]);
-
   const dispatch = useAppDispatch();
+  const workoutTemplates = useAppSelector(
+    (state) => state.createWorkoutPlan.workoutPlan.workoutTemplates
+  );
 
-  const renderItem = ({
-    getIndex,
-    drag,
-    item,
-  }: RenderItemParams<CreateWorkoutPlanSliceType["workouts"][number]>) => {
-    return (
-      <ScaleDecorator>
-        <View className="flex-row items-center gap-x-2 py-5 border-b border-gray-500">
-          <DragIcon
-            size={28}
-            color="white"
-            onLongPress={() => {
-              drag();
-            }}
-          />
-
-          <View className="flex-1 gap-y-1">
-            <AppText className="text-2xl">
-              {t("day", { count: (getIndex() as number) + 1 })}
-            </AppText>
-            <AppText className="text-xl text-slate-600 dark:text-slate-400">
-              {item.name}
-            </AppText>
-          </View>
-        </View>
-      </ScaleDecorator>
-    );
-  };
+  const renderItem = useCallback(
+    ({
+      index,
+      item,
+    }: {
+      index: number;
+      item: InitialWorkoutPlan["workoutTemplates"][number];
+    }) => {
+      return <Item item={item} index={index} />;
+    },
+    []
+  );
 
   return (
     <AppScreen name="edit-workout-order-screen">
       <AppHeader title={t("reorder_workouts")} withBackButton />
-      <DraggableFlatList
-        keyExtractor={(item) => item.id.toString()}
-        data={sortedWorkouts}
+      <ReorderableList
+        keyExtractor={(item) => item?.id?.toString() || ""}
+        data={workoutTemplates}
         renderItem={renderItem}
-        pagingEnabled={true}
-        onDragEnd={({ data }) => {
-          dispatch(overrideWorkoutOrders({ workouts: data }));
-        }}
         style={{ flex: 1 }}
-        containerStyle={{ flexGrow: 1 }}
         contentContainerStyle={{
           flexGrow: 1,
           padding: 8,
         }}
-        // ItemSeparatorComponent={() => <Divider />}
+        onReorder={({ from, to }) => {
+          dispatch(
+            overrideWorkoutOrders({
+              from,
+              to,
+            })
+          );
+        }}
       />
     </AppScreen>
+  );
+};
+
+const Item = ({
+  item,
+  index,
+}: {
+  item: InitialWorkoutPlan["workoutTemplates"][number];
+  index: number;
+}) => {
+  const { t } = useTranslation();
+  const drag = useReorderableDrag();
+  return (
+    <View className="flex-row items-center gap-x-2 py-5 border-b border-gray-500">
+      <Pressable
+        onLongPress={() => {
+          drag();
+        }}
+        hitSlop={20}
+      >
+        <DragIcon size={28} color="white" />
+      </Pressable>
+
+      <View className="flex-1 gap-y-1">
+        <AppText className="text-2xl">
+          {t("day", { count: (index as number) + 1 })}
+        </AppText>
+        <AppText className="text-xl text-slate-600 dark:text-slate-400">
+          {item.name}
+        </AppText>
+      </View>
+    </View>
   );
 };

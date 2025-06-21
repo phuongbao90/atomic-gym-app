@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Workout } from "app";
+import { ActiveWorkoutTemplateSchema } from "app-config";
+import { z } from "zod";
 
 interface WorkoutSessionState {
   startTime: number | null;
   elapsedTime: number; // in milliseconds
-  activeWorkout: Workout | null;
+  activeWorkout: z.infer<typeof ActiveWorkoutTemplateSchema> | null;
   countdownRestTimeEndTime: number | null; // in milliseconds
 }
 
@@ -19,7 +20,10 @@ export const workoutSessionSlice = createSlice({
   name: "workoutSession",
   initialState,
   reducers: {
-    startWorkout: (state, action: PayloadAction<Workout | null>) => {
+    startWorkout: (
+      state,
+      action: PayloadAction<z.infer<typeof ActiveWorkoutTemplateSchema> | null>
+    ) => {
       const now = Date.now();
       state.startTime = now;
       if (action.payload) {
@@ -57,16 +61,7 @@ export const workoutSessionSlice = createSlice({
         workoutExerciseId: string;
         notes: string;
       }>
-    ) => {
-      if (state.activeWorkout?.workoutExercises) {
-        const workoutExercise = state.activeWorkout.workoutExercises.find(
-          (we) => we.id === action.payload.workoutExerciseId
-        );
-        if (workoutExercise) {
-          workoutExercise.notes = action.payload.notes;
-        }
-      }
-    },
+    ) => {},
 
     setCountDownRestTimeEndTime: (
       state,
@@ -94,4 +89,4 @@ export const {
   cancelWorkoutSession,
 } = workoutSessionSlice.actions;
 
-export const workoutSessionReducer = workoutSessionSlice.reducer;
+export const activeWorkoutSessionReducer = workoutSessionSlice.reducer;

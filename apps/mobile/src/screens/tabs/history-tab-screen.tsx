@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { RefreshControl, View } from "react-native";
 import { AppScreen } from "../../components/ui/app-screen";
 import { AppText } from "../../components/ui/app-text";
 import { Calendar } from "react-native-calendars";
@@ -10,13 +10,14 @@ import {
   twColors,
 } from "../../styles/themes";
 import { useCallback, useMemo } from "react";
-import { useWorkoutSessionHistory, WorkoutSessionHistoryItem } from "app";
-
+import { useWorkoutSessionHistory } from "app";
 import { LegendList } from "@legendapp/list";
 import { AppTouchable } from "../../components/ui/app-touchable";
 import { useRouter } from "expo-router";
 import { appRoutes } from "../../configs/routes";
 import { dayjs } from "../../lib/dayjs";
+import { z } from "zod";
+import { WorkoutSessionHistoryItemSchema } from "app-config";
 
 export const HistoryTabScreen = () => {
   const { t } = useTranslation();
@@ -24,23 +25,32 @@ export const HistoryTabScreen = () => {
   const language = useAppSelector((s) => s.app.language);
   const router = useRouter();
 
-  const { data: workoutSessionHistory } = useWorkoutSessionHistory();
+  const {
+    data: workoutSessionHistory,
+    isRefetching,
+    refetch,
+  } = useWorkoutSessionHistory();
+  // console.log(
+  //   "🚀 ~ HistoryTabScreen ~ workoutSessionHistory:",
+  //   JSON.stringify(workoutSessionHistory, null, 2)
+  // );
 
   const calendarData = useCalendarData(workoutSessionHistory);
 
   const renderItem = useCallback(
-    ({ item }: { item: WorkoutSessionHistoryItem }) => {
+    ({ item }: { item: z.infer<typeof WorkoutSessionHistoryItemSchema> }) => {
+      // console.log("🚀 ~ renderItem ~ item:", item?.workoutTemplate?.name);
       return (
         <AppTouchable onPress={() => handleNavigate(item.id)}>
           <View className="h-20 mx-4 border-b border-gray-200 flex-row justify-between items-center">
             <View>
               <AppText className="text-sm">
-                {item?.performedAt
-                  ? dayjs(item?.performedAt)?.format("ddd, DD MMM")
+                {item?.completedAt
+                  ? dayjs(item?.completedAt)?.format("ddd, DD MMM")
                   : ""}
               </AppText>
               <AppText className="text-lg">
-                {item?.originalWorkout?.translations[0]?.name ?? ""}
+                {item?.workoutTemplate?.name ?? ""}
               </AppText>
             </View>
           </View>
@@ -61,6 +71,9 @@ export const HistoryTabScreen = () => {
       </View>
 
       <LegendList
+        refreshControl={
+          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+        }
         ListHeaderComponent={
           <Calendar
             key={theme + language}
@@ -78,7 +91,6 @@ export const HistoryTabScreen = () => {
               dayTextColor: theme === "dark" ? twColors.slate[300] : "#000", // text color of the day
               textSectionTitleColor:
                 theme === "dark" ? twColors.slate[100] : "#000", // name of the day
-
               //
               // textSectionTitleDisabledColor:
               //   theme === "dark" ? twColors.slate[100] : "#fff",
@@ -118,15 +130,17 @@ export const HistoryTabScreen = () => {
 };
 
 const useCalendarData = (
-  workoutSessionHistory: WorkoutSessionHistoryItem[] | undefined
+  workoutSessionHistory:
+    | z.infer<typeof WorkoutSessionHistoryItemSchema>[]
+    | undefined
 ) => {
   const theme = useAppSelector((s) => s.app.theme);
   const markedDates = useMemo(() => {
     if (!workoutSessionHistory || workoutSessionHistory.length === 0) return {};
     return workoutSessionHistory?.reduce(
       (acc, cur) => {
-        const date = cur.performedAt
-          ? dayjs(cur.performedAt)?.format("YYYY-MM-DD")
+        const date = cur.completedAt
+          ? dayjs(cur.completedAt)?.format("YYYY-MM-DD")
           : undefined;
         if (!date) return acc;
         if (!acc[date]) {

@@ -1,7 +1,7 @@
 import { IsString, IsDefined, IsOptional, IsIn, IsBoolean, IsDate } from "class-validator";
-import { Workout, User, WorkoutPlanTranslation, WorkoutSessionLog } from "./";
+import { User, WorkoutPlanTranslation, WorkoutTemplate, WorkoutSession } from "./";
 import { getEnumValues } from "../helpers";
-import { WorkoutPlanLevel, WorkoutPlanCategory } from "../enums";
+import { WorkoutPlanLevel, WorkoutPlanGoal } from "../enums";
 
 export class WorkoutPlan {
     @IsDefined()
@@ -33,11 +33,8 @@ export class WorkoutPlan {
     isSingle?: boolean;
 
     @IsOptional()
-    @IsIn(getEnumValues(WorkoutPlanCategory))
-    category?: WorkoutPlanCategory;
-
-    @IsDefined()
-    workouts!: Workout[];
+    @IsIn(getEnumValues(WorkoutPlanGoal))
+    goal?: WorkoutPlanGoal;
 
     @IsDefined()
     createdBy!: User;
@@ -55,12 +52,15 @@ export class WorkoutPlan {
     updatedAt!: Date;
 
     @IsDefined()
+    @IsBoolean()
+    isActive!: boolean;
+
+    @IsDefined()
     translations!: WorkoutPlanTranslation[];
 
     @IsDefined()
-    WorkoutSessionLog!: WorkoutSessionLog[];
+    workoutTemplates!: WorkoutTemplate[];
 
     @IsDefined()
-    @IsBoolean()
-    isActive!: boolean;
+    workoutSessions!: WorkoutSession[];
 }

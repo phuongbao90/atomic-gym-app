@@ -1,17 +1,22 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { WORKOUT_SESSION_KEYS } from "./workout-session.keys";
 import {
+  createWorkoutSession,
   deleteWorkoutSession,
   deleteWorkoutSessionExercise,
+  getMuscleGroupStats,
   getWorkoutSessionDetail,
   getWorkoutSessionHistory,
+  getWorkoutSessionsByPlanId,
   updateWorkoutSession,
   updateWorkoutSessionExerciseSets,
 } from "./workout-session.requests";
+import { UpdateWorkoutSessionExerciseSetsBody } from "./workout-session.types";
 import {
-  UpdateWorkoutSessionBody,
-  UpdateWorkoutSessionExerciseSetsBody,
-} from "./workout-session.types";
+  CreateWorkoutSessionSchema,
+  UpdateWorkoutSessionSchema,
+} from "app-config";
+import { z } from "zod";
 
 export const useWorkoutSessionHistory = () => {
   return useQuery({
@@ -60,11 +65,48 @@ export const useUpdateWorkoutSessionExerciseSets = () => {
 };
 
 export const useUpdateWorkoutSession = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({
       id,
       body,
-    }: { id: string; body: UpdateWorkoutSessionBody }) =>
+    }: { id: string; body: z.infer<typeof UpdateWorkoutSessionSchema> }) =>
       updateWorkoutSession(id, body),
+    onSuccess: (data, { id }) => {
+      queryClient.setQueryData(WORKOUT_SESSION_KEYS.detail(id), data);
+      // queryClient.invalidateQueries({
+      //   queryKey: WORKOUT_SESSION_KEYS.detail(id),
+      //   refetchType: "all",
+      // });
+    },
+  });
+};
+
+export const useCreateWorkoutSession = () => {
+  return useMutation({
+    mutationFn: (body: z.infer<typeof CreateWorkoutSessionSchema>) =>
+      createWorkoutSession(body),
+  });
+};
+
+export const useGetWorkoutSessionsByPlanId = (id: string) => {
+  return useQuery({
+    queryKey: WORKOUT_SESSION_KEYS.plan(id),
+    queryFn: () => getWorkoutSessionsByPlanId(id),
+    select: (data) => data.data,
+    enabled: !!id,
+  });
+};
+
+export const useGetMuscleGroupStats = (
+  periodType: "week" | "month" | "year" | "all",
+  periodValue: string
+) => {
+  return useQuery({
+    queryKey: WORKOUT_SESSION_KEYS.muscleGroupStats(periodType, periodValue),
+    queryFn: () => getMuscleGroupStats(periodType, periodValue),
+    select: (data) => data.data,
+    enabled: !!periodType && !!periodValue,
+    staleTime: 1000 * 60 * 60 * 24,
   });
 };

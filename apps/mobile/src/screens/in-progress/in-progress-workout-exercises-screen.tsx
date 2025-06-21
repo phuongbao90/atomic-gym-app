@@ -1,4 +1,4 @@
-import { FlatList, View } from "react-native";
+import { View } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { AppScreen } from "../../components/ui/app-screen";
 import { ChevronLeftIcon, XIcon } from "../../components/ui/expo-icon";
@@ -28,7 +28,7 @@ import {
   selectExercisesForPagerView,
   selectExerciseSetsByPageIndex,
   setSelectedSetId,
-} from "../../stores/slices/edit-exercise-set.slice";
+} from "../../stores/slices/edit-exercise-set-slice";
 import deepEqual from "deep-equal";
 import { LegendList } from "@legendapp/list";
 
@@ -210,7 +210,7 @@ const RestTimeCountDown = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const countdownRestTimeEndTime = useAppSelector(
-    (s) => s.workoutSession.countdownRestTimeEndTime
+    (s) => s.activeWorkoutSession.countdownRestTimeEndTime
   );
   const countdown = useCountDownRestTime({
     to: countdownRestTimeEndTime,
@@ -241,7 +241,6 @@ const RestTimeCountDown = () => {
 };
 
 const Header = React.memo(() => {
-  const { t } = useTranslation();
   const router = useRouter();
 
   return (
@@ -254,9 +253,6 @@ const Header = React.memo(() => {
         <ChevronLeftIcon size={26} />
       </TouchableOpacity>
       <CountDown />
-      <TouchableOpacity hitSlop={10} className="absolute right-0">
-        <AppText>{t("finish")}</AppText>
-      </TouchableOpacity>
     </View>
   );
 });

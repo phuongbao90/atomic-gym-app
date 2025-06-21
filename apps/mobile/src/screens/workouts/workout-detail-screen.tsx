@@ -1,8 +1,8 @@
 import { AppHeader } from "../../components/ui/app-header";
 import { AppScreen } from "../../components/ui/app-screen";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useGetWorkout } from "app";
-import { ActivityIndicator, View } from "react-native";
+import { useGetWorkoutTemplate } from "app";
+import { View } from "react-native";
 import { ExerciseItem } from "../../components/exercise-item";
 import { AppFlatList } from "../../components/ui/app-flat-list";
 import { AppButton } from "../../components/ui/app-button";
@@ -11,38 +11,26 @@ import { AppText } from "../../components/ui/app-text";
 import { useAppDispatch } from "../../stores/redux-store";
 import { appRoutes } from "../../configs/routes";
 import { startWorkout } from "../../stores/slices/workout-session-slice";
-import { cloneExercises } from "../../stores/slices/edit-exercise-set.slice";
+import { cloneExercises } from "../../stores/slices/edit-exercise-set-slice";
 
 export function WorkoutDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { data: workout, isLoading } = useGetWorkout(id);
-  // const { notifyWorkoutSessionStart } = useWorkoutSessionNotification();
-
-  if (isLoading) {
-    return (
-      <View
-        className="flex-1 items-center justify-center"
-        testID="loading-indicator"
-      >
-        <ActivityIndicator />
-      </View>
-    );
-  }
+  const { data: workout, isLoading } = useGetWorkoutTemplate(id);
 
   return (
     <AppScreen name="workout-detail-screen">
-      <AppHeader title={workout?.translations?.[0]?.name} withBackButton />
+      <AppHeader title={workout?.name} withBackButton />
 
       <AppFlatList
-        data={workout?.workoutExercises}
+        data={workout?.templateExercises}
         renderItem={({ item, index }) => (
           <ExerciseItem
             item={item?.exercise}
             index={index}
-            setCount={item?.sets?.length}
+            setCount={item?.templateSets?.length}
           />
         )}
         keyExtractor={(item) => item.id.toString()}
@@ -67,15 +55,24 @@ export function WorkoutDetailScreen() {
           color="primary"
           onPress={() => {
             if (workout) {
-              dispatch(startWorkout(workout));
+              dispatch(
+                startWorkout({
+                  id: workout.id,
+                  name: workout.name,
+                  slug: workout.slug,
+                  workoutPlanId: workout.workoutPlanId,
+                })
+              );
               dispatch(
                 cloneExercises(
-                  workout.workoutExercises?.map((e, index) => ({
+                  workout.templateExercises?.map((e, index) => ({
                     id: e.exerciseId,
-                    name: e.exercise?.translations?.[0]?.name || "",
+                    name: e.exercise?.name || "",
                     order: e.order,
+                    images: e.exercise?.images || [],
+                    exerciseId: e.exerciseId,
                     sets:
-                      e.sets?.map((s) => ({
+                      e.templateSets?.map((s) => ({
                         id: s.id,
                         isCompleted: false,
                         weight: 0,
@@ -84,7 +81,8 @@ export function WorkoutDetailScreen() {
                         duration: 0,
                         order: index,
                         originalExerciseId: e.exerciseId,
-                        exerciseNameSnapshot: "ss",
+                        exerciseNameSnapshot: e.exercise?.name || "",
+                        restTime: 0,
                         type: "untouched",
                       })) || [],
                   })) || []

@@ -2,7 +2,7 @@ GET {{BASE_URL}}/workout-session/history
 Accept-Language: vi
 
 {{
-  $global.workoutSessionId=response.parsedBody.data[2].id;
+  $global.workoutSessionId=response.parsedBody.data[0].id;
 }}
 
 
@@ -42,3 +42,14 @@ PUT {{BASE_URL}}/workout-session/244bbc32-1b09-4885-a05c-aa3f27eaafd2
   "performedAt": "2025-06-04T10:00:00.000Z",
   "duration": 1800
 }
+
+GET {{BASE_URL}}/workout-session/plan/651f63fb-4b24-4126-8787-5cf791a41eaa
+
+// Get muscle group stats
+GET {{BASE_URL}}/workout-session/muscle-group-stats?periodType=month&periodValue=2025-06
+
+GET {{BASE_URL}}/workout-session/muscle-group-stats?periodType=year&periodValue=2025
+
+GET {{BASE_URL}}/workout-session/muscle-group-stats?periodType=all
+
+// Get muscle group stats

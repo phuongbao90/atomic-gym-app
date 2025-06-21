@@ -1,11 +1,6 @@
-import { IsDateString, IsNumber, IsOptional } from "class-validator";
+import { UpdateWorkoutSessionSchema } from "app-config";
+import { createZodDto } from "nestjs-zod";
 
-export class UpdateWorkoutSessionDto {
-  @IsDateString()
-  @IsOptional()
-  performedAt?: string;
-
-  @IsNumber()
-  @IsOptional()
-  duration?: number;
-}
+export class UpdateWorkoutSessionDto extends createZodDto(
+  UpdateWorkoutSessionSchema
+) {}

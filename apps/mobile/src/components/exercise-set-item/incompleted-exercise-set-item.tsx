@@ -16,7 +16,7 @@ import {
   completeSet,
   makeSelectExerciseSetById,
   updateExerciseSet,
-} from "../../stores/slices/edit-exercise-set.slice";
+} from "../../stores/slices/edit-exercise-set-slice";
 import { useHoldAction } from "../../hooks/use-hold-action";
 import { useMemo } from "react";
 
@@ -126,7 +126,7 @@ export const IncompletedSetItem = ({
 
           <TextInput
             className="text-4xl text-center text-white"
-            value={exerciseSet?.weight.toString()}
+            value={exerciseSet?.weight?.toString()}
             keyboardType="number-pad"
             onChangeText={(text) => {
               dispatch(
@@ -168,7 +168,7 @@ export const IncompletedSetItem = ({
 
           <TextInput
             className="text-4xl text-center text-white"
-            value={exerciseSet?.repetitions.toString()}
+            value={exerciseSet?.repetitions?.toString()}
             keyboardType="number-pad"
             onChangeText={(text) => {
               dispatch(

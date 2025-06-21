@@ -33,7 +33,7 @@
     "typescript": "5.8.3",
     "typescript-config": "*",
     "wretch": "^2.11.0",
-    "zod": "^3.25.51"
+    "zod": "^3.25.64"
   },
   "peerDependencies": {
     "@tanstack/query-async-storage-persister": "*",

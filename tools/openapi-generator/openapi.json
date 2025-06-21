@@ -1,0 +1,1824 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/user/{id}": {
+      "get": {
+        "operationId": "UserController_getUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      },
+      "delete": {
+        "operationId": "UserController_deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/auth/{any}": {
+      "get": {
+        "operationId": "AuthController_handleAuth_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      },
+      "post": {
+        "operationId": "AuthController_handleAuth_post",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      },
+      "put": {
+        "operationId": "AuthController_handleAuth_put",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      },
+      "delete": {
+        "operationId": "AuthController_handleAuth_delete",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      },
+      "patch": {
+        "operationId": "AuthController_handleAuth_patch",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      },
+      "options": {
+        "operationId": "AuthController_handleAuth_options",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      },
+      "head": {
+        "operationId": "AuthController_handleAuth_head",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      },
+      "search": {
+        "operationId": "AuthController_handleAuth_search",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/muscle-groups": {
+      "post": {
+        "operationId": "MuscleGroupController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMuscleGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "MuscleGroup"
+        ]
+      },
+      "get": {
+        "operationId": "MuscleGroupController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "MuscleGroup"
+        ]
+      }
+    },
+    "/muscle-groups/{id}/exercises": {
+      "get": {
+        "operationId": "MuscleGroupController_findExercises",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "MuscleGroup"
+        ]
+      }
+    },
+    "/exercises": {
+      "post": {
+        "operationId": "ExerciseController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExerciseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Exercise"
+        ]
+      },
+      "get": {
+        "operationId": "ExerciseController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Exercise"
+        ]
+      }
+    },
+    "/exercises/{id}": {
+      "get": {
+        "operationId": "ExerciseController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Exercise"
+        ]
+      },
+      "patch": {
+        "operationId": "ExerciseController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Exercise"
+        ]
+      },
+      "delete": {
+        "operationId": "ExerciseController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Exercise"
+        ]
+      }
+    },
+    "/exercises/workout/{id}": {
+      "get": {
+        "operationId": "ExerciseController_findByWorkout",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Exercise"
+        ]
+      }
+    },
+    "/workout-plans": {
+      "post": {
+        "operationId": "WorkoutPlanController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 3
+                  },
+                  "cover_image": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "goal": {
+                    "type": "string",
+                    "enum": [
+                      "STRENGTH",
+                      "ENDURANCE",
+                      "BALANCE",
+                      "FLEXIBILITY",
+                      "LOOSE_WEIGHT"
+                    ],
+                    "x-enumNames": [
+                      "STRENGTH",
+                      "ENDURANCE",
+                      "BALANCE",
+                      "FLEXIBILITY",
+                      "LOOSE_WEIGHT"
+                    ]
+                  },
+                  "level": {
+                    "type": "string",
+                    "enum": [
+                      "BEGINNER",
+                      "INTERMEDIATE",
+                      "ADVANCED"
+                    ],
+                    "x-enumNames": [
+                      "BEGINNER",
+                      "INTERMEDIATE",
+                      "ADVANCED"
+                    ]
+                  },
+                  "isPublic": {
+                    "type": "boolean"
+                  },
+                  "isPremium": {
+                    "type": "boolean"
+                  },
+                  "isFeatured": {
+                    "type": "boolean"
+                  },
+                  "workoutTemplates": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "minLength": 3,
+                          "maxLength": 100
+                        },
+                        "order": {
+                          "type": "number"
+                        },
+                        "templateExercises": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "exerciseId": {
+                                "type": "string"
+                              },
+                              "order": {
+                                "type": "number"
+                              },
+                              "templateSets": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "setNumber": {
+                                      "type": "number"
+                                    },
+                                    "restTime": {
+                                      "type": "number"
+                                    },
+                                    "isWarmup": {
+                                      "type": "boolean"
+                                    },
+                                    "isDropSet": {
+                                      "type": "boolean"
+                                    },
+                                    "isUntilFailure": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "setNumber",
+                                    "restTime",
+                                    "isWarmup",
+                                    "isDropSet",
+                                    "isUntilFailure"
+                                  ]
+                                }
+                              }
+                            },
+                            "required": [
+                              "exerciseId",
+                              "order",
+                              "templateSets"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "order",
+                        "templateExercises"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "workoutTemplates"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The workout plan has been created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "slug": {
+                      "type": "string"
+                    },
+                    "cover_image": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "level": {
+                      "type": "string",
+                      "enum": [
+                        "BEGINNER",
+                        "INTERMEDIATE",
+                        "ADVANCED"
+                      ],
+                      "x-enumNames": [
+                        "BEGINNER",
+                        "INTERMEDIATE",
+                        "ADVANCED"
+                      ]
+                    },
+                    "goal": {
+                      "type": "string",
+                      "enum": [
+                        "STRENGTH",
+                        "ENDURANCE",
+                        "BALANCE",
+                        "FLEXIBILITY",
+                        "LOOSE_WEIGHT"
+                      ],
+                      "x-enumNames": [
+                        "STRENGTH",
+                        "ENDURANCE",
+                        "BALANCE",
+                        "FLEXIBILITY",
+                        "LOOSE_WEIGHT"
+                      ]
+                    },
+                    "isPublic": {
+                      "type": "boolean"
+                    },
+                    "isFeatured": {
+                      "type": "boolean"
+                    },
+                    "isPremium": {
+                      "type": "boolean"
+                    },
+                    "isSingle": {
+                      "type": "boolean"
+                    },
+                    "workoutTemplates": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "order": {
+                            "type": "number"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "slug": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "templateExercises": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "setNumber": {
+                                  "type": "number"
+                                },
+                                "restTime": {
+                                  "type": "number"
+                                },
+                                "isWarmup": {
+                                  "type": "boolean"
+                                },
+                                "isDropSet": {
+                                  "type": "boolean"
+                                },
+                                "isUntilFailure": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "setNumber",
+                                "restTime",
+                                "isWarmup",
+                                "isDropSet",
+                                "isUntilFailure"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "order",
+                          "name",
+                          "slug",
+                          "templateExercises"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "description",
+                    "slug",
+                    "cover_image",
+                    "level",
+                    "goal",
+                    "isPublic",
+                    "isFeatured",
+                    "isPremium",
+                    "isSingle",
+                    "workoutTemplates"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "WorkoutPlan"
+        ]
+      },
+      "get": {
+        "operationId": "WorkoutPlanController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutPlan"
+        ]
+      }
+    },
+    "/workout-plans/in-groups": {
+      "get": {
+        "operationId": "WorkoutPlanController_findAllInGroups",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutPlan"
+        ]
+      }
+    },
+    "/workout-plans/{id}": {
+      "get": {
+        "operationId": "WorkoutPlanController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The workout plan has been created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "is_owner": {
+                      "type": "boolean"
+                    },
+                    "level": {
+                      "type": "string",
+                      "enum": [
+                        "BEGINNER",
+                        "INTERMEDIATE",
+                        "ADVANCED"
+                      ],
+                      "nullable": true
+                    },
+                    "goal": {
+                      "type": "string",
+                      "enum": [
+                        "STRENGTH",
+                        "ENDURANCE",
+                        "BALANCE",
+                        "FLEXIBILITY",
+                        "LOOSE_WEIGHT"
+                      ],
+                      "nullable": true
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "cover_image": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "isPublic": {
+                      "type": "boolean",
+                      "nullable": true
+                    },
+                    "isPremium": {
+                      "type": "boolean",
+                      "nullable": true
+                    },
+                    "isFeatured": {
+                      "type": "boolean",
+                      "nullable": true
+                    },
+                    "isSingle": {
+                      "type": "boolean",
+                      "nullable": true
+                    },
+                    "createdById": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "slug": {
+                      "type": "string"
+                    },
+                    "_count": {
+                      "type": "object",
+                      "properties": {
+                        "workoutTemplates": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "workoutTemplates"
+                      ]
+                    },
+                    "workoutTemplates": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "order": {
+                            "type": "integer"
+                          },
+                          "workoutPlanId": {
+                            "type": "string"
+                          },
+                          "createdAt": {},
+                          "updatedAt": {},
+                          "isActive": {
+                            "type": "boolean"
+                          },
+                          "_count": {
+                            "type": "object",
+                            "properties": {
+                              "templateExercises": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "templateExercises"
+                            ]
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "slug": {
+                            "type": "string"
+                          },
+                          "templateExercises": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "order": {
+                                  "type": "number"
+                                },
+                                "name": {
+                                  "type": "string"
+                                },
+                                "category": {
+                                  "type": "string",
+                                  "enum": [
+                                    "WEIGHT",
+                                    "FREE_WEIGHT",
+                                    "CARDIO"
+                                  ]
+                                },
+                                "slug": {
+                                  "type": "string",
+                                  "nullable": true
+                                },
+                                "templateSets": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "id": {
+                                        "type": "string"
+                                      },
+                                      "setNumber": {
+                                        "type": "number"
+                                      },
+                                      "restTime": {
+                                        "type": "number",
+                                        "nullable": true
+                                      },
+                                      "isWarmup": {
+                                        "type": "boolean",
+                                        "nullable": true
+                                      },
+                                      "isDropSet": {
+                                        "type": "boolean",
+                                        "nullable": true
+                                      },
+                                      "isUntilFailure": {
+                                        "type": "boolean",
+                                        "nullable": true
+                                      }
+                                    },
+                                    "required": [
+                                      "id",
+                                      "setNumber",
+                                      "restTime",
+                                      "isWarmup",
+                                      "isDropSet",
+                                      "isUntilFailure"
+                                    ]
+                                  }
+                                },
+                                "exercise": {
+                                  "type": "object",
+                                  "properties": {
+                                    "category": {
+                                      "type": "string",
+                                      "enum": [
+                                        "WEIGHT",
+                                        "FREE_WEIGHT",
+                                        "CARDIO"
+                                      ]
+                                    },
+                                    "id": {
+                                      "type": "string",
+                                      "format": "uuid"
+                                    },
+                                    "notes": {
+                                      "type": "string",
+                                      "nullable": true
+                                    },
+                                    "createdById": {
+                                      "type": "string"
+                                    },
+                                    "images": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "createdAt": {},
+                                    "updatedAt": {},
+                                    "isPublic": {
+                                      "type": "boolean"
+                                    },
+                                    "isActive": {
+                                      "type": "boolean"
+                                    },
+                                    "muscleGroupId": {
+                                      "type": "integer",
+                                      "nullable": true
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "slug": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "category",
+                                    "id",
+                                    "notes",
+                                    "createdById",
+                                    "images",
+                                    "createdAt",
+                                    "updatedAt",
+                                    "isPublic",
+                                    "isActive",
+                                    "muscleGroupId",
+                                    "name",
+                                    "slug"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "order",
+                                "name",
+                                "category",
+                                "slug",
+                                "templateSets",
+                                "exercise"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "order",
+                          "workoutPlanId",
+                          "createdAt",
+                          "updatedAt",
+                          "isActive",
+                          "_count",
+                          "name",
+                          "slug",
+                          "templateExercises"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "is_owner",
+                    "level",
+                    "goal",
+                    "id",
+                    "cover_image",
+                    "isPublic",
+                    "isPremium",
+                    "isFeatured",
+                    "isSingle",
+                    "createdById",
+                    "name",
+                    "description",
+                    "slug",
+                    "_count",
+                    "workoutTemplates"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "WorkoutPlan"
+        ]
+      },
+      "put": {
+        "operationId": "WorkoutPlanController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkoutPlanDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutPlan"
+        ]
+      },
+      "delete": {
+        "operationId": "WorkoutPlanController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutPlan"
+        ]
+      }
+    },
+    "/workout-plans/stats/{id}": {
+      "get": {
+        "operationId": "WorkoutPlanController_findStats",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutPlan"
+        ]
+      }
+    },
+    "/workout-plans/user/me": {
+      "get": {
+        "operationId": "WorkoutPlanController_findAllByMe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutPlan"
+        ]
+      }
+    },
+    "/workout-plans/user/{userId}": {
+      "get": {
+        "operationId": "WorkoutPlanController_findAllByUserId",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutPlan"
+        ]
+      }
+    },
+    "/workout-templates": {
+      "post": {
+        "operationId": "WorkoutTemplateController_createWorkoutTemplate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkoutTemplateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutTemplate"
+        ]
+      }
+    },
+    "/workout-templates/plan/{id}": {
+      "get": {
+        "operationId": "WorkoutTemplateController_getWorkoutTemplatesByWorkoutPlanId",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutTemplate"
+        ]
+      }
+    },
+    "/workout-templates/{id}": {
+      "get": {
+        "operationId": "WorkoutTemplateController_getWorkoutTemplateById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutTemplate"
+        ]
+      }
+    },
+    "/logs/workouts": {
+      "get": {
+        "operationId": "LogController_getAllWorkoutLogs",
+        "parameters": [
+          {
+            "name": "periodType",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "week",
+                "month",
+                "year",
+                "all"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "periodValue",
+            "required": true,
+            "in": "query",
+            "examples": {
+              "week": {
+                "value": "2025-05-01,2025-05-07"
+              },
+              "month": {
+                "value": "2025-05-01"
+              },
+              "year": {
+                "value": "2025-01-01"
+              },
+              "all": {
+                "value": "all"
+              }
+            },
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all workout logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Log"
+        ]
+      }
+    },
+    "/logs/body-measurement-types": {
+      "get": {
+        "operationId": "LogController_getBodyMeasurementTypes",
+        "parameters": [
+          {
+            "name": "language",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Log"
+        ]
+      }
+    },
+    "/logs/body": {
+      "get": {
+        "operationId": "LogController_getAllBodyLogs",
+        "parameters": [
+          {
+            "name": "periodType",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Log"
+        ]
+      },
+      "post": {
+        "operationId": "LogController_createBodyLog",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBodyMeasurementDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Log"
+        ]
+      },
+      "delete": {
+        "operationId": "LogController_deleteBodyLog",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Log"
+        ]
+      }
+    },
+    "/workout-session/history": {
+      "get": {
+        "operationId": "WorkoutSessionController_getWorkoutSessionHistory",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutSession"
+        ]
+      }
+    },
+    "/workout-session/detail": {
+      "get": {
+        "operationId": "WorkoutSessionController_getWorkoutSessionDetail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutSession"
+        ]
+      }
+    },
+    "/workout-session": {
+      "post": {
+        "operationId": "WorkoutSessionController_createWorkoutSession",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkoutSessionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutSession"
+        ]
+      }
+    },
+    "/workout-session/{id}": {
+      "delete": {
+        "operationId": "WorkoutSessionController_deleteWorkoutSession",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutSession"
+        ]
+      },
+      "put": {
+        "operationId": "WorkoutSessionController_updateWorkoutSession",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkoutSessionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutSession"
+        ]
+      }
+    },
+    "/workout-session/{id}/exercise/{exerciseId}": {
+      "delete": {
+        "operationId": "WorkoutSessionController_deleteWorkoutSessionExercise",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "exerciseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutSession"
+        ]
+      }
+    },
+    "/workout-session/{id}/exercise/{exerciseId}/sets": {
+      "put": {
+        "operationId": "WorkoutSessionController_updateWorkoutSessionExercise",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "exerciseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkoutSessionExerciseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutSession"
+        ]
+      }
+    },
+    "/workout-session/plan/{id}": {
+      "get": {
+        "operationId": "WorkoutSessionController_getWorkoutSessionsByPlanId",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutSession"
+        ]
+      }
+    },
+    "/workout-session/muscle-group-stats": {
+      "get": {
+        "operationId": "WorkoutSessionController_getMuscleGroupStats",
+        "parameters": [
+          {
+            "name": "periodType",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "periodValue",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "WorkoutSession"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "API",
+    "description": "API description",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "CreateMuscleGroupDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateExerciseDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateWorkoutPlanDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateWorkoutTemplateDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "workoutPlanId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "exerciseIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "workoutPlanId",
+          "exerciseIds"
+        ]
+      },
+      "LogResponseDto": {
+        "type": "object",
+        "properties": {
+          "totalWorkouts": {
+            "type": "number",
+            "description": "The total number of workouts"
+          },
+          "totalDuration": {
+            "type": "number",
+            "description": "The total duration of all workouts"
+          },
+          "averageDuration": {
+            "type": "number",
+            "description": "The average duration of all workouts"
+          },
+          "totalSets": {
+            "type": "number",
+            "description": "The total number of sets"
+          },
+          "muscleGroupSummary": {
+            "type": "array",
+            "description": "The summary of the muscle groups",
+            "items": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "number"
+                },
+                "muscleGroupId": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "totalWorkouts",
+          "totalDuration",
+          "averageDuration",
+          "totalSets",
+          "muscleGroupSummary"
+        ]
+      },
+      "CreateBodyMeasurementDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateWorkoutSessionDto": {
+        "type": "object",
+        "properties": {
+          "duration": {
+            "type": "integer",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "completedAt": {
+            "nullable": true
+          },
+          "workoutPlanId": {
+            "type": "string"
+          },
+          "workoutTemplateId": {
+            "type": "string"
+          },
+          "sessionExercises": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "exerciseId": {
+                  "type": "string"
+                },
+                "exerciseName": {
+                  "type": "string"
+                },
+                "notes": {
+                  "type": "string"
+                },
+                "performedSets": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "reps": {
+                        "type": "integer",
+                        "nullable": true
+                      },
+                      "weight": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "isCompleted": {
+                        "type": "boolean"
+                      },
+                      "performedAt": {},
+                      "setNumber": {
+                        "type": "integer"
+                      },
+                      "restTime": {
+                        "type": "integer",
+                        "nullable": true
+                      },
+                      "distance": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "nullable": true
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "reps",
+                      "weight",
+                      "isCompleted",
+                      "performedAt",
+                      "setNumber",
+                      "restTime",
+                      "distance",
+                      "duration"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "exerciseId",
+                "exerciseName",
+                "performedSets"
+              ]
+            }
+          }
+        },
+        "required": [
+          "duration",
+          "notes",
+          "completedAt",
+          "workoutPlanId",
+          "workoutTemplateId",
+          "sessionExercises"
+        ]
+      },
+      "UpdateWorkoutSessionExerciseDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateWorkoutSessionDto": {
+        "type": "object",
+        "properties": {
+          "notes": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "number"
+          },
+          "completedAt": {
+            "type": "string"
+          },
+          "sessionExercises": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "order": {
+                  "type": "integer"
+                },
+                "exerciseId": {
+                  "type": "string"
+                },
+                "exerciseName": {
+                  "type": "string"
+                },
+                "notes": {
+                  "type": "string"
+                },
+                "performedSets": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "reps": {
+                        "type": "integer",
+                        "nullable": true
+                      },
+                      "weight": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "isCompleted": {
+                        "type": "boolean"
+                      },
+                      "setNumber": {
+                        "type": "integer"
+                      },
+                      "restTime": {
+                        "type": "integer",
+                        "nullable": true
+                      },
+                      "distance": {
+                        "type": "number",
+                        "nullable": true
+                      },
+                      "duration": {
+                        "type": "integer",
+                        "nullable": true
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "reps",
+                      "weight",
+                      "isCompleted",
+                      "setNumber",
+                      "restTime",
+                      "distance",
+                      "duration"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "order",
+                "exerciseId",
+                "exerciseName",
+                "performedSets"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

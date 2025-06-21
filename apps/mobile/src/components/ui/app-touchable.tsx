@@ -1,13 +1,19 @@
-import { TouchableOpacity, TouchableOpacityProps } from "react-native";
+import {
+  ActivityIndicator,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from "react-native";
 import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
 
 export const AppTouchable = ({
   debounce = true,
   debounceDelay,
+  isLoading = false,
   ...props
 }: TouchableOpacityProps & {
   debounce?: boolean;
   debounceDelay?: number;
+  isLoading?: boolean;
 }) => {
   const debounceFn = usePreventRepeatPress(debounceDelay);
 
@@ -22,6 +28,8 @@ export const AppTouchable = ({
           props.onPress?.(e);
         }
       }}
-    />
+    >
+      {isLoading ? <ActivityIndicator /> : props.children}
+    </TouchableOpacity>
   );
 };

@@ -15,7 +15,7 @@ export const ExerciseSetPagerDots = memo(
           <View
             key={index.toString()}
             className={`w-2 h-2 rounded-full ${
-              index === activePage ? "bg-primary" : "bg-gray-500"
+              index === activePage ? "bg-primary w-3 h-3" : "bg-gray-500"
             }`}
           />
         ))}

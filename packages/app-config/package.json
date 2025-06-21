@@ -15,6 +15,9 @@
     "build",
     "src"
   ],
+  "dependencies": {
+    "zod": "^3.25.64"
+  },
   "devDependencies": {
     "tsup": "^8.5.0",
     "typescript": "5.7.2",

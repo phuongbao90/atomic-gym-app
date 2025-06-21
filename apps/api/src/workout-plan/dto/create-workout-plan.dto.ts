@@ -1,4 +1,5 @@
-import { WorkoutPlanCategory, WorkoutPlanLevel } from "@prisma/client";
+import { WorkoutPlanGoal, WorkoutPlanLevel } from "@prisma/client";
+import { CreateWorkoutPlanBodySchema } from "app-config";
 import {
   IsArray,
   IsBoolean,
@@ -9,6 +10,7 @@ import {
   IsUrl,
   MinLength,
 } from "class-validator";
+import { createZodDto } from "nestjs-zod";
 
 class WorkoutPlanEditorDto {
   @IsString()
@@ -24,9 +26,9 @@ class WorkoutPlanEditorDto {
   @IsOptional()
   description?: string;
 
-  @IsEnum(WorkoutPlanCategory, { message: "Loại lịch tập không hợp lệ" })
+  @IsEnum(WorkoutPlanGoal, { message: "Mục tiêu lịch tập không hợp lệ" })
   @IsOptional()
-  category?: WorkoutPlanCategory;
+  goal?: WorkoutPlanGoal;
 
   @IsEnum(WorkoutPlanLevel, { message: "Cấp độ lịch tập không hợp lệ" })
   @IsOptional()
@@ -49,25 +51,33 @@ class WorkoutPlanEditorDto {
   workoutIds?: string[];
 }
 
-export class CreateWorkoutPlanDto extends WorkoutPlanEditorDto {
-  @IsArray({ message: "Danh sách workouts không hợp lệ" })
-  @IsOptional()
-  workouts?: {
-    name: string;
-    description?: string;
-    workoutExercises: {
-      exerciseId: number;
-      order: number;
-      sets: {
-        restTime: number;
-        isWarmup: boolean;
-        isDropSet: boolean;
-        isUntilFailure: boolean;
-      }[];
-    }[];
-    order: number;
-  }[];
-}
+// export class CreateWorkoutPlanDto extends WorkoutPlanEditorDto {
+//   @IsArray({ message: "Danh sách workouts không hợp lệ" })
+//   @IsOptional()
+//   workouts?: {
+//     name: string;
+//     description?: string;
+//     workoutExercises: {
+//       exerciseId: number;
+//       order: number;
+//       sets: {
+//         restTime: number;
+//         isWarmup: boolean;
+//         isDropSet: boolean;
+//         isUntilFailure: boolean;
+//       }[];
+//     }[];
+//     order: number;
+//   }[];
+// }
+
+// const CreateWorkoutPlanBodySchema = z.object({
+//   name: z.string().min(3, { message: "Tên lịch tập phải có ít nhất 3 ký tự" }),
+// });
+
+export class CreateWorkoutPlanDto extends createZodDto(
+  CreateWorkoutPlanBodySchema
+) {}
 
 export class UpdateWorkoutPlanDto extends WorkoutPlanEditorDto {
   @IsString({ message: "ID lịch tập không hợp lệ" })

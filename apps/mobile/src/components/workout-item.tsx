@@ -1,9 +1,10 @@
-import { Workout } from "app";
 import { Text, View } from "react-native";
 import { LockIcon } from "./ui/expo-icon";
 import { Link } from "expo-router";
 import { appRoutes } from "../configs/routes";
 import { useTranslation } from "react-i18next";
+import { WorkoutPlanItemResponseSchema } from "app-config";
+import { z } from "zod";
 
 const Badge = ({ label }: { label: string }) => {
   return (
@@ -14,17 +15,19 @@ const Badge = ({ label }: { label: string }) => {
 };
 
 export const WorkoutItem = ({
-  workout,
+  workoutTemplate,
   index,
   isPremiumPlan,
 }: {
-  workout: Workout & { _count: { workoutExercises: number } };
+  workoutTemplate: z.infer<
+    typeof WorkoutPlanItemResponseSchema
+  >["workoutTemplates"][number];
   index: number;
   isPremiumPlan: boolean;
 }) => {
   const { t } = useTranslation();
   return (
-    <Link href={appRoutes.workouts.detail(workout.id.toString())}>
+    <Link href={appRoutes.workouts.detail(workoutTemplate.id.toString())}>
       <View
         className="flex-row items-center bg-slate-200 rounded-lg py-3 px-2"
         testID={`workout-item-${index}`}
@@ -32,12 +35,12 @@ export const WorkoutItem = ({
         <Badge label={t("day", { count: index + 1 })} />
         <View className="mx-4 flex-1">
           <Text numberOfLines={1} style={{ flex: 1 }}>
-            {workout?.translations?.[0]?.name}
+            {workoutTemplate?.name}
           </Text>
-          {!!workout?._count?.workoutExercises && (
+          {!!workoutTemplate?.templateExercises?.length && (
             <Text>
               {t("exercises_count", {
-                count: workout._count.workoutExercises,
+                count: workoutTemplate?.templateExercises?.length,
               })}
             </Text>
           )}

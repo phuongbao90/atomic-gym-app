@@ -1,7 +1,7 @@
 import { useGetWorkoutPlan } from "app";
 import { ImageBackground } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Pressable, TouchableOpacity, View } from "react-native";
+import { Pressable, View } from "react-native";
 import {
   CollapsibleRef,
   TabBarProps,
@@ -22,6 +22,7 @@ import { setActiveWorkoutPlanId } from "../../stores/slices/app-slice";
 import { useCallback, useEffect, useRef } from "react";
 import { use$ } from "@legendapp/state/react";
 import { observable } from "@legendapp/state";
+import { AppTouchable } from "../../components/ui/app-touchable";
 
 const routes = [
   { key: "first", title: "overview" },
@@ -91,8 +92,12 @@ export const WorkoutPlanDetailScreen = () => {
               },
             ]}
           >
-            <AppText className="text-2xl font-bold bottom-6 left-6 absolute">
-              {workoutPlan?.translations?.[0]?.name}
+            <AppText
+              className="text-2xl font-bold bottom-6 left-6 absolute"
+              numberOfLines={2}
+              style={{ maxWidth: "90%" }}
+            >
+              {workoutPlan?.name}
             </AppText>
           </ImageBackground>
         )}
@@ -106,19 +111,20 @@ export const WorkoutPlanDetailScreen = () => {
         withBackButton
         Right={
           <View className="flex-row gap-8">
-            <TouchableOpacity
-              hitSlop={10}
-              onPress={() => {
-                router.navigate(
-                  appRoutes.workoutPlans.create({ workoutPlanId: id })
-                );
-              }}
-            >
-              <EditIcon />
-            </TouchableOpacity>
-            <TouchableOpacity hitSlop={10}>
+            {workoutPlan?.is_owner && (
+              <AppTouchable
+                onPress={() => {
+                  router.navigate(
+                    appRoutes.workoutPlans.create({ workoutPlanId: id })
+                  );
+                }}
+              >
+                <EditIcon />
+              </AppTouchable>
+            )}
+            <AppTouchable>
               <VerticalDotsIcon />
-            </TouchableOpacity>
+            </AppTouchable>
           </View>
         }
       />

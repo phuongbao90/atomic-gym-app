@@ -8,7 +8,7 @@ import {
 export const useWorkoutTimer = () => {
   const dispatch = useAppDispatch();
   const { elapsedTime, startTime } = useAppSelector(
-    (state) => state.workoutSession
+    (state) => state.activeWorkoutSession
   );
   const [displayTime, setDisplayTime] = useState(0);
   // Determine if workout is active based on startTime

@@ -5,7 +5,7 @@ export const AppImage = ({
   style,
   ...props
 }: {
-  uri: string | undefined;
+  uri: string | undefined | null;
   style: ImageStyle;
 } & ImageProps) => {
   if (!uri) {
