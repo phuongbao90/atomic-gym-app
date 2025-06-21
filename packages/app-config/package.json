@@ -16,7 +16,7 @@
     "src"
   ],
   "dependencies": {
-    "zod": "^3.25.64"
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "tsup": "^8.5.0",

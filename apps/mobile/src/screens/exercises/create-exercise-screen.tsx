@@ -15,8 +15,8 @@ import {
   XIcon,
 } from "../../components/ui/expo-icon";
 import { AppText } from "../../components/ui/app-text";
-import { Controller, useForm, UseFormReturn } from "react-hook-form";
-import { ImageBackground } from "expo-image";
+import { Controller, UseFormReturn } from "react-hook-form";
+import { ImageBackground, ImageSource } from "expo-image";
 import { colors } from "../../styles/themes";
 import { Dropdown } from "react-native-element-dropdown";
 import { useMemo, useRef, useState } from "react";
@@ -125,7 +125,7 @@ export const CreateExerciseForm = ({
         render={({ field: { onChange, onBlur, value } }) => {
           return value ? (
             <ImageBackground
-              source={value}
+              source={value as ImageSource}
               style={{
                 width: "100%",
                 aspectRatio: 1.3,
