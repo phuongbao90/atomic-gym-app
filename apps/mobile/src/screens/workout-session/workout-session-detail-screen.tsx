@@ -23,7 +23,7 @@ import { convertToHourMinuteSecond } from "../../utils/convert-to-hour-minute-se
 import { twColors } from "../../styles/themes";
 import { capitalize } from "lodash";
 import { useModal } from "react-native-modalfy";
-import { appRoutes } from "../../configs/routes";
+import { appRoutes } from "app-config";
 import { OrderNumberCircle } from "../../components/ui/OrderNumberCircle";
 import { dayjs } from "../../lib/dayjs";
 import { useMemo } from "react";

@@ -2,7 +2,7 @@ import { Exercise } from "app";
 import { customRenderUI } from "../../utils/test-utils";
 import { ExerciseItem } from "../exercise-item";
 import { fireEvent, screen } from "@testing-library/react-native";
-import { appRoutes } from "../../configs/routes";
+import { appRoutes } from "app-config";
 import { useRouter } from "../../../__mocks__/expo-router";
 
 const mockExercise: Exercise = {

@@ -2,7 +2,7 @@ import { View } from "react-native";
 import { AppText } from "./ui/app-text";
 import { useRouter } from "expo-router";
 import { AppTouchable } from "./ui/app-touchable";
-import { appRoutes } from "../configs/routes";
+import { appRoutes } from "app-config";
 import { AppImage } from "./ui/app-image";
 import { capitalize } from "lodash";
 

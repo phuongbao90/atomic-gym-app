@@ -53,7 +53,7 @@ import {
   updateWorkoutPlanImage,
   updateWorkoutPlanName,
 } from "../../stores/slices/create-workout-plan-slice";
-import { appRoutes } from "../../configs/routes";
+import { appRoutes } from "app-config";
 import {
   queryClient,
   useCreateWorkoutPlan,

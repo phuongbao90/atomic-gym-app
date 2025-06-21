@@ -5,3 +5,5 @@ export * from "./types/exercise-schema";
 export * from "./types/muscle-group-schema";
 export * from "./types/workout-session-schema";
 export * from "./types/workout-template-schema";
+
+export * from "./app-routes";

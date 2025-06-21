@@ -1,7 +1,7 @@
 import { fireEvent, screen } from "@testing-library/react-native";
 import { customRenderUI } from "../../utils/test-utils";
 import { SingleWorkoutPlanCard, WorkoutPlanCard } from "../workout-plan-card";
-import { appRoutes } from "../../configs/routes";
+import { appRoutes } from "app-config";
 import { useRouter } from "../../../__mocks__/expo-router";
 
 const planWithExercises = {

@@ -1,5 +1,5 @@
 import { Redirect, Stack } from "expo-router";
-import { appRoutes } from "../../src/configs/routes";
+import { appRoutes } from "app-config";
 import { useSession } from "../../src/lib/auth-client";
 
 export default function AuthLayout() {

@@ -10,7 +10,7 @@ import {
   VerticalDotsIcon,
 } from "../../components/ui/expo-icon";
 import { Divider } from "../../components/ui/divider";
-import { appRoutes } from "../../configs/routes";
+import { appRoutes } from "app-config";
 import { AppButton } from "../../components/ui/app-button";
 import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";
 import React, { useRef } from "react";

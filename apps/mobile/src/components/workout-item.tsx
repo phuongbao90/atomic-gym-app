@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import { LockIcon } from "./ui/expo-icon";
 import { Link } from "expo-router";
-import { appRoutes } from "../configs/routes";
+import { appRoutes } from "app-config";
 import { useTranslation } from "react-i18next";
 import { WorkoutPlanItemResponseSchema } from "app-config";
 import { z } from "zod";

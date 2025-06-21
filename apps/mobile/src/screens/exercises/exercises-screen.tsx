@@ -28,7 +28,7 @@ import { colors, PRIMARY_COLOR } from "../../styles/themes";
 import { useDebounce } from "../../hooks/use-debounce";
 import { SelectMuscleGroupSheet } from "../../components/bottom-sheets/select-muscle-group";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { appRoutes, ExercisesScreenParams } from "../../configs/routes";
+import { appRoutes, ExercisesScreenParams } from "app-config";
 import { router, useLocalSearchParams } from "expo-router";
 import { Env } from "../../configs/env";
 import { usePreventRepeatPress } from "../../hooks/use-prevent-repeat-press";

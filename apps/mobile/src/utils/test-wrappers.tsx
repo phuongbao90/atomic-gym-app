@@ -18,7 +18,6 @@ import { ModalProvider } from "react-native-modalfy";
 import { modalStack } from "../lib/modal/modal-stack";
 import { store } from "../stores/redux-store";
 import { Provider } from "react-redux";
-import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -74,9 +73,7 @@ export const DefaultMockWrapper = ({
               <GestureHandlerRootView style={{ flex: 1 }}>
                 <ModalProvider stack={modalStack}>
                   <BottomSheetModalProvider>
-                    <ActionSheetProvider>
-                      <PortalProvider>{children}</PortalProvider>
-                    </ActionSheetProvider>
+                    <PortalProvider>{children}</PortalProvider>
                   </BottomSheetModalProvider>
                 </ModalProvider>
               </GestureHandlerRootView>

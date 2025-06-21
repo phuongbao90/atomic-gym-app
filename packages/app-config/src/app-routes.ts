@@ -1,6 +1,6 @@
 import QueryString from "qs";
 
-export type ExercisesScreenParams =
+type ExercisesScreenParams =
   | {
       mode: "default";
     }
@@ -21,11 +21,6 @@ export type ExercisesScreenParams =
       | { mode: "addToCreateWorkoutPlan" }
     ));
 
-export type InProgressWorkoutExercisesScreenParams = {
-  // workoutId: string;
-  pageIndex: string;
-};
-
 export const appRoutes = {
   login: "/(auth)",
   register: "/(auth)/register",
@@ -39,17 +34,6 @@ export const appRoutes = {
   history: "/history",
   statistics: "/statistics",
 
-  // tabs: {
-  //   home: () => "/(tabs)" as const,
-  //   plans: () => "/plans" as const,
-  //   coach: () => "/coach" as const,
-  //   history: () => "/history" as const,
-  //   statistics: () => "/statistics" as const,
-  // },
-
-  // exercises: "/exercises",
-  // createExercise: "/exercises/create",
-  // exercise: (id: string) => `/exercises/${id}`,
   exercises: {
     base: "/exercises" as const,
     list: (params: ExercisesScreenParams) =>

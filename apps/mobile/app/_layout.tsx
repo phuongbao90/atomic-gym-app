@@ -3,11 +3,15 @@ import "react-native-reanimated";
 import "react-native-url-polyfill/auto";
 import "../global.css";
 
-import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { PortalProvider } from "@gorhom/portal";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack, useNavigationContainerRef } from "expo-router";
+import {
+  router,
+  SplashScreen,
+  Stack,
+  useNavigationContainerRef,
+} from "expo-router";
 import { useEffect, useRef } from "react";
 import { Platform, StatusBar, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -31,7 +35,7 @@ import i18n from "../src/configs/i18n";
 import { PersistGate } from "redux-persist/integration/react";
 import { colorScheme } from "nativewind";
 import { useReactNavigationDevTools } from "@dev-plugins/react-navigation";
-import notifee from "@notifee/react-native";
+import notifee, { Notification } from "@notifee/react-native";
 import restTimeEndSound from "../assets/sounds/rest-time-end.mp3";
 import { enableScreens } from "react-native-screens";
 import { getCookie, useSession } from "../src/lib/auth-client";
@@ -49,6 +53,15 @@ import { setIsConnected } from "../src/stores/slices/app-slice";
 import { AudioModule } from "expo-audio";
 import { useSyncQueriesExternal } from "react-query-external-sync";
 import Constants from "expo-constants";
+import {
+  displayNotification,
+  getFCMToken,
+  useNotificationSetup,
+} from "../src/services/notification-service";
+import messaging, {
+  FirebaseMessagingTypes,
+} from "@react-native-firebase/messaging";
+import { appRoutes } from "app-config";
 
 enableScreens();
 
@@ -66,14 +79,22 @@ notifee.registerForegroundService(async (task) => {
 });
 
 const hostIP =
-  Constants.expoGoConfig?.debuggerHost?.split(`:`)[0] ||
-  Constants.expoConfig?.hostUri?.split(`:`)[0];
+  Constants.expoGoConfig?.debuggerHost?.split(":")[0] ||
+  Constants.expoConfig?.hostUri?.split(":")[0];
 
 // This is the default configuration
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
   strict: false, // Reanimated runs in strict mode by default
 });
+
+messaging().setBackgroundMessageHandler(
+  async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
+    console.debug("[RootLayout] Background message received!", remoteMessage);
+    // This will display the notification in the system tray when the app is in the background or killed.
+    await displayNotification(remoteMessage);
+  }
+);
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -120,6 +141,50 @@ export default function RootLayout() {
     // ], // SecureStore keys to monitor
   });
 
+  const handleNotificationPress = (notification?: Notification) => {
+    if (notification?.data) {
+      console.debug(
+        "[RootLayout] Handling notification press:",
+        notification.data
+      );
+      const { screenUrl } = notification.data;
+
+      if (typeof screenUrl === "string") {
+        //@ts-ignore
+        router.navigate(screenUrl);
+      }
+    }
+  };
+
+  useNotificationSetup(handleNotificationPress);
+
+  // --- Register FCM Token with Your Server (Example) ---
+  useEffect(() => {
+    const registerDevice = async () => {
+      const token = await getFCMToken();
+      if (token) {
+        // Here you would send the token to your backend API
+        // e.g., await myApi.registerDeviceToken(token);
+        console.debug(
+          "[RootLayout] Device token sent to server (simulated):",
+          token
+        );
+      }
+    };
+
+    // Listen for token refreshes from FCM and re-register
+    const unsubscribeOnTokenRefresh = messaging().onTokenRefresh((newToken) => {
+      console.debug("[RootLayout] Token refreshed. Re-registering...");
+      // await myApi.registerDeviceToken(newToken);
+    });
+
+    registerDevice();
+
+    return () => {
+      unsubscribeOnTokenRefresh();
+    };
+  }, []);
+
   if (!loaded) {
     return null;
   }
@@ -131,31 +196,29 @@ export default function RootLayout() {
           <KeyboardProvider>
             <GestureHandlerRootView style={{ flex: 1 }}>
               <ModalProvider stack={modalStack}>
-                <ActionSheetProvider>
-                  <BottomSheetModalProvider>
-                    <PortalProvider>
-                      <StatusBar
-                        translucent
-                        backgroundColor="black"
-                        networkActivityIndicatorVisible
+                <BottomSheetModalProvider>
+                  <PortalProvider>
+                    <StatusBar
+                      translucent
+                      backgroundColor="black"
+                      networkActivityIndicatorVisible
+                    />
+                    <View
+                      style={{
+                        flex: 1,
+                        paddingBottom: insets.bottom,
+                        paddingTop: insets.top,
+                      }}
+                    >
+                      <App />
+                      <Toaster
+                        position="top-center"
+                        duration={2000}
+                        style={{ marginTop: 10 }}
                       />
-                      <View
-                        style={{
-                          flex: 1,
-                          paddingBottom: insets.bottom,
-                          paddingTop: insets.top,
-                        }}
-                      >
-                        <App />
-                        <Toaster
-                          position="top-center"
-                          duration={2000}
-                          style={{ marginTop: 10 }}
-                        />
-                      </View>
-                    </PortalProvider>
-                  </BottomSheetModalProvider>
-                </ActionSheetProvider>
+                    </View>
+                  </PortalProvider>
+                </BottomSheetModalProvider>
               </ModalProvider>
             </GestureHandlerRootView>
           </KeyboardProvider>

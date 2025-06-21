@@ -20,6 +20,9 @@ export default (): ExpoConfig => ({
   ios: {
     buildNumber: String(VERSION_CODE),
     supportsTablet: false,
+    entitlements: {
+      "aps-environment": "production",
+    },
     bundleIdentifier: appId,
     infoPlist: {
       UIBackgroundModes: ["fetch", "remote-notification", "audio"],
@@ -149,6 +152,13 @@ export default (): ExpoConfig => ({
       },
     ],
     [
+      "expo-notifications",
+      {
+        icon: "./assets/images/favicon.png",
+        // color: "#ffffff", // cause build error
+      },
+    ],
+    [
       "expo-build-properties",
       {
         android: {
@@ -171,6 +181,7 @@ export default (): ExpoConfig => ({
       },
     ],
     "@react-native-firebase/app",
+    "@react-native-firebase/messaging",
     "@react-native-firebase/auth",
     "@config-plugins/react-native-blob-util",
     // "./scripts/fix-rn-firebase-plugin",

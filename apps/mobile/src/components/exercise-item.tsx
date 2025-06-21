@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { appRoutes } from "../configs/routes";
+import { appRoutes } from "app-config";
 import { ListItem } from "./ui/list-item";
 import { usePreventRepeatPress } from "../hooks/use-prevent-repeat-press";
 import { useTranslation } from "react-i18next";

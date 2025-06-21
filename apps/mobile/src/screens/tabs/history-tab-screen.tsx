@@ -14,7 +14,7 @@ import { useWorkoutSessionHistory } from "app";
 import { LegendList } from "@legendapp/list";
 import { AppTouchable } from "../../components/ui/app-touchable";
 import { useRouter } from "expo-router";
-import { appRoutes } from "../../configs/routes";
+import { appRoutes } from "app-config";
 import { dayjs } from "../../lib/dayjs";
 import { z } from "zod";
 import { WorkoutSessionHistoryItemSchema } from "app-config";

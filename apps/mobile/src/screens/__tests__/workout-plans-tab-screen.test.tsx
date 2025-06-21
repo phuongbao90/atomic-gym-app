@@ -5,7 +5,7 @@ import nock from "nock";
 import { ENV, API_ROUTES } from "app";
 import { fireEvent, waitFor } from "@testing-library/react-native";
 import { useRouter } from "../../../__mocks__/expo-router";
-import { appRoutes } from "../../configs/routes";
+import { appRoutes } from "app-config";
 
 const mockData: WorkoutPlanInGroups = {
   byCategory: [

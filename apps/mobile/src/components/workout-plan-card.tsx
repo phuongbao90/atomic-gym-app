@@ -2,7 +2,7 @@ import Entypo from "@expo/vector-icons/Entypo";
 import { ImageBackground } from "expo-image";
 import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
-import { appRoutes } from "../configs/routes";
+import { appRoutes } from "app-config";
 import { AppText } from "./ui/app-text";
 import { useTranslation } from "react-i18next";
 import { usePreventRepeatPress } from "../hooks/use-prevent-repeat-press";

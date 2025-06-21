@@ -10,7 +10,7 @@ import { ChevronRightIcon } from "../../components/ui/expo-icon";
 import { useSession } from "../../lib/auth-client";
 import { AppButton } from "../../components/ui/app-button";
 import { useRouter } from "expo-router";
-import { appRoutes } from "../../configs/routes";
+import { appRoutes } from "app-config";
 
 export function SettingsScreen() {
   const { t } = useTranslation("settings-screen");

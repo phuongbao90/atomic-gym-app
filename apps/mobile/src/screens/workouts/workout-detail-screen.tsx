@@ -9,7 +9,7 @@ import { AppButton } from "../../components/ui/app-button";
 import { useTranslation } from "react-i18next";
 import { AppText } from "../../components/ui/app-text";
 import { useAppDispatch } from "../../stores/redux-store";
-import { appRoutes } from "../../configs/routes";
+import { appRoutes } from "app-config";
 import { startWorkout } from "../../stores/slices/workout-session-slice";
 import { cloneExercises } from "../../stores/slices/edit-exercise-set-slice";
 

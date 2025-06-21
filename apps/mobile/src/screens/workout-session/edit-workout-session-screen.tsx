@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useUpdateWorkoutSession } from "app/src/query/workout-session/workout-session.hooks";
 import { CheckIcon, VerticalDotsIcon } from "../../components/ui/expo-icon";
 import { WorkoutExerciseItem } from "../../components/workout-exercise-item";
-import { appRoutes } from "../../configs/routes";
+import { appRoutes } from "app-config";
 import { EditSessionExerciseSheet } from "../../components/bottom-sheets/edit-session-exercise-sheet";
 import { useRef, useState } from "react";
 import BottomSheet from "@gorhom/bottom-sheet";

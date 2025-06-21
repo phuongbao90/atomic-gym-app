@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import { AppText } from "../../components/ui/app-text";
 import { AppButton } from "../../components/ui/app-button";
 import { router } from "expo-router";
-import { appRoutes } from "../../configs/routes";
+import { appRoutes } from "app-config";
 import { toast } from "sonner-native";
 
 const initialValues = {

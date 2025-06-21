@@ -18,7 +18,7 @@ import { BodyMeasurementType } from "app/src/prisma-generated";
 import { PRIMARY_COLOR, twColors } from "../../../styles/themes";
 import { BodyLogResponse } from "app/src/query/logs/logs.types";
 import { useRouter } from "expo-router";
-import { appRoutes } from "../../../configs/routes";
+import { appRoutes } from "app-config";
 import { UserPreferencesStorage } from "app";
 import { dayjs } from "../../../lib/dayjs";
 

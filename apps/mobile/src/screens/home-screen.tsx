@@ -10,7 +10,7 @@ import { AppScrollView } from "../../src/components/ui/app-scrollview";
 import { AppHeader } from "../components/ui/app-header";
 import { AppScreen } from "../components/ui/app-screen";
 import { useAppDispatch, useAppSelector } from "../stores/redux-store";
-import { appRoutes } from "../configs/routes";
+import { appRoutes } from "app-config";
 import { useTranslation } from "react-i18next";
 import {
   CalendarIcon,

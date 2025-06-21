@@ -4,7 +4,7 @@ import { VerticalDotsIcon } from "../../../components/ui/expo-icon";
 import { convertToHourMinuteSecond } from "../../../utils/convert-to-hour-minute-second";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "expo-router";
-import { appRoutes } from "../../../configs/routes";
+import { appRoutes } from "app-config";
 import { capitalize } from "lodash";
 import { CreateWorkoutPlanSliceType } from "../../../stores/slices/create-workout-plan-slice";
 

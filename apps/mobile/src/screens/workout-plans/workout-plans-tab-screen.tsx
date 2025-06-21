@@ -17,7 +17,7 @@ import {
   SingleWorkoutPlanCard,
   WorkoutPlanCard,
 } from "../../components/workout-plan-card";
-import { appRoutes } from "../../configs/routes";
+import { appRoutes } from "app-config";
 import { useAppSelector } from "../../stores/redux-store";
 import { useTranslation } from "react-i18next";
 import { capitalize } from "lodash";

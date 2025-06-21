@@ -5,7 +5,7 @@ import { View } from "react-native";
 import { AppScreen } from "../../../src/components/ui/app-screen";
 import { AppScrollView } from "../../../src/components/ui/app-scrollview";
 import { AppText } from "../../../src/components/ui/app-text";
-import { appRoutes } from "../../../src/configs/routes";
+import { appRoutes } from "app-config";
 import { getCookie, signIn } from "../../lib/auth-client";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";

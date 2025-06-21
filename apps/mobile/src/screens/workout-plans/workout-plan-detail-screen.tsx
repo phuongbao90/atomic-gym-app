@@ -16,7 +16,7 @@ import { PlanInfo } from "./components/workout-plan-info";
 import { WorkoutPlanStatistics } from "./components/workout-plan-statistics";
 import { useTranslation } from "react-i18next";
 import { EditIcon, VerticalDotsIcon } from "../../components/ui/expo-icon";
-import { appRoutes } from "../../configs/routes";
+import { appRoutes } from "app-config";
 import { useAppDispatch, useAppSelector } from "../../stores/redux-store";
 import { setActiveWorkoutPlanId } from "../../stores/slices/app-slice";
 import { useCallback, useEffect, useRef } from "react";
