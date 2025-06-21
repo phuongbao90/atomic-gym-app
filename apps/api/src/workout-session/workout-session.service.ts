@@ -530,33 +530,4 @@ export class WorkoutSessionService {
       throw error;
     }
   }
-
-  async createWorkoutSession(user: User, body: CreateWorkoutSessionDto) {
-    const workoutSession = await this.prisma.workoutSessionLog.create({
-      data: {
-        originalWorkoutPlanId: body.originalWorkoutPlanId,
-        originalWorkoutId: body.originalWorkoutId,
-        workoutNameSnapshot: body.workoutNameSnapshot,
-        workoutPlanNameSnapshot: body.workoutPlanNameSnapshot,
-        performedAt: body.performedAt,
-        id: body.id,
-        duration: body.duration,
-        notes: body.notes,
-        userId: user.id,
-
-        setLogs: {
-          createMany: {
-            data: body.setLogs?.map((s) => ({
-              ...s,
-              userId: user.id,
-              performedAt: body.performedAt,
-              muscleGroupId: Number(s.muscleGroupId),
-            })),
-          },
-        },
-      },
-    });
-
-    return workoutSession;
-  }
 }
