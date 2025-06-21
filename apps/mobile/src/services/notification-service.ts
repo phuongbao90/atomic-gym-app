@@ -48,7 +48,7 @@ const createNotificationChannel = async (): Promise<void> => {
         sound: "default",
       });
       channelCreated = true;
-      console.log(
+      console.debug(
         "[useNotificationSetup] Notification channel created/verified."
       );
     } catch (error) {
@@ -85,7 +85,10 @@ export const displayNotification = async (
       },
     };
 
-    console.log("[displayNotification] Displaying notification:", notification);
+    console.debug(
+      "[displayNotification] Displaying notification:",
+      notification
+    );
     await notifee.displayNotification(notification);
   } catch (error) {
     console.error(
@@ -107,7 +110,7 @@ export const getFCMToken = async (): Promise<string | null> => {
       return null;
     }
     const token = await messaging().getToken();
-    console.log("[getFCMToken] FCM Token retrieved:", token);
+    console.debug("[getFCMToken] FCM Token retrieved:", token);
     return token;
   } catch (error) {
     console.error("[getFCMToken] Failed to get FCM token:", error);
@@ -118,12 +121,17 @@ export const getFCMToken = async (): Promise<string | null> => {
 /**
  * Schedules a local notification to be displayed at a future time.
  */
-export const scheduleLocalNotification = async (
-  title: string,
-  body: string,
-  date: Date,
-  data?: NotificationData
-): Promise<string> => {
+export const scheduleLocalNotification = async ({
+  title,
+  body,
+  date,
+  data,
+}: {
+  title: string;
+  body: string;
+  date: Date;
+  data?: NotificationData;
+}): Promise<string> => {
   // Prevent scheduling notifications for a past date
   if (date.getTime() <= Date.now()) {
     throw new Error("Cannot schedule a notification for a date in the past.");
@@ -143,7 +151,7 @@ export const scheduleLocalNotification = async (
     },
     trigger
   );
-  console.log(
+  console.debug(
     `[scheduleLocalNotification] Notification scheduled with ID: ${notificationId}`
   );
   return notificationId;
@@ -156,7 +164,7 @@ export const cancelScheduledNotification = async (
   notificationId: string
 ): Promise<void> => {
   await notifee.cancelNotification(notificationId);
-  console.log(`[cancelScheduledNotification] Canceled: ${notificationId}`);
+  console.debug(`[cancelScheduledNotification] Canceled: ${notificationId}`);
 };
 
 // --- The Main Custom Hook ---
@@ -192,7 +200,7 @@ export const useNotificationSetup = (
       // 3. Check for initial notification that opened the app
       const initialNotification = await notifee.getInitialNotification();
       if (initialNotification) {
-        console.log(
+        console.debug(
           "[useNotificationSetup] App opened by initial notification."
         );
         onNotificationOpened(initialNotification.notification);
@@ -206,7 +214,7 @@ export const useNotificationSetup = (
     // 4. Listener for foreground FCM messages
     const unsubscribeOnMessage = messaging().onMessage(
       async (remoteMessage) => {
-        console.log(
+        console.debug(
           "[useNotificationSetup] FCM Message received in foreground."
         );
         displayNotification(remoteMessage);
@@ -217,7 +225,7 @@ export const useNotificationSetup = (
     const unsubscribeNotifeeForeground = notifee.onForegroundEvent(
       ({ type, detail }) => {
         if (type === EventType.PRESS) {
-          console.log(
+          console.debug(
             "[useNotificationSetup] User pressed notification in foreground."
           );
           onNotificationOpened(detail.notification);
@@ -228,11 +236,11 @@ export const useNotificationSetup = (
     // 6. Listener for Notifee background events (notification press)
     notifee.onBackgroundEvent(async ({ type, detail }) => {
       if (type === EventType.PRESS) {
-        console.log(
+        console.debug(
           "[useNotificationSetup] User pressed notification in background.",
           detail.notification
         );
-        // This log is a good place to add analytics for background notification presses.
+        // This debug is a good place to add analytics for background notification presses.
         // The onNotificationOpened callback is handled by getInitialNotification
         // when the app re-opens from a quit state.
       }

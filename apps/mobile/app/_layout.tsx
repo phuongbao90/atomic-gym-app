@@ -30,7 +30,12 @@ import {
 import { ModalProvider } from "react-native-modalfy";
 import { modalStack } from "../src/lib/modal/modal-stack";
 import { Provider } from "react-redux";
-import { persistor, store, useAppSelector } from "../src/stores/redux-store";
+import {
+  persistor,
+  store,
+  useAppDispatch,
+  useAppSelector,
+} from "../src/stores/redux-store";
 import i18n from "../src/configs/i18n";
 import { PersistGate } from "redux-persist/integration/react";
 import { colorScheme } from "nativewind";
@@ -61,7 +66,6 @@ import {
 import messaging, {
   FirebaseMessagingTypes,
 } from "@react-native-firebase/messaging";
-import { appRoutes } from "app-config";
 
 enableScreens();
 
@@ -239,6 +243,7 @@ const App = () => {
   const runOnce = useRef(false);
   const runOnceTheme = useRef(false);
   const cookie = getCookie();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (cookie) {
@@ -252,11 +257,11 @@ const App = () => {
 
   useEffect(() => {
     if (isConnected) {
-      setIsConnected(true);
+      dispatch(setIsConnected(true));
     } else {
-      setIsConnected(false);
+      dispatch(setIsConnected(false));
     }
-  }, [isConnected]);
+  }, [isConnected, dispatch]);
 
   useEffect(() => {
     if (runOnce.current) return;
