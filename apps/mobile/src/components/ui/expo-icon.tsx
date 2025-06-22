@@ -290,3 +290,11 @@ export const WeightIcon = (props: Omit<IconProps<string>, "name">) => {
     />
   );
 };
+
+export const MessageIcon = (props: Omit<IconProps<string>, "name">) => {
+  return <ExpoIcon library="feather" name="message-square" {...props} />;
+};
+
+export const YoutubeIcon = (props: Omit<IconProps<string>, "name">) => {
+  return <ExpoIcon library="feather" name="youtube" {...props} />;
+};

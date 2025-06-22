@@ -5,6 +5,7 @@ import { useAppSelector } from "../stores/redux-store";
 import { cn } from "../utils/cn";
 import { MuscleGroupItemSchema } from "app-config";
 import { z } from "zod";
+import { AppImage } from "./ui/app-image";
 
 export const MuscleItem = ({
   muscleGroup,
@@ -31,11 +32,11 @@ export const MuscleItem = ({
           <AppText className={cn("text-xl font-semibold text-center")}>
             {muscleGroup.name}
           </AppText>
-          <Image
-            source={muscleGroup.image}
+          <AppImage
+            uri={muscleGroup.image}
+            width={100}
+            height={100}
             style={{
-              width: 100,
-              height: 100,
               borderRadius: 100,
               borderWidth: 2,
               borderColor: theme === "dark" ? "white" : "black",
@@ -45,8 +46,10 @@ export const MuscleItem = ({
         </>
       ) : (
         <>
-          <Image
-            source={muscleGroup.image}
+          <AppImage
+            uri={muscleGroup.image}
+            width={100}
+            height={100}
             style={{
               width: 100,
               height: 100,

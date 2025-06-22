@@ -1,7 +1,7 @@
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useGetWorkoutPlansByMe, useGetWorkoutPlansInGroups } from "app";
 import { useRouter } from "expo-router";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import {
   FlatList,
   Pressable,
@@ -25,6 +25,7 @@ import { AppText } from "../../components/ui/app-text";
 import { useSession } from "../../lib/auth-client";
 import { z } from "zod";
 import { WorkoutPlanItemResponseSchema } from "app-config";
+import { Image } from "expo-image";
 
 export function WorkoutPlansTabScreen() {
   const router = useRouter();
@@ -36,7 +37,50 @@ export function WorkoutPlansTabScreen() {
     enabled: !!session?.session,
   });
 
+  // 2. THE CRITICAL STEP: Prefetch all images as soon as the data arrives
+  useEffect(() => {
+    // Ensure we have plans to work with
+    if (myWorkoutPlans && myWorkoutPlans.length > 0) {
+      const imageUrls = myWorkoutPlans
+        .map((plan) => plan.cover_image)
+        .filter(Boolean) as string[];
+      Image.prefetch(imageUrls, { cachePolicy: "memory-disk" });
+    }
+  }, [myWorkoutPlans]); // This effect runs once when the list data is loaded
+
   const { data, isRefetching, refetch } = useGetWorkoutPlansInGroups();
+
+  useEffect(() => {
+    if (data) {
+      const featuredImages = data.isFeatured
+        .map((plan) => plan.cover_image)
+        .filter(Boolean);
+      if (featuredImages.length > 0) {
+        Image.prefetch(featuredImages, {
+          cachePolicy: "memory-disk",
+        });
+      }
+
+      const categoryImages = Object.values(data.byCategory).map((item) => {
+        return item.result.data.map((plan) => plan.cover_image).filter(Boolean);
+      });
+      if (categoryImages.length > 0) {
+        Image.prefetch(categoryImages.flat(), {
+          cachePolicy: "memory-disk",
+        });
+      }
+
+      // const singleImages = data.single
+      //   .map((plan) => plan.cover_image)
+      //   .filter(Boolean);
+      // if (singleImages.length > 0) {
+      //   Image.prefetch(singleImages, {
+      //     cachePolicy: "memory-disk",
+      //   });
+      // }
+    }
+  }, [data]);
+
   const sections = useMemo(() => {
     if (!data) return [];
 

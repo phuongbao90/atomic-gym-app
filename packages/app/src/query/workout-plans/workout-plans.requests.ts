@@ -25,19 +25,32 @@ export const getWorkoutPlan = async (id: string) => {
 };
 
 export const getWorkoutPlansInGroups = async () => {
-  return (await http.get(API_ROUTES.plans.inGroups).json()) as ApiResponse<
-    Record<
+  return (await http.get(API_ROUTES.plans.inGroups).json()) as ApiResponse<{
+    isFeatured: z.infer<typeof WorkoutPlanItemResponseSchema>[];
+    single: z.infer<typeof WorkoutPlanItemResponseSchema>[];
+    byCategory: Record<
       string,
-      [
-        {
-          result: {
-            name: string;
-            data: z.infer<typeof WorkoutPlanItemResponseSchema>[];
-          };
-        },
-      ]
-    >
-  >;
+      {
+        result: {
+          name: string;
+          data: z.infer<typeof WorkoutPlanItemResponseSchema>[];
+        };
+      }
+    >;
+  }>;
+  // return (await http.get(API_ROUTES.plans.inGroups).json()) as ApiResponse<
+  //   Record<
+  //     string,
+  //     [
+  //       {
+  //         result: {
+  //           name: string;
+  //           data: z.infer<typeof WorkoutPlanItemResponseSchema>[];
+  //         };
+  //       },
+  //     ]
+  //   >
+  // >;
 };
 
 export const createWorkoutPlan = async (

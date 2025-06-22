@@ -56,6 +56,8 @@ export const ExerciseItem = ({
               width: 100,
               height: 100,
             }}
+            width={100}
+            height={100}
             contentFit="cover"
             testID="exercise-item-image"
             cachePolicy={"memory-disk"}

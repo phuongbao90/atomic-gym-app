@@ -1,14 +1,10 @@
-import Feather from "@expo/vector-icons/Feather";
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
-import { Exercise } from "app";
 import { useCallback, useRef, useState } from "react";
-import { View, Linking, TouchableOpacity } from "react-native";
+import { View, Linking, TouchableOpacity, Dimensions } from "react-native";
 import { AppScrollView } from "../../../components/ui/app-scrollview";
 import { AppText } from "../../../components/ui/app-text";
 import { Divider } from "../../../components/ui/divider";
 import { ListItem } from "../../../components/ui/list-item";
-import { ThemedIcon } from "../../../components/ui/themed-icon";
-import { Image } from "expo-image";
 import { useTranslation } from "react-i18next";
 import { MuscleItem } from "../../../components/muscle-item";
 import { AppBottomSheetView } from "../../../components/ui/app-bottom-sheet-view";
@@ -17,6 +13,8 @@ import { AppBottomSheetModal } from "../../../components/ui/app-bottom-sheet-mod
 import { useAppSelector } from "../../../stores/redux-store";
 import { ExerciseItemSchema } from "app-config";
 import { z } from "zod";
+import { MessageIcon, YoutubeIcon } from "../../../components/ui/expo-icon";
+import { AppImage } from "../../../components/ui/app-image";
 
 export const ExerciseSummary = ({
   exercise,
@@ -52,9 +50,10 @@ export const ExerciseSummary = ({
       }}
     >
       {exercise?.images?.[0] && (
-        <Image
-          source={exercise.images?.[0]}
+        <AppImage
+          uri={exercise.images?.[0]}
           style={{ width: "100%", height: 300 }}
+          height={300}
           contentFit="cover"
         />
       )}
@@ -81,13 +80,7 @@ export const ExerciseSummary = ({
           onPress={() => {
             ref.current?.present();
           }}
-          Left={
-            <ThemedIcon
-              render={({ color }) => (
-                <Feather name="message-square" size={24} color={color} />
-              )}
-            />
-          }
+          Left={<MessageIcon />}
         />
 
         <Divider className="my-4" />
@@ -99,13 +92,7 @@ export const ExerciseSummary = ({
               `https://www.youtube.com/results?search_query=${exercise?.name}`
             );
           }}
-          Left={
-            <ThemedIcon
-              render={({ color }) => (
-                <Feather name="youtube" size={24} color={color} />
-              )}
-            />
-          }
+          Left={<YoutubeIcon />}
         />
         <Divider className="mt-4" />
       </View>

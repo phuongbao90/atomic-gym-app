@@ -1,4 +1,3 @@
-import { ImageBackground } from "expo-image";
 import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { appRoutes } from "app-config";
@@ -98,6 +97,8 @@ export const SingleWorkoutPlanCard = ({
         <AppImage
           uri={item.cover_image}
           style={{ width: 46, height: 46, borderRadius: 10 }}
+          width={46}
+          height={46}
           contentFit="cover"
           testID="single-workout-plan-card-image"
         />

@@ -1,5 +1,4 @@
 import { useGetWorkoutPlan } from "app";
-import { ImageBackground } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, View } from "react-native";
 import {
@@ -23,6 +22,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { use$ } from "@legendapp/state/react";
 import { observable } from "@legendapp/state";
 import { AppTouchable } from "../../components/ui/app-touchable";
+import { AppImage } from "../../components/ui/app-image";
 
 const routes = [
   { key: "first", title: "overview" },
@@ -79,29 +79,27 @@ export const WorkoutPlanDetailScreen = () => {
 
   const renderHeader = useCallback(() => {
     return (
-      <View>
+      <>
         {workoutPlan?.cover_image && (
-          <ImageBackground
-            source={{ uri: workoutPlan?.cover_image }}
+          <AppImage
+            uri={workoutPlan?.cover_image}
             contentFit="cover"
             className="w-full h-full"
-            style={[
-              {
-                width: "100%",
-                height: IMAGE_HEIGHT,
-              },
-            ]}
+            style={{
+              width: "100%",
+              height: IMAGE_HEIGHT,
+            }}
           >
             <AppText
-              className="text-2xl font-bold bottom-6 left-6 absolute"
+              className="text-2xl font-bold bottom-6 left-6 absolute text-white"
               numberOfLines={2}
               style={{ maxWidth: "90%" }}
             >
               {workoutPlan?.name}
             </AppText>
-          </ImageBackground>
+          </AppImage>
         )}
-      </View>
+      </>
     );
   }, [workoutPlan]);
 
