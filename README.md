@@ -2,6 +2,20 @@
 
 A modern, full-stack gym management application built with React Native, Expo, and TypeScript. This monorepo project uses Turborepo for efficient development and deployment.
 
+## Related Project Documents
+
+- [Project-specification](docs/project-specifications.md)
+- [User-journey-map](docs/user-journey-map.md)
+- [User-Story](docs/user-story.md)
+- [technology-stack-overview](docs/technology-stack-overview.md)
+- [Development-roadmap](docs/development-roadmap.md)
+- [Backend-Framework](docs/backend-framework.md)
+- [Database-Schema-design](docs/database-schema-design.md)
+- [Frontend-blueprint](docs/frontend-blueprint.md)
+- [Performance-optimization-plan](docs/performance-optimization-plan.md)
+- [security-implementation](docs/security-implementation-guide.md)
+
+
 ## 🚀 Features
 
 - Mobile app for gym members and trainers

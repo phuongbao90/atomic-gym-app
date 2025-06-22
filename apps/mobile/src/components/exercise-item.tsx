@@ -1,4 +1,3 @@
-import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { appRoutes } from "app-config";
 import { ListItem } from "./ui/list-item";
@@ -7,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { upperCase } from "lodash";
 import { z } from "zod";
 import { ExerciseItemSchema } from "app-config";
+import { AppImage } from "./ui/app-image";
 
 export const ExerciseItem = ({
   item,
@@ -49,14 +49,16 @@ export const ExerciseItem = ({
       }
       Left={
         item.images[0] ? (
-          <Image
-            source={item.images[0]}
+          <AppImage
+            // source={item.images[0]}
+            uri={item.images[0]}
             style={{
               width: 100,
               height: 100,
             }}
             contentFit="cover"
             testID="exercise-item-image"
+            cachePolicy={"memory-disk"}
           />
         ) : null
       }

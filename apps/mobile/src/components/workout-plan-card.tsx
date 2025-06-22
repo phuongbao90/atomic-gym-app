@@ -1,4 +1,3 @@
-import Entypo from "@expo/vector-icons/Entypo";
 import { ImageBackground } from "expo-image";
 import { useRouter } from "expo-router";
 import { Pressable, Text, View } from "react-native";
@@ -10,6 +9,8 @@ import { AppImage } from "./ui/app-image";
 import { WorkoutPlanItemResponseSchema } from "app-config";
 import { z } from "zod";
 import { toast } from "sonner-native";
+import { LockIcon as LockIconIcon } from "./ui/expo-icon";
+import { AppImageBackground } from "./ui/app-background-image";
 
 export const WorkoutPlanCard = ({
   item,
@@ -33,8 +34,8 @@ export const WorkoutPlanCard = ({
       testID="workout-plan-card"
     >
       <View className="w-72 h-44 rounded-lg overflow-hidden">
-        <ImageBackground
-          source={item.cover_image ? { uri: item.cover_image } : undefined}
+        <AppImageBackground
+          uri={item.cover_image}
           style={{
             width: "100%",
             height: "100%",
@@ -43,7 +44,14 @@ export const WorkoutPlanCard = ({
           testID="workout-plan-card-image"
         >
           <View className="items-start justify-end flex-1 px-2 pb-2 gap-1 bg-black/30">
-            {item.isPremium && <LockIcon />}
+            {item.isPremium && (
+              <View
+                className="absolute top-2 right-2 w-8 h-8 items-center justify-center rounded-full bg-black/40"
+                testID="lock-icon"
+              >
+                <LockIconIcon size={16} color="white" />
+              </View>
+            )}
             <Text className="text-white text-lg font-bold">{item.name}</Text>
             <View className="flex-row items-center gap-1">
               {item.level && (
@@ -57,20 +65,11 @@ export const WorkoutPlanCard = ({
               )}
             </View>
           </View>
-        </ImageBackground>
+        </AppImageBackground>
       </View>
     </Pressable>
   );
 };
-
-const LockIcon = () => (
-  <View
-    className="absolute top-2 right-2 w-8 h-8 items-center justify-center rounded-full bg-black/40"
-    testID="lock-icon"
-  >
-    <Entypo name="lock" size={16} color="white" />
-  </View>
-);
 
 export const SingleWorkoutPlanCard = ({
   item,
@@ -104,20 +103,12 @@ export const SingleWorkoutPlanCard = ({
         />
         <AppText
           numberOfLines={1}
-          className="text-base font-semibold"
+          className="text-base font-semibold mr-auto"
           style={{ maxWidth: "82%" }}
         >
           {item.name}
         </AppText>
-        {item.isPremium && (
-          <Entypo
-            name="lock"
-            size={18}
-            color="gray"
-            className="ml-auto"
-            testID="lock-icon"
-          />
-        )}
+        {item.isPremium && <LockIconIcon />}
       </View>
     </Pressable>
   );

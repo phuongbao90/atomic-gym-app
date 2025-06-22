@@ -182,7 +182,7 @@ export const useNotificationSetup = (
 ) => {
   useEffect(() => {
     const initialize = async () => {
-      // 1. Create channel
+      // 1. Create channel for android only
       await createNotificationChannel();
 
       // 2. Request permissions and check status
@@ -190,6 +190,7 @@ export const useNotificationSetup = (
       const enabled =
         settings.authorizationStatus === AuthorizationStatus.AUTHORIZED ||
         settings.authorizationStatus === AuthorizationStatus.PROVISIONAL;
+
       if (!enabled) {
         console.warn(
           "[useNotificationSetup] User denied notification permissions."
@@ -199,6 +200,7 @@ export const useNotificationSetup = (
 
       // 3. Check for initial notification that opened the app
       const initialNotification = await notifee.getInitialNotification();
+
       if (initialNotification) {
         console.debug(
           "[useNotificationSetup] App opened by initial notification."
@@ -214,6 +216,7 @@ export const useNotificationSetup = (
     // 4. Listener for foreground FCM messages
     const unsubscribeOnMessage = messaging().onMessage(
       async (remoteMessage) => {
+        console.log("remoteMessage", remoteMessage);
         console.debug(
           "[useNotificationSetup] FCM Message received in foreground."
         );
@@ -253,3 +256,5 @@ export const useNotificationSetup = (
     };
   }, [onNotificationOpened]);
 };
+
+// friEBMXfqUsOgVCRRg7tpb:APA91bF04g13PdILPj1pMo8Zi0pK-YH-25B5kqYhpHcFQYdanKHAbblFCB0J6v276u-yFpRy85rcK1lOJJ47Tb6th8hxboKFnaZ2flWKAEyXojhOlL-hrHU

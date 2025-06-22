@@ -270,6 +270,7 @@ export const ExercisesScreen = () => {
         onEndReachedThreshold={0.1}
         contentContainerStyle={{
           paddingBottom: 100,
+          paddingHorizontal: 12,
         }}
         keyExtractor={(item) => item?.id?.toString() || ""}
         onEndReached={() => {
@@ -277,7 +278,7 @@ export const ExercisesScreen = () => {
             fetchNextPage();
           }
         }}
-        drawDistance={Env.TEST_MODE ? 10000 : 250}
+        drawDistance={Env.TEST_MODE ? 10000 : 10 * 100} // 10 items * 100px
         estimatedItemSize={100}
         ItemSeparatorComponent={() => <View className="h-4" />}
         ListFooterComponent={

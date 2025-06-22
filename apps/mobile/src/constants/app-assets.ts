@@ -9,3 +9,5 @@ export const OnBoardingImage3 = require("../../assets/images/onboard/3.svg");
 export const OnBoardingImage4 = require("../../assets/images/onboard/4.svg");
 
 export const OnboardBackgroundBlur = require("../../assets/images/onboard/backgound.jpg");
+
+export const PlaceholderImage = require("../../assets/images/placeholder.jpg");
