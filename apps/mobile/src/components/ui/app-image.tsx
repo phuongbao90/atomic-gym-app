@@ -1,5 +1,5 @@
 import { Image, ImageProps, ImageStyle, useImage } from "expo-image";
-// import { PlaceholderImage } from "../../constants/app-assets";
+import { PlaceholderImage } from "../../constants/app-assets";
 import { Dimensions, StyleSheet, View } from "react-native";
 
 type AppImageProps = {
@@ -19,7 +19,7 @@ export const AppImage = ({
   children,
   ...props
 }: AppImageProps) => {
-  const optimizedImage = useImage(uri || "", {
+  const optimizedImage = useImage(uri || PlaceholderImage, {
     maxWidth: width,
     maxHeight: height,
   });
