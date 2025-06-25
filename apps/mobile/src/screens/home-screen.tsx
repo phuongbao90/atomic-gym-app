@@ -45,7 +45,7 @@ export function HomeScreen() {
   const router = useRouter();
 
   return (
-    <AppScreen name="home-screen">
+    <AppScreen name="home-screen" safeAreaEdges={["top"]}>
       <AppHeader
         title={t("app_name")}
         Right={

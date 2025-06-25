@@ -81,7 +81,7 @@ export const EditSetScreen = () => {
   }
 
   return (
-    <AppScreen name="edit-set-screen">
+    <AppScreen name="edit-set-screen" safeAreaEdges={["top"]}>
       <AppHeader
         title={t("edit_set")}
         withBackButton

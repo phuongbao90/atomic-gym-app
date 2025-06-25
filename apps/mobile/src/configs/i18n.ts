@@ -11,7 +11,7 @@ import authScreenEn from "../locales/en/auth.json";
 import authScreenVi from "../locales/vi/auth.json";
 import { ZodErrorMap } from "zod";
 import z from "zod";
-import { AppStorage } from "app";
+import { storageKeyNames, storageLoadString } from "app";
 
 const customErrorMap: ZodErrorMap = (issue, ctx) => {
   switch (issue.code) {
@@ -33,7 +33,7 @@ const customErrorMap: ZodErrorMap = (issue, ctx) => {
 z.setErrorMap(customErrorMap);
 
 const initI18n = async () => {
-  let savedLanguage = AppStorage.getLanguage();
+  let savedLanguage = storageLoadString(storageKeyNames.language);
 
   if (!savedLanguage) {
     savedLanguage = Localization.getLocales()[0].languageCode;

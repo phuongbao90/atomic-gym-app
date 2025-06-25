@@ -57,7 +57,11 @@ export const EditWorkoutSessionScreen = () => {
   };
 
   return (
-    <AppScreen name="edit-workout-session-screen" isLoading={isMutating > 0}>
+    <AppScreen
+      name="edit-workout-session-screen"
+      isLoading={isMutating > 0}
+      safeAreaEdges={["top"]}
+    >
       <Header />
       <ReorderableList
         data={workoutExercises}

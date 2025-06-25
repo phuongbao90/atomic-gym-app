@@ -4,7 +4,7 @@ import { AppText } from "../../components/ui/app-text";
 
 export const UpdatePasswordScreen = () => {
   return (
-    <AppScreen name="update-password-screen">
+    <AppScreen name="update-password-screen" safeAreaEdges={["top"]}>
       <AppScrollView>
         <AppText>Update Password</AppText>
       </AppScrollView>

@@ -64,7 +64,7 @@ export const InProgressWorkoutScreen = () => {
   };
 
   return (
-    <AppScreen name="in-progress-workout-screen">
+    <AppScreen name="in-progress-workout-screen" safeAreaEdges={["top"]}>
       <Header />
       <Divider />
 

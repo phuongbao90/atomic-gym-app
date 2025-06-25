@@ -77,7 +77,7 @@ export function EditExerciseSetsScreen() {
   }
 
   return (
-    <AppScreen name="edit-exercise-sets-screen">
+    <AppScreen name="edit-exercise-sets-screen" safeAreaEdges={["top"]}>
       <AppHeader title={t("edit_exercise")} withBackButton />
 
       <AppText className="text-4xl font-bold p-6">

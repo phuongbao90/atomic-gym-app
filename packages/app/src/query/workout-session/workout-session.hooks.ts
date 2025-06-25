@@ -15,8 +15,10 @@ import { UpdateWorkoutSessionExerciseSetsBody } from "./workout-session.types";
 import {
   CreateWorkoutSessionSchema,
   UpdateWorkoutSessionSchema,
+  WorkoutSessionHistoryItemSchema,
 } from "app-config";
 import { z } from "zod";
+import { ApiResponse } from "../..";
 
 export const useWorkoutSessionHistory = () => {
   return useQuery({
@@ -38,8 +40,51 @@ export const useWorkoutSessionDetail = (id: string) => {
 };
 
 export const useDeleteWorkoutSession = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteWorkoutSession(id),
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({
+        queryKey: WORKOUT_SESSION_KEYS.detail(id),
+      });
+
+      const previousData = (await queryClient.getQueryData(
+        WORKOUT_SESSION_KEYS.history()
+      )) as ApiResponse<z.infer<typeof WorkoutSessionHistoryItemSchema>[]>;
+
+      await queryClient.setQueryData(
+        WORKOUT_SESSION_KEYS.history(),
+        (
+          old:
+            | ApiResponse<z.infer<typeof WorkoutSessionHistoryItemSchema>[]>
+            | undefined
+        ) => {
+          if (!old) return old;
+
+          return {
+            ...old,
+            data: old.data.filter((item) => item.id !== id),
+          };
+        }
+      );
+
+      return { previousData };
+    },
+    onError: async (error, id, context) => {
+      console.error("🚀 ~ onError: ~ error:", error);
+      const previousData = (await queryClient.getQueryData(
+        WORKOUT_SESSION_KEYS.history()
+      )) as ApiResponse<z.infer<typeof WorkoutSessionHistoryItemSchema>[]>;
+
+      queryClient.setQueryData(WORKOUT_SESSION_KEYS.history(), previousData);
+    },
+    onSettled: (data, error, id, context) => {
+      console.error("🚀 ~ useDeleteWorkoutSession ~ error:", error);
+      queryClient.invalidateQueries({
+        queryKey: WORKOUT_SESSION_KEYS.history(),
+      });
+      console.log("run onSettled");
+    },
   });
 };
 

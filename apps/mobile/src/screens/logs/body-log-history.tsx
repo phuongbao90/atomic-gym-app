@@ -29,7 +29,7 @@ export const BodyLogHistory = () => {
 
   if (isLoading) {
     return (
-      <AppScreen name="body-log-history">
+      <AppScreen name="body-log-history" safeAreaEdges={["top"]}>
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator color={PRIMARY_COLOR} />
         </View>

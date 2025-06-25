@@ -9,7 +9,6 @@ import { useTranslation } from "react-i18next";
 import { useWorkoutTimer } from "../../hooks/use-workout-timer";
 import PagerView from "react-native-pager-view";
 import { useAppDispatch, useAppSelector } from "../../stores/redux-store";
-import { InProgressWorkoutExercisesScreenParams } from "app-config";
 import React, { Fragment, useRef, useState } from "react";
 import { setCountDownRestTimeEndTime } from "../../stores/slices/workout-session-slice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -33,20 +32,20 @@ import deepEqual from "deep-equal";
 import { LegendList } from "@legendapp/list";
 
 export const InProgressWorkoutExercisesScreen = () => {
-  const { pageIndex } =
-    useLocalSearchParams<InProgressWorkoutExercisesScreenParams>();
-
+  const { pageIndex } = useLocalSearchParams<{ pageIndex: string }>();
   const workoutExercises = useAppSelector(
     selectExercisesForPagerView,
     deepEqual
   );
-
   const [activePage, setActivePage] = useState(Number(pageIndex));
   const completedSetSheetRef = useRef<BottomSheet>(null);
   const incompletedSetSheetRef = useRef<BottomSheet>(null);
 
   return (
-    <AppScreen name="in-progress-workout-exercises-screen">
+    <AppScreen
+      name="in-progress-workout-exercises-screen"
+      safeAreaEdges={["top"]}
+    >
       <Header />
       <View className="mb-3">
         <ExerciseSetPagerDots

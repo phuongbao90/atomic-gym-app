@@ -48,7 +48,7 @@ export const ForgotPasswordScreen = () => {
   }
 
   return (
-    <AppScreen name="forgot-password-screen">
+    <AppScreen name="forgot-password-screen" safeAreaEdges={["top"]}>
       <BackButton />
       <AppScrollView>
         <View className="gap-4 m-4 flex-1 mt-28">

@@ -16,6 +16,7 @@ export const SetExerciseHeader = ({
   exerciseId: string;
 }) => {
   const router = useRouter();
+
   return (
     <View className="flex-row items-center gap-4">
       <AppTouchable
@@ -26,6 +27,8 @@ export const SetExerciseHeader = ({
         <AppImage
           uri={exerciseImageUrl}
           style={{ width: 80, height: 80, borderRadius: 10 }}
+          width={80}
+          height={80}
         />
       </AppTouchable>
       <View>

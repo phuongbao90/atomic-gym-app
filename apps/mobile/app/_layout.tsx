@@ -46,13 +46,14 @@ import { enableScreens } from "react-native-screens";
 import { getCookie, useSession } from "../src/lib/auth-client";
 import {
   appStorage,
-  AppStorage,
   clearRequestCookie,
   queryClient,
   setRequestCookie,
   setRequestLanguage,
   storageKeyNames,
+  storageSaveString,
 } from "app";
+
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setIsConnected } from "../src/stores/slices/app-slice";
 import { AudioModule } from "expo-audio";
@@ -202,25 +203,25 @@ export default function RootLayout() {
               <ModalProvider stack={modalStack}>
                 <BottomSheetModalProvider>
                   <PortalProvider>
-                    <StatusBar
+                    {/* <StatusBar
                       translucent
                       backgroundColor="black"
                       networkActivityIndicatorVisible
-                    />
-                    <View
+                    /> */}
+                    {/* <View
                       style={{
                         flex: 1,
                         paddingBottom: insets.bottom,
                         paddingTop: insets.top,
                       }}
-                    >
-                      <App />
-                      <Toaster
-                        position="top-center"
-                        duration={2000}
-                        style={{ marginTop: 10 }}
-                      />
-                    </View>
+                    > */}
+                    <App />
+                    <Toaster
+                      position="top-center"
+                      duration={2000}
+                      style={{ marginTop: 10 }}
+                    />
+                    {/* </View> */}
                   </PortalProvider>
                 </BottomSheetModalProvider>
               </ModalProvider>
@@ -248,10 +249,10 @@ const App = () => {
   useEffect(() => {
     if (cookie) {
       setRequestCookie(cookie);
-      AppStorage.setCookie(cookie);
+      storageSaveString(storageKeyNames.cookie, cookie);
     } else {
       clearRequestCookie();
-      AppStorage.setCookie("");
+      storageSaveString(storageKeyNames.cookie, "");
     }
   }, [cookie]);
 

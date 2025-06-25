@@ -65,7 +65,7 @@ export const CreateExerciseScreen = () => {
   };
 
   return (
-    <AppScreen name="create-exercise-screen">
+    <AppScreen name="create-exercise-screen" safeAreaEdges={["top"]}>
       <Header handleSubmit={form.handleSubmit(onSubmit)} />
       <KeyboardAwareScrollView ScrollViewComponent={ScrollView}>
         <CreateExerciseForm form={form} />

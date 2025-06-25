@@ -83,7 +83,11 @@ export const WorkoutSessionDetailScreen = () => {
   }, [workoutSession]);
 
   return (
-    <AppScreen name="workout-session-detail-screen" isLoading={isPending}>
+    <AppScreen
+      name="workout-session-detail-screen"
+      isLoading={isPending}
+      safeAreaEdges={["top"]}
+    >
       <AppHeader
         title={t("session_detail")}
         withBackButton

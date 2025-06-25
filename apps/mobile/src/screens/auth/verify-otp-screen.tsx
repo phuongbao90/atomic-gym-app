@@ -4,7 +4,7 @@ import { AppText } from "../../components/ui/app-text";
 
 export const VerifyOtpScreen = () => {
   return (
-    <AppScreen name="verify-otp-screen">
+    <AppScreen name="verify-otp-screen" safeAreaEdges={["top"]}>
       <AppScrollView>
         <AppText>Verify OTP</AppText>
       </AppScrollView>

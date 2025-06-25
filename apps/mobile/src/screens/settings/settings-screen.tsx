@@ -20,7 +20,7 @@ export function SettingsScreen() {
   const { data } = useSession();
 
   return (
-    <AppScreen name="settings-screen">
+    <AppScreen name="settings-screen" safeAreaEdges={["top"]}>
       <AppHeader title={t("title")} withBackButton />
       <AppScrollView contentContainerClassName="px-4 pt-6">
         {!data?.session && (

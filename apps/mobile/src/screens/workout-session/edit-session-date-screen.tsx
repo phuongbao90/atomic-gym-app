@@ -45,7 +45,7 @@ export function EditSessionDateScreen() {
       workoutSession?.duration === duration);
 
   return (
-    <AppScreen name="edit-session-date-screen">
+    <AppScreen name="edit-session-date-screen" safeAreaEdges={["top"]}>
       <AppHeader
         title={t("edit_session")}
         withBackButton

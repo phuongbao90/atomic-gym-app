@@ -55,7 +55,7 @@ export function SignupScreen() {
   }
 
   return (
-    <AppScreen name="register-screen">
+    <AppScreen name="register-screen" safeAreaEdges={["top"]}>
       <AppScrollView>
         <View className="gap-4 m-4 flex-1 mt-28">
           <AppText className="text-3xl font-bold text-center mb-10">

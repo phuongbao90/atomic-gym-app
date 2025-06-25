@@ -57,7 +57,7 @@ export function LoginScreen() {
   }
 
   return (
-    <AppScreen name="login-screen">
+    <AppScreen name="login-screen" safeAreaEdges={["top"]}>
       <AppScrollView contentContainerStyle={{ flex: 1 }}>
         <View className="gap-4 m-4 flex-1 mt-28">
           <AppText className="text-3xl font-bold text-center mb-10">

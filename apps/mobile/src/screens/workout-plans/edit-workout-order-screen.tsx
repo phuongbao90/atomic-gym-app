@@ -35,7 +35,7 @@ export const EditWorkoutOrderScreen = () => {
   );
 
   return (
-    <AppScreen name="edit-workout-order-screen">
+    <AppScreen name="edit-workout-order-screen" safeAreaEdges={["top"]}>
       <AppHeader title={t("reorder_workouts")} withBackButton />
       <ReorderableList
         keyExtractor={(item) => item?.id?.toString() || ""}

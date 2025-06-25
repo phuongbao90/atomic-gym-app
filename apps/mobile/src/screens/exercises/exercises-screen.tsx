@@ -199,7 +199,7 @@ export const ExercisesScreen = () => {
   };
 
   return (
-    <AppScreen name="exercises-screen">
+    <AppScreen name="exercises-screen" safeAreaEdges={["top"]}>
       <AppHeader
         title={capitalize(t("exercises"))}
         withBackButton

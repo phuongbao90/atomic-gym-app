@@ -8,45 +8,81 @@ export const storageKeyNames = {
   cookie: "cookie",
 };
 
-// type keys = keyof typeof storageKeyNames;
+/**
+ * Loads a string from storage.
+ *
+ * @param key The key to fetch.
+ */
+export function storageLoadString(key: string): string | null {
+  try {
+    return appStorage.getString(key) ?? null;
+  } catch {
+    // not sure why this would fail... even reading the RN docs I'm unclear
+    return null;
+  }
+}
 
-export const AppStorage = {
-  clearAll: () => {
+/**
+ * Saves a string to storage.
+ *
+ * @param key The key to fetch.
+ * @param value The value to store.
+ */
+export function storageSaveString(key: string, value: string): boolean {
+  try {
+    appStorage.set(key, value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Loads something from storage and runs it thru JSON.parse.
+ *
+ * @param key The key to fetch.
+ */
+export function storageLoad<T>(key: string): T | null {
+  let almostThere: string | null = null;
+  try {
+    almostThere = storageLoadString(key);
+    return JSON.parse(almostThere ?? "") as T;
+  } catch {
+    return (almostThere as T) ?? null;
+  }
+}
+
+/**
+ * Saves an object to storage.
+ *
+ * @param key The key to fetch.
+ * @param value The value to store.
+ */
+export function storageSave(key: string, value: unknown): boolean {
+  try {
+    storageSaveString(key, JSON.stringify(value));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Removes something from storage.
+ *
+ * @param key The key to kill.
+ */
+export function storageRemove(key: string): void {
+  try {
+    appStorage.delete(key);
+  } catch {}
+}
+
+/**
+ * Burn it all to the ground.
+ */
+export function storageClear(): void {
+  try {
     appStorage.clearAll();
-  },
-  getIsOnboarded: () => {
-    try {
-      return appStorage.getBoolean(storageKeyNames.isOnboarded);
-    } catch (_error) {
-      return false;
-    }
-  },
-  setIsOnboarded: (value: boolean) => {
-    try {
-      appStorage.set(storageKeyNames.isOnboarded, value);
-    } catch (error) {
-      console.error(error);
-    }
-  },
-  getLanguage: () => {
-    try {
-      return appStorage.getString(storageKeyNames.language);
-    } catch (_error) {
-      return null;
-    }
-  },
-  setCookie: (value: string) => {
-    try {
-      appStorage.set(storageKeyNames.cookie, value);
-    } catch (error) {
-      console.error(error);
-    }
-  },
-  getCookie: () => {
-    try {
-      return appStorage.getString(storageKeyNames.cookie);
-    } catch (_error) {
-      return null;
-    }
-  },
-};
+  } catch {}
+}

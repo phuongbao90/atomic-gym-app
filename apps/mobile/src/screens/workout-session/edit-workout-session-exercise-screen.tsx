@@ -55,7 +55,10 @@ export const EditWorkoutSessionExerciseScreen = () => {
   // console.log("workoutExercises ", JSON.stringify(workoutExercises, null, 2));
 
   return (
-    <AppScreen name="edit-workout-session-exercise-screen">
+    <AppScreen
+      name="edit-workout-session-exercise-screen"
+      safeAreaEdges={["top"]}
+    >
       <AppHeader
         title={
           <View className="flex-col gap-1 ml-4">

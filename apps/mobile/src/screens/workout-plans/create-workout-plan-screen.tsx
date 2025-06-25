@@ -22,7 +22,6 @@ import {
   XIcon,
 } from "../../components/ui/expo-icon";
 import { AppText } from "../../components/ui/app-text";
-import { Image } from "expo-image";
 import PagerView, {
   PagerViewOnPageSelectedEventData,
 } from "react-native-pager-view";
@@ -39,7 +38,6 @@ import {
 } from "../../stores/redux-store";
 import {
   addWorkout,
-  duplicateWorkout,
   InitialWorkoutPlan,
   initWorkoutPlan,
   overrideWorkoutExercises,
@@ -215,7 +213,11 @@ export const CreateWorkoutPlanScreen = () => {
   // };
 
   return (
-    <AppScreen name="create-workout-plan-screen" isLoading={isMutating > 0}>
+    <AppScreen
+      name="create-workout-plan-screen"
+      isLoading={isMutating > 0}
+      safeAreaEdges={["top"]}
+    >
       <Header
         isEditing={!!workoutPlanId}
         editingWorkoutPlan={editingWorkoutPlan}
@@ -741,6 +743,7 @@ const PlanImage = () => {
   const image = useAppSelector(
     (state) => state.createWorkoutPlan.workoutPlan.cover_image
   );
+
   return (
     <TouchableOpacity
       testID="workout-plan-image-button"
@@ -755,8 +758,8 @@ const PlanImage = () => {
       }}
       className="w-20 h-20 rounded-lg overflow-hidden border border-gray-500"
     >
-      <Image
-        source={image}
+      <AppImage
+        uri={image}
         contentFit="cover"
         style={{ width: "100%", height: "100%" }}
         testID="workout-plan-image"

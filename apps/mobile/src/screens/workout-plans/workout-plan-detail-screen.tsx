@@ -89,6 +89,7 @@ export const WorkoutPlanDetailScreen = () => {
               width: "100%",
               height: IMAGE_HEIGHT,
             }}
+            priority={"high"}
           >
             <AppText
               className="text-2xl font-bold bottom-6 left-6 absolute text-white"
@@ -104,7 +105,7 @@ export const WorkoutPlanDetailScreen = () => {
   }, [workoutPlan]);
 
   return (
-    <AppScreen name="workout-plan-detail-screen">
+    <AppScreen name="workout-plan-detail-screen" safeAreaEdges={["top"]}>
       <AppHeader
         withBackButton
         Right={

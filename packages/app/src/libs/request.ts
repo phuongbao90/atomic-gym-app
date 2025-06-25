@@ -1,6 +1,7 @@
+import { storageLoadString } from "../configs/app-storage";
+import { storageKeyNames } from "../configs/app-storage";
 import { ENV } from "../configs/env";
 import wretch from "wretch";
-import { AppStorage } from "../configs/app-storage";
 
 export const setRequestCookie = (cookie: string) => {
   http.headers({
@@ -37,10 +38,8 @@ export const http = wretch(`${ENV.API_URL}`)
   })
   .middlewares([
     (next) => (url, opts) => {
-      // console.log("url ", url);
-      // console.log("opts ", opts);
-      const cookie = AppStorage.getCookie();
-      const language = AppStorage.getLanguage();
+      const cookie = storageLoadString(storageKeyNames.cookie);
+      const language = storageLoadString(storageKeyNames.language);
       let headers = {
         ...opts.headers,
       };

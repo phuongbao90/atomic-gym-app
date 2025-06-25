@@ -154,7 +154,7 @@ export function WorkoutPlansTabScreen() {
   }
 
   return (
-    <AppScreen name="workout-plans-tab-screen">
+    <AppScreen name="workout-plans-tab-screen" safeAreaEdges={["top"]}>
       <AppHeader title={t("workout_plans")} />
       <SectionList
         //@ts-ignore

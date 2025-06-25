@@ -75,7 +75,7 @@ export const ExerciseDetailScreen = () => {
   }
 
   return (
-    <AppScreen name="exercise-detail-screen">
+    <AppScreen name="exercise-detail-screen" safeAreaEdges={["top"]}>
       <AppHeader withBackButton withBottomBorder={false} />
       <TabView
         navigationState={{ index, routes }}

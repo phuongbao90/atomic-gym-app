@@ -12,7 +12,7 @@ export function DevUIScreen() {
   const language = useAppSelector((state) => state.app.language);
 
   return (
-    <AppScreen name="(dev) ui-screen">
+    <AppScreen name="(dev) ui-screen" safeAreaEdges={["top"]}>
       <AppHeader title="UI" withBackButton theme={theme} language={language} />
       <AppScrollView
         contentContainerStyle={{

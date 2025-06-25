@@ -65,7 +65,7 @@ export const HistoryTabScreen = () => {
   };
 
   return (
-    <AppScreen name="history-tab-screen">
+    <AppScreen name="history-tab-screen" safeAreaEdges={["top"]}>
       <View className="my-4 ml-4">
         <AppText className="text-3xl">{t("history")}</AppText>
       </View>

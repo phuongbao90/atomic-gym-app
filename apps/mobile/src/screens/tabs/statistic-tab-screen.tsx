@@ -75,7 +75,7 @@ export const StatisticTabScreen = () => {
   }, []);
 
   return (
-    <AppScreen name="statistic-tab-screen">
+    <AppScreen name="statistic-tab-screen" safeAreaEdges={["top"]}>
       <AppText className="text-3xl font-semibold mt-4 mb-2 ml-4">
         {t("statistics")}
       </AppText>
