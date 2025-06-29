@@ -1,4 +1,4 @@
-import { setRequestCookie, SigninSchema } from "app";
+import { SigninSchema } from "app";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
@@ -18,6 +18,7 @@ import {
 import { toast } from "sonner-native";
 import { AppInput } from "../../components/ui/app-input";
 import { z } from "zod";
+import { saveAuthCookie } from "../../services/api-client";
 
 const defaultValues = {
   email: "bao1@gmail.com",
@@ -53,7 +54,10 @@ export function LoginScreen() {
     }
 
     const cookie = getCookie();
-    setRequestCookie(cookie);
+
+    if (cookie) {
+      await saveAuthCookie(cookie);
+    }
   }
 
   return (

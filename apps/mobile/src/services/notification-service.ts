@@ -48,9 +48,9 @@ const createNotificationChannel = async (): Promise<void> => {
         sound: "default",
       });
       channelCreated = true;
-      console.debug(
-        "[useNotificationSetup] Notification channel created/verified."
-      );
+      // console.debug(
+      //   "[useNotificationSetup] Notification channel created/verified."
+      // );
     } catch (error) {
       console.error(
         "[useNotificationSetup] Failed to create notification channel:",
@@ -85,10 +85,10 @@ export const displayNotification = async (
       },
     };
 
-    console.debug(
-      "[displayNotification] Displaying notification:",
-      notification
-    );
+    // console.debug(
+    //   "[displayNotification] Displaying notification:",
+    //   notification
+    // );
     await notifee.displayNotification(notification);
   } catch (error) {
     console.error(
@@ -106,11 +106,11 @@ export const getFCMToken = async (): Promise<string | null> => {
   try {
     const settings = await notifee.getNotificationSettings();
     if (settings.authorizationStatus < AuthorizationStatus.AUTHORIZED) {
-      console.warn("[getFCMToken] Notification permissions not granted.");
+      // console.warn("[getFCMToken] Notification permissions not granted.");
       return null;
     }
     const token = await messaging().getToken();
-    console.debug("[getFCMToken] FCM Token retrieved:", token);
+    // console.debug("[getFCMToken] FCM Token retrieved:", token);
     return token;
   } catch (error) {
     console.error("[getFCMToken] Failed to get FCM token:", error);
@@ -151,9 +151,9 @@ export const scheduleLocalNotification = async ({
     },
     trigger
   );
-  console.debug(
-    `[scheduleLocalNotification] Notification scheduled with ID: ${notificationId}`
-  );
+  // console.debug(
+  //   `[scheduleLocalNotification] Notification scheduled with ID: ${notificationId}`
+  // );
   return notificationId;
 };
 
@@ -164,7 +164,7 @@ export const cancelScheduledNotification = async (
   notificationId: string
 ): Promise<void> => {
   await notifee.cancelNotification(notificationId);
-  console.debug(`[cancelScheduledNotification] Canceled: ${notificationId}`);
+  // console.debug(`[cancelScheduledNotification] Canceled: ${notificationId}`);
 };
 
 // --- The Main Custom Hook ---
@@ -192,9 +192,9 @@ export const useNotificationSetup = (
         settings.authorizationStatus === AuthorizationStatus.PROVISIONAL;
 
       if (!enabled) {
-        console.warn(
-          "[useNotificationSetup] User denied notification permissions."
-        );
+        // console.warn(
+        //   "[useNotificationSetup] User denied notification permissions."
+        // );
         return; // Exit setup if permissions are not granted
       }
 
@@ -202,9 +202,9 @@ export const useNotificationSetup = (
       const initialNotification = await notifee.getInitialNotification();
 
       if (initialNotification) {
-        console.debug(
-          "[useNotificationSetup] App opened by initial notification."
-        );
+        // console.debug(
+        //   "[useNotificationSetup] App opened by initial notification."
+        // );
         onNotificationOpened(initialNotification.notification);
       }
     };
@@ -216,10 +216,10 @@ export const useNotificationSetup = (
     // 4. Listener for foreground FCM messages
     const unsubscribeOnMessage = messaging().onMessage(
       async (remoteMessage) => {
-        console.log("remoteMessage", remoteMessage);
-        console.debug(
-          "[useNotificationSetup] FCM Message received in foreground."
-        );
+        // console.log("remoteMessage", remoteMessage);
+        // console.debug(
+        //   "[useNotificationSetup] FCM Message received in foreground."
+        // );
         displayNotification(remoteMessage);
       }
     );
@@ -228,9 +228,9 @@ export const useNotificationSetup = (
     const unsubscribeNotifeeForeground = notifee.onForegroundEvent(
       ({ type, detail }) => {
         if (type === EventType.PRESS) {
-          console.debug(
-            "[useNotificationSetup] User pressed notification in foreground."
-          );
+          // console.debug(
+          //   "[useNotificationSetup] User pressed notification in foreground."
+          // );
           onNotificationOpened(detail.notification);
         }
       }
@@ -239,10 +239,10 @@ export const useNotificationSetup = (
     // 6. Listener for Notifee background events (notification press)
     notifee.onBackgroundEvent(async ({ type, detail }) => {
       if (type === EventType.PRESS) {
-        console.debug(
-          "[useNotificationSetup] User pressed notification in background.",
-          detail.notification
-        );
+        // console.debug(
+        //   "[useNotificationSetup] User pressed notification in background.",
+        //   detail.notification
+        // );
         // This debug is a good place to add analytics for background notification presses.
         // The onNotificationOpened callback is handled by getInitialNotification
         // when the app re-opens from a quit state.

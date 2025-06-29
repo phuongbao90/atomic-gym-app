@@ -1,4 +1,4 @@
-import { clearRequestCookie, queryClient, useGetWorkoutPlan } from "app";
+import { queryClient, useGetWorkoutPlan } from "app";
 import { useRouter } from "expo-router";
 import { Button, Pressable, TouchableOpacity, View } from "react-native";
 import { AppScrollView } from "../../src/components/ui/app-scrollview";
@@ -28,6 +28,7 @@ import { AppTouchable } from "../components/ui/app-touchable";
 import { cancelWorkoutSession } from "../stores/slices/workout-session-slice";
 import { useModal } from "react-native-modalfy";
 import { storageKeyNames } from "../utils/app-storage";
+import { clearAuthCookie } from "../services/api-client";
 
 export function HomeScreen() {
   const activeWorkoutPlanId = useAppSelector((s) => s.app.activeWorkoutPlanId);
@@ -302,7 +303,7 @@ const DEV = () => {
           onPress={async () => {
             await signOut();
 
-            clearRequestCookie();
+            await clearAuthCookie();
             queryClient.clear();
             router.replace(appRoutes.login);
           }}

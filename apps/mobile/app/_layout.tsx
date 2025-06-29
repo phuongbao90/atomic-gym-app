@@ -44,12 +44,7 @@ import notifee, { Notification } from "@notifee/react-native";
 import restTimeEndSound from "../assets/sounds/rest-time-end.mp3";
 import { enableScreens } from "react-native-screens";
 import { getCookie, useSession } from "../src/lib/auth-client";
-import {
-  clearRequestCookie,
-  queryClient,
-  setRequestCookie,
-  setRequestLanguage,
-} from "app";
+import { queryClient } from "app";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setIsConnected } from "../src/stores/slices/app-slice";
 import { AudioModule } from "expo-audio";
@@ -71,10 +66,14 @@ import {
   storageKeyNames,
   storageSaveString,
 } from "../src/utils/app-storage";
+import {
+  clearAuthCookie,
+  saveAuthCookie,
+  setupApiClient,
+} from "../src/services/api-client";
 
 Sentry.init({
-  // dsn: "http://e6d610a559c541ea8ba703e7940d137c@bugsink-sso8gow0g0088c0gwssogwwk.103.82.23.70.sslip.io/1",
-  dsn: process.env.BUG_SINK_DSN,
+  dsn: process.env.EXPO_PUBLIC_BUG_SINK_DSN,
   release: "atomic-gym",
   integrations: [],
   tracesSampleRate: 0,
@@ -110,7 +109,7 @@ configureReanimatedLogger({
 
 messaging().setBackgroundMessageHandler(
   async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
-    console.debug("[RootLayout] Background message received!", remoteMessage);
+    // console.debug("[RootLayout] Background message received!", remoteMessage);
     // This will display the notification in the system tray when the app is in the background or killed.
     await displayNotification(remoteMessage);
   }
@@ -163,10 +162,10 @@ const RootLayout = () => {
 
   const handleNotificationPress = (notification?: Notification) => {
     if (notification?.data) {
-      console.debug(
-        "[RootLayout] Handling notification press:",
-        notification.data
-      );
+      // console.debug(
+      //   "[RootLayout] Handling notification press:",
+      //   notification.data
+      // );
       const { screenUrl } = notification.data;
 
       if (typeof screenUrl === "string") {
@@ -185,10 +184,10 @@ const RootLayout = () => {
       if (token) {
         // Here you would send the token to your backend API
         // e.g., await myApi.registerDeviceToken(token);
-        console.debug(
-          "[RootLayout] Device token sent to server (simulated):",
-          token
-        );
+        // console.debug(
+        //   "[RootLayout] Device token sent to server (simulated):",
+        //   token
+        // );
       }
     };
 
@@ -231,7 +230,7 @@ const RootLayout = () => {
                       }}
                     > */}
                     <PostHogProvider
-                      apiKey={process.env.POSTHOG_API_KEY}
+                      apiKey={process.env.EXPO_PUBLIC_POSTHOG_API_KEY}
                       options={{
                         host: "https://us.i.posthog.com",
                       }}
@@ -275,13 +274,18 @@ const App = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (cookie) {
-      setRequestCookie(cookie);
-      storageSaveString(storageKeyNames.cookie, cookie);
-    } else {
-      clearRequestCookie();
-      storageSaveString(storageKeyNames.cookie, "");
-    }
+    setupApiClient();
+  }, []);
+
+  useEffect(() => {
+    const init = async () => {
+      if (cookie) {
+        await saveAuthCookie(cookie);
+      } else {
+        await clearAuthCookie();
+      }
+    };
+    init();
   }, [cookie]);
 
   useEffect(() => {
@@ -295,9 +299,7 @@ const App = () => {
   useEffect(() => {
     if (runOnce.current) return;
     runOnce.current = true;
-    i18n.changeLanguage(language, () => {
-      setRequestLanguage(language);
-    });
+    i18n.changeLanguage(language);
   }, [language]);
 
   useEffect(() => {

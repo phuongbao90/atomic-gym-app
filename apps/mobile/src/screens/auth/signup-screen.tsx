@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { setRequestCookie, SignupSchema } from "app";
+import { SignupSchema } from "app";
 import { Controller, useForm } from "react-hook-form";
 import { View } from "react-native";
 import { z } from "zod";
@@ -13,6 +13,7 @@ import { AppButton } from "../../components/ui/app-button";
 import { router } from "expo-router";
 import { appRoutes } from "app-config";
 import { toast } from "sonner-native";
+import { saveAuthCookie } from "../../services/api-client";
 
 const initialValues = {
   email: "bao1112@gmail.com",
@@ -49,7 +50,7 @@ export function SignupScreen() {
     if (data) {
       const cookie = getCookie();
       if (cookie) {
-        setRequestCookie(cookie);
+        await saveAuthCookie(cookie);
       }
     }
   }
