@@ -12,12 +12,10 @@
     "debug_app": "tsup --watch",
     "test": "jest",
     "test:watch": "tsup --watch",
-    "dev": "tsup --watch"
+    "dev": "tsup --watch",
+    "build": "tsup"
   },
-  "files": [
-    "build",
-    "src"
-  ],
+  "files": ["build", "src"],
   "devDependencies": {
     "@testing-library/react-native": "^13.2.0",
     "@total-typescript/ts-reset": "^0.6.1",

@@ -1,10 +1,13 @@
 import {
   ActivityIndicator,
+  KeyboardAvoidingViewProps,
   Platform,
   ScrollViewProps,
   StyleProp,
   View,
   ViewStyle,
+  // KeyboardAvoidingView,
+  // KeyboardAvoidingViewProps,
 } from "react-native";
 import { cn } from "../../../utils/cn";
 import { AppText } from "../app-text";
@@ -15,12 +18,8 @@ import {
   SystemBarsProps,
   SystemBarStyle,
 } from "react-native-edge-to-edge";
-import { ReactNode } from "react";
 import { Edge, useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-  KeyboardAvoidingView,
-  KeyboardAvoidingViewProps,
-} from "react-native-keyboard-controller";
+import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { useSafeAreaInsetsStyle } from "../../../hooks/use-safe-area-insets-style";
 
 type ExtendedEdge = Edge | "start" | "end";
@@ -29,7 +28,7 @@ interface BaseScreenProps {
   /**
    * Children components.
    */
-  children?: ReactNode;
+  children: React.ReactNode;
   /**
    * Style for the outer content container useful for padding & margin.
    */
@@ -116,6 +115,8 @@ export const AppScreen = ({
   } = props;
 
   const $containerInsets = useSafeAreaInsetsStyle(safeAreaEdges);
+
+  // console.log("🚀 ~ $containerInsets:", $containerInsets, safeAreaEdges);
   const isIos = Platform.OS === "ios";
 
   return (
@@ -142,11 +143,6 @@ export const AppScreen = ({
         style={[{ flex: 1 }, KeyboardAvoidingViewProps?.style]}
       >
         {props.children}
-        {/* {isNonScrolling(props.preset) ? (
-          <ScreenWithoutScrolling {...props} />
-        ) : (
-          <ScreenWithScrolling {...props} />
-        )} */}
       </KeyboardAvoidingView>
       {__DEV__ && <DevFloatingButtons />}
       {__DEV__ && (
