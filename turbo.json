@@ -1,5 +1,5 @@
 {
-  "$schema": "https://turbo.build/schema.json",
+  "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
   "globalEnv": ["JAVA_HOME", "ANDROID_NDK", "ANDROID_SDK", "ANDROID_HOME"],
   "tasks": {
@@ -16,6 +16,7 @@
     "start": {
       "outputs": [".expo/**"],
       "persistent": true,
+      "cache": false,
       "dependsOn": ["^app-config#debug_config", "^app#debug_app"]
     },
     "debug": {
@@ -32,11 +33,7 @@
     "debug_config": {
       "outputs": ["build/**"]
     },
-    "build": {
-      "dependsOn": ["app#build_app"],
-      "persistent": true,
-      "cache": false
-    },
+
     "build_app": {
       "dependsOn": ["app-config#build_config"],
       "outputs": ["build/**"]
@@ -46,6 +43,12 @@
     },
     "dev": {
       "persistent": true,
+      "cache": false
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [".next/**", "!.next/cache/**"],
       "cache": false
     }
   }

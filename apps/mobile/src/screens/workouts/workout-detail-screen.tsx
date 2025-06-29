@@ -21,7 +21,7 @@ export function WorkoutDetailScreen() {
   const { data: workout, isLoading } = useGetWorkoutTemplate(id);
 
   return (
-    <AppScreen name="workout-detail-screen" safeAreaEdges={["top"]}>
+    <AppScreen name="workout-detail-screen" safeAreaEdges={["top", "bottom"]}>
       <AppHeader title={workout?.name} withBackButton />
 
       <AppFlatList
@@ -50,6 +50,7 @@ export function WorkoutDetailScreen() {
           testID="start-workout-button"
           title={t("start_workout")}
           fullWidth
+          size="lg"
           containerClassName="px-4 pb-4"
           radius="xl"
           color="primary"

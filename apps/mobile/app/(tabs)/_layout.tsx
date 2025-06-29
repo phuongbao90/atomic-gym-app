@@ -39,12 +39,14 @@ export default function TabLayout() {
         headerShown: false,
         tabBarStyle: Platform.select({
           ios: {
-            height: TAB_HEIGHT,
+            height: TAB_HEIGHT + insets.bottom,
+          },
+          android: {
+            height: TAB_HEIGHT + insets.bottom,
           },
           default: {
             backgroundColor: colors.pageBackground[colorMode],
-            height: insets.bottom ? TAB_HEIGHT : TAB_HEIGHT + insets.bottom,
-            paddingBottom: 0,
+            // paddingBottom: 0,
           },
         }),
         tabBarActiveTintColor: colors.text[colorMode].main,

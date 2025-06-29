@@ -99,7 +99,7 @@ export function WorkoutPlansTabScreen() {
         title: "FEATURED",
         data: [data.isFeatured],
       },
-      ...data.byCategory.map((item) => ({
+      ...data.byCategory?.map((item) => ({
         title: item.result.name,
         data: [item.result.data],
       })),
@@ -166,6 +166,16 @@ export function WorkoutPlansTabScreen() {
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
         }
+        bounces={false}
+        // contentContainerStyle={{
+        //   paddingBottom: 100,
+        // }}
+        style={{
+          paddingBottom: 100,
+        }}
+        ListFooterComponentStyle={{
+          paddingBottom: 100,
+        }}
         ListFooterComponent={
           <>
             <SectionTitle title={capitalize(t("exercises"))} />
@@ -199,7 +209,7 @@ export function WorkoutPlansTabScreen() {
           </>
         }
       />
-      <View className="absolute bottom-6 right-6">
+      <AppScreen.Footer>
         <AppButton
           testID="build-plan-button"
           title={t("build_plan")}
@@ -207,9 +217,10 @@ export function WorkoutPlansTabScreen() {
             router.navigate(appRoutes.workoutPlans.create({}));
           }}
           color="primary"
-          containerClassName="flex-1"
+          containerClassName="flex-1 px-4 pb-4"
+          size="lg"
         />
-      </View>
+      </AppScreen.Footer>
     </AppScreen>
   );
 }

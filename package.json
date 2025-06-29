@@ -24,7 +24,9 @@
     "mobile#debug_ios_dev": "        ts-node ./scripts/modify-env.cjs dev     ios     && turbo watch debug --filter=mobile",
     "mobile#build_android_prod": "   ts-node ./scripts/modify-env.cjs prod    android && turbo run build --filter=mobile -- --profile production     --platform android  --non-interactive --output ./build/prod/app.apk",
     "mobile#build_android_prodAab": "ts-node ./scripts/modify-env.cjs prodAab android && turbo run build --filter=mobile -- --profile production:aab --platform android  --non-interactive --output ./build/prodAab/app.aab",
-    "mobile#build_ios_prod": "       ts-node ./scripts/modify-env.cjs prod    ios     && turbo run build_app && cd apps/mobile && yarn build -- --profile production     --platform ios      --non-interactive --output ./build/prod/app.ipa"
+    "mobile#build_ios_prod": "       ts-node ./scripts/modify-env.cjs prod    ios     && turbo run build_app && cd apps/mobile && yarn build -- --profile production     --platform ios      --non-interactive --output ./build/prod/app.ipa",
+    "___": "------------------------------------------",
+    "build_web": "turbo run build --filter=web"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",

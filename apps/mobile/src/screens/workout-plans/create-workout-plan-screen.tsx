@@ -60,7 +60,6 @@ import {
   WorkoutPlan,
 } from "app";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useActionSheet } from "@expo/react-native-action-sheet";
 import { colors } from "../../styles/themes";
 import { useDispatch } from "react-redux";
 import { workoutPlanKeys } from "app/src/query/workout-plans/workout-plans.keys";
@@ -265,7 +264,7 @@ const List = ({
   const { t } = useTranslation();
   const debouncedPress = usePreventRepeatPress();
   const router = useRouter();
-  const { showActionSheetWithOptions } = useActionSheet();
+  // const { showActionSheetWithOptions } = useActionSheet();
   const { openModal } = useModal();
   const workout = useAppSelector(
     (state) => selectWorkoutTemplateById(state, workoutId),
@@ -275,59 +274,59 @@ const List = ({
   function onPressMore(workoutId: string) {
     const options = [t("reorder"), t("duplicate"), t("delete"), t("cancel")];
 
-    showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex: options.length - 1,
-        showSeparators: true,
-        destructiveButtonIndex: 2,
-        disabledButtonIndices: [
-          // Number(workoutTemplates?.length) === 1 ? 0 : -1,
-        ],
-        icons: [
-          <ReorderIcon key="reorder" size={20} />,
-          <DuplicateIcon key="duplicate" size={20} />,
-          <DeleteIcon key="delete" color="red" size={20} />,
-          <CancelIcon key="cancel" size={20} />,
-        ],
-        textStyle: {
-          fontSize: 18,
-          fontWeight: "500",
-          color: theme === "dark" ? "white" : "black",
-        },
+    // showActionSheetWithOptions(
+    //   {
+    //     options,
+    //     cancelButtonIndex: options.length - 1,
+    //     showSeparators: true,
+    //     destructiveButtonIndex: 2,
+    //     disabledButtonIndices: [
+    //       // Number(workoutTemplates?.length) === 1 ? 0 : -1,
+    //     ],
+    //     icons: [
+    //       <ReorderIcon key="reorder" size={20} />,
+    //       <DuplicateIcon key="duplicate" size={20} />,
+    //       <DeleteIcon key="delete" color="red" size={20} />,
+    //       <CancelIcon key="cancel" size={20} />,
+    //     ],
+    //     textStyle: {
+    //       fontSize: 18,
+    //       fontWeight: "500",
+    //       color: theme === "dark" ? "white" : "black",
+    //     },
 
-        containerStyle: {
-          backgroundColor:
-            theme === "dark"
-              ? colors.pageBackground.dark
-              : colors.pageBackground.light,
-        },
-      },
-      (selectedIndex) => {
-        if (selectedIndex === 0) {
-          // reorder
-          router.push(appRoutes.workoutPlans.editWorkoutOrder());
-        }
-        if (selectedIndex === 1) {
-          // duplicate
-          // dispatch(
-          //   duplicateWorkout({
-          //     workoutId: workoutTemplates[activeWorkoutIndex].id,
-          //   })
-          // );
-          // delay(() => setPage(workoutTemplates.length), 100);
-        }
-        if (selectedIndex === 2) {
-          // delete
-          openModal("ConfirmModal", {
-            message: t("delete_workout_plan_message"),
-            onConfirm: () => {
-              dispatch(removeWorkout({ workoutId }));
-            },
-          });
-        }
-      }
-    );
+    //     containerStyle: {
+    //       backgroundColor:
+    //         theme === "dark"
+    //           ? colors.pageBackground.dark
+    //           : colors.pageBackground.light,
+    //     },
+    //   },
+    //   (selectedIndex: number) => {
+    //     if (selectedIndex === 0) {
+    //       // reorder
+    //       router.push(appRoutes.workoutPlans.editWorkoutOrder());
+    //     }
+    //     if (selectedIndex === 1) {
+    //       // duplicate
+    //       // dispatch(
+    //       //   duplicateWorkout({
+    //       //     workoutId: workoutTemplates[activeWorkoutIndex].id,
+    //       //   })
+    //       // );
+    //       // delay(() => setPage(workoutTemplates.length), 100);
+    //     }
+    //     if (selectedIndex === 2) {
+    //       // delete
+    //       openModal("ConfirmModal", {
+    //         message: t("delete_workout_plan_message"),
+    //         onConfirm: () => {
+    //           dispatch(removeWorkout({ workoutId }));
+    //         },
+    //       });
+    //     }
+    //   }
+    // );
   }
 
   const renderItem = useCallback(
@@ -490,65 +489,65 @@ const ExerciseItem = ({
   const drag = useReorderableDrag();
   const { t } = useTranslation();
   const debouncedPress = usePreventRepeatPress();
-  const { showActionSheetWithOptions } = useActionSheet();
+  // const { showActionSheetWithOptions } = useActionSheet();
   const theme = useAppSelector((state) => state.app.theme);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
   function onPressMore() {
     const options = [t("replace"), t("delete"), t("cancel")];
-    showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex: options.length - 1,
-        showSeparators: true,
-        destructiveButtonIndex: 1,
-        icons: [
-          <MaterialIcons
-            key="replace"
-            name="find-replace"
-            size={20}
-            color={theme === "dark" ? "white" : "black"}
-          />,
-          <DeleteIcon key="delete" color="red" size={20} />,
-          <CancelIcon key="cancel" size={20} />,
-        ],
-        textStyle: {
-          fontSize: 18,
-          fontWeight: "500",
-          color: theme === "dark" ? "white" : "black",
-        },
+    // showActionSheetWithOptions(
+    //   {
+    //     options,
+    //     cancelButtonIndex: options.length - 1,
+    //     showSeparators: true,
+    //     destructiveButtonIndex: 1,
+    //     icons: [
+    //       <MaterialIcons
+    //         key="replace"
+    //         name="find-replace"
+    //         size={20}
+    //         color={theme === "dark" ? "white" : "black"}
+    //       />,
+    //       <DeleteIcon key="delete" color="red" size={20} />,
+    //       <CancelIcon key="cancel" size={20} />,
+    //     ],
+    //     textStyle: {
+    //       fontSize: 18,
+    //       fontWeight: "500",
+    //       color: theme === "dark" ? "white" : "black",
+    //     },
 
-        containerStyle: {
-          backgroundColor:
-            theme === "dark"
-              ? colors.pageBackground.dark
-              : colors.pageBackground.light,
-        },
-      },
-      (selectedIndex) => {
-        if (selectedIndex === 0) {
-          // replace
-          router.push(
-            appRoutes.exercises.list({
-              allowSelect: "true",
-              workoutId,
-              replaceWorkoutExerciseId: item.id,
-              mode: "replaceToCreateWorkoutPlan",
-            })
-          );
-        }
-        if (selectedIndex === 1) {
-          // delete
-          dispatch(
-            removeWorkoutExercise({
-              workoutId: workoutId,
-              workoutExerciseId: item.id,
-            })
-          );
-        }
-      }
-    );
+    //     containerStyle: {
+    //       backgroundColor:
+    //         theme === "dark"
+    //           ? colors.pageBackground.dark
+    //           : colors.pageBackground.light,
+    //     },
+    //   },
+    //   (selectedIndex: number) => {
+    //     if (selectedIndex === 0) {
+    //       // replace
+    //       router.push(
+    //         appRoutes.exercises.list({
+    //           allowSelect: "true",
+    //           workoutId,
+    //           replaceWorkoutExerciseId: item.id,
+    //           mode: "replaceToCreateWorkoutPlan",
+    //         })
+    //       );
+    //     }
+    //     if (selectedIndex === 1) {
+    //       // delete
+    //       dispatch(
+    //         removeWorkoutExercise({
+    //           workoutId: workoutId,
+    //           workoutExerciseId: item.id,
+    //         })
+    //       );
+    //     }
+    //   }
+    // );
   }
 
   return (

@@ -105,7 +105,10 @@ export const WorkoutPlanDetailScreen = () => {
   }, [workoutPlan]);
 
   return (
-    <AppScreen name="workout-plan-detail-screen" safeAreaEdges={["top"]}>
+    <AppScreen
+      name="workout-plan-detail-screen"
+      safeAreaEdges={["top", "bottom"]}
+    >
       <AppHeader
         withBackButton
         Right={

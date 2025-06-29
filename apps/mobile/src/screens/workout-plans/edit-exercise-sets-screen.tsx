@@ -9,7 +9,6 @@ import { View } from "react-native";
 import { SetItem } from "./components/set-item";
 import { colors } from "../../styles/themes";
 import { CancelIcon } from "../../components/ui/expo-icon";
-import { useActionSheet } from "@expo/react-native-action-sheet";
 import { DeleteIcon } from "../../components/ui/expo-icon";
 import { removeExerciseSet } from "../../stores/slices/create-workout-plan-slice";
 
@@ -19,7 +18,7 @@ export function EditExerciseSetsScreen() {
     workoutExerciseId: string;
   }>();
   const { t } = useTranslation();
-  const { showActionSheetWithOptions } = useActionSheet();
+  // const { showActionSheetWithOptions } = useActionSheet();
   const theme = useAppSelector((s) => s.app.theme);
   const dispatch = useAppDispatch();
   const workouts = useAppSelector(
@@ -34,46 +33,44 @@ export function EditExerciseSetsScreen() {
       );
   }, [workouts, workoutId, workoutExerciseId]);
 
-  console.log("workoutExercise ", workoutExercise);
-
   function onPressMore(setIndex: number) {
     const options = [t("delete"), t("cancel")];
 
-    showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex: options.length - 1,
-        showSeparators: true,
-        destructiveButtonIndex: 0,
-        icons: [
-          <DeleteIcon key="delete" color="red" size={20} />,
-          <CancelIcon key="cancel" size={20} />,
-        ],
-        textStyle: {
-          fontSize: 18,
-          fontWeight: "500",
-          color: theme === "dark" ? "white" : "black",
-        },
+    // showActionSheetWithOptions(
+    //   {
+    //     options,
+    //     cancelButtonIndex: options.length - 1,
+    //     showSeparators: true,
+    //     destructiveButtonIndex: 0,
+    //     icons: [
+    //       <DeleteIcon key="delete" color="red" size={20} />,
+    //       <CancelIcon key="cancel" size={20} />,
+    //     ],
+    //     textStyle: {
+    //       fontSize: 18,
+    //       fontWeight: "500",
+    //       color: theme === "dark" ? "white" : "black",
+    //     },
 
-        containerStyle: {
-          backgroundColor:
-            theme === "dark"
-              ? colors.pageBackground.dark
-              : colors.pageBackground.light,
-        },
-      },
-      (selectedIndex) => {
-        if (selectedIndex === 0) {
-          dispatch(
-            removeExerciseSet({
-              workoutId,
-              workoutExerciseId,
-              setIndex,
-            })
-          );
-        }
-      }
-    );
+    //     containerStyle: {
+    //       backgroundColor:
+    //         theme === "dark"
+    //           ? colors.pageBackground.dark
+    //           : colors.pageBackground.light,
+    //     },
+    //   },
+    //   (selectedIndex) => {
+    //     if (selectedIndex === 0) {
+    //       dispatch(
+    //         removeExerciseSet({
+    //           workoutId,
+    //           workoutExerciseId,
+    //           setIndex,
+    //         })
+    //       );
+    //     }
+    //   }
+    // );
   }
 
   return (

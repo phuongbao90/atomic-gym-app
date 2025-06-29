@@ -13,7 +13,7 @@ import {
   useNavigationContainerRef,
 } from "expo-router";
 import { useEffect, useRef } from "react";
-import { Platform, StatusBar, View } from "react-native";
+import { Platform } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { useMMKVBoolean } from "react-native-mmkv";
@@ -53,7 +53,6 @@ import {
   storageKeyNames,
   storageSaveString,
 } from "app";
-
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setIsConnected } from "../src/stores/slices/app-slice";
 import { AudioModule } from "expo-audio";
@@ -67,6 +66,20 @@ import {
 import messaging, {
   FirebaseMessagingTypes,
 } from "@react-native-firebase/messaging";
+import * as Sentry from "@sentry/react-native";
+import { AppText } from "../src/components/ui/app-text";
+import { PostHogProvider } from "posthog-react-native";
+
+Sentry.init({
+  // dsn: "http://e6d610a559c541ea8ba703e7940d137c@bugsink-sso8gow0g0088c0gwssogwwk.103.82.23.70.sslip.io/1",
+  dsn: process.env.BUG_SINK_DSN,
+  release: "atomic-gym",
+  integrations: [],
+  tracesSampleRate: 0,
+  // Adds more context data to events (IP address, cookies, user, etc.)
+  // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
+  sendDefaultPii: true,
+});
 
 enableScreens();
 
@@ -104,7 +117,7 @@ messaging().setBackgroundMessageHandler(
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+const RootLayout = () => {
   const insets = useSafeAreaInsets();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
@@ -215,7 +228,20 @@ export default function RootLayout() {
                         paddingTop: insets.top,
                       }}
                     > */}
-                    <App />
+                    <PostHogProvider
+                      apiKey={process.env.POSTHOG_API_KEY}
+                      options={{
+                        host: "https://us.i.posthog.com",
+                      }}
+                    >
+                      <Sentry.ErrorBoundary
+                        fallback={() => {
+                          return <AppText>Error</AppText>;
+                        }}
+                      >
+                        <App />
+                      </Sentry.ErrorBoundary>
+                    </PostHogProvider>
                     <Toaster
                       position="top-center"
                       duration={2000}
@@ -231,7 +257,7 @@ export default function RootLayout() {
       </PersistGate>
     </Provider>
   );
-}
+};
 
 const App = () => {
   const { isConnected } = useNetInfo();
@@ -309,3 +335,5 @@ const App = () => {
     </Stack>
   );
 };
+
+export default Sentry.wrap(RootLayout);
