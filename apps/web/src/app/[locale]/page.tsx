@@ -7,9 +7,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+// import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
-import LocaleSwitcher from "../../components/locale-switcher";
+// import LocaleSwitcher from "../../components/locale-switcher";
 
 export default async function HomePage() {
   // const t = useTranslations("HomePage");
@@ -47,7 +47,7 @@ export default async function HomePage() {
       </section>
 
       <p>This text is rendered on the server: {t("title")}</p>
-      <LocaleSwitcher />
+      {/* <LocaleSwitcher /> */}
 
       {/* Features Section */}
       <section id="features" className="py-24 bg-white dark:bg-gray-950">

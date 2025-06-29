@@ -4,7 +4,7 @@ const _ENV =
 
 // const url = "192.168.31.183"; // home
 // const url = "192.168.110.2"; // my-coffee
-const url = "192.168.1.231";
+const url = "192.168.1.212";
 // const url = "localhost";
 
 const _API_URL = {

@@ -19,8 +19,8 @@ import { PRIMARY_COLOR, twColors } from "../../../styles/themes";
 import { BodyLogResponse } from "app/src/query/logs/logs.types";
 import { useRouter } from "expo-router";
 import { appRoutes } from "app-config";
-import { UserPreferencesStorage } from "app";
 import { dayjs } from "../../../lib/dayjs";
+import { UserPreferencesStorage } from "../../../hooks/use-preferences-storage";
 
 const INITIAL_SPACING = 4;
 const PADDING = 12;

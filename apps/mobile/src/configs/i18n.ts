@@ -11,7 +11,7 @@ import authScreenEn from "../locales/en/auth.json";
 import authScreenVi from "../locales/vi/auth.json";
 import { ZodErrorMap } from "zod";
 import z from "zod";
-import { storageKeyNames, storageLoadString } from "app";
+import { storageKeyNames, storageLoadString } from "../utils/app-storage";
 
 const customErrorMap: ZodErrorMap = (issue, ctx) => {
   switch (issue.code) {

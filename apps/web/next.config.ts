@@ -18,6 +18,7 @@ const nextConfig: NextConfig = {
     scrollRestoration: true,
   },
   crossOrigin: "anonymous",
+  output: "standalone",
 };
 
 export default withNextIntl(nextConfig);

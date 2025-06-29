@@ -25,6 +25,12 @@ const defaultValues = {
   rememberMe: false,
 } as const;
 
+// const SigninSchema = z.object({
+//   email: z.string().email(),
+//   password: z.string().min(8),
+//   rememberMe: z.boolean().optional(),
+// });
+
 export default function SignInForm() {
   const router = useRouter();
   const form = useForm<z.infer<typeof SigninSchema>>({

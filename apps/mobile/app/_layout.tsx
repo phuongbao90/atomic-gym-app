@@ -45,13 +45,10 @@ import restTimeEndSound from "../assets/sounds/rest-time-end.mp3";
 import { enableScreens } from "react-native-screens";
 import { getCookie, useSession } from "../src/lib/auth-client";
 import {
-  appStorage,
   clearRequestCookie,
   queryClient,
   setRequestCookie,
   setRequestLanguage,
-  storageKeyNames,
-  storageSaveString,
 } from "app";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { setIsConnected } from "../src/stores/slices/app-slice";
@@ -69,6 +66,11 @@ import messaging, {
 import * as Sentry from "@sentry/react-native";
 import { AppText } from "../src/components/ui/app-text";
 import { PostHogProvider } from "posthog-react-native";
+import {
+  appStorage,
+  storageKeyNames,
+  storageSaveString,
+} from "../src/utils/app-storage";
 
 Sentry.init({
   // dsn: "http://e6d610a559c541ea8ba703e7940d137c@bugsink-sso8gow0g0088c0gwssogwwk.103.82.23.70.sslip.io/1",

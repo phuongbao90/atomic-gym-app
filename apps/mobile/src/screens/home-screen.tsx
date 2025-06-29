@@ -1,9 +1,4 @@
-import {
-  clearRequestCookie,
-  queryClient,
-  storageKeyNames,
-  useGetWorkoutPlan,
-} from "app";
+import { clearRequestCookie, queryClient, useGetWorkoutPlan } from "app";
 import { useRouter } from "expo-router";
 import { Button, Pressable, TouchableOpacity, View } from "react-native";
 import { AppScrollView } from "../../src/components/ui/app-scrollview";
@@ -32,6 +27,7 @@ import { WorkoutPlanCard } from "../components/workout-plan-card";
 import { AppTouchable } from "../components/ui/app-touchable";
 import { cancelWorkoutSession } from "../stores/slices/workout-session-slice";
 import { useModal } from "react-native-modalfy";
+import { storageKeyNames } from "../utils/app-storage";
 
 export function HomeScreen() {
   const activeWorkoutPlanId = useAppSelector((s) => s.app.activeWorkoutPlanId);
